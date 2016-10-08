@@ -28,7 +28,7 @@ client
     });
 ```
 
-Each method returns a Promise.
+Each method returns a `Promise`.
 
 ### Adapter methods
 These methods can be called on the object returned from the main factory.
@@ -48,6 +48,36 @@ client
 ```
 
 The returned value is a Promise, which resolves with an array of [item stat objects](#item-stat).
+
+### getFileContents(remotePath)
+Get the contents of the file at `remotePath` as a `Buffer`.
+
+```js
+var fs = require("fs");
+
+client
+    .getFileContents("/folder/myImage.jpg")
+    .then(function(imageData) {
+        fs.writeFileSync("./myImage.jpg", imageData);
+    })
+    .catch(function(err) {
+        console.error(err);
+    });
+```
+
+### getTextContents(remotePath)
+Get the text content of a file at `remotePath`.
+
+```js
+client
+    .getFileContents("/doc.txt")
+    .then(function(text) {
+        console.log(text);
+    })
+    .catch(function(err) {
+        console.error(err);
+    });
+```
 
 ### Returned data structures
 
