@@ -1,0 +1,30 @@
+{
+  "name": "webdav",
+  "version": "0.1.0",
+  "description": "WebDAV client for NodeJS",
+  "main": "source/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/perry-mitchell/webdav-client.git"
+  },
+  "keywords": [
+    "webdav",
+    "client",
+    "remote",
+    "sync"
+  ],
+  "author": "Perry Mitchell <perry@perrymitchell.net>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/perry-mitchell/webdav-client/issues"
+  },
+  "homepage": "https://github.com/perry-mitchell/webdav-client#readme",
+  "dependencies": {
+    "brototype": "0.0.5",
+    "node-fetch": "^1.6.3",
+    "xml2js": "^0.4.17"
+  }
+}
