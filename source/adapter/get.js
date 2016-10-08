@@ -5,7 +5,7 @@ var parsing = require("./parse.js");
 
 module.exports = {
 
-    getContents: function getContents(url, dirPath) {
+    getDirectoryContents: function getDirectoryContents(url, dirPath) {
         dirPath = dirPath || "/";
         var fetchURL = url + dirPath;
         return fetch(
@@ -17,7 +17,6 @@ module.exports = {
                     }
                 }
             )
-            //.then(handleResponseError)
             .then(function(res) {
                 return res.text();
             })
@@ -32,6 +31,20 @@ module.exports = {
                         }
                     });
                 });
+            });
+    },
+
+    getFileContents: function getFileContents(url, filePath) {
+        return fetch(url + filePath)
+            .then(function(res) {
+                return res.buffer();
+            });
+    },
+
+    getTextContents: function getTextContents(url, filePath) {
+        return fetch(url + filePath)
+            .then(function(res) {
+                return res.text();
             });
     }
 

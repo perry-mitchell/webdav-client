@@ -10,7 +10,15 @@ module.exports = {
         return {
 
             getDirectoryContents: function getDirectoryContents(remotePath) {
-                return getAdapter.getContents(__url, remotePath);
+                return getAdapter.getDirectoryContents(__url, remotePath);
+            },
+
+            getFileContents: function getFileContents(remoteFilename) {
+                return getAdapter.getFileContents(__url, remoteFilename);
+            },
+
+            getTextContents: function getTextContents(remoteFilename) {
+                return getAdapter.getTextContents(__url, remoteFilename);
             }
 
         };
