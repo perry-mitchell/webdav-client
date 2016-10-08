@@ -47,7 +47,7 @@ client
     });
 ```
 
-The returned value is a Promise, which resolves with an array of [item stat objects](###item-stat).
+The returned value is a Promise, which resolves with an array of [item stat objects](#item-stat).
 
 ### Returned data structures
 
