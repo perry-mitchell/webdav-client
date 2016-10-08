@@ -49,7 +49,7 @@ client
 
 The returned value is a Promise, which resolves with an array of [item stat objects](#item-stat).
 
-### getFileContents(remotePath)
+#### getFileContents(remotePath)
 Get the contents of the file at `remotePath` as a `Buffer`.
 
 ```js
@@ -65,7 +65,7 @@ client
     });
 ```
 
-### getTextContents(remotePath)
+#### getTextContents(remotePath)
 Get the text content of a file at `remotePath`.
 
 ```js
