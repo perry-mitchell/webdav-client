@@ -14,13 +14,18 @@ describe("adapter:get", function() {
         this.server.stop().then(done);
     })
 
-    it("does something", function(done) {
-        getAdapter
-            .getFileContents("http://localhost:9999", "/gem.png")
-            .then(function(contents) {
-                expect(contents.length).to.equal(279);
-            })
-            .then(done);
+    describe("getFileContents", function() {
+
+        it("gets contents of a remote file", function(done) {
+            getAdapter
+                .getFileContents("http://localhost:9999", "/gem.png")
+                .then(function(contents) {
+                    expect(contents.length).to.equal(279);
+                    expect(contents instanceof Buffer).to.be.true;
+                })
+                .then(done);
+        });
+
     });
 
 });
