@@ -1,0 +1,7 @@
+language: node_js
+node_js:
+  - "stable"
+  - "6.7"
+  - "5.12"
+  - "4.6"
+  - "0.12"
