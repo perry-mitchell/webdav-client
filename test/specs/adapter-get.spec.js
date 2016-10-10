@@ -32,7 +32,7 @@ describe("adapter:get", function() {
                         expect(item.filename.length).to.be.above(0);
                         expect(item.basename.length).to.be.above(0);
                         expect(item.filename.indexOf(item.basename)).to.be.above(-1);
-                        let type = item.type;
+                        var type = item.type;
                         expect(["file", "directory"]).to.contain(type);
                         if (type === "file") {
                             expect(item.size).to.be.above(0);
@@ -65,7 +65,7 @@ describe("adapter:get", function() {
             return getAdapter
                 .getTextContents("http://localhost:9999", "/test.txt")
                 .then(function(contents) {
-                    let numLines = contents.trim().split("\n").length;
+                    var numLines = contents.trim().split("\n").length;
                     expect(numLines).to.equal(3);
                 });
         });
