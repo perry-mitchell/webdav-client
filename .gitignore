@@ -22,3 +22,4 @@ jspm_packages
 # Custom
 test.js
 .history
+test/resources/data
