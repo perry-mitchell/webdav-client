@@ -13,12 +13,14 @@ module.exports = {
                 return getAdapter.getDirectoryContents(__url, remotePath);
             },
 
-            getFileContents: function getFileContents(remoteFilename) {
-                return getAdapter.getFileContents(__url, remoteFilename);
-            },
-
-            getTextContents: function getTextContents(remoteFilename) {
-                return getAdapter.getTextContents(__url, remoteFilename);
+            getFileContents: function getFileContents(remoteFilename, format) {
+                format = format || "binary";
+                if (["binary", "text"].indexOf(format) < 0) {
+                    throw new Error("Unknown format");
+                }
+                return (format === "text") ?
+                    getAdapter.getTextContents(__url, remoteFilename) :
+                    getAdapter.getFileContents(__url, remoteFilename);
             }
 
         };

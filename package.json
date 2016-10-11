@@ -29,7 +29,10 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "directory-exists": "^1.0.1",
+    "file-exists": "^2.0.0",
     "jsDAV": "^0.3.4",
-    "mocha": "^3.1.0"
+    "mocha": "^3.1.0",
+    "rimraf": "^2.5.4"
   }
 }
