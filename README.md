@@ -51,8 +51,8 @@ client
 
 The returned value is a Promise, which resolves with an array of [item stat objects](#item-stat).
 
-#### getFileContents(remotePath)
-Get the contents of the file at `remotePath` as a `Buffer`.
+#### getFileContents(remotePath, format)
+Get the contents of the file at `remotePath` as a `Buffer` or `String`. `format` can either be "binary" or "text", where "binary" is default.
 
 ```js
 var fs = require("fs");
@@ -67,12 +67,11 @@ client
     });
 ```
 
-#### getTextContents(remotePath)
-Get the text content of a file at `remotePath`.
+Or with text:
 
 ```js
 client
-    .getFileContents("/doc.txt")
+    .getFileContents("/doc.txt", "text")
     .then(function(text) {
         console.log(text);
     })
