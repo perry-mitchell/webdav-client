@@ -38,6 +38,9 @@ These methods can be called on the object returned from the main factory.
 #### createDirectory(remotePath)
 Create a new directory at the remote path.
 
+#### deleteFile(remotePath)
+Delete a file or directory at `remotePath`.
+
 #### getDirectoryContents(remotePath)
 Get an array of items within a directory. `remotePath` is a string that begins with a forward-slash and indicates the remote directory to get the contents of.
 
@@ -83,20 +86,20 @@ client
     });
 ```
 
-#### move(remotePath, targetPath)
+#### moveFile(remotePath, targetPath)
 Move a file or directory from `remotePath` to `targetPath`.
 
 ```js
 // Move a directory
 client
-    .move("/some-dir", "/storage/moved-dir")
+    .moveFile("/some-dir", "/storage/moved-dir")
     .catch(function(err) {
         console.error(err);
     });
 
 // Rename a file
 client
-    .move("/images/pic.jpg", "/images/profile.jpg")
+    .moveFile("/images/pic.jpg", "/images/profile.jpg")
     .catch(function(err) {
         console.error(err);
     });
