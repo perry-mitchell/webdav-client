@@ -12,7 +12,8 @@ var createServer = require(__dirname + "/../resources/webdav-server.js"),
 
 var TARGET_DIR = path.resolve(__dirname, "../resources/webdav_testing_files/testdir"),
     TARGET_FILE = path.resolve(__dirname, "../resources/webdav_testing_files/gem2.png"),
-    TARGET_FILE_ORIGINAL = TARGET_FILE.replace("gem2.png", "gem.png");
+    TARGET_FILE_ORIGINAL = TARGET_FILE.replace("gem2.png", "gem.png"),
+    TARGET_TEXT_FILE = path.resolve(__dirname, "../resources/webdav_testing_files/written.txt");
 
 describe("adapter:put", function() {
 
@@ -28,6 +29,9 @@ describe("adapter:put", function() {
         }
         if (fileExists(TARGET_FILE)) {
             rimraf(TARGET_FILE);
+        }
+        if (fileExists(TARGET_TEXT_FILE)) {
+            rimraf(TARGET_TEXT_FILE);
         }
     });
 
@@ -70,6 +74,27 @@ describe("adapter:put", function() {
                     .then(resolve)
                     .catch(reject);
             });
+        });
+
+    });
+
+    describe("putTextContents", function() {
+
+        before(function() {
+            if (fileExists(TARGET_TEXT_FILE)) {
+                throw new Error("Testing file existed when it shouldn't have");
+            }
+        });
+
+        it("puts the text file correctly in the remote directory", function() {
+            var text = " This is the first line, \n" +
+                "and this is the second.\n";
+            return putAdapter
+                .putTextContents("http://localhost:9999", "/written.txt", text)
+                .then(function() {
+                    var readText = fs.readFileSync(TARGET_TEXT_FILE, "utf8");
+                    expect(readText === text).to.be.true;
+                });
         });
 
     });

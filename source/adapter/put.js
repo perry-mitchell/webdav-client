@@ -17,6 +17,17 @@ module.exports = {
             },
             body: data
         });
+    },
+
+    putTextContents: function putTextContents(url, filePath, text) {
+        return fetch(url + filePath, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "text/plain",
+                "Content-Length": text.length
+            },
+            body: text
+        });
     }
 
 };

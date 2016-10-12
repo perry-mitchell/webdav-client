@@ -80,6 +80,32 @@ client
     });
 ```
 
+#### putFileContents(remotePath, format, data)
+Put some data in a remote file at `remotePath` from a `Buffer` or `String`. `format` can be either "binary" or "text". `data` is a `Buffer` or a `String`.
+
+```js
+var fs = require("fs");
+
+var imageData = fs.readFileSync("someImage.jpg");
+
+client
+    .putFileContents("/folder/myImage.jpg", "binary", imageData)
+    .then(function(imageData) {
+        fs.writeFileSync("./myImage.jpg", imageData);
+    })
+    .catch(function(err) {
+        console.error(err);
+    });
+```
+
+```js
+client
+    .putFileContents("/example.txt", "text", "some text")
+    .catch(function(err) {
+        console.error(err);
+    });
+```
+
 ### Returned data structures
 
 #### Item stat
