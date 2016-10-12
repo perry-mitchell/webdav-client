@@ -35,6 +35,9 @@ Each method returns a `Promise`.
 ### Adapter methods
 These methods can be called on the object returned from the main factory.
 
+#### createDirectory(remotePath)
+Create a new directory at the remote path.
+
 #### getDirectoryContents(remotePath)
 Get an array of items within a directory. `remotePath` is a string that begins with a forward-slash and indicates the remote directory to get the contents of.
 
