@@ -39,7 +39,7 @@ describe("adapter:alter", function() {
             if (fileExists(MOVED_TARGET)) {
                 throw new Error("Testing file existed when it shouldn't have");
             }
-            let buffer = fs.readFileSync(TARGET_FILE);
+            var buffer = fs.readFileSync(TARGET_FILE);
             fs.writeFileSync(MOVE_TARGET, buffer);
         });
 
@@ -70,7 +70,7 @@ describe("adapter:alter", function() {
             if (fileExists(MOVED_TARGET)) {
                 throw new Error("Testing file existed when it shouldn't have");
             }
-            let buffer = fs.readFileSync(TARGET_FILE);
+            var buffer = fs.readFileSync(TARGET_FILE);
             fs.writeFileSync(MOVE_TARGET, buffer);
         });
 
