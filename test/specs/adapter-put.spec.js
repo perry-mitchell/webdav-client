@@ -14,7 +14,7 @@ var TARGET_DIR = path.resolve(__dirname, "../resources/webdav_testing_files/test
     TARGET_FILE = path.resolve(__dirname, "../resources/webdav_testing_files/gem2.png"),
     TARGET_FILE_ORIGINAL = TARGET_FILE.replace("gem2.png", "gem.png");
 
-describe("adapter:get", function() {
+describe("adapter:put", function() {
 
     beforeEach(function(done) {
         this.server = createServer();
