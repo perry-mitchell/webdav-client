@@ -1,6 +1,7 @@
 var urlTools = require("./url.js"),
     getAdapter = require("./adapter/get.js"),
-    putAdapter = require("./adapter/put.js")
+    putAdapter = require("./adapter/put.js"),
+    alterAdapter = require("./adapter/alter.js");
 
 module.exports = {
 
@@ -26,6 +27,10 @@ module.exports = {
                 return (format === "text") ?
                     getAdapter.getTextContents(__url, remoteFilename) :
                     getAdapter.getFileContents(__url, remoteFilename);
+            },
+
+            move: function move(remotePath, targetRemotePath) {
+                return alterAdapter.move(__url, remotePath, targetRemotePath);
             },
 
             putFileContents: function putFileContents(remoteFilename, format, data) {

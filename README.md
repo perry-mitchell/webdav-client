@@ -83,6 +83,25 @@ client
     });
 ```
 
+#### move(remotePath, targetPath)
+Move a file or directory from `remotePath` to `targetPath`.
+
+```js
+// Move a directory
+client
+    .move("/some-dir", "/storage/moved-dir")
+    .catch(function(err) {
+        console.error(err);
+    });
+
+// Rename a file
+client
+    .move("/images/pic.jpg", "/images/profile.jpg")
+    .catch(function(err) {
+        console.error(err);
+    });
+```
+
 #### putFileContents(remotePath, format, data)
 Put some data in a remote file at `remotePath` from a `Buffer` or `String`. `format` can be either "binary" or "text". `data` is a `Buffer` or a `String`.
 
