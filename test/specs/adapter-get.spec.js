@@ -3,6 +3,8 @@ var expect = require("chai").expect;
 var createServer = require(__dirname + "/../resources/webdav-server.js"),
     getAdapter = require(__dirname + "/../../source/adapter/get.js");
 
+var SERVER_URL = "http://localhost:9999";
+
 describe("adapter:get", function() {
 
     beforeEach(function(done) {
@@ -18,7 +20,7 @@ describe("adapter:get", function() {
 
         it("gets all objects in directory", function() {
             return getAdapter
-                .getDirectoryContents("http://localhost:9999", "/")
+                .getDirectoryContents(SERVER_URL, "/")
                 .then(function(contents) {
                     expect(contents.length).to.equal(2);
                 });
@@ -26,7 +28,7 @@ describe("adapter:get", function() {
 
         it("gets objects in correct form", function() {
             return getAdapter
-                .getDirectoryContents("http://localhost:9999", "/")
+                .getDirectoryContents(SERVER_URL, "/")
                 .then(function(contents) {
                     contents.forEach(function(item) {
                         expect(item.filename.length).to.be.above(0);
@@ -50,10 +52,22 @@ describe("adapter:get", function() {
 
         it("gets contents of a remote file", function() {
             return getAdapter
-                .getFileContents("http://localhost:9999", "/gem.png")
+                .getFileContents(SERVER_URL, "/gem.png")
                 .then(function(contents) {
                     expect(contents.length).to.equal(279);
                     expect(contents instanceof Buffer).to.be.true;
+                });
+        });
+
+    });
+
+    describe("getStat", function() {
+
+        it("stats files", function() {
+            return getAdapter
+                .getStat(SERVER_URL, "/test.txt")
+                .then(function(stat) {
+                    console.log(stat);
                 });
         });
 
@@ -63,7 +77,7 @@ describe("adapter:get", function() {
 
         it("gets contents of a remote file", function() {
             return getAdapter
-                .getTextContents("http://localhost:9999", "/test.txt")
+                .getTextContents(SERVER_URL, "/test.txt")
                 .then(function(contents) {
                     var numLines = contents.trim().split("\n").length;
                     expect(numLines).to.equal(3);
