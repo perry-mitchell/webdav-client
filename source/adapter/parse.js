@@ -18,6 +18,10 @@ function filterItemsByDepth(items) {
     });
 }
 
+function parseMIME(mimeStr) {
+    return mimeStr.split(";").shift();
+}
+
 function processDirectoryResult(dirPath, dirResult, targetOnly) {
     var items = [],
         responseItems = [],
@@ -67,7 +71,7 @@ function processDirectoryResult(dirPath, dirResult, targetOnly) {
             },
             mime = processXMLStringValue(propsBro.iCanHaz1("d:getcontenttype", "D:getcontenttype"));
         if (mime) {
-            item.mime = mime;
+            item.mime = parseMIME(mime);
         }
         items.push(item);
     });

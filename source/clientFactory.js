@@ -45,6 +45,10 @@ module.exports = {
                 return (format === "text") ?
                     getAdapter.putTextContents(__url, remoteFilename, data) :
                     getAdapter.putFileContents(__url, remoteFilename, data);
+            },
+
+            stat: function stat(remotePath) {
+                return getAdapter.getStat(__url, remotePath);
             }
 
         };
