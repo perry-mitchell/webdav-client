@@ -21,7 +21,9 @@ module.exports = {
                 return res.text();
             })
             .then(function(body) {
-                var parser = new xml2js.Parser();
+                var parser = new xml2js.Parser({
+                    ignoreAttrs: true
+                });
                 return new Promise(function(resolve, reject) {
                     parser.parseString(body, function (err, result) {
                         if (err) {
@@ -52,7 +54,9 @@ module.exports = {
                 return res.text();
             })
             .then(function(body) {
-                var parser = new xml2js.Parser();
+                var parser = new xml2js.Parser({
+                    ignoreAttrs: true
+                });
                 return new Promise(function(resolve, reject) {
                     parser.parseString(body, function (err, result) {
                         if (err) {

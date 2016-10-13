@@ -131,6 +131,9 @@ client
     });
 ```
 
+#### stat(remotePath)
+Get the stat properties of a remote file or directory at `remotePath`. Resolved object is a [item stat object](#item-stat).
+
 ### Returned data structures
 
 #### Item stat
