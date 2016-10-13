@@ -43,8 +43,8 @@ module.exports = {
                     throw new Error("Unknown format");
                 }
                 return (format === "text") ?
-                    getAdapter.putTextContents(__url, remoteFilename, data) :
-                    getAdapter.putFileContents(__url, remoteFilename, data);
+                    putAdapter.putTextContents(__url, remoteFilename, data) :
+                    putAdapter.putFileContents(__url, remoteFilename, data);
             },
 
             stat: function stat(remotePath) {

@@ -12,7 +12,7 @@ module.exports = {
         return fetch(url + filePath, {
             method: "MOVE",
             headers: {
-                Destination: targetFilePath
+                Destination: url + targetFilePath
             }
         });
     }

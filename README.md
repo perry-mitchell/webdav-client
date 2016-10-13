@@ -115,9 +115,6 @@ var imageData = fs.readFileSync("someImage.jpg");
 
 client
     .putFileContents("/folder/myImage.jpg", "binary", imageData)
-    .then(function(imageData) {
-        fs.writeFileSync("./myImage.jpg", imageData);
-    })
     .catch(function(err) {
         console.error(err);
     });
