@@ -1,7 +1,8 @@
 var fetch = require("node-fetch"),
     xml2js = require("xml2js");
 
-var parsing = require("./parse.js");
+var parsing = require("./parse.js"),
+    responseHandlers = require("./response.js");
 
 module.exports = {
 
@@ -17,6 +18,7 @@ module.exports = {
                     }
                 }
             )
+            .then(responseHandlers.handleResponseCode)
             .then(function(res) {
                 return res.text();
             })
@@ -38,6 +40,7 @@ module.exports = {
 
     getFileContents: function getFileContents(url, filePath) {
         return fetch(url + filePath)
+            .then(responseHandlers.handleResponseCode)
             .then(function(res) {
                 return res.buffer();
             });
@@ -50,6 +53,7 @@ module.exports = {
                     Depth: 1
                 }
             })
+            .then(responseHandlers.handleResponseCode)
             .then(function(res) {
                 return res.text();
             })
@@ -75,6 +79,7 @@ module.exports = {
 
     getTextContents: function getTextContents(url, filePath) {
         return fetch(url + filePath)
+            .then(responseHandlers.handleResponseCode)
             .then(function(res) {
                 return res.text();
             });
