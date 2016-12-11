@@ -11,13 +11,14 @@ module.exports = {
             .then(responseHandlers.handleResponseCode);
     },
 
-    putFileContents: function putFileContents(url, filePath, data) {
+    putFileContents: function putFileContents(url, filePath, data, options) {
+        //Set default headers
+        options.headers["Content-Type"] = "application/octet-stream";
+        options.headers["Content-Length"] = data.length;
+
         return fetch(url + filePath, {
                 method: "PUT",
-                headers: {
-                    "Content-Type": "application/octet-stream",
-                    "Content-Length": data.length
-                },
+                headers: options.headers,
                 body: data
             })
             .then(responseHandlers.handleResponseCode);
