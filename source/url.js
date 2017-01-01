@@ -6,7 +6,7 @@ module.exports = {
         return (username && username.length > 0) ?
             url.replace(
                 /(https?:\/\/)/i,
-                "$1" + queryString.escape(username) + ":" + queryString.escape(password) + "@"
+                "$1" + queryString.stringify(username) + ":" + queryString.stringify(password) + "@"
             ) : url;
     },
 
