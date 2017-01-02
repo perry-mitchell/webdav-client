@@ -37,14 +37,15 @@ module.exports = {
                 return alterAdapter.moveItem(__url, remotePath, targetRemotePath);
             },
 
-            putFileContents: function putFileContents(remoteFilename, format, data) {
+            putFileContents: function putFileContents(remoteFilename, format, data, overwriteIfFileExists) {
+                overwriteIfFileExists = (typeof overwriteIfFileExists !== "undefined") ? overwriteIfFileExists : true;
                 format = format || "binary";
                 if (["binary", "text"].indexOf(format) < 0) {
                     throw new Error("Unknown format");
                 }
                 return (format === "text") ?
-                    putAdapter.putTextContents(__url, remoteFilename, data) :
-                    putAdapter.putFileContents(__url, remoteFilename, data);
+                    putAdapter.putTextContents(__url, remoteFilename, data, overwriteIfFileExists) :
+                    putAdapter.putFileContents(__url, remoteFilename, data, overwriteIfFileExists);
             },
 
             stat: function stat(remotePath) {

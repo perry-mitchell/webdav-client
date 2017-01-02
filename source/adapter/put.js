@@ -11,25 +11,31 @@ module.exports = {
             .then(responseHandlers.handleResponseCode);
     },
 
-    putFileContents: function putFileContents(url, filePath, data) {
+   putFileContents: function putFileContents(url, filePath, data, overwriteIfFileExists) {
+        overwriteIfFileExists = (typeof overwriteIfFileExists !== "undefined") ? overwriteIfFileExists : true;
+        var headersObj = { 
+                    "Content-Type": "application/octet-stream",
+                    "Content-Length": data.length 
+                };
+        Object.assign(headersObj, (!overwriteIfFileExists) ? { "If-None-Match": "*" } : null);
         return fetch(url + filePath, {
                 method: "PUT",
-                headers: {
-                    "Content-Type": "application/octet-stream",
-                    "Content-Length": data.length
-                },
+                headers: headersObj,
                 body: data
             })
             .then(responseHandlers.handleResponseCode);
     },
 
-    putTextContents: function putTextContents(url, filePath, text) {
+    putTextContents: function putTextContents(url, filePath, text, overwriteIfFileExists) {
+        overwriteIfFileExists = (typeof overwriteIfFileExists !== "undefined") ? overwriteIfFileExists : true;
+        var headersObj = { 
+                    "Content-Type": "application/octet-stream",
+                    "Content-Length": text.length 
+                };
+        Object.assign(headersObj, (!overwriteIfFileExists) ? { "If-None-Match": "*" } : null);
         return fetch(url + filePath, {
                 method: "PUT",
-                headers: {
-                    "Content-Type": "text/plain",
-                    "Content-Length": text.length
-                },
+                headers: headersObj,
                 body: text
             })
             .then(responseHandlers.handleResponseCode);
