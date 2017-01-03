@@ -107,8 +107,8 @@ client
     });
 ```
 
-#### putFileContents(remotePath, format, data, options)
-Put some data in a remote file at `remotePath` from a `Buffer` or `String`. `format` can be either "binary" or "text". `data` is a `Buffer` or a `String`. If `option.overwrite` is set to false, server should abort put if `remotePath` is already existing (default is to overwrite).
+#### putFileContents(remotePath, format, data, _options_)
+Put some data in a remote file at `remotePath` from a `Buffer` or `String`. `format` can be either "binary" or "text". `data` is a `Buffer` or a `String`.
 
 ```js
 var fs = require("fs");
@@ -129,6 +129,19 @@ client
         console.error(err);
     });
 ```
+
+`options`, which is **optional**, can be set to an object like the following:
+
+```json
+{
+    "headers": {
+        "Content-Type": "application/octet-stream"
+    },
+    "overwrite": true
+}
+```
+
+> `options.overwrite` (default: `true`), if set to false, will add an additional header which tells the server to abort writing if the target already exists.
 
 #### stat(remotePath)
 Get the stat properties of a remote file or directory at `remotePath`. Resolved object is a [item stat object](#item-stat).

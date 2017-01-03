@@ -13,7 +13,8 @@ var createServer = require(__dirname + "/../resources/webdav-server.js"),
 var TARGET_DIR = path.resolve(__dirname, "../resources/webdav_testing_files/testdir"),
     TARGET_FILE = path.resolve(__dirname, "../resources/webdav_testing_files/gem2.png"),
     TARGET_FILE_ORIGINAL = TARGET_FILE.replace("gem2.png", "gem.png"),
-    TARGET_TEXT_FILE = path.resolve(__dirname, "../resources/webdav_testing_files/written.txt");
+    TARGET_TEXT_FILE = path.resolve(__dirname, "../resources/webdav_testing_files/written.txt"),
+    TARGET_TEXT_FILE_ORIGINAL = path.resolve(__dirname, "../resources/webdav_testing_files/test.txt")
 
 describe("adapter:put", function() {
 
@@ -74,6 +75,33 @@ describe("adapter:put", function() {
                     .then(resolve)
                     .catch(reject);
             });
+        });
+
+        it("doesn't overwrite if option set", function() {
+            var buff1 = fs.readFileSync(TARGET_FILE_ORIGINAL),
+                buff2 = fs.readFileSync(TARGET_TEXT_FILE_ORIGINAL);
+            return putAdapter
+                .putFileContents("http://localhost:9999", "/gem2.png", buff1)
+                .then(function() {
+                    return putAdapter.putFileContents(
+                        "http://localhost:9999",
+                        "/gem2.png",
+                        buff2,
+                        {
+                            overwrite: false
+                        }
+                    );
+                })
+                .then(
+                    function() {
+                        throw new Error("fetch should throw an error");
+                    },
+                    function(err) {
+                        var newBuff = fs.readFileSync(TARGET_FILE);
+                        expect(buff1.equals(newBuff)).to.be.true;
+                        expect(newBuff.length).to.equal(279); // size of first write
+                    }
+                );
         });
 
     });

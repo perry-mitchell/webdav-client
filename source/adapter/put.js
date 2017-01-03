@@ -1,6 +1,16 @@
 var fetch = require("node-fetch");
+var deepmerge = require("deepmerge");
 
 var responseHandlers = require("./response.js");
+
+function getPutContentsDefaults() {
+    return {
+        headers: {
+            "Content-Type": "application/octet-stream"
+        },
+        overwrite: true
+    };
+}
 
 module.exports = {
 
@@ -11,37 +21,35 @@ module.exports = {
             .then(responseHandlers.handleResponseCode);
     },
 
-   putFileContents: function putFileContents(url, filePath, data, options) {
-        var headersObj = { 
-                    "Content-Type": "application/octet-stream",
-                    "Content-Length": data.length 
-        };
-        if(typeof options !== "undefined"){
-            if (options.overwrite === false) {
-                Object.assign(headersObj, (!overwriteIfFileExists) ? { "If-None-Match": "*" } : null);
-            }
+    putFileContents: function putFileContents(url, filePath, data, options) {
+        options = deepmerge.all([
+            getPutContentsDefaults(),
+            { headers: { "Content-Length": data.length } },
+            options || {}
+        ]);
+        if (options.overwrite === false) {
+            options.headers["If-None-Match"] = "*";
         }
         return fetch(url + filePath, {
                 method: "PUT",
-                headers: headersObj,
+                headers: options.headers,
                 body: data
             })
             .then(responseHandlers.handleResponseCode);
     },
 
     putTextContents: function putTextContents(url, filePath, text, options) {
-        var headersObj = { 
-                    "Content-Type": "application/octet-stream",
-                    "Content-Length": text.length 
-                };
-        if(typeof options !== "undefined"){
-            if (options.overwrite === false) {
-                Object.assign(headersObj, (!overwriteIfFileExists) ? { "If-None-Match": "*" } : null);
-            }
+        options = deepmerge.all([
+            getPutContentsDefaults(),
+            { headers: { "Content-Length": text.length } },
+            options || {}
+        ]);
+        if (options.overwrite === false) {
+            options.headers["If-None-Match"] = "*";
         }
         return fetch(url + filePath, {
                 method: "PUT",
-                headers: headersObj,
+                headers: options.headers,
                 body: text
             })
             .then(responseHandlers.handleResponseCode);
