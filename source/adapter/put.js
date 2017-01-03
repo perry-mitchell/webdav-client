@@ -11,25 +11,37 @@ module.exports = {
             .then(responseHandlers.handleResponseCode);
     },
 
-    putFileContents: function putFileContents(url, filePath, data) {
+   putFileContents: function putFileContents(url, filePath, data, options) {
+        var headersObj = { 
+                    "Content-Type": "application/octet-stream",
+                    "Content-Length": data.length 
+        };
+        if(typeof options !== "undefined"){
+            if (options.overwrite === false) {
+                Object.assign(headersObj, (!overwriteIfFileExists) ? { "If-None-Match": "*" } : null);
+            }
+        }
         return fetch(url + filePath, {
                 method: "PUT",
-                headers: {
-                    "Content-Type": "application/octet-stream",
-                    "Content-Length": data.length
-                },
+                headers: headersObj,
                 body: data
             })
             .then(responseHandlers.handleResponseCode);
     },
 
-    putTextContents: function putTextContents(url, filePath, text) {
+    putTextContents: function putTextContents(url, filePath, text, options) {
+        var headersObj = { 
+                    "Content-Type": "application/octet-stream",
+                    "Content-Length": text.length 
+                };
+        if(typeof options !== "undefined"){
+            if (options.overwrite === false) {
+                Object.assign(headersObj, (!overwriteIfFileExists) ? { "If-None-Match": "*" } : null);
+            }
+        }
         return fetch(url + filePath, {
                 method: "PUT",
-                headers: {
-                    "Content-Type": "text/plain",
-                    "Content-Length": text.length
-                },
+                headers: headersObj,
                 body: text
             })
             .then(responseHandlers.handleResponseCode);

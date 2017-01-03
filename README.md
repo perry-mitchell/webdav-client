@@ -107,8 +107,8 @@ client
     });
 ```
 
-#### putFileContents(remotePath, format, data)
-Put some data in a remote file at `remotePath` from a `Buffer` or `String`. `format` can be either "binary" or "text". `data` is a `Buffer` or a `String`.
+#### putFileContents(remotePath, format, data, options)
+Put some data in a remote file at `remotePath` from a `Buffer` or `String`. `format` can be either "binary" or "text". `data` is a `Buffer` or a `String`. If `option.overwrite` is set to false, server should abort put if `remotePath` is already existing (default is to overwrite).
 
 ```js
 var fs = require("fs");
