@@ -38,7 +38,6 @@ module.exports = {
             },
 
             putFileContents: function putFileContents(remoteFilename, format, data, options) {
-                //overwriteIfFileExists = (typeof overwriteIfFileExists !== "undefined") ? overwriteIfFileExists : true;
                 format = format || "binary";
                 if (["binary", "text"].indexOf(format) < 0) {
                     throw new Error("Unknown format");
