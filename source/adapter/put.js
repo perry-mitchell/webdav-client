@@ -11,13 +11,16 @@ module.exports = {
             .then(responseHandlers.handleResponseCode);
     },
 
-   putFileContents: function putFileContents(url, filePath, data, overwriteIfFileExists) {
-        overwriteIfFileExists = (typeof overwriteIfFileExists !== "undefined") ? overwriteIfFileExists : true;
+   putFileContents: function putFileContents(url, filePath, data, options) {
         var headersObj = { 
                     "Content-Type": "application/octet-stream",
                     "Content-Length": data.length 
-                };
-        Object.assign(headersObj, (!overwriteIfFileExists) ? { "If-None-Match": "*" } : null);
+        };
+        if(typeof options !== "undefined"){
+            if (options.overwrite === false) {
+                Object.assign(headersObj, (!overwriteIfFileExists) ? { "If-None-Match": "*" } : null);
+            }
+        }
         return fetch(url + filePath, {
                 method: "PUT",
                 headers: headersObj,
@@ -26,13 +29,16 @@ module.exports = {
             .then(responseHandlers.handleResponseCode);
     },
 
-    putTextContents: function putTextContents(url, filePath, text, overwriteIfFileExists) {
-        overwriteIfFileExists = (typeof overwriteIfFileExists !== "undefined") ? overwriteIfFileExists : true;
+    putTextContents: function putTextContents(url, filePath, text, options) {
         var headersObj = { 
                     "Content-Type": "application/octet-stream",
                     "Content-Length": text.length 
                 };
-        Object.assign(headersObj, (!overwriteIfFileExists) ? { "If-None-Match": "*" } : null);
+        if(typeof options !== "undefined"){
+            if (options.overwrite === false) {
+                Object.assign(headersObj, (!overwriteIfFileExists) ? { "If-None-Match": "*" } : null);
+            }
+        }
         return fetch(url + filePath, {
                 method: "PUT",
                 headers: headersObj,
