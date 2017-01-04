@@ -76,12 +76,12 @@ describe("adapter:get", function() {
             return getAdapter
                 .getFileContents(SERVER_URL, "/gem.png", { returnFormat: "binary", returnHeaders: true })
                 .then(function(contentsAndHeaders) {
-                    expect(contentsAndHeaders instanceof Object).to.be.true;
+                    expect(contentsAndHeaders).to.be.a('Object');
                     expect(contentsAndHeaders.contents.length).to.equal(279);
                     expect(contentsAndHeaders.contents instanceof Buffer).to.be.true;
                     //headers
-                    expect(contentsAndHeaders.headers instanceof Object).to.be.true;
-                    expect(contentsAndHeaders.headers["content-length"] instanceof Array).to.be.true;
+                    expect(contentsAndHeaders.headers).to.be.a('Object');
+                    expect(contentsAndHeaders.headers["content-length"]).to.be.a('Array');
                     expect(contentsAndHeaders.headers.date).to.match(VALID_DATE);
                 });
         });
@@ -105,8 +105,8 @@ describe("adapter:get", function() {
                     var numLines = contentsAndHeaders.contents.trim().split("\n").length;
                     expect(numLines).to.equal(3);
                     //headers
-                    expect(contentsAndHeaders.headers instanceof Object).to.be.true;
-                    expect(contentsAndHeaders.headers["content-length"] instanceof Array).to.be.true;
+                    expect(contentsAndHeaders.headers).to.be.a('Object');
+                    expect(contentsAndHeaders.headers["content-length"]).to.be.a('Array');
                     expect(contentsAndHeaders.headers.date).to.match(VALID_DATE);
                 });
         });
@@ -115,6 +115,7 @@ describe("adapter:get", function() {
             return getAdapter
                 .getFileContents(SERVER_URL, "/test.json", { returnFormat: "json" })
                 .then(function(result) {
+                    expect(result).to.be.a('Object');
                     var contents = result.contents;
                     expect(contents.msg).to.equal('hallo');
                 });
