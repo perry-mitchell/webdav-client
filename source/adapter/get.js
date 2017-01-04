@@ -44,7 +44,7 @@ module.exports = {
             .then(function(res) {
                 return new Promise(function(resolve,reject){
                     res.buffer().then(function(fileContent){
-                        resolve({ contents: fileContent, headers: res.headers });
+                        resolve({ contents: fileContent, headers: res.headers._headers });
                     })
                 })
             });
@@ -102,7 +102,7 @@ module.exports = {
             .then(function(res) {
                 return new Promise(function(resolve,reject){
                     res.text().then(function(fileContent){
-                        resolve({ contents: fileContent, headers: res.headers });
+                        resolve({ contents: fileContent, headers: res.headers._headers });
                     })
                 })
             });
