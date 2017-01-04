@@ -29,7 +29,7 @@ module.exports = {
 
             getFileContents: function getFileContents(remoteFilename, format) {
                 var options = {
-                    returnFormat = format
+                    returnFormat: format
                 };
                 return getAdapter.getFileContents(__url, remoteFilename, options)
                         .then(function (resultObject){
