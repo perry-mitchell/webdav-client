@@ -23,25 +23,18 @@ module.exports = {
                 return getAdapter.getDirectoryContents(__url, remotePath);
             },
             
-            getFileContentsAndHeaders: function getFileContentsAndHeaders(remoteFilename, format){
-                format = format || "binary";
-                if (["binary", "text"].indexOf(format) < 0) {
-                    throw new Error("Unknown format");
-                }
-                return (format === "text") ?
-                    getAdapter.getTextContentsAndHeaders(__url, remoteFilename) :
-                    getAdapter.getFileContentsAndHeaders(__url, remoteFilename);
-
+            getFileContentsExtended: function getFileContentsExtended(remoteFilename, options){
+                return getAdapter.getFileContents(__url, remoteFilename, options);
             },
 
             getFileContents: function getFileContents(remoteFilename, format) {
-                format = format || "binary";
-                if (["binary", "text"].indexOf(format) < 0) {
-                    throw new Error("Unknown format");
-                }
-                return (format === "text") ?
-                    getAdapter.getTextContents(__url, remoteFilename) :
-                    getAdapter.getFileContents(__url, remoteFilename);
+                var options = {
+                    returnFormat = format
+                };
+                return getAdapter.getFileContents(__url, remoteFilename, options)
+                        .then(function (resultObject){
+                            return Promise.resolve(resultObject.contents);
+                        });
             },
 
             moveFile: function moveFile(remotePath, targetRemotePath) {
