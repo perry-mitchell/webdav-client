@@ -22,15 +22,22 @@ module.exports = {
             getDirectoryContents: function getDirectoryContents(remotePath) {
                 return getAdapter.getDirectoryContents(__url, remotePath);
             },
-
-            getFileContents: function getFileContents(remoteFilename, format) {
+            getFileContentsAndHeaders: function getFileContentsAndHeaders(remoteFilename, format){
                 format = format || "binary";
                 if (["binary", "text"].indexOf(format) < 0) {
                     throw new Error("Unknown format");
                 }
                 return (format === "text") ?
-                    getAdapter.getTextContents(__url, remoteFilename) :
-                    getAdapter.getFileContents(__url, remoteFilename);
+                    getAdapter.getTextContentsAndHeaders(__url, remoteFilename) :
+                    getAdapter.getFileContentsAndHeaders(__url, remoteFilename);
+
+            },
+            getFileContents: function getFileContents(remoteFilename, format) {
+                return module.exports.getFileContentsAndHeaders(remoteFilename,format)
+                .then(
+                    function(contentsAndHeaders){
+                        return Promise.resolve(contentsAndHeaders.contents);
+                    });
             },
 
             moveFile: function moveFile(remotePath, targetRemotePath) {

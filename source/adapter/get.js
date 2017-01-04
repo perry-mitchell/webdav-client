@@ -38,12 +38,31 @@ module.exports = {
             });
     },
 
-    getFileContents: function getFileContents(url, filePath) {
+    getFileContentsAndHeaders: function getFileContentsAndHeaders(url, filePath){
+        return fetch(url + filePath)
+            .then(responseHandlers.handleResponseCode)
+            .then(function(res) {
+                return new Promise(function(resolve,reject){
+                    res.buffer().then(function(fileContent){
+                        resolve({ contents: fileContent, headers: res.headers });
+                    })
+                })
+            });
+    }, 
+    /*getFileContents: function getFileContents(url, filePath) {
         return fetch(url + filePath)
             .then(responseHandlers.handleResponseCode)
             .then(function(res) {
                 return res.buffer();
             });
+    },*/
+
+    getFileContents: function getFileContents(url, filePath){
+        return module.exports.getFileContentsAndHeaders(url,filePath)
+                .then(
+                    function(contentsAndHeaders){
+                        return Promise.resolve(contentsAndHeaders.contents);
+                    });
     },
 
     getStat: function getStat(url, itemPath) {
@@ -77,12 +96,32 @@ module.exports = {
             });
     },
 
-    getTextContents: function getTextContents(url, filePath) {
+    getTextContentsAndHeaders: function getTextContentsAndHeaders(url, filePath){
+        return fetch(url + filePath)
+            .then(responseHandlers.handleResponseCode)
+            .then(function(res) {
+                return new Promise(function(resolve,reject){
+                    res.text().then(function(fileContent){
+                        resolve({ contents: fileContent, headers: res.headers });
+                    })
+                })
+            });
+    }, 
+
+    getTextContents: function getTextContents(url, filePath){
+        return module.exports.getTextContentsAndHeaders(url,filePath)
+                .then(
+                    function(contentsAndHeaders){
+                        return Promise.resolve(contentsAndHeaders.contents);
+                    });
+    }
+
+    /*getTextContents: function getTextContents(url, filePath) {
         return fetch(url + filePath)
             .then(responseHandlers.handleResponseCode)
             .then(function(res) {
                 return res.text();
             });
-    }
+    }*/
 
 };
