@@ -64,24 +64,46 @@ describe("adapter:get", function() {
 
         it("gets contents of a remote file", function() {
             return getAdapter
-                .getFileContents(SERVER_URL, "/gem.png")
-                .then(function(contents) {
+                .getFileContents(SERVER_URL, "/gem.png", { returnFormat: "binary" })
+                .then(function(result) {
+                    var contents = result.contents;
                     expect(contents.length).to.equal(279);
                     expect(contents instanceof Buffer).to.be.true;
                 });
         });
 
-    });
-
-    describe("getFileContentsAndHeaders", function() {
-
         it("gets contents of a remote file & corresponding headers", function() {
             return getAdapter
-                .getFileContentsAndHeaders(SERVER_URL, "/gem.png")
+                .getFileContents(SERVER_URL, "/gem.png", { returnFormat: "binary", returnHeaders: true })
                 .then(function(contentsAndHeaders) {
                     expect(contentsAndHeaders instanceof Object).to.be.true;
                     expect(contentsAndHeaders.contents.length).to.equal(279);
                     expect(contentsAndHeaders.contents instanceof Buffer).to.be.true;
+                    //headers
+                    expect(contentsAndHeaders.headers instanceof Object).to.be.true;
+                    expect(contentsAndHeaders.headers["content-length"] instanceof Array).to.be.true;
+                    expect(contentsAndHeaders.headers.date).to.match(VALID_DATE);
+                });
+        });
+
+        it("gets contents of a remote text file", function() {
+            return getAdapter
+                .getFileContents(SERVER_URL, "/test.txt", { returnFormat: "text" })
+                .then(function(result) {
+                    var contents = result.contents;
+                    var numLines = contents.trim().split("\n").length;
+                    expect(numLines).to.equal(3);
+                });
+        });
+
+        it("gets contents of a remote txt file & corresponding headers", function() {
+            return getAdapter
+                .getFileContents(SERVER_URL, "/test.txt", { returnFormat: "text", returnHeaders: true })
+                .then(function(contentsAndHeaders) {
+                    expect(contentsAndHeaders instanceof Object).to.be.true;
+                    //test contents
+                    var numLines = contentsAndHeaders.contents.trim().split("\n").length;
+                    expect(numLines).to.equal(3);
                     //headers
                     expect(contentsAndHeaders.headers instanceof Object).to.be.true;
                     expect(contentsAndHeaders.headers["content-length"] instanceof Array).to.be.true;
@@ -123,38 +145,6 @@ describe("adapter:get", function() {
                     expect(stat.lastmod).to.match(VALID_DATE);
                     expect(stat.size).to.equal(0);
                     expect(stat.mime).to.be.undefined;
-                });
-        });
-
-    });
-
-    describe("getTextContents", function() {
-
-        it("gets contents of a remote file", function() {
-            return getAdapter
-                .getTextContents(SERVER_URL, "/test.txt")
-                .then(function(contents) {
-                    var numLines = contents.trim().split("\n").length;
-                    expect(numLines).to.equal(3);
-                });
-        });
-
-    });
-
-    describe("getTextContentsAndHeaders", function() {
-
-        it("gets contents of a remote file & corresponding headers", function() {
-            return getAdapter
-                .getTextContentsAndHeaders(SERVER_URL, "/test.txt")
-                .then(function(contentsAndHeaders) {
-                    expect(contentsAndHeaders instanceof Object).to.be.true;
-                    //test contents
-                    var numLines = contentsAndHeaders.contents.trim().split("\n").length;
-                    expect(numLines).to.equal(3);
-                    //headers
-                    expect(contentsAndHeaders.headers instanceof Object).to.be.true;
-                    expect(contentsAndHeaders.headers["content-length"] instanceof Array).to.be.true;
-                    expect(contentsAndHeaders.headers.date).to.match(VALID_DATE);
                 });
         });
 
