@@ -33,7 +33,7 @@ describe("adapter:get", function() {
             return getAdapter
                 .getDirectoryContents(SERVER_URL, "/")
                 .then(function(contents) {
-                    expect(contents.length).to.equal(2);
+                    expect(contents.length).to.equal(3);
                 });
         });
 
@@ -108,6 +108,15 @@ describe("adapter:get", function() {
                     expect(contentsAndHeaders.headers instanceof Object).to.be.true;
                     expect(contentsAndHeaders.headers["content-length"] instanceof Array).to.be.true;
                     expect(contentsAndHeaders.headers.date).to.match(VALID_DATE);
+                });
+        });
+
+        it("gets contents of a remote json file", function() {
+            return getAdapter
+                .getFileContents(SERVER_URL, "/test.json", { returnFormat: "json" })
+                .then(function(result) {
+                    var contents = result.contents;
+                    expect(contents.msg).to.equal('hallo');
                 });
         });
 
