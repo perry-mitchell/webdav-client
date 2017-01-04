@@ -22,6 +22,7 @@ module.exports = {
             getDirectoryContents: function getDirectoryContents(remotePath) {
                 return getAdapter.getDirectoryContents(__url, remotePath);
             },
+            
             getFileContentsAndHeaders: function getFileContentsAndHeaders(remoteFilename, format){
                 format = format || "binary";
                 if (["binary", "text"].indexOf(format) < 0) {
@@ -32,6 +33,7 @@ module.exports = {
                     getAdapter.getFileContentsAndHeaders(__url, remoteFilename);
 
             },
+
             getFileContents: function getFileContents(remoteFilename, format) {
                 format = format || "binary";
                 if (["binary", "text"].indexOf(format) < 0) {
