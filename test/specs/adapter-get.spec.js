@@ -73,6 +73,24 @@ describe("adapter:get", function() {
 
     });
 
+    describe("getFileContentsAndHeaders", function() {
+
+        it("gets contents of a remote file & corresponding headers", function() {
+            return getAdapter
+                .getFileContentsAndHeaders(SERVER_URL, "/gem.png")
+                .then(function(contentsAndHeaders) {
+                    expect(contentsAndHeaders instanceof Object).to.be.true;
+                    expect(contentsAndHeaders.contents.length).to.equal(279);
+                    expect(contentsAndHeaders.contents instanceof Buffer).to.be.true;
+                    //headers
+                    expect(contentsAndHeaders.headers instanceof Object).to.be.true;
+                    expect(contentsAndHeaders.headers["content-length"] instanceof Array).to.be.true;
+                    expect(contentsAndHeaders.headers.date).to.match(VALID_DATE);
+                });
+        });
+
+    });
+
     describe("getStat", function() {
 
         afterEach(function() {
@@ -118,6 +136,25 @@ describe("adapter:get", function() {
                 .then(function(contents) {
                     var numLines = contents.trim().split("\n").length;
                     expect(numLines).to.equal(3);
+                });
+        });
+
+    });
+
+    describe("getTextContentsAndHeaders", function() {
+
+        it("gets contents of a remote file & corresponding headers", function() {
+            return getAdapter
+                .getTextContentsAndHeaders(SERVER_URL, "/test.txt")
+                .then(function(contentsAndHeaders) {
+                    expect(contentsAndHeaders instanceof Object).to.be.true;
+                    //test contents
+                    var numLines = contentsAndHeaders.contents.trim().split("\n").length;
+                    expect(numLines).to.equal(3);
+                    //headers
+                    expect(contentsAndHeaders.headers instanceof Object).to.be.true;
+                    expect(contentsAndHeaders.headers["content-length"] instanceof Array).to.be.true;
+                    expect(contentsAndHeaders.headers.date).to.match(VALID_DATE);
                 });
         });
 
