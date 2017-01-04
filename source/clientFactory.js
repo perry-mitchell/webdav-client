@@ -33,11 +33,13 @@ module.exports = {
 
             },
             getFileContents: function getFileContents(remoteFilename, format) {
-                return module.exports.getFileContentsAndHeaders(remoteFilename,format)
-                .then(
-                    function(contentsAndHeaders){
-                        return Promise.resolve(contentsAndHeaders.contents);
-                    });
+                format = format || "binary";
+                if (["binary", "text"].indexOf(format) < 0) {
+                    throw new Error("Unknown format");
+                }
+                return (format === "text") ?
+                    getAdapter.getTextContents(__url, remoteFilename) :
+                    getAdapter.getFileContents(__url, remoteFilename);
             },
 
             moveFile: function moveFile(remotePath, targetRemotePath) {
