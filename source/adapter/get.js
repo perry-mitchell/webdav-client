@@ -44,18 +44,11 @@ module.exports = {
             .then(function(res) {
                 return new Promise(function(resolve,reject){
                     res.buffer().then(function(fileContent){
-                        resolve({ contents: fileContent, headers: res.headers._headers });
+                        resolve({ contents: fileContent, headers: res.headers.raw() });
                     })
                 })
             });
     }, 
-    /*getFileContents: function getFileContents(url, filePath) {
-        return fetch(url + filePath)
-            .then(responseHandlers.handleResponseCode)
-            .then(function(res) {
-                return res.buffer();
-            });
-    },*/
 
     getFileContents: function getFileContents(url, filePath){
         return module.exports.getFileContentsAndHeaders(url,filePath)
@@ -102,7 +95,7 @@ module.exports = {
             .then(function(res) {
                 return new Promise(function(resolve,reject){
                     res.text().then(function(fileContent){
-                        resolve({ contents: fileContent, headers: res.headers._headers });
+                        resolve({ contents: fileContent, headers: res.headers.raw() });
                     })
                 })
             });
@@ -115,13 +108,5 @@ module.exports = {
                         return Promise.resolve(contentsAndHeaders.contents);
                     });
     }
-
-    /*getTextContents: function getTextContents(url, filePath) {
-        return fetch(url + filePath)
-            .then(responseHandlers.handleResponseCode)
-            .then(function(res) {
-                return res.text();
-            });
-    }*/
 
 };
