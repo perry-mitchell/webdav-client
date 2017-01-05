@@ -15,8 +15,8 @@ module.exports = {
                 return putAdapter.createDirectory(__url, dirPath);
             },
 
-            deleteFile: function deleteFile(remotePath) {
-                return alterAdapter.deleteItem(__url, remotePath);
+            deleteFile: function deleteFile(remotePath, options) {
+                return alterAdapter.deleteItem(__url, remotePath, options);
             },
 
             getDirectoryContents: function getDirectoryContents(remotePath) {
@@ -37,8 +37,8 @@ module.exports = {
                         });
             },
 
-            moveFile: function moveFile(remotePath, targetRemotePath) {
-                return alterAdapter.moveItem(__url, remotePath, targetRemotePath);
+            moveFile: function moveFile(remotePath, targetRemotePath, options) {
+                return alterAdapter.moveItem(__url, remotePath, targetRemotePath, options);
             },
 
             putFileContents: function putFileContents(remoteFilename, format, data, options) {
