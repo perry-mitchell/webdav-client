@@ -59,7 +59,7 @@ function processDirectoryResult(dirPath, dirResult, targetOnly) {
             // skip self or only self
             return;
         }
-        filename = path.posix.normalize("/" + filename);
+        filename = tieFilenameToRoot(filename);
         var item = {
                 filename: filename,
                 basename: path.basename(filename),
@@ -104,6 +104,14 @@ function processXMLStringValue(xmlVal) {
         return xmlVal;
     }
     return "";
+}
+
+function tieFilenameToRoot(filename) {
+    if (path && path.posix) {
+        return path.posix.normalize("/" + filename);
+    }
+    // for when posix isn't available (web-packaged builds)
+    return path.normalize("/" + filename);
 }
 
 module.exports = {
