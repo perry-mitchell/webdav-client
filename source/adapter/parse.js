@@ -59,7 +59,7 @@ function processDirectoryResult(dirPath, dirResult, targetOnly) {
             // skip self or only self
             return;
         }
-        filename = "/" + filename;
+        filename = path.posix.normalize("/" + filename);
         var item = {
                 filename: filename,
                 basename: path.basename(filename),
