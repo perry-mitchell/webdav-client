@@ -1,5 +1,4 @@
-var querystring = require("querystring"),
-    path = require("path");
+var path = require("path");
 
 var Bro = require("../brototype.js"),
     urlTools = require("../url.js");
@@ -38,7 +37,7 @@ function processDirectoryResult(dirPath, dirResult, targetOnly) {
             propstatBro = Bro(responseBro.iCanHaz1("d:propstat.0", "D:propstat.0")),
             props = propstatBro.iCanHaz1("d:prop.0", "D:prop.0"),
             propsBro = Bro(props);
-        var sanitisedFilePath = querystring.unescape(processXMLStringValue(responseBro.iCanHaz1("d:href", "D:href"))),
+        var sanitisedFilePath = decodeURIComponent(processXMLStringValue(responseBro.iCanHaz1("d:href", "D:href"))),
             serverDepth = sanitisedFilePath
                 .split("/")
                 .filter(function(item) {
