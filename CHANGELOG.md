@@ -1,5 +1,10 @@
 # WebDAV-client changelog
 
+## 0.3.0
+_2017-01-18_
+
+ * Remove node querystring calls for downstream compat
+
 ## 0.2.0
 _2017-01-03_
 
