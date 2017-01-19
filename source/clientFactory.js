@@ -15,26 +15,30 @@ module.exports = {
                 return putAdapter.createDirectory(__url, dirPath);
             },
 
-            deleteFile: function deleteFile(remotePath) {
-                return alterAdapter.deleteItem(__url, remotePath);
+            deleteFile: function deleteFile(remotePath, options) {
+                return alterAdapter.deleteItem(__url, remotePath, options);
             },
 
             getDirectoryContents: function getDirectoryContents(remotePath) {
                 return getAdapter.getDirectoryContents(__url, remotePath);
             },
-
-            getFileContents: function getFileContents(remoteFilename, format) {
-                format = format || "binary";
-                if (["binary", "text"].indexOf(format) < 0) {
-                    throw new Error("Unknown format");
-                }
-                return (format === "text") ?
-                    getAdapter.getTextContents(__url, remoteFilename) :
-                    getAdapter.getFileContents(__url, remoteFilename);
+            
+            getFileContentsExtended: function getFileContentsExtended(remoteFilename, options){
+                return getAdapter.getFileContents(__url, remoteFilename, options);
             },
 
-            moveFile: function moveFile(remotePath, targetRemotePath) {
-                return alterAdapter.moveItem(__url, remotePath, targetRemotePath);
+            getFileContents: function getFileContents(remoteFilename, format) {
+                var options = {
+                    returnFormat: format
+                };
+                return getAdapter.getFileContents(__url, remoteFilename, options)
+                        .then(function (resultObject){
+                            return Promise.resolve(resultObject.contents);
+                        });
+            },
+
+            moveFile: function moveFile(remotePath, targetRemotePath, options) {
+                return alterAdapter.moveItem(__url, remotePath, targetRemotePath, options);
             },
 
             putFileContents: function putFileContents(remoteFilename, format, data, options) {
