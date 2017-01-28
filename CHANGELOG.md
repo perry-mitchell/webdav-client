@@ -1,5 +1,13 @@
 # WebDAV-client changelog
 
+## 0.4.0
+_2017-01-29_
+
+ * Add `options` argument to all methods, allowing custom headers
+ * **(Breaking)**
+   * Move `format` arguments to `options` object
+   * Removed node 0.12 support
+
 ## 0.3.1
 _2017-01-18_
 
