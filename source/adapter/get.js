@@ -1,21 +1,26 @@
 var fetch = require("node-fetch"),
-    xml2js = require("xml2js");
+    xml2js = require("xml2js"),
+    deepmerge = require("deepmerge");
 
 var parsing = require("./parse.js"),
     responseHandlers = require("./response.js");
 
 module.exports = {
 
-    getDirectoryContents: function getDirectoryContents(url, dirPath) {
+    getDirectoryContents: function getDirectoryContents(url, dirPath, options) {
         dirPath = dirPath || "/";
+        options = options || { headers: {} };
         var fetchURL = url + dirPath;
         return fetch(
                 fetchURL,
                 {
                     method: "PROPFIND",
-                    headers: {
-                        Depth: 1
-                    }
+                    headers: deepmerge(
+                        {
+                            Depth: 1
+                        },
+                        options.headers
+                    )
                 }
             )
             .then(responseHandlers.handleResponseCode)
@@ -38,20 +43,28 @@ module.exports = {
             });
     },
 
-    getFileContents: function getFileContents(url, filePath) {
-        return fetch(url + filePath)
+    getFileContents: function getFileContents(url, filePath, options) {
+        options = options || { headers: {} };
+        return fetch(url + filePath, {
+                method: "GET",
+                headers: options.headers
+            })
             .then(responseHandlers.handleResponseCode)
             .then(function(res) {
                 return res.buffer();
             });
     },
 
-    getStat: function getStat(url, itemPath) {
+    getStat: function getStat(url, itemPath, options) {
+        options = options || { headers: {} };
         return fetch(url + itemPath, {
                 method: "PROPFIND",
-                headers: {
-                    Depth: 1
-                }
+                headers: deepmerge(
+                    {
+                        Depth: 1
+                    },
+                    options.headers
+                )
             })
             .then(responseHandlers.handleResponseCode)
             .then(function(res) {
@@ -77,8 +90,11 @@ module.exports = {
             });
     },
 
-    getTextContents: function getTextContents(url, filePath) {
-        return fetch(url + filePath)
+    getTextContents: function getTextContents(url, filePath, options) {
+        options = options || { headers: {} };
+        return fetch(url + filePath, {
+                headers: options.headers
+            })
             .then(responseHandlers.handleResponseCode)
             .then(function(res) {
                 return res.text();

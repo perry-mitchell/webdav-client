@@ -1,40 +1,68 @@
+var deepmerge = require("deepmerge");
+
 var urlTools = require("./url.js"),
     getAdapter = require("./adapter/get.js"),
     putAdapter = require("./adapter/put.js"),
-    alterAdapter = require("./adapter/alter.js");
+    alterAdapter = require("./adapter/alter.js"),
+    authTools = require("./auth.js");
 
 module.exports = {
 
     createClient: function(remoteURL, username, password) {
         var __url = urlTools.sanitiseBaseURL(remoteURL);
-        __url = urlTools.implantCredentials(__url, username, password);
+        var baseOptions = {
+            headers: {}
+        };
+        if (username && username.length > 0) {
+            baseOptions.headers.Authorization = authTools.generateAuthHeader(username, password);
+        }
 
         return {
 
-            createDirectory: function createDirectory(dirPath) {
-                return putAdapter.createDirectory(__url, dirPath);
+            createDirectory: function createDirectory(dirPath, options) {
+                var putOptions = deepmerge(
+                    baseOptions,
+                    options || {}
+                );
+                return putAdapter.createDirectory(__url, dirPath, putOptions);
             },
 
-            deleteFile: function deleteFile(remotePath) {
-                return alterAdapter.deleteItem(__url, remotePath);
+            deleteFile: function deleteFile(remotePath, options) {
+                var altOptions = deepmerge(
+                    baseOptions,
+                    options || {}
+                );
+                return alterAdapter.deleteItem(__url, remotePath, altOptions);
             },
 
-            getDirectoryContents: function getDirectoryContents(remotePath) {
-                return getAdapter.getDirectoryContents(__url, remotePath);
+            getDirectoryContents: function getDirectoryContents(remotePath, options) {
+                var getOptions = deepmerge(
+                    baseOptions,
+                    options || {}
+                );
+                return getAdapter.getDirectoryContents(__url, remotePath, getOptions);
             },
 
-            getFileContents: function getFileContents(remoteFilename, format) {
-                format = format || "binary";
-                if (["binary", "text"].indexOf(format) < 0) {
+            getFileContents: function getFileContents(remoteFilename, options) {
+                var getOptions = deepmerge(
+                    baseOptions,
+                    options || {}
+                );
+                getOptions.format = getOptions.format || "binary";
+                if (["binary", "text"].indexOf(getOptions.format) < 0) {
                     throw new Error("Unknown format");
                 }
-                return (format === "text") ?
-                    getAdapter.getTextContents(__url, remoteFilename) :
-                    getAdapter.getFileContents(__url, remoteFilename);
+                return (getOptions.format === "text") ?
+                    getAdapter.getTextContents(__url, remoteFilename, getOptions) :
+                    getAdapter.getFileContents(__url, remoteFilename, getOptions);
             },
 
-            moveFile: function moveFile(remotePath, targetRemotePath) {
-                return alterAdapter.moveItem(__url, remotePath, targetRemotePath);
+            moveFile: function moveFile(remotePath, targetRemotePath, options) {
+                var altOptions = deepmerge(
+                    baseOptions,
+                    options || {}
+                );
+                return alterAdapter.moveItem(__url, remotePath, targetRemotePath, altOptions);
             },
 
             putFileContents: function putFileContents(remoteFilename, format, data, options) {
@@ -47,8 +75,12 @@ module.exports = {
                     putAdapter.putFileContents(__url, remoteFilename, data, options);
             },
 
-            stat: function stat(remotePath) {
-                return getAdapter.getStat(__url, remotePath);
+            stat: function stat(remotePath, options) {
+                var getOptions = deepmerge(
+                    baseOptions,
+                    options || {}
+                );
+                return getAdapter.getStat(__url, remotePath, getOptions);
             }
 
         };
