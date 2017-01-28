@@ -11,7 +11,7 @@ This client was branched from [webdav-fs](https://github.com/perry-mitchell/webd
 This WebDAV client library is designed to provide an improved API for low-level WebDAV integration.
 
 ## Usage
-Usage is very simple - the main exported object is a factory to create adapter instances:
+Usage is very simple ([API](API.md)) - the main exported object is a factory to create adapter instances:
 
 ```js
 var createClient = require("webdav");

@@ -11,6 +11,10 @@
 <dl>
 <dt><a href="#ClientInterface">ClientInterface</a> : <code>Object</code></dt>
 <dd></dd>
+<dt><a href="#OptionsWithHeaders">OptionsWithHeaders</a> : <code>Object</code></dt>
+<dd></dd>
+<dt><a href="#OptionsHeadersAndFormat">OptionsHeadersAndFormat</a> : <code><a href="#OptionsWithHeaders">OptionsWithHeaders</a></code></dt>
+<dd></dd>
 </dl>
 
 <a name="createWebDAVClient"></a>
@@ -52,7 +56,7 @@ Create a directory
 | Param | Type | Description |
 | --- | --- | --- |
 | dirPath | <code>String</code> | The path to create |
-| [options] | <code>Object</code> | Options for the request |
+| [options] | <code>[OptionsWithHeaders](#OptionsWithHeaders)</code> | Options for the request |
 
 <a name="ClientInterface.deleteFile"></a>
 
@@ -65,7 +69,7 @@ Delete a remote file
 | Param | Type | Description |
 | --- | --- | --- |
 | remotePath | <code>String</code> | The remote path to delete |
-| [options] | <code>Object</code> | The options for the request |
+| [options] | <code>[OptionsWithHeaders](#OptionsWithHeaders)</code> | The options for the request |
 
 <a name="ClientInterface.getDirectoryContents"></a>
 
@@ -78,7 +82,7 @@ Get the contents of a remote directory
 | Param | Type | Description |
 | --- | --- | --- |
 | remotePath | <code>String</code> | The path to fetch the contents of |
-| [options] | <code>Object</code> | Options for the remote the request |
+| [options] | <code>[OptionsWithHeaders](#OptionsWithHeaders)</code> | Options for the remote the request |
 
 <a name="ClientInterface.getFileContents"></a>
 
@@ -91,7 +95,7 @@ Get the contents of a remote file
 | Param | Type | Description |
 | --- | --- | --- |
 | remoteFilename | <code>String</code> | The file to fetch |
-| [options] | <code>Object</code> | Options for the request |
+| [options] | <code>[OptionsHeadersAndFormat](#OptionsHeadersAndFormat)</code> | Options for the request |
 
 <a name="ClientInterface.moveFile"></a>
 
@@ -105,7 +109,7 @@ Move a remote item to another path
 | --- | --- | --- |
 | remotePath | <code>String</code> | The remote item path |
 | targetRemotePath | <code>String</code> | The new path after moving |
-| [options] | <code>Object</code> | Options for the request |
+| [options] | <code>[OptionsWithHeaders](#OptionsWithHeaders)</code> | Options for the request |
 
 <a name="ClientInterface.putFileContents"></a>
 
@@ -119,7 +123,7 @@ Write contents to a remote file path
 | --- | --- | --- |
 | remoteFilename | <code>String</code> | The path of the remote file |
 | data | <code>String</code> &#124; <code>Buffer</code> | The data to write |
-| [options] | <code>Object</code> | The options for the request |
+| [options] | <code>[OptionsHeadersAndFormat](#OptionsHeadersAndFormat)</code> | The options for the request |
 
 <a name="ClientInterface.stat"></a>
 
@@ -132,5 +136,25 @@ Stat a remote object
 | Param | Type | Description |
 | --- | --- | --- |
 | remotePath | <code>String</code> | The path of the item |
-| [options] | <code>Object</code> | Options for the request |
+| [options] | <code>[OptionsWithHeaders](#OptionsWithHeaders)</code> | Options for the request |
+
+<a name="OptionsWithHeaders"></a>
+
+## OptionsWithHeaders : <code>Object</code>
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| headers | <code>Object</code> | Optional headers to send with the request |
+
+<a name="OptionsHeadersAndFormat"></a>
+
+## OptionsHeadersAndFormat : <code>[OptionsWithHeaders](#OptionsWithHeaders)</code>
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| format | <code>String</code> | Format of request/response payload (binary/text) |
 

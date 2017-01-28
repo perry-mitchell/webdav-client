@@ -10,6 +10,16 @@ var urlTools = require("./url.js"),
  * @typedef {Object} ClientInterface
  */
 
+/**
+ * @typedef {Object} OptionsWithHeaders
+ * @property {Object} headers Optional headers to send with the request
+ */
+
+/**
+ * @typedef {OptionsWithHeaders} OptionsHeadersAndFormat
+ * @property {String} format Format of request/response payload (binary/text)
+ */
+
 module.exports = {
 
     /**
@@ -33,7 +43,7 @@ module.exports = {
             /**
              * Create a directory
              * @param {String} dirPath The path to create
-             * @param {Object=} options Options for the request
+             * @param {OptionsWithHeaders=} options Options for the request
              * @memberof ClientInterface
              * @returns {Promise} A promise that resolves when the remote path has been created
              */
@@ -48,7 +58,7 @@ module.exports = {
             /**
              * Delete a remote file
              * @param {String} remotePath The remote path to delete
-             * @param {Object=} options The options for the request
+             * @param {OptionsWithHeaders=} options The options for the request
              * @memberof ClientInterface
              * @returns {Promise} A promise that resolves when the remote file as been deleted
              */
@@ -63,7 +73,7 @@ module.exports = {
             /**
              * Get the contents of a remote directory
              * @param {String} remotePath The path to fetch the contents of
-             * @param {Object=} options Options for the remote the request
+             * @param {OptionsWithHeaders=} options Options for the remote the request
              * @returns {Promise.<Array>} A promise that resolves with an array of remote item stats
              * @memberof ClientInterface
              */
@@ -78,7 +88,7 @@ module.exports = {
             /**
              * Get the contents of a remote file
              * @param {String} remoteFilename The file to fetch
-             * @param {Object=} options Options for the request
+             * @param {OptionsHeadersAndFormat=} options Options for the request
              * @memberof ClientInterface
              * @returns {Promise.<Buffer|String>} A promise that resolves with the contents of the remote file
              */
@@ -100,7 +110,7 @@ module.exports = {
              * Move a remote item to another path
              * @param {String} remotePath The remote item path
              * @param {String} targetRemotePath The new path after moving
-             * @param {Object=} options Options for the request
+             * @param {OptionsWithHeaders=} options Options for the request
              * @memberof ClientInterface
              * @returns {Promise} A promise that resolves once the request has completed
              */
@@ -116,7 +126,7 @@ module.exports = {
              * Write contents to a remote file path
              * @param {String} remoteFilename The path of the remote file
              * @param {String|Buffer} data The data to write
-             * @param {Object=} options The options for the request
+             * @param {OptionsHeadersAndFormat=} options The options for the request
              * @returns {Promise} A promise that resolves once the contents have been written
              * @memberof ClientInterface
              */
@@ -134,7 +144,7 @@ module.exports = {
             /**
              * Stat a remote object
              * @param {String} remotePath The path of the item
-             * @param {Object=} options Options for the request
+             * @param {OptionsWithHeaders=} options Options for the request
              * @memberof ClientInterface
              * @returns {Promise.<Object>} A promise that resolves with the stat data
              */
