@@ -37,13 +37,13 @@ Each method returns a `Promise`.
 ### Adapter methods
 These methods can be called on the object returned from the main factory.
 
-#### createDirectory(remotePath_[, options]_)
+#### createDirectory(remotePath _[, options]_)
 Create a new directory at the remote path.
 
-#### deleteFile(remotePath_[, options]_)
+#### deleteFile(remotePath _[, options]_)
 Delete a file or directory at `remotePath`.
 
-#### getDirectoryContents(remotePath_[, options]_)
+#### getDirectoryContents(remotePath _[, options]_)
 Get an array of items within a directory. `remotePath` is a string that begins with a forward-slash and indicates the remote directory to get the contents of.
 
 ```js
@@ -59,7 +59,7 @@ client
 
 The returned value is a Promise, which resolves with an array of [item stat objects](#item-stat).
 
-#### getFileContents(remotePath, format_[, options]_)
+#### getFileContents(remotePath, format _[, options]_)
 Get the contents of the file at `remotePath` as a `Buffer` or `String`. `format` can either be "binary" or "text", where "binary" is default.
 
 ```js
@@ -88,7 +88,7 @@ client
     });
 ```
 
-#### moveFile(remotePath, targetPath_[, options]_)
+#### moveFile(remotePath, targetPath _[, options]_)
 Move a file or directory from `remotePath` to `targetPath`.
 
 ```js
@@ -107,7 +107,7 @@ client
     });
 ```
 
-#### putFileContents(remotePath, format, data_[, options]_)
+#### putFileContents(remotePath, format, data _[, options]_)
 Put some data in a remote file at `remotePath` from a `Buffer` or `String`. `data` is a `Buffer` or a `String`. `options` has a property called `format` which can be "binary" (default) or "text".
 
 ```js
@@ -144,7 +144,7 @@ client
 
 > `options.overwrite` (default: `true`), if set to false, will add an additional header which tells the server to abort writing if the target already exists.
 
-#### stat(remotePath_[, options]_)
+#### stat(remotePath _[, options]_)
 Get the stat properties of a remote file or directory at `remotePath`. Resolved object is a [item stat object](#item-stat).
 
 ### Returned data structures
