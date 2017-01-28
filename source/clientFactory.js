@@ -8,6 +8,13 @@ var urlTools = require("./url.js"),
 
 module.exports = {
 
+    /**
+     * Create a webdav client interface
+     * @param {String} remoteURL The target URL for the webdav server
+     * @param {String=} username The username for the remote account
+     * @param {String=} password The password for the remote account
+     * @returns {Object} The webdav interface
+     */
     createClient: function(remoteURL, username, password) {
         var __url = urlTools.sanitiseBaseURL(remoteURL);
         var baseOptions = {
