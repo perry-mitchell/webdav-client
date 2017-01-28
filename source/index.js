@@ -1,5 +1,14 @@
 var factory = require("./clientFactory.js");
 
-module.exports = function createWebDAVClient(remoteURL, username, password) {
+/**
+ * Create a webdav client interface
+ * @see createClient
+ * @returns {Object} The client interface
+ * @public
+ * @param {String} remoteURL The target URL
+ */
+function createWebDAVClient(remoteURL, username, password) {
     return factory.createClient(remoteURL, username, password);
 };
+
+module.exports = createWebDAVClient;

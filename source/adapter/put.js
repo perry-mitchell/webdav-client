@@ -14,9 +14,11 @@ function getPutContentsDefaults() {
 
 module.exports = {
 
-    createDirectory: function createDirectory(url, directoryPath) {
+    createDirectory: function createDirectory(url, directoryPath, options) {
+        options = options || { headers: {} };
         return fetch(url + directoryPath, {
-                method: "MKCOL"
+                method: "MKCOL",
+                headers: options.headers
             })
             .then(responseHandlers.handleResponseCode);
     },
