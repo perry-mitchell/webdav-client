@@ -131,14 +131,17 @@ module.exports = {
              * @memberof ClientInterface
              */
             putFileContents: function putFileContents(remoteFilename, data, options) {
-                options = options || {};
-                options.format = options.format || "binary";
-                if (["binary", "text"].indexOf(options.format) < 0) {
-                    throw new Error("Unknown format: " + options.format);
+                var putOptions = deepmerge(
+                    baseOptions,
+                    options || {}
+                );
+                putOptions.format = putOptions.format || "binary";
+                if (["binary", "text"].indexOf(putOptions.format) < 0) {
+                    throw new Error("Unknown format: " + putOptions.format);
                 }
-                return (options.format === "text") ?
-                    putAdapter.putTextContents(__url, remoteFilename, data, options) :
-                    putAdapter.putFileContents(__url, remoteFilename, data, options);
+                return (putOptions.format === "text") ?
+                    putAdapter.putTextContents(__url, remoteFilename, data, putOptions) :
+                    putAdapter.putFileContents(__url, remoteFilename, data, putOptions);
             },
 
             /**
