@@ -1,5 +1,10 @@
 # WebDAV-client changelog
 
+## 0.4.1
+_2017-02-04_
+
+ * Fix `putFileContents` authorisation bug
+
 ## 0.4.0
 _2017-01-29_
 
