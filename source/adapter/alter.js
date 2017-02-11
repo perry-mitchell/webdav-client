@@ -1,7 +1,7 @@
-var fetch = require("node-fetch"),
-    deepmerge = require("deepmerge");
+var deepmerge = require("deepmerge");
 
-var responseHandlers = require("./response.js");
+var responseHandlers = require("./response.js"),
+    fetch = require("./request.js");
 
 module.exports = {
 
