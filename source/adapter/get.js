@@ -1,8 +1,8 @@
-var fetch = require("node-fetch"),
-    xml2js = require("xml2js"),
+var xml2js = require("xml2js"),
     deepmerge = require("deepmerge");
 
-var parsing = require("./parse.js"),
+var fetch = require("./request.js"),
+    parsing = require("./parse.js"),
     responseHandlers = require("./response.js");
 
 module.exports = {
