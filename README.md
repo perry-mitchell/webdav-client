@@ -8,7 +8,7 @@ A WebDAV client written in JavaScript for NodeJS.
 ## About
 This client was branched from [webdav-fs](https://github.com/perry-mitchell/webdav-fs) as the core functionality deserved its own repository. As **webdav-fs**' API was designed to resemble NodeJS' fs API, little could be done to improve the adapter interface for regular use.
 
-This WebDAV client library is designed to provide an improved API for low-level WebDAV integration.
+This WebDAV client library is designed to provide an improved API for low-level WebDAV integration. This client uses `window.fetch` when available in the browser.
 
 ## Usage
 Usage is very simple ([API](API.md)) - the main exported object is a factory to create adapter instances:

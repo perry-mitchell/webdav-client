@@ -1,5 +1,10 @@
 # WebDAV-client changelog
 
+## 0.5.0
+_2017-02-11_
+
+ * Use `window.fetch` when available in browser
+
 ## 0.4.1
 _2017-02-04_
 
