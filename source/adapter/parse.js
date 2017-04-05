@@ -55,7 +55,6 @@ function processDirectoryResult(dirPath, dirResult, targetOnly) {
                     return (item.trim().length > 0);
                 })
                 .length;
-        // console.log(JSON.stringify(props, undefined, 4));
         var filename = processDirectoryResultFilename(
                 dirPath,
                 sanitisedFilePath       
