@@ -1,7 +1,21 @@
 var path = require("path");
+var _ = require("lodash");
 
-var Bro = require("../brototype.js"),
-    urlTools = require("../url.js");
+_.mixin({
+    getOne: function(object, keys) {
+        var val,
+            keysLen = keys.length;
+
+        for (var i = 0; i < keysLen; i += 1) {
+            val = _.get(object, keys[i]);
+            if (val !== undefined) {
+                return val;
+            }
+        }
+
+        return undefined;
+    }
+});
 
 function filterItemsByDepth(items) {
     var highestDepth = 0;
@@ -23,34 +37,30 @@ function parseMIME(mimeStr) {
 
 function processDirectoryResult(dirPath, dirResult, targetOnly) {
     var items = [],
-        responseItems = [],
-        dirResultBro = Bro(dirResult);
+        responseItems = [];
     if (targetOnly === undefined) {
         targetOnly = false;
     }
     try {
-        var multistatus = dirResultBro.iCanHaz1("d:multistatus", "D:multistatus");
-        responseItems = Bro(multistatus).iCanHaz1("d:response", "D:response") || [];
+        var multistatus = _.getOne(dirResult, ["d:multistatus", "D:multistatus", "multistatus"]);
+        responseItems = _.getOne(multistatus, ["d:response", "D:response", "response"]) || [];
     } catch (e) {}
     responseItems.forEach(function(responseItem) {
-        var responseBro = Bro(responseItem),
-            propstatBro = Bro(responseBro.iCanHaz1("d:propstat.0", "D:propstat.0")),
-            props = propstatBro.iCanHaz1("d:prop.0", "D:prop.0"),
-            propsBro = Bro(props);
-        var sanitisedFilePath = decodeURIComponent(processXMLStringValue(responseBro.iCanHaz1("d:href", "D:href"))),
+        var propstat = _.getOne(responseItem, ["d:propstat.0", "D:propstat.0", "propstat.0"]),
+            props = _.getOne(propstat, ["d:prop.0", "D:prop.0", "prop.0"]);
+        var sanitisedFilePath = decodeURIComponent(processXMLStringValue(_.getOne(responseItem, ["d:href", "D:href", "href"]))),
             serverDepth = sanitisedFilePath
                 .split("/")
                 .filter(function(item) {
                     return (item.trim().length > 0);
                 })
                 .length;
-        // console.log(JSON.stringify(props, undefined, 4));
         var filename = processDirectoryResultFilename(
                 dirPath,
                 sanitisedFilePath       
             ).trim(),
-            resourceType = processXMLStringValue(propsBro.iCanHaz1("lp1:resourcetype", "d:resourcetype", "D:resourcetype")),
-            itemType = (resourceType.indexOf("d:collection") >= 0 || resourceType.indexOf("D:collection") >= 0) ?
+            resourceType = processXMLStringValue(_.getOne(props, ["lp1:resourcetype", "d:resourcetype", "D:resourcetype", "resourcetype"])),
+            itemType = (resourceType.indexOf("d:collection") >= 0 || resourceType.indexOf("D:collection") >= 0 || resourceType.indexOf("collection") >= 0) ?
                 "directory" : "file";
         if (filename.length <= 0) {
             return;
@@ -63,12 +73,12 @@ function processDirectoryResult(dirPath, dirResult, targetOnly) {
         var item = {
                 filename: filename,
                 basename: path.basename(filename),
-                lastmod: processXMLStringValue(propsBro.iCanHaz1("lp1:getlastmodified", "d:getlastmodified", "D:getlastmodified")),
-                size: parseInt(processXMLStringValue(propsBro.iCanHaz1("lp1:getcontentlength", "d:getcontentlength", "D:getcontentlength")) || "0", 10),
+                lastmod: processXMLStringValue(_.getOne(props, ["lp1:getlastmodified", "d:getlastmodified", "D:getlastmodified", "getlastmodified"])),
+                size: parseInt(processXMLStringValue(_.getOne(props, ["lp1:getcontentlength", "d:getcontentlength", "D:getcontentlength", "getcontentlength"])) || "0", 10),
                 type: itemType,
                 _depth: serverDepth
             },
-            mime = processXMLStringValue(propsBro.iCanHaz1("d:getcontenttype", "D:getcontenttype"));
+            mime = processXMLStringValue(_.getOne(props, ["d:getcontenttype", "D:getcontenttype", "getcontenttype"]));
         if (mime) {
             item.mime = parseMIME(mime);
         }
