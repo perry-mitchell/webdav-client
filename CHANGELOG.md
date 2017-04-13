@@ -1,5 +1,11 @@
 # WebDAV-client changelog
 
+## 0.6.0
+_2017-04-13_
+
+ * Support for non-prefixed XML elements in WebDAV response
+ * HTTP status code for thrown exceptions
+
 ## 0.5.0
 _2017-02-11_
 
