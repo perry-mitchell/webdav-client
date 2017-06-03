@@ -4,8 +4,6 @@ var directoryExists = require("directory-exists").sync,
     rimraf = require("rimraf").sync,
     mkdir = require("mkdirp").sync;
 
-var expect = require("chai").expect;
-
 var createServer = require("../resources/webdav-server.js"),
     getAdapter = require("../../source/adapter/get.js"),
     authTools = require("../../source/auth.js");

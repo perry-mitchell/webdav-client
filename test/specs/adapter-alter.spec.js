@@ -1,12 +1,10 @@
 var path = require("path"),
     fs = require("fs");
 
-var fileExists = require("file-exists"),
+var fileExists = require("file-exists").sync,
     directoryExists = require("directory-exists").sync,
     rimraf = require("rimraf").sync,
     mkdir = require("mkdirp").sync;
-
-var expect = require("chai").expect;
 
 var createServer = require(__dirname + "/../resources/webdav-server.js"),
     alterAdapter = require(__dirname + "/../../source/adapter/alter.js");
