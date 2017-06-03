@@ -1,5 +1,10 @@
 # WebDAV-client changelog
 
+## 0.7.0
+_2017-06-03_
+
+ * Remove lodash (performance improvement)
+
 ## 0.6.0
 _2017-04-13_
 
