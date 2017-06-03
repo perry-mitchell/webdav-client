@@ -31,7 +31,7 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "directory-exists": "^1.0.1",
-    "file-exists": "^4.0.0",
+    "file-exists": "^2.0.0",
     "jsDAV": "^0.3.4",
     "jsdoc-to-markdown": "^2.0.1",
     "mkdirp": "^0.5.1",

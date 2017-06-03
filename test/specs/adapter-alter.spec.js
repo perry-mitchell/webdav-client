@@ -1,7 +1,7 @@
 var path = require("path"),
     fs = require("fs");
 
-var fileExists = require("file-exists").sync,
+var fileExists = require("file-exists"),
     directoryExists = require("directory-exists").sync,
     rimraf = require("rimraf").sync,
     mkdir = require("mkdirp").sync;
