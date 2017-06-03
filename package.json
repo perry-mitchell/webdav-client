@@ -5,7 +5,7 @@
   "main": "source/index.js",
   "scripts": {
     "generate:docs": "jsdoc2md 'source/**/*.js' > API.md",
-    "test": "find ./test/specs -name '*.spec.js' | xargs mocha -R spec"
+    "test": "mocha -r test/specs/index.js test/specs/**/*.spec.js"
   },
   "repository": {
     "type": "git",
@@ -25,7 +25,6 @@
   "homepage": "https://github.com/perry-mitchell/webdav-client#readme",
   "dependencies": {
     "deepmerge": "^1.3.1",
-    "lodash": "^4.17.4",
     "node-fetch": "^1.6.3",
     "xml2js": "^0.4.17"
   },

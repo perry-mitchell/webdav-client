@@ -5,8 +5,6 @@ var fileExists = require("file-exists"),
     directoryExists = require("directory-exists").sync,
     rimraf = require("rimraf").sync;
 
-var expect = require("chai").expect;
-
 var createServer = require(__dirname + "/../resources/webdav-server.js"),
     putAdapter = require(__dirname + "/../../source/adapter/put.js");
 

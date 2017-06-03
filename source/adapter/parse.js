@@ -1,21 +1,26 @@
 var path = require("path");
-var _ = require("lodash");
 
-_.mixin({
-    getOne: function(object, keys) {
-        var val,
-            keysLen = keys.length;
-
-        for (var i = 0; i < keysLen; i += 1) {
-            val = _.get(object, keys[i]);
-            if (val !== undefined) {
-                return val;
+function getOne(object, keys) {
+    for (var i = 0, numKeys = keys.length; i < numKeys; i += 1) {
+        try {
+            var key = keys[i].split("."),
+                current = object;
+            while (key.length > 0) {
+                var keypart = key.shift(),
+                    prop = /^\d+$/.test(keypart) ?
+                        parseInt(keypart, 10) :
+                        keypart;
+                current = current[prop];
             }
+            if (current !== undefined) {
+                return current;
+            }
+        } catch (err) {
+            // ignore
         }
-
-        return undefined;
     }
-});
+    return undefined;
+}
 
 function filterItemsByDepth(items) {
     var highestDepth = 0;
@@ -42,13 +47,13 @@ function processDirectoryResult(dirPath, dirResult, targetOnly) {
         targetOnly = false;
     }
     try {
-        var multistatus = _.getOne(dirResult, ["d:multistatus", "D:multistatus", "multistatus"]);
-        responseItems = _.getOne(multistatus, ["d:response", "D:response", "response"]) || [];
+        var multistatus = getOne(dirResult, ["d:multistatus", "D:multistatus", "multistatus"]);
+        responseItems = getOne(multistatus, ["d:response", "D:response", "response"]) || [];
     } catch (e) {}
     responseItems.forEach(function(responseItem) {
-        var propstat = _.getOne(responseItem, ["d:propstat.0", "D:propstat.0", "propstat.0"]),
-            props = _.getOne(propstat, ["d:prop.0", "D:prop.0", "prop.0"]);
-        var sanitisedFilePath = decodeURIComponent(processXMLStringValue(_.getOne(responseItem, ["d:href", "D:href", "href"]))),
+        var propstat = getOne(responseItem, ["d:propstat.0", "D:propstat.0", "propstat.0"]),
+            props = getOne(propstat, ["d:prop.0", "D:prop.0", "prop.0"]);
+        var sanitisedFilePath = decodeURIComponent(processXMLStringValue(getOne(responseItem, ["d:href", "D:href", "href"]))),
             serverDepth = sanitisedFilePath
                 .split("/")
                 .filter(function(item) {
@@ -59,7 +64,7 @@ function processDirectoryResult(dirPath, dirResult, targetOnly) {
                 dirPath,
                 sanitisedFilePath       
             ).trim(),
-            resourceType = processXMLStringValue(_.getOne(props, ["lp1:resourcetype", "d:resourcetype", "D:resourcetype", "resourcetype"])),
+            resourceType = processXMLStringValue(getOne(props, ["lp1:resourcetype", "d:resourcetype", "D:resourcetype", "resourcetype"])),
             itemType = (resourceType.indexOf("d:collection") >= 0 || resourceType.indexOf("D:collection") >= 0 || resourceType.indexOf("collection") >= 0) ?
                 "directory" : "file";
         if (filename.length <= 0) {
@@ -73,12 +78,12 @@ function processDirectoryResult(dirPath, dirResult, targetOnly) {
         var item = {
                 filename: filename,
                 basename: path.basename(filename),
-                lastmod: processXMLStringValue(_.getOne(props, ["lp1:getlastmodified", "d:getlastmodified", "D:getlastmodified", "getlastmodified"])),
-                size: parseInt(processXMLStringValue(_.getOne(props, ["lp1:getcontentlength", "d:getcontentlength", "D:getcontentlength", "getcontentlength"])) || "0", 10),
+                lastmod: processXMLStringValue(getOne(props, ["lp1:getlastmodified", "d:getlastmodified", "D:getlastmodified", "getlastmodified"])),
+                size: parseInt(processXMLStringValue(getOne(props, ["lp1:getcontentlength", "d:getcontentlength", "D:getcontentlength", "getcontentlength"])) || "0", 10),
                 type: itemType,
                 _depth: serverDepth
             },
-            mime = processXMLStringValue(_.getOne(props, ["d:getcontenttype", "D:getcontenttype", "getcontenttype"]));
+            mime = processXMLStringValue(getOne(props, ["d:getcontenttype", "D:getcontenttype", "getcontenttype"]));
         if (mime) {
             item.mime = parseMIME(mime);
         }
@@ -125,6 +130,8 @@ function tieFilenameToRoot(filename) {
 }
 
 module.exports = {
+
+    getOne: getOne,
 
     parseDirectoryLookup: processDirectoryResult
 
