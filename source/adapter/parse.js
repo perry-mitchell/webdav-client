@@ -1,15 +1,15 @@
 var path = require("path");
 
 function getOne(object, keys) {
-    for (let i = 0, numKeys = keys.length; i < numKeys; i += 1) {
+    for (var i = 0, numKeys = keys.length; i < numKeys; i += 1) {
         try {
-            const key = keys[i].split(".");
-            let current = object;
+            var key = keys[i].split("."),
+                current = object;
             while (key.length > 0) {
-                const keypart = key.shift();
-                const prop = /^\d+$/.test(keypart) ?
-                    parseInt(keypart, 10) :
-                    keypart;
+                var keypart = key.shift(),
+                    prop = /^\d+$/.test(keypart) ?
+                        parseInt(keypart, 10) :
+                        keypart;
                 current = current[prop];
             }
             if (current !== undefined) {
