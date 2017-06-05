@@ -26,9 +26,6 @@ client
     .getDirectoryContents("/")
     .then(function(contents) {
         console.log(JSON.stringify(contents, undefined, 4));
-    })
-    .catch(function(err) {
-        console.error(err);
     });
 ```
 
@@ -39,6 +36,11 @@ These methods can be called on the object returned from the main factory.
 
 #### createDirectory(remotePath _[, options]_)
 Create a new directory at the remote path.
+
+#### createReadStream(remotePath _[, options]_)
+Creates a readable stream on the remote path. Options is the same format as `getReadStream`.
+
+Returns a readable stream instance.
 
 #### deleteFile(remotePath _[, options]_)
 Delete a file or directory at `remotePath`.
@@ -51,15 +53,12 @@ client
     .getDirectoryContents("/MyFolder")
     .then(function(contents) {
         console.log(JSON.stringify(contents, undefined, 2));
-    })
-    .catch(function(err) {
-        console.error(err);
     });
 ```
 
 The returned value is a Promise, which resolves with an array of [item stat objects](#item-stat).
 
-#### getFileContents(remotePath, format _[, options]_)
+#### getFileContents(remotePath _[, options]_)
 Get the contents of the file at `remotePath` as a `Buffer` or `String`. `format` can either be "binary" or "text", where "binary" is default.
 
 ```js
@@ -69,9 +68,6 @@ client
     .getFileContents("/folder/myImage.jpg")
     .then(function(imageData) {
         fs.writeFileSync("./myImage.jpg", imageData);
-    })
-    .catch(function(err) {
-        console.error(err);
     });
 ```
 
@@ -82,10 +78,39 @@ client
     .getFileContents("/doc.txt", "text")
     .then(function(text) {
         console.log(text);
-    })
-    .catch(function(err) {
-        console.error(err);
     });
+```
+
+#### getFileStream(remotePath _[, options]_)
+Get a readable stream on a remote file. Returns a Promise that resolves with a readable stream instance.
+
+_This is the underlying method to `createReadStream` (uses a `PassThrough` stream to delay the data). Due to the requirement of waiting on the request to complete before being able to get the **true** read stream, a Promise is returned that resolves when it becomes available. `createReadStream` simply creates and returns a `PassThrough` stream immediately and writes to it once this method resolves._
+
+```js
+var fs = require("fs");
+
+client
+    .getFileStream("/test/image.png")
+    .then(function(imageStream) {
+        imageStream.pipe(fs.createWriteStream("./image.png"));
+    });
+```
+
+`options` is an object that may look like the following:
+
+```json
+{
+    "headers": {}
+}
+```
+
+##### options.range
+Optionally request part of the remote file by specifying the `start` and `end` byte positions.
+
+```javascript
+var stream = client.getFileStream("/test/image.png", {
+    range: { start: 0, end: 499 } // first 500 bytes
+});
 ```
 
 #### moveFile(remotePath, targetPath _[, options]_)
@@ -93,18 +118,10 @@ Move a file or directory from `remotePath` to `targetPath`.
 
 ```js
 // Move a directory
-client
-    .moveFile("/some-dir", "/storage/moved-dir")
-    .catch(function(err) {
-        console.error(err);
-    });
+client.moveFile("/some-dir", "/storage/moved-dir");
 
 // Rename a file
-client
-    .moveFile("/images/pic.jpg", "/images/profile.jpg")
-    .catch(function(err) {
-        console.error(err);
-    });
+client.moveFile("/images/pic.jpg", "/images/profile.jpg");
 ```
 
 #### putFileContents(remotePath, format, data _[, options]_)
@@ -115,19 +132,11 @@ var fs = require("fs");
 
 var imageData = fs.readFileSync("someImage.jpg");
 
-client
-    .putFileContents("/folder/myImage.jpg", imageData, { format: "binary" })
-    .catch(function(err) {
-        console.error(err);
-    });
+client.putFileContents("/folder/myImage.jpg", imageData, { format: "binary" });
 ```
 
 ```js
-client
-    .putFileContents("/example.txt", "some text", { format: "text" })
-    .catch(function(err) {
-        console.error(err);
-    });
+client.putFileContents("/example.txt", "some text", { format: "text" });
 ```
 
 `options`, which is **optional**, can be set to an object like the following:
