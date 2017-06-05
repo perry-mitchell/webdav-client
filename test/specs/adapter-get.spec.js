@@ -1,4 +1,5 @@
 var path = require("path");
+var ReadableStream = require("stream").Readable;
 
 var directoryExists = require("directory-exists").sync,
     rimraf = require("rimraf").sync,
@@ -61,6 +62,22 @@ describe("adapter:get", function() {
             this.server.stop().then(done);
         });
 
+        describe("createReadStream", function() {
+
+            it("streams contents of a remote file", function(done) {
+                var stream = getAdapter.createReadStream(SERVER_URL, "/gem.png");
+                expect(stream instanceof ReadableStream).to.be.true;
+                var buffers = [];
+                stream.on("data", function(d) { buffers.push(d); });
+                stream.on("end", function() {
+                    var final = Buffer.concat(buffers);
+                    expect(final.length).to.equal(279);
+                    done();
+                });
+            });
+
+        });
+
         describe("getDirectoryContents", function() {
 
             it("gets all objects in directory", function() {
@@ -102,6 +119,28 @@ describe("adapter:get", function() {
                     .then(function(contents) {
                         expect(contents.length).to.equal(279);
                         expect(contents instanceof Buffer).to.be.true;
+                    });
+            });
+
+        });
+
+        describe("getFileStream", function() {
+
+            it("streams contents of a remote file", function() {
+                return getAdapter
+                    .getFileStream(SERVER_URL, "/gem.png")
+                    .then(function(stream) {
+                        expect(stream instanceof ReadableStream).to.be.true;
+                        var buffers = [];
+                        return new Promise(function(resolve) {
+                            stream.on("data", function(d) { buffers.push(d); });
+                            stream.on('end', function() {
+                                resolve(Buffer.concat(buffers));
+                            });
+                        });
+                    })
+                    .then(function(buff) {
+                        expect(buff.length).to.equal(279);
                     });
             });
 
