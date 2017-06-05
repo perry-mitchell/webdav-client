@@ -74,14 +74,13 @@ var adapter = module.exports = {
 
     getFileStream: function getFileStream(url, filePath, options) {
         options = deepmerge({ headers: {} }, options || {});
+        if (typeof options.range === "object") {
+            options.headers.Range = "bytes=" + options.range.start + "-" +
+                options.range.end;
+        }
         return fetch(url + filePath, {
                 method: "GET",
-                headers: deepmerge(
-                    {
-                        // todo range
-                    },
-                    options.headers
-                )
+                headers: options.headers
             })
             .then(responseHandlers.handleResponseCode)
             .then(function(res) {
