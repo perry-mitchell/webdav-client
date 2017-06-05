@@ -26,7 +26,7 @@ var adapter = module.exports = {
 
     getDirectoryContents: function getDirectoryContents(url, dirPath, options) {
         dirPath = dirPath || "/";
-        options = options || { headers: {} };
+        options = deepmerge({ headers: {} }, options || {});
         var fetchURL = url + dirPath;
         return fetch(
                 fetchURL,
@@ -61,7 +61,7 @@ var adapter = module.exports = {
     },
 
     getFileContents: function getFileContents(url, filePath, options) {
-        options = options || { headers: {} };
+        options = deepmerge({ headers: {} }, options || {});
         return fetch(url + filePath, {
                 method: "GET",
                 headers: options.headers
@@ -73,7 +73,7 @@ var adapter = module.exports = {
     },
 
     getFileStream: function getFileStream(url, filePath, options) {
-        options = options || { headers: {} };
+        options = deepmerge({ headers: {} }, options || {});
         return fetch(url + filePath, {
                 method: "GET",
                 headers: deepmerge(
@@ -90,7 +90,7 @@ var adapter = module.exports = {
     },
 
     getStat: function getStat(url, itemPath, options) {
-        options = options || { headers: {} };
+        options = deepmerge({ headers: {} }, options || {});
         return fetch(url + itemPath, {
                 method: "PROPFIND",
                 headers: deepmerge(
@@ -125,7 +125,7 @@ var adapter = module.exports = {
     },
 
     getTextContents: function getTextContents(url, filePath, options) {
-        options = options || { headers: {} };
+        options = deepmerge({ headers: {} }, options || {});
         return fetch(url + filePath, {
                 headers: options.headers
             })

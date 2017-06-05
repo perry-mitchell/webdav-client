@@ -6,7 +6,7 @@ var responseHandlers = require("./response.js"),
 module.exports = {
 
     deleteItem: function deleteItem(url, targetPath, options) {
-        options = options || { headers: {} };
+        options = deepmerge({ headers: {} }, options || {});
         return fetch(url + targetPath, {
                 method: "DELETE",
                 headers: options.headers
@@ -15,7 +15,7 @@ module.exports = {
     },
 
     moveItem: function moveItem(url, filePath, targetFilePath, options) {
-        options = options || { headers: {} };
+        options = deepmerge({ headers: {} }, options || {});
         return fetch(url + filePath, {
                 method: "MOVE",
                 headers: deepmerge(

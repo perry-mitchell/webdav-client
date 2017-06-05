@@ -15,7 +15,7 @@ function getPutContentsDefaults() {
 module.exports = {
 
     createDirectory: function createDirectory(url, directoryPath, options) {
-        options = options || { headers: {} };
+        options = deepmerge({ headers: {} }, options || {});
         return fetch(url + directoryPath, {
                 method: "MKCOL",
                 headers: options.headers
