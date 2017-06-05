@@ -1,11 +1,28 @@
 var xml2js = require("xml2js"),
     deepmerge = require("deepmerge");
 
+var Stream = require("stream"),
+    ReadableStream = Stream.Readable,
+    PassThroughStream = Stream.PassThrough;
+
 var fetch = require("./request.js"),
     parsing = require("./parse.js"),
     responseHandlers = require("./response.js");
 
-module.exports = {
+var adapter = module.exports = {
+
+    createReadStream: function createReadStream(url, filePath, options) {
+        var outStream = new PassThroughStream();
+        adapter
+            .getFileStream(url, filePath, options)
+            .then(function __handleStream(stream) {
+                stream.pipe(outStream);
+            })
+            .catch(function __handleReadError(err) {
+                outStream.emit("error", err);
+            });
+        return outStream;
+    },
 
     getDirectoryContents: function getDirectoryContents(url, dirPath, options) {
         dirPath = dirPath || "/";
@@ -52,6 +69,23 @@ module.exports = {
             .then(responseHandlers.handleResponseCode)
             .then(function(res) {
                 return res.buffer();
+            });
+    },
+
+    getFileStream: function getFileStream(url, filePath, options) {
+        options = options || { headers: {} };
+        return fetch(url + filePath, {
+                method: "GET",
+                headers: deepmerge(
+                    {
+                        // todo range
+                    },
+                    options.headers
+                )
+            })
+            .then(responseHandlers.handleResponseCode)
+            .then(function(res) {
+                return res.body;
             });
     },
 
