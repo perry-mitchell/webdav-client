@@ -144,6 +144,40 @@ describe("adapter:get", function() {
                     });
             });
 
+            it("streams portions (ranges) of a remote file", function() {
+                return Promise
+                    .all([
+                        getAdapter.getFileStream(SERVER_URL, "/gem.png", { range: { start: 0, end: 199 } }),
+                        getAdapter.getFileStream(SERVER_URL, "/gem.png", { range: { start: 200, end: 278 } })
+                    ])
+                    .then(function(streams) {
+                        var part1 = streams.shift(),
+                            part2 = streams.shift();
+                        var part1Buffers = [],
+                            part2Buffers = [];
+                        return Promise.all([
+                            new Promise(function(resolve) {
+                                part1.on("data", function(d) { part1Buffers.push(d); });
+                                part1.on('end', function() {
+                                    resolve(Buffer.concat(part1Buffers));
+                                });
+                            }),
+                            new Promise(function(resolve) {
+                                part2.on("data", function(d) { part2Buffers.push(d); });
+                                part2.on('end', function() {
+                                    resolve(Buffer.concat(part2Buffers));
+                                });
+                            })
+                        ]);
+                    })
+                    .then(function(buffers) {
+                        var part1 = buffers.shift(),
+                            part2 = buffers.shift();
+                        expect(part1.length).to.equal(200);
+                        expect(part2.length).to.equal(79);
+                    });
+            });
+
         });
 
         describe("getStat", function() {
