@@ -38,9 +38,11 @@ Create a webdav client interface
 
 * [ClientInterface](#ClientInterface) : <code>Object</code>
     * [.createDirectory(dirPath, [options])](#ClientInterface.createDirectory) ⇒ <code>Promise</code>
+    * [.createReadStream(remoteFilename, [options])](#ClientInterface.createReadStream) ⇒ <code>Readable</code>
     * [.deleteFile(remotePath, [options])](#ClientInterface.deleteFile) ⇒ <code>Promise</code>
     * [.getDirectoryContents(remotePath, [options])](#ClientInterface.getDirectoryContents) ⇒ <code>Promise.&lt;Array&gt;</code>
     * [.getFileContents(remoteFilename, [options])](#ClientInterface.getFileContents) ⇒ <code>Promise.&lt;(Buffer\|String)&gt;</code>
+    * [.getFileStream(remoteFilename, [options])](#ClientInterface.getFileStream) ⇒ <code>Promise.&lt;Readable&gt;</code>
     * [.moveFile(remotePath, targetRemotePath, [options])](#ClientInterface.moveFile) ⇒ <code>Promise</code>
     * [.putFileContents(remoteFilename, data, [options])](#ClientInterface.putFileContents) ⇒ <code>Promise</code>
     * [.stat(remotePath, [options])](#ClientInterface.stat) ⇒ <code>Promise.&lt;Object&gt;</code>
@@ -57,6 +59,19 @@ Create a directory
 | --- | --- | --- |
 | dirPath | <code>String</code> | The path to create |
 | [options] | <code>[OptionsWithHeaders](#OptionsWithHeaders)</code> | Options for the request |
+
+<a name="ClientInterface.createReadStream"></a>
+
+### ClientInterface.createReadStream(remoteFilename, [options]) ⇒ <code>Readable</code>
+Create a readable stream of a remote file
+
+**Kind**: static method of <code>[ClientInterface](#ClientInterface)</code>  
+**Returns**: <code>Readable</code> - A readable stream  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| remoteFilename | <code>String</code> | The file to stream |
+| [options] | <code>[OptionsHeadersAndFormat](#OptionsHeadersAndFormat)</code> | Options for the request |
 
 <a name="ClientInterface.deleteFile"></a>
 
@@ -95,6 +110,19 @@ Get the contents of a remote file
 | Param | Type | Description |
 | --- | --- | --- |
 | remoteFilename | <code>String</code> | The file to fetch |
+| [options] | <code>[OptionsHeadersAndFormat](#OptionsHeadersAndFormat)</code> | Options for the request |
+
+<a name="ClientInterface.getFileStream"></a>
+
+### ClientInterface.getFileStream(remoteFilename, [options]) ⇒ <code>Promise.&lt;Readable&gt;</code>
+Get a readable stream of a remote file
+
+**Kind**: static method of <code>[ClientInterface](#ClientInterface)</code>  
+**Returns**: <code>Promise.&lt;Readable&gt;</code> - A promise that resolves with a readable stream  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| remoteFilename | <code>String</code> | The file to stream |
 | [options] | <code>[OptionsHeadersAndFormat](#OptionsHeadersAndFormat)</code> | Options for the request |
 
 <a name="ClientInterface.moveFile"></a>

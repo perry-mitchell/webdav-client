@@ -1,5 +1,10 @@
 # WebDAV-client changelog
 
+## 0.9.0
+_2017-06-07_
+
+ * Add support for ranges with only `start`
+
 ## 0.8.0
 _2017-06-07_
 
