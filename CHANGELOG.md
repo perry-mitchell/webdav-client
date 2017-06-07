@@ -1,5 +1,13 @@
 # WebDAV-client changelog
 
+## 0.8.0
+_2017-06-07_
+
+ * Add stream support (GET)
+ * Add `createReadStream` method
+ * Add `getFileStream` method
+ * Update option merging behaviour for default values
+
 ## 0.7.0
 _2017-06-03_
 
