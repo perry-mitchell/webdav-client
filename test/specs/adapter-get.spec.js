@@ -176,6 +176,17 @@ describe("adapter:get", function() {
                     });
             });
 
+            it("streams a partial file when only start is provided", function() {
+                return getAdapter
+                    .getFileStream(SERVER_URL, "/gem.png", { range: { start: 200  } })
+                    .then(function(stream) {
+                        return streamToBuffer(stream);
+                    })
+                    .then(function(buff) {
+                        expect(buff.length).to.equal(79);
+                    });
+            });
+
         });
 
         describe("getStat", function() {
