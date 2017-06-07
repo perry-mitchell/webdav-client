@@ -19,6 +19,16 @@ var TEST_DIR_PARENT_PATH = path.resolve(__dirname, "../resources/webdav_testing_
 var DAV_USER = "test";
 var DAV_PASS = "test";
 
+function streamToBuffer(stream) {
+    var buffs = [];
+    return new Promise(function(resolve) {
+        stream.on("data", function(d) { buffs.push(d); });
+        stream.on("end", function() {
+            resolve(Buffer.concat(buffs));
+        });
+    });
+}
+
 describe("adapter:get", function() {
 
     describe.skip("authenticated", function() {
@@ -153,21 +163,9 @@ describe("adapter:get", function() {
                     .then(function(streams) {
                         var part1 = streams.shift(),
                             part2 = streams.shift();
-                        var part1Buffers = [],
-                            part2Buffers = [];
                         return Promise.all([
-                            new Promise(function(resolve) {
-                                part1.on("data", function(d) { part1Buffers.push(d); });
-                                part1.on('end', function() {
-                                    resolve(Buffer.concat(part1Buffers));
-                                });
-                            }),
-                            new Promise(function(resolve) {
-                                part2.on("data", function(d) { part2Buffers.push(d); });
-                                part2.on('end', function() {
-                                    resolve(Buffer.concat(part2Buffers));
-                                });
-                            })
+                            streamToBuffer(part1),
+                            streamToBuffer(part2)
                         ]);
                     })
                     .then(function(buffers) {
