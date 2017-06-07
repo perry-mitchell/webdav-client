@@ -1,4 +1,5 @@
 var path = require("path");
+var ReadableStream = require("stream").Readable;
 
 var directoryExists = require("directory-exists").sync,
     rimraf = require("rimraf").sync,
@@ -61,6 +62,22 @@ describe("adapter:get", function() {
             this.server.stop().then(done);
         });
 
+        describe("createReadStream", function() {
+
+            it("streams contents of a remote file", function(done) {
+                var stream = getAdapter.createReadStream(SERVER_URL, "/gem.png");
+                expect(stream instanceof ReadableStream).to.be.true;
+                var buffers = [];
+                stream.on("data", function(d) { buffers.push(d); });
+                stream.on("end", function() {
+                    var final = Buffer.concat(buffers);
+                    expect(final.length).to.equal(279);
+                    done();
+                });
+            });
+
+        });
+
         describe("getDirectoryContents", function() {
 
             it("gets all objects in directory", function() {
@@ -102,6 +119,62 @@ describe("adapter:get", function() {
                     .then(function(contents) {
                         expect(contents.length).to.equal(279);
                         expect(contents instanceof Buffer).to.be.true;
+                    });
+            });
+
+        });
+
+        describe("getFileStream", function() {
+
+            it("streams contents of a remote file", function() {
+                return getAdapter
+                    .getFileStream(SERVER_URL, "/gem.png")
+                    .then(function(stream) {
+                        expect(stream instanceof ReadableStream).to.be.true;
+                        var buffers = [];
+                        return new Promise(function(resolve) {
+                            stream.on("data", function(d) { buffers.push(d); });
+                            stream.on('end', function() {
+                                resolve(Buffer.concat(buffers));
+                            });
+                        });
+                    })
+                    .then(function(buff) {
+                        expect(buff.length).to.equal(279);
+                    });
+            });
+
+            it("streams portions (ranges) of a remote file", function() {
+                return Promise
+                    .all([
+                        getAdapter.getFileStream(SERVER_URL, "/gem.png", { range: { start: 0, end: 199 } }),
+                        getAdapter.getFileStream(SERVER_URL, "/gem.png", { range: { start: 200, end: 278 } })
+                    ])
+                    .then(function(streams) {
+                        var part1 = streams.shift(),
+                            part2 = streams.shift();
+                        var part1Buffers = [],
+                            part2Buffers = [];
+                        return Promise.all([
+                            new Promise(function(resolve) {
+                                part1.on("data", function(d) { part1Buffers.push(d); });
+                                part1.on('end', function() {
+                                    resolve(Buffer.concat(part1Buffers));
+                                });
+                            }),
+                            new Promise(function(resolve) {
+                                part2.on("data", function(d) { part2Buffers.push(d); });
+                                part2.on('end', function() {
+                                    resolve(Buffer.concat(part2Buffers));
+                                });
+                            })
+                        ]);
+                    })
+                    .then(function(buffers) {
+                        var part1 = buffers.shift(),
+                            part2 = buffers.shift();
+                        expect(part1.length).to.equal(200);
+                        expect(part2.length).to.equal(79);
                     });
             });
 

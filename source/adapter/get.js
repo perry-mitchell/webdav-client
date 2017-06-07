@@ -1,15 +1,32 @@
 var xml2js = require("xml2js"),
     deepmerge = require("deepmerge");
 
+var Stream = require("stream"),
+    ReadableStream = Stream.Readable,
+    PassThroughStream = Stream.PassThrough;
+
 var fetch = require("./request.js"),
     parsing = require("./parse.js"),
     responseHandlers = require("./response.js");
 
-module.exports = {
+var adapter = module.exports = {
+
+    createReadStream: function createReadStream(url, filePath, options) {
+        var outStream = new PassThroughStream();
+        adapter
+            .getFileStream(url, filePath, options)
+            .then(function __handleStream(stream) {
+                stream.pipe(outStream);
+            })
+            .catch(function __handleReadError(err) {
+                outStream.emit("error", err);
+            });
+        return outStream;
+    },
 
     getDirectoryContents: function getDirectoryContents(url, dirPath, options) {
         dirPath = dirPath || "/";
-        options = options || { headers: {} };
+        options = deepmerge({ headers: {} }, options || {});
         var fetchURL = url + dirPath;
         return fetch(
                 fetchURL,
@@ -44,7 +61,7 @@ module.exports = {
     },
 
     getFileContents: function getFileContents(url, filePath, options) {
-        options = options || { headers: {} };
+        options = deepmerge({ headers: {} }, options || {});
         return fetch(url + filePath, {
                 method: "GET",
                 headers: options.headers
@@ -55,8 +72,24 @@ module.exports = {
             });
     },
 
+    getFileStream: function getFileStream(url, filePath, options) {
+        options = deepmerge({ headers: {} }, options || {});
+        if (typeof options.range === "object") {
+            options.headers.Range = "bytes=" + options.range.start + "-" +
+                options.range.end;
+        }
+        return fetch(url + filePath, {
+                method: "GET",
+                headers: options.headers
+            })
+            .then(responseHandlers.handleResponseCode)
+            .then(function(res) {
+                return res.body;
+            });
+    },
+
     getStat: function getStat(url, itemPath, options) {
-        options = options || { headers: {} };
+        options = deepmerge({ headers: {} }, options || {});
         return fetch(url + itemPath, {
                 method: "PROPFIND",
                 headers: deepmerge(
@@ -91,7 +124,7 @@ module.exports = {
     },
 
     getTextContents: function getTextContents(url, filePath, options) {
-        options = options || { headers: {} };
+        options = deepmerge({ headers: {} }, options || {});
         return fetch(url + filePath, {
                 headers: options.headers
             })

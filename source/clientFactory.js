@@ -56,6 +56,21 @@ module.exports = {
             },
 
             /**
+             * Create a readable stream of a remote file
+             * @param {String} remoteFilename The file to stream
+             * @param {OptionsHeadersAndFormat=} options Options for the request
+             * @memberof ClientInterface
+             * @returns {Readable} A readable stream
+             */
+            createReadStream: function createReadStream(remoteFilename, options) {
+                var getOptions = deepmerge(
+                    baseOptions,
+                    options || {}
+                );
+                return getAdapter.createReadStream(__url, remoteFilename, getOptions);
+            },
+
+            /**
              * Delete a remote file
              * @param {String} remotePath The remote path to delete
              * @param {OptionsWithHeaders=} options The options for the request
@@ -104,6 +119,21 @@ module.exports = {
                 return (getOptions.format === "text") ?
                     getAdapter.getTextContents(__url, remoteFilename, getOptions) :
                     getAdapter.getFileContents(__url, remoteFilename, getOptions);
+            },
+
+            /**
+             * Get a readable stream of a remote file
+             * @param {String} remoteFilename The file to stream
+             * @param {OptionsHeadersAndFormat=} options Options for the request
+             * @memberof ClientInterface
+             * @returns {Promise.<Readable>} A promise that resolves with a readable stream
+             */
+            getFileStream: function getFileStream(remoteFilename, options) {
+                var getOptions = deepmerge(
+                    baseOptions,
+                    options || {}
+                );
+                return getAdapter.getFileStream(__url, remoteFilename, getOptions);
             },
 
             /**
