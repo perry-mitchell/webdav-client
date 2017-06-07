@@ -141,13 +141,7 @@ describe("adapter:get", function() {
                     .getFileStream(SERVER_URL, "/gem.png")
                     .then(function(stream) {
                         expect(stream instanceof ReadableStream).to.be.true;
-                        var buffers = [];
-                        return new Promise(function(resolve) {
-                            stream.on("data", function(d) { buffers.push(d); });
-                            stream.on('end', function() {
-                                resolve(Buffer.concat(buffers));
-                            });
-                        });
+                        return streamToBuffer(stream);
                     })
                     .then(function(buff) {
                         expect(buff.length).to.equal(279);
