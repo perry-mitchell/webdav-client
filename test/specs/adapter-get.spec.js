@@ -19,6 +19,16 @@ var TEST_DIR_PARENT_PATH = path.resolve(__dirname, "../resources/webdav_testing_
 var DAV_USER = "test";
 var DAV_PASS = "test";
 
+function streamToBuffer(stream) {
+    var buffs = [];
+    return new Promise(function(resolve) {
+        stream.on("data", function(d) { buffs.push(d); });
+        stream.on("end", function() {
+            resolve(Buffer.concat(buffs));
+        });
+    });
+}
+
 describe("adapter:get", function() {
 
     describe.skip("authenticated", function() {
@@ -131,13 +141,7 @@ describe("adapter:get", function() {
                     .getFileStream(SERVER_URL, "/gem.png")
                     .then(function(stream) {
                         expect(stream instanceof ReadableStream).to.be.true;
-                        var buffers = [];
-                        return new Promise(function(resolve) {
-                            stream.on("data", function(d) { buffers.push(d); });
-                            stream.on('end', function() {
-                                resolve(Buffer.concat(buffers));
-                            });
-                        });
+                        return streamToBuffer(stream);
                     })
                     .then(function(buff) {
                         expect(buff.length).to.equal(279);
@@ -153,21 +157,9 @@ describe("adapter:get", function() {
                     .then(function(streams) {
                         var part1 = streams.shift(),
                             part2 = streams.shift();
-                        var part1Buffers = [],
-                            part2Buffers = [];
                         return Promise.all([
-                            new Promise(function(resolve) {
-                                part1.on("data", function(d) { part1Buffers.push(d); });
-                                part1.on('end', function() {
-                                    resolve(Buffer.concat(part1Buffers));
-                                });
-                            }),
-                            new Promise(function(resolve) {
-                                part2.on("data", function(d) { part2Buffers.push(d); });
-                                part2.on('end', function() {
-                                    resolve(Buffer.concat(part2Buffers));
-                                });
-                            })
+                            streamToBuffer(part1),
+                            streamToBuffer(part2)
                         ]);
                     })
                     .then(function(buffers) {
@@ -175,6 +167,17 @@ describe("adapter:get", function() {
                             part2 = buffers.shift();
                         expect(part1.length).to.equal(200);
                         expect(part2.length).to.equal(79);
+                    });
+            });
+
+            it("streams a partial file when only start is provided", function() {
+                return getAdapter
+                    .getFileStream(SERVER_URL, "/gem.png", { range: { start: 200  } })
+                    .then(function(stream) {
+                        return streamToBuffer(stream);
+                    })
+                    .then(function(buff) {
+                        expect(buff.length).to.equal(79);
                     });
             });
 

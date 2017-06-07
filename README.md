@@ -105,7 +105,7 @@ client
 ```
 
 ##### options.range
-Optionally request part of the remote file by specifying the `start` and `end` byte positions.
+Optionally request part of the remote file by specifying the `start` and `end` byte positions. The `end` byte position is optional and the rest of the file from `start` onwards will be streamed.
 
 ```javascript
 var stream = client.getFileStream("/test/image.png", {
