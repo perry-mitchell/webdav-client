@@ -122,21 +122,6 @@ module.exports = {
             },
 
             /**
-             * Get a readable stream of a remote file
-             * @param {String} remoteFilename The file to stream
-             * @param {OptionsHeadersAndFormat=} options Options for the request
-             * @memberof ClientInterface
-             * @returns {Promise.<Readable>} A promise that resolves with a readable stream
-             */
-            getFileStream: function getFileStream(remoteFilename, options) {
-                var getOptions = deepmerge(
-                    baseOptions,
-                    options || {}
-                );
-                return getAdapter.getFileStream(__url, remoteFilename, getOptions);
-            },
-
-            /**
              * Move a remote item to another path
              * @param {String} remotePath The remote item path
              * @param {String} targetRemotePath The new path after moving

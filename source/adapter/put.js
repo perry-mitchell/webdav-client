@@ -1,4 +1,6 @@
-var deepmerge = require("deepmerge");
+var Stream = require("stream"),
+    PassThroughStream = Stream.PassThrough,
+    deepmerge = require("deepmerge");
 
 var responseHandlers = require("./response.js"),
     fetch = require("./request.js");
@@ -21,6 +23,27 @@ module.exports = {
                 headers: options.headers
             })
             .then(responseHandlers.handleResponseCode);
+    },
+
+    createWriteStream: function createWriteStream(url, filePath, options) {
+        options = deepmerge({ headers: {} }, options || {});
+        var writeStream = new PassThroughStream();
+        // if (typeof options.range === "object" && typeof options.range.start === "number") {
+        //     var rangeHeader = "bytes=" + options.range.start + "-";
+        //     if (typeof options.range.end === "number") {
+        //         rangeHeader += options.range.end;
+        //     }
+        //     options.headers.Range = rangeHeader;
+        // }
+        if (options.overwrite === false) {
+            options.headers["If-None-Match"] = "*";
+        }
+        fetch(url + filePath, {
+            method: "PUT",
+            headers: options.headers,
+            body: writeStream
+        });
+        return writeStream;
     },
 
     putFileContents: function putFileContents(url, filePath, data, options) {
