@@ -86,6 +86,30 @@ describe("adapter:get", function() {
                 });
             });
 
+            it("streams portions (ranges) of a remote file", function() {
+                var stream1 = getAdapter.createReadStream(SERVER_URL, "/gem.png", { range: { start: 0, end: 199 } }),
+                    stream2 = getAdapter.createReadStream(SERVER_URL, "/gem.png", { range: { start: 200, end: 278 } })
+                return Promise
+                    .all([
+                        streamToBuffer(stream1),
+                        streamToBuffer(stream2)
+                    ])
+                    .then(function(buffers) {
+                        var part1 = buffers.shift(),
+                            part2 = buffers.shift();
+                        expect(part1.length).to.equal(200);
+                        expect(part2.length).to.equal(79);
+                    });
+            });
+
+            it("streams a partial file when only start is provided", function() {
+                var stream = getAdapter.createReadStream(SERVER_URL, "/gem.png", { range: { start: 200  } });
+                return streamToBuffer(stream)
+                    .then(function(buff) {
+                        expect(buff.length).to.equal(79);
+                    });
+            });
+
         });
 
         describe("getDirectoryContents", function() {
@@ -129,55 +153,6 @@ describe("adapter:get", function() {
                     .then(function(contents) {
                         expect(contents.length).to.equal(279);
                         expect(contents instanceof Buffer).to.be.true;
-                    });
-            });
-
-        });
-
-        describe("getFileStream", function() {
-
-            it("streams contents of a remote file", function() {
-                return getAdapter
-                    .getFileStream(SERVER_URL, "/gem.png")
-                    .then(function(stream) {
-                        expect(stream instanceof ReadableStream).to.be.true;
-                        return streamToBuffer(stream);
-                    })
-                    .then(function(buff) {
-                        expect(buff.length).to.equal(279);
-                    });
-            });
-
-            it("streams portions (ranges) of a remote file", function() {
-                return Promise
-                    .all([
-                        getAdapter.getFileStream(SERVER_URL, "/gem.png", { range: { start: 0, end: 199 } }),
-                        getAdapter.getFileStream(SERVER_URL, "/gem.png", { range: { start: 200, end: 278 } })
-                    ])
-                    .then(function(streams) {
-                        var part1 = streams.shift(),
-                            part2 = streams.shift();
-                        return Promise.all([
-                            streamToBuffer(part1),
-                            streamToBuffer(part2)
-                        ]);
-                    })
-                    .then(function(buffers) {
-                        var part1 = buffers.shift(),
-                            part2 = buffers.shift();
-                        expect(part1.length).to.equal(200);
-                        expect(part2.length).to.equal(79);
-                    });
-            });
-
-            it("streams a partial file when only start is provided", function() {
-                return getAdapter
-                    .getFileStream(SERVER_URL, "/gem.png", { range: { start: 200  } })
-                    .then(function(stream) {
-                        return streamToBuffer(stream);
-                    })
-                    .then(function(buff) {
-                        expect(buff.length).to.equal(79);
                     });
             });
 
