@@ -52,6 +52,29 @@ describe("adapter:put", function() {
 
     });
 
+    describe("createWriteStream", function() {
+
+        before(function() {
+            if (fileExists(TARGET_FILE)) {
+                throw new Error("Testing file existed when it shouldn't have");
+            }
+        });
+
+        it("writes the file to the remote", function() {
+            var writeStream = putAdapter.createWriteStream("http://localhost:9999", "/gem2.png"),
+                readStream = fs.createReadStream(TARGET_FILE_ORIGINAL);
+            return new Promise(function(resolve, reject) {
+                writeStream.on("end", function() {
+                    // stupid stream needs time to close probably.. 😕
+                    setTimeout(resolve, 150);
+                });
+                writeStream.on("error", reject);
+                readStream.pipe(writeStream);
+            });
+        });
+
+    });
+
     describe("putFileContents", function() {
 
         before(function() {
