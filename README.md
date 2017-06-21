@@ -124,7 +124,7 @@ client.moveFile("/some-dir", "/storage/moved-dir");
 client.moveFile("/images/pic.jpg", "/images/profile.jpg");
 ```
 
-#### putFileContents(remotePath, format, data _[, options]_)
+#### putFileContents(remotePath, data _[, options]_)
 Put some data in a remote file at `remotePath` from a `Buffer` or `String`. `data` is a `Buffer` or a `String`. `options` has a property called `format` which can be "binary" (default) or "text".
 
 ```js
