@@ -1,5 +1,10 @@
 # WebDAV-client changelog
 
+## 0.10.0
+_2017-06-24_
+
+ * Disable native `window.fetch` in browsers
+
 ## 0.9.0
 _2017-06-07_
 
