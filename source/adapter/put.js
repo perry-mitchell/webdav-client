@@ -1,7 +1,7 @@
 var deepmerge = require("deepmerge");
 
 var responseHandlers = require("./response.js"),
-    fetch = require("./request.js");
+    fetch = require("./request.js").fetch;
 
 function getPutContentsDefaults() {
     return {
