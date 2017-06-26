@@ -97,7 +97,7 @@ var adapter = module.exports = {
                 method: "PROPFIND",
                 headers: deepmerge(
                     {
-                        Depth: 1
+                        Depth: 0
                     },
                     options.headers
                 )
