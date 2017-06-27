@@ -3,7 +3,7 @@ A WebDAV client written in JavaScript for NodeJS.
 
 [![Build Status](https://travis-ci.org/perry-mitchell/webdav-client.svg?branch=master)](https://travis-ci.org/perry-mitchell/webdav-client)
 
-[![NPM](https://nodei.co/npm/webdav.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/webdav) [![NPM](https://nodei.co/npm-dl/webdav.png?months=3&height=2)](https://www.npmjs.com/package/webdav)
+[![NPM](https://nodei.co/npm/webdav.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/webdav) [![NPM](https://nodei.co/npm-dl/webdav.png?months=6&height=2)](https://www.npmjs.com/package/webdav)
 
 ## About
 This client was branched from [webdav-fs](https://github.com/perry-mitchell/webdav-fs) as the core functionality deserved its own repository. As **webdav-fs**' API was designed to resemble NodeJS' fs API, little could be done to improve the adapter interface for regular use.
@@ -124,7 +124,7 @@ client.moveFile("/some-dir", "/storage/moved-dir");
 client.moveFile("/images/pic.jpg", "/images/profile.jpg");
 ```
 
-#### putFileContents(remotePath, format, data _[, options]_)
+#### putFileContents(remotePath, data _[, options]_)
 Put some data in a remote file at `remotePath` from a `Buffer` or `String`. `data` is a `Buffer` or a `String`. `options` has a property called `format` which can be "binary" (default) or "text".
 
 ```js
