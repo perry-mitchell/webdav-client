@@ -94,7 +94,7 @@ describe("adapter:get", function() {
                 return getAdapter
                     .getDirectoryContents(SERVER_URL, "/")
                     .then(function(contents) {
-                        expect(contents.length).to.equal(2);
+                        expect(contents.length).to.equal(3);
                     });
             });
 
@@ -116,6 +116,13 @@ describe("adapter:get", function() {
                                 expect(item.size).to.equal(0);
                             }
                         });
+                    });
+            });
+            it("gets all objects in directory with special character", function() {
+                return getAdapter
+                    .getDirectoryContents(SERVER_URL, "/test%20test/")
+                    .then(function(contents) {
+                        expect(contents.length).to.equal(1);
                     });
             });
 
