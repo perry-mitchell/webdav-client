@@ -38,23 +38,6 @@ module.exports = {
                 body: data
             })
             .then(responseHandlers.handleResponseCode);
-    },
-
-    putTextContents: function putTextContents(url, filePath, text, options) {
-        options = deepmerge.all([
-            getPutContentsDefaults(),
-            { headers: { "Content-Length": text.length } },
-            options || {}
-        ]);
-        if (options.overwrite === false) {
-            options.headers["If-None-Match"] = "*";
-        }
-        return fetch(url + filePath, {
-                method: "PUT",
-                headers: options.headers,
-                body: text
-            })
-            .then(responseHandlers.handleResponseCode);
     }
 
 };
