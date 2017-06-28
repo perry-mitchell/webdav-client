@@ -183,6 +183,29 @@ describe("adapter:get", function() {
 
         });
 
+        describe("getQuota", function() {
+
+            it("gets a valid used value", function() {
+                return getAdapter
+                    .getQuota(SERVER_URL)
+                    .then(function(quota) {
+                        expect(parseInt(quota.used, 10)).to.be.above(-1);
+                    });
+            });
+
+            it("gets a valid available value", function() {
+                return getAdapter
+                    .getQuota(SERVER_URL)
+                    .then(function(quota) {
+                        var avail = quota.available;
+                        if (["unknown", "unlimited"].indexOf(avail) < 0) {
+                            expect(parseInt(avail, 10)).to.be.above(-1);
+                        }
+                    });
+            });
+
+        });
+
         describe("getStat", function() {
 
             afterEach(function() {
