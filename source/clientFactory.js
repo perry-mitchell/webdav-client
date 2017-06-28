@@ -137,6 +137,19 @@ module.exports = {
             },
 
             /**
+             * Get quota information
+             * @param {OptionsHeadersAndFormat=} options Options for the request
+             * @returns {null|Object} Returns null if failed, or an object with `used` and `available`
+             */
+            getQuota: function getQuota(options) {
+                var getOptions = deepmerge(
+                    baseOptions,
+                    options || {}
+                );
+                return getAdapter.getQuota(__url, getOptions);
+            },
+
+            /**
              * Move a remote item to another path
              * @param {String} remotePath The remote item path
              * @param {String} targetRemotePath The new path after moving
