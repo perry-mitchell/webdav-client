@@ -120,7 +120,7 @@ describe("adapter:get", function() {
             });
             it("gets all objects in directory with special character", function() {
                 return getAdapter
-                    .getDirectoryContents(SERVER_URL, "/test%20test/")
+                    .getDirectoryContents(SERVER_URL, encodeURI("/folder with spécial ch@r"))
                     .then(function(contents) {
                         expect(contents.length).to.equal(1);
                     });
