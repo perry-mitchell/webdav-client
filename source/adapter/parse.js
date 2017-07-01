@@ -60,6 +60,7 @@ function processDirectoryResult(dirPath, dirResult, targetOnly) {
                     return (item.trim().length > 0);
                 })
                 .length;
+        dirPath = decodeURI(dirPath);
         var filename = processDirectoryResultFilename(
                 dirPath,
                 sanitisedFilePath       
