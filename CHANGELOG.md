@@ -1,5 +1,15 @@
 # WebDAV-client changelog
 
+## 1.0.0-rc1
+_2017-07-01_
+
+ * URI encoding for special characters
+ * Writeable streams
+ * Internal `fetch` override support
+ * Quota support
+ * Remove duplicate methods
+ * Optimise `stat` depth
+
 ## 0.10.0
 _2017-06-24_
 
