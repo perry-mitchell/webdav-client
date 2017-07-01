@@ -118,7 +118,7 @@ describe("adapter:get", function() {
                 return getAdapter
                     .getDirectoryContents(SERVER_URL, "/")
                     .then(function(contents) {
-                        expect(contents.length).to.equal(2);
+                        expect(contents.length).to.equal(3);
                     });
             });
 
@@ -142,6 +142,13 @@ describe("adapter:get", function() {
                         });
                     });
             });
+            it("gets all objects in directory with special character", function() {
+                return getAdapter
+                    .getDirectoryContents(SERVER_URL, encodeURI("/folder with spécial ch@r"))
+                    .then(function(contents) {
+                        expect(contents.length).to.equal(1);
+                    });
+            });
 
         });
 
@@ -153,6 +160,29 @@ describe("adapter:get", function() {
                     .then(function(contents) {
                         expect(contents.length).to.equal(279);
                         expect(contents instanceof Buffer).to.be.true;
+                    });
+            });
+
+        });
+
+        describe("getQuota", function() {
+
+            it("gets a valid used value", function() {
+                return getAdapter
+                    .getQuota(SERVER_URL)
+                    .then(function(quota) {
+                        expect(parseInt(quota.used, 10)).to.be.above(-1);
+                    });
+            });
+
+            it("gets a valid available value", function() {
+                return getAdapter
+                    .getQuota(SERVER_URL)
+                    .then(function(quota) {
+                        var avail = quota.available;
+                        if (["unknown", "unlimited"].indexOf(avail) < 0) {
+                            expect(parseInt(avail, 10)).to.be.above(-1);
+                        }
                     });
             });
 

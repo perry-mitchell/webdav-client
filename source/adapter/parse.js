@@ -60,6 +60,7 @@ function processDirectoryResult(dirPath, dirResult, targetOnly) {
                     return (item.trim().length > 0);
                 })
                 .length;
+        dirPath = decodeURI(dirPath);
         var filename = processDirectoryResultFilename(
                 dirPath,
                 sanitisedFilePath       
@@ -108,6 +109,26 @@ function processDirectoryResultFilename(dirPath, resultFilename) {
     return "";
 }
 
+function processQuota(result) {
+    var responseItem = null;
+    try {
+        var multistatus = getOne(result, ["d:multistatus", "D:multistatus", "multistatus"]),
+            responseItems = getOne(multistatus, ["d:response", "D:response", "response"]) || [];
+        responseItem = responseItems[0] || null;
+    } catch (e) {}
+    if (responseItem) {
+        var propstat = getOne(responseItem, ["d:propstat.0", "D:propstat.0", "propstat.0"]),
+            props = getOne(propstat, ["d:prop.0", "D:prop.0", "prop.0"]),
+            quotaUsed = processXMLStringValue(getOne(props, ["quota-used-bytes", "d:quota-used-bytes", "D:quota-used-bytes"])),
+            quotaAvail = processXMLStringValue(getOne(props, ["quota-available-bytes", "d:quota-available-bytes", "D:quota-available-bytes"]));
+        return {
+            used: quotaUsed,
+            available: translateDiskSpace(quotaAvail)
+        };
+    }
+    return null;
+}
+
 function processXMLStringValue(xmlVal) {
     if (Array.isArray(xmlVal)) {
         if (xmlVal.length === 1) {
@@ -129,10 +150,26 @@ function tieFilenameToRoot(filename) {
     return path.normalize("/" + filename);
 }
 
+function translateDiskSpace(value) {
+    switch (value.toString()) {
+        case "-3":
+            return "unlimited";
+        case "-2":
+            /* falls-through */
+        case "-1":
+            // -1 is non-computed
+            return "unknown";
+        default:
+            return value;
+    }
+}
+
 module.exports = {
 
     getOne: getOne,
 
-    parseDirectoryLookup: processDirectoryResult
+    parseDirectoryLookup: processDirectoryResult,
+
+    processQuota: processQuota
 
 };

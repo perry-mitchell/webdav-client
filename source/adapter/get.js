@@ -5,7 +5,7 @@ var Stream = require("stream"),
     ReadableStream = Stream.Readable,
     PassThroughStream = Stream.PassThrough;
 
-var fetch = require("./request.js"),
+var fetch = require("./request.js").fetch,
     parsing = require("./parse.js"),
     responseHandlers = require("./response.js");
 
@@ -26,6 +26,22 @@ function getFileStream(url, filePath, options) {
         .then(function(res) {
             return res.body;
         });
+}
+
+function parseXMLBody(body) {
+    var parser = new xml2js.Parser({ ignoreAttrs: true });
+    return new Promise(function(resolve, reject) {
+        parser.parseString(body, function (err, result) {
+            if (err) {
+                return reject(err);
+            }
+            return resolve(result);
+        });
+    });
+}
+
+function toText(res) {
+    return res.text();
 }
 
 module.exports = {
@@ -90,35 +106,38 @@ module.exports = {
             });
     },
 
+    getQuota: function getQuota(url, options) {
+        options = deepmerge({ headers: {} }, options || {});
+        return fetch(url + "/", {
+                method: "PROPFIND",
+                headers: deepmerge(
+                    { Depth: 0 },
+                    options.headers
+                )
+            })
+            .then(responseHandlers.handleResponseCode)
+            .then(toText)
+            .then(parseXMLBody)
+            .then(function __processStats(result) {
+                return parsing.processQuota(result);
+            });
+    },
+
     getStat: function getStat(url, itemPath, options) {
         options = deepmerge({ headers: {} }, options || {});
         return fetch(url + itemPath, {
                 method: "PROPFIND",
                 headers: deepmerge(
-                    {
-                        Depth: 0
-                    },
+                    { Depth: 0 },
                     options.headers
                 )
             })
             .then(responseHandlers.handleResponseCode)
-            .then(function(res) {
-                return res.text();
-            })
-            .then(function(body) {
-                var parser = new xml2js.Parser({
-                    ignoreAttrs: true
-                });
-                return new Promise(function(resolve, reject) {
-                    parser.parseString(body, function (err, result) {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            var targetPath = itemPath.replace(/^\//, "");
-                            resolve(parsing.parseDirectoryLookup(targetPath, result, true));
-                        }
-                    });
-                });
+            .then(toText)
+            .then(parseXMLBody)
+            .then(function __processStats(result) {
+                var targetPath = itemPath.replace(/^\//, "");
+                return parsing.parseDirectoryLookup(targetPath, result, true);
             })
             .then(function(stats) {
                 return stats.shift();
