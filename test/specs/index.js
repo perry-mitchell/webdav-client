@@ -1,4 +1,7 @@
-var expect = require("chai").expect;
+var expect = require("chai").expect,
+    sinon = require("sinon");
+
 Object.assign(global, {
-    expect: expect
+    expect: expect,
+    sinon: sinon
 });

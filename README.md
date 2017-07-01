@@ -171,6 +171,15 @@ client.putFileContents("/example.txt", "some text", { format: "text" });
 #### stat(remotePath _[, options]_)
 Get the stat properties of a remote file or directory at `remotePath`. Resolved object is a [item stat object](#item-stat).
 
+### Overriding the built-in fetch function
+Under the hood, `webdav-client` uses [`node-fetch`](https://github.com/bitinn/node-fetch) to perform requests. This can be overridden by running the following:
+
+```js
+// For example, use the `fetch` method in the browser:
+const createWebDAVClient = require("webdav");
+createWebDAVClient.setFetchMethod(window.fetch);
+```
+
 ### Returned data structures
 
 #### Item stat

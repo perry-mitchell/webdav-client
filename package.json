@@ -5,7 +5,7 @@
   "main": "source/index.js",
   "scripts": {
     "generate:docs": "jsdoc2md 'source/**/*.js' > API.md",
-    "test": "mocha -r test/specs/index.js test/specs/**/*.spec.js"
+    "test": "mocha -r test/specs/index.js test/specs/*.spec.js test/specs/integration/*.spec.js"
   },
   "repository": {
     "type": "git",
@@ -36,6 +36,7 @@
     "jsdoc-to-markdown": "^2.0.1",
     "mkdirp": "^0.5.1",
     "mocha": "^3.1.0",
-    "rimraf": "^2.5.4"
+    "rimraf": "^2.5.4",
+    "sinon": "^2.3.5"
   }
 }

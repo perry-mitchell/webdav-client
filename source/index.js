@@ -1,4 +1,5 @@
-var factory = require("./clientFactory.js");
+var factory = require("./clientFactory.js"),
+    setFetchMethod = require("./adapter/request.js").setFetchMethod;
 
 /**
  * Create a webdav client interface
@@ -10,5 +11,7 @@ var factory = require("./clientFactory.js");
 function createWebDAVClient(remoteURL, username, password) {
     return factory.createClient(remoteURL, username, password);
 };
+
+createWebDAVClient.setFetchMethod = setFetchMethod;
 
 module.exports = createWebDAVClient;

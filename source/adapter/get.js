@@ -5,7 +5,7 @@ var Stream = require("stream"),
     ReadableStream = Stream.Readable,
     PassThroughStream = Stream.PassThrough;
 
-var fetch = require("./request.js"),
+var fetch = require("./request.js").fetch,
     parsing = require("./parse.js"),
     responseHandlers = require("./response.js");
 
