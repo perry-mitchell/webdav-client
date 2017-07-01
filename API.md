@@ -1,6 +1,16 @@
 ## Functions
 
 <dl>
+<dt><a href="#request">request(url, options)</a> ⇒ <code>Promise</code></dt>
+<dd><p>Perform a request</p>
+</dd>
+<dt><a href="#setFetchMethod">setFetchMethod(fn)</a></dt>
+<dd><p>Set the fetch method to use when making requests
+Defaults to <code>node-fetch</code>. Setting it to <code>null</code> will reset it to <code>node-fetch</code>.</p>
+</dd>
+<dt><a href="#getQuota">getQuota([options])</a> ⇒ <code>null</code> | <code>Object</code></dt>
+<dd><p>Get quota information</p>
+</dd>
 <dt><a href="#createWebDAVClient">createWebDAVClient(remoteURL)</a> ⇒ <code>Object</code></dt>
 <dd><p>Create a webdav client interface</p>
 </dd>
@@ -16,6 +26,43 @@
 <dt><a href="#OptionsHeadersAndFormat">OptionsHeadersAndFormat</a> : <code><a href="#OptionsWithHeaders">OptionsWithHeaders</a></code></dt>
 <dd></dd>
 </dl>
+
+<a name="request"></a>
+
+## request(url, options) ⇒ <code>Promise</code>
+Perform a request
+
+**Kind**: global function  
+**Returns**: <code>Promise</code> - A promise that resolves with the result  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| url | <code>String</code> | The URL to fetch |
+| options | <code>Object</code> | Fetch options |
+
+<a name="setFetchMethod"></a>
+
+## setFetchMethod(fn)
+Set the fetch method to use when making requests
+Defaults to `node-fetch`. Setting it to `null` will reset it to `node-fetch`.
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| fn | <code>function</code> | Function to use - should perform like `fetch`. |
+
+<a name="getQuota"></a>
+
+## getQuota([options]) ⇒ <code>null</code> &#124; <code>Object</code>
+Get quota information
+
+**Kind**: global function  
+**Returns**: <code>null</code> &#124; <code>Object</code> - Returns null if failed, or an object with `used` and `available`  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [options] | <code>[OptionsHeadersAndFormat](#OptionsHeadersAndFormat)</code> | Options for the request |
 
 <a name="createWebDAVClient"></a>
 
@@ -39,10 +86,10 @@ Create a webdav client interface
 * [ClientInterface](#ClientInterface) : <code>Object</code>
     * [.createDirectory(dirPath, [options])](#ClientInterface.createDirectory) ⇒ <code>Promise</code>
     * [.createReadStream(remoteFilename, [options])](#ClientInterface.createReadStream) ⇒ <code>Readable</code>
+    * [.createWriteStream(remoteFilename, [options])](#ClientInterface.createWriteStream) ⇒ <code>Writeable</code>
     * [.deleteFile(remotePath, [options])](#ClientInterface.deleteFile) ⇒ <code>Promise</code>
     * [.getDirectoryContents(remotePath, [options])](#ClientInterface.getDirectoryContents) ⇒ <code>Promise.&lt;Array&gt;</code>
     * [.getFileContents(remoteFilename, [options])](#ClientInterface.getFileContents) ⇒ <code>Promise.&lt;(Buffer\|String)&gt;</code>
-    * [.getFileStream(remoteFilename, [options])](#ClientInterface.getFileStream) ⇒ <code>Promise.&lt;Readable&gt;</code>
     * [.moveFile(remotePath, targetRemotePath, [options])](#ClientInterface.moveFile) ⇒ <code>Promise</code>
     * [.putFileContents(remoteFilename, data, [options])](#ClientInterface.putFileContents) ⇒ <code>Promise</code>
     * [.stat(remotePath, [options])](#ClientInterface.stat) ⇒ <code>Promise.&lt;Object&gt;</code>
@@ -71,6 +118,19 @@ Create a readable stream of a remote file
 | Param | Type | Description |
 | --- | --- | --- |
 | remoteFilename | <code>String</code> | The file to stream |
+| [options] | <code>[OptionsHeadersAndFormat](#OptionsHeadersAndFormat)</code> | Options for the request |
+
+<a name="ClientInterface.createWriteStream"></a>
+
+### ClientInterface.createWriteStream(remoteFilename, [options]) ⇒ <code>Writeable</code>
+Create a writeable stream to a remote file
+
+**Kind**: static method of <code>[ClientInterface](#ClientInterface)</code>  
+**Returns**: <code>Writeable</code> - A writeable stream  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| remoteFilename | <code>String</code> | The file to write to |
 | [options] | <code>[OptionsHeadersAndFormat](#OptionsHeadersAndFormat)</code> | Options for the request |
 
 <a name="ClientInterface.deleteFile"></a>
@@ -110,19 +170,6 @@ Get the contents of a remote file
 | Param | Type | Description |
 | --- | --- | --- |
 | remoteFilename | <code>String</code> | The file to fetch |
-| [options] | <code>[OptionsHeadersAndFormat](#OptionsHeadersAndFormat)</code> | Options for the request |
-
-<a name="ClientInterface.getFileStream"></a>
-
-### ClientInterface.getFileStream(remoteFilename, [options]) ⇒ <code>Promise.&lt;Readable&gt;</code>
-Get a readable stream of a remote file
-
-**Kind**: static method of <code>[ClientInterface](#ClientInterface)</code>  
-**Returns**: <code>Promise.&lt;Readable&gt;</code> - A promise that resolves with a readable stream  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| remoteFilename | <code>String</code> | The file to stream |
 | [options] | <code>[OptionsHeadersAndFormat](#OptionsHeadersAndFormat)</code> | Options for the request |
 
 <a name="ClientInterface.moveFile"></a>

@@ -38,9 +38,14 @@ These methods can be called on the object returned from the main factory.
 Create a new directory at the remote path.
 
 #### createReadStream(remotePath _[, options]_)
-Creates a readable stream on the remote path. Options is the same format as `getReadStream`.
+Creates a readable stream on the remote path.
 
 Returns a readable stream instance.
+
+#### createWriteStream(remotePath _[, options]_)
+Creates a writeable stream to a remote path.
+
+Returns a writeable stream instance.
 
 #### deleteFile(remotePath _[, options]_)
 Delete a file or directory at `remotePath`.
