@@ -71,6 +71,21 @@ module.exports = {
             },
 
             /**
+             * Create a writeable stream to a remote file
+             * @param {String} remoteFilename The file to write to
+             * @param {OptionsHeadersAndFormat=} options Options for the request
+             * @memberof ClientInterface
+             * @returns {Writeable} A writeable stream
+             */
+            createWriteStream: function createWriteStream(remoteFilename, options) {
+                var putOptions = deepmerge(
+                    baseOptions,
+                    options || {}
+                );
+                return putAdapter.createWriteStream(__url, remoteFilename, putOptions);
+            },
+
+            /**
              * Delete a remote file
              * @param {String} remotePath The remote path to delete
              * @param {OptionsWithHeaders=} options The options for the request
