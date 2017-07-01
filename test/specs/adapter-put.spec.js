@@ -3,7 +3,8 @@ var path = require("path"),
 
 var fileExists = require("file-exists"),
     directoryExists = require("directory-exists").sync,
-    rimraf = require("rimraf").sync;
+    rimraf = require("rimraf").sync,
+    waitOn = require("wait-on");
 
 var createServer = require(__dirname + "/../resources/webdav-server.js"),
     putAdapter = require(__dirname + "/../../source/adapter/put.js");
@@ -13,6 +14,24 @@ var TARGET_DIR = path.resolve(__dirname, "../resources/webdav_testing_files/test
     TARGET_FILE_ORIGINAL = TARGET_FILE.replace("gem2.png", "gem.png"),
     TARGET_TEXT_FILE = path.resolve(__dirname, "../resources/webdav_testing_files/written.txt"),
     TARGET_TEXT_FILE_ORIGINAL = path.resolve(__dirname, "../resources/webdav_testing_files/test.txt")
+
+function waitOnFile(filename) {
+    return new Promise(function(resolve, reject) {
+        waitOn(
+            {
+                resources: [ filename ],
+                interval: 50,
+                timeout: 500,
+                window: 0
+            }, function(err) {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve();
+            }
+        );
+    });
+}
 
 describe("adapter:put", function() {
 
@@ -48,6 +67,30 @@ describe("adapter:put", function() {
                 .then(function() {
                     expect(directoryExists(TARGET_DIR)).to.be.true;
                 });
+        });
+
+    });
+
+    describe("createWriteStream", function() {
+
+        before(function() {
+            if (fileExists(TARGET_FILE)) {
+                throw new Error("Testing file existed when it shouldn't have");
+            }
+        });
+
+        it("writes the file to the remote", function() {
+            var writeStream = putAdapter.createWriteStream("http://localhost:9999", "/gem2.png"),
+                readStream = fs.createReadStream(TARGET_FILE_ORIGINAL);
+            return new Promise(function(resolve, reject) {
+                writeStream.on("end", function() {
+                    // stupid stream needs time to close probably..
+                    waitOnFile(TARGET_FILE)
+                        .then(resolve, reject);
+                });
+                writeStream.on("error", reject);
+                readStream.pipe(writeStream);
+            });
         });
 
     });

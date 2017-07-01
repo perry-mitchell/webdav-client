@@ -9,6 +9,25 @@ var fetch = require("./request.js").fetch,
     parsing = require("./parse.js"),
     responseHandlers = require("./response.js");
 
+function getFileStream(url, filePath, options) {
+    options = deepmerge({ headers: {} }, options || {});
+    if (typeof options.range === "object" && typeof options.range.start === "number") {
+        var rangeHeader = "bytes=" + options.range.start + "-";
+        if (typeof options.range.end === "number") {
+            rangeHeader += options.range.end;
+        }
+        options.headers.Range = rangeHeader;
+    }
+    return fetch(url + filePath, {
+            method: "GET",
+            headers: options.headers
+        })
+        .then(responseHandlers.handleResponseCode)
+        .then(function(res) {
+            return res.body;
+        });
+}
+
 function parseXMLBody(body) {
     var parser = new xml2js.Parser({ ignoreAttrs: true });
     return new Promise(function(resolve, reject) {
@@ -25,12 +44,11 @@ function toText(res) {
     return res.text();
 }
 
-var adapter = module.exports = {
+module.exports = {
 
     createReadStream: function createReadStream(url, filePath, options) {
         var outStream = new PassThroughStream();
-        adapter
-            .getFileStream(url, filePath, options)
+        getFileStream(url, filePath, options)
             .then(function __handleStream(stream) {
                 stream.pipe(outStream);
             })
@@ -85,25 +103,6 @@ var adapter = module.exports = {
             .then(responseHandlers.handleResponseCode)
             .then(function(res) {
                 return res.buffer();
-            });
-    },
-
-    getFileStream: function getFileStream(url, filePath, options) {
-        options = deepmerge({ headers: {} }, options || {});
-        if (typeof options.range === "object" && typeof options.range.start === "number") {
-            var rangeHeader = "bytes=" + options.range.start + "-";
-            if (typeof options.range.end === "number") {
-                rangeHeader += options.range.end;
-            }
-            options.headers.Range = rangeHeader;
-        }
-        return fetch(url + filePath, {
-                method: "GET",
-                headers: options.headers
-            })
-            .then(responseHandlers.handleResponseCode)
-            .then(function(res) {
-                return res.body;
             });
     },
 
