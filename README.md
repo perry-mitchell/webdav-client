@@ -113,6 +113,21 @@ var stream = client.getFileStream("/test/image.png", {
 });
 ```
 
+#### getQuota(_[options]_)
+Get quota information. Returns `null` upon failure or an object like so:
+
+```json
+{
+    "used": "12842",
+    "available": "512482001"
+}
+```
+
+Both values are provided in bytes in string form. `available` may also be one of the following:
+
+ * `unknown`: The available space is unknown or not yet calculated
+ * `unlimited`: The space available is not limited by quotas
+
 #### moveFile(remotePath, targetPath _[, options]_)
 Move a file or directory from `remotePath` to `targetPath`.
 
