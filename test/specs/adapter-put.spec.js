@@ -102,21 +102,11 @@ describe("adapter:put", function() {
                 );
         });
 
-    });
-
-    describe("putTextContents", function() {
-
-        before(function() {
-            if (fileExists(TARGET_TEXT_FILE)) {
-                throw new Error("Testing file existed when it shouldn't have");
-            }
-        });
-
         it("puts the text file correctly in the remote directory", function() {
             var text = " This is the first line, \n" +
                 "and this is the second.\n";
             return putAdapter
-                .putTextContents("http://localhost:9999", "/written.txt", text)
+                .putFileContents("http://localhost:9999", "/written.txt", text)
                 .then(function() {
                     var readText = fs.readFileSync(TARGET_TEXT_FILE, "utf8");
                     expect(readText === text).to.be.true;
@@ -124,6 +114,5 @@ describe("adapter:put", function() {
         });
 
     });
-
 
 });

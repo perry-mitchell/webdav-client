@@ -165,13 +165,7 @@ module.exports = {
                     baseOptions,
                     options || {}
                 );
-                putOptions.format = putOptions.format || "binary";
-                if (["binary", "text"].indexOf(putOptions.format) < 0) {
-                    throw new Error("Unknown format: " + putOptions.format);
-                }
-                return (putOptions.format === "text") ?
-                    putAdapter.putTextContents(__url, remoteFilename, data, putOptions) :
-                    putAdapter.putFileContents(__url, remoteFilename, data, putOptions);
+                return putAdapter.putFileContents(__url, remoteFilename, data, putOptions);
             },
 
             /**
