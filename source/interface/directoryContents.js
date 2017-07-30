@@ -26,6 +26,7 @@ function getDirectoryContents(remotePath, options) {
     return fetch(fetchURL, fetchOptions)
         .then(responseHandlers.handleResponseCode)
         .then(function __handleResponseFormat(res) {
+            // Convert response to text
             return res.text();
         })
         .then(function __handleResponseParsing(body) {
@@ -33,6 +34,7 @@ function getDirectoryContents(remotePath, options) {
                 ignoreAttrs: true
             });
             return new Promise(function __parseXML(resolve, reject) {
+                // Parse the XML response from the server
                 parser.parseString(body, function (err, result) {
                     if (err) {
                         return reject(err);
@@ -44,23 +46,30 @@ function getDirectoryContents(remotePath, options) {
 }
 
 function getDirectoryFiles(result, serverBasePath) {
+    // Extract the response items (directory contents)
     var multiStatus = getValueForKey("multistatus", result),
         responseItems = getValueForKey("response", multiStatus);
     return responseItems
+        // Filter out the item pointing to the current directory (not needed)
         .filter(function __filterResponseItem(item) {
             var href = getSingleValue(getValueForKey("href", item));
             href = urlTools.normalisePath(href);
             return href !== serverBasePath;
         })
+        // Map all items to a consistent output structure (results)
         .map(function __mapResponseItem(item) {
+            // HREF is the file path (in full)
             var href = getSingleValue(getValueForKey("href", item));
             href = decodeURI(href);
             href = urlTools.normalisePath(href);
+            // Each item should contain a stat object
             var propStat = getSingleValue(getValueForKey("propstat", item)),
                 props = getSingleValue(getValueForKey("prop", propStat));
+            // Process the true full filename (minus the base server path)
             var filename = serverBasePath === "/" ?
                 href :
                 urlTools.normalisePath(path.relative(serverBasePath, href));
+            // Last modified time, raw size and item type
             var lastMod = getSingleValue(getValueForKey("getlastmodified", props)),
                 rawSize = getSingleValue(getValueForKey("getcontentlength", props)) || "0",
                 resourceType = getSingleValue(getValueForKey("resourcetype", props)),
