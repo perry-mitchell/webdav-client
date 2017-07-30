@@ -46,7 +46,6 @@ function getDirectoryContents(remotePath, options) {
 }
 
 function getDirectoryFiles(result, serverBasePath) {
-    // console.log(JSON.stringify(result, undefined, 4));
     // Extract the response items (directory contents)
     var multiStatus = getValueForKey("multistatus", result),
         responseItems = getValueForKey("response", multiStatus);

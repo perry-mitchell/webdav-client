@@ -33,4 +33,26 @@ describe("getDirectoryContents", function() {
         });
     });
 
+    it("returns correct file results", function() {
+        return this.client.getDirectoryContents("/").then(function(contents) {
+            var sub1 = contents.find(function(item) {
+                return item.basename === "alrighty.jpg";
+            });
+            expect(sub1.filename).to.equal("/alrighty.jpg");
+            expect(sub1.size).to.equal(52130);
+            expect(sub1.type).to.equal("file");
+        });
+    });
+
+    it("returns correct file results in sub-directory", function() {
+        return this.client.getDirectoryContents("/sub1").then(function(contents) {
+            var sub1 = contents.find(function(item) {
+                return item.basename === "irrelephant.jpg";
+            });
+            expect(sub1.filename).to.equal("/sub1/irrelephant.jpg");
+            expect(sub1.size).to.equal(138008);
+            expect(sub1.type).to.equal("file");
+        });
+    });
+
 });
