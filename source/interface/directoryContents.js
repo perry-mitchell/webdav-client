@@ -46,6 +46,7 @@ function getDirectoryContents(remotePath, options) {
 }
 
 function getDirectoryFiles(result, serverBasePath) {
+    // console.log(JSON.stringify(result, undefined, 4));
     // Extract the response items (directory contents)
     var multiStatus = getValueForKey("multistatus", result),
         responseItems = getValueForKey("response", multiStatus);
@@ -53,6 +54,7 @@ function getDirectoryFiles(result, serverBasePath) {
         // Filter out the item pointing to the current directory (not needed)
         .filter(function __filterResponseItem(item) {
             var href = getSingleValue(getValueForKey("href", item));
+            href = urlTools.normaliseHREF(href);
             href = urlTools.normalisePath(href);
             return href !== serverBasePath;
         })
@@ -60,6 +62,7 @@ function getDirectoryFiles(result, serverBasePath) {
         .map(function __mapResponseItem(item) {
             // HREF is the file path (in full)
             var href = getSingleValue(getValueForKey("href", item));
+            href = urlTools.normaliseHREF(href);
             href = decodeURI(href);
             href = urlTools.normalisePath(href);
             // Each item should contain a stat object

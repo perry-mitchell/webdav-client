@@ -9,6 +9,11 @@ function extractURLPath(fullURL) {
     return normalisePath(urlPath);
 }
 
+function normaliseHREF(href) {
+    href = href.replace(/^https?:\/\/[^\/]+/, "");
+    return href;
+}
+
 function normalisePath(pathStr) {
     if (pathStr[0] !== "/") {
         pathStr = "/" + pathStr;
@@ -21,5 +26,6 @@ function normalisePath(pathStr) {
 
 module.exports = {
     extractURLPath: extractURLPath,
+    normaliseHREF: normaliseHREF,
     normalisePath: normalisePath
 };
