@@ -3,7 +3,8 @@ var deepmerge = require("deepmerge");
 var authTools = require("./auth.js"),
     urlTools = require("./url.js");
 
-var directoryContents = require("./interface/directoryContents.js");
+var directoryContents = require("./interface/directoryContents.js"),
+    createDir = require("./interface/createDirectory.js");
 
 /**
  * @typedef {Object} ClientInterface
@@ -20,6 +21,21 @@ function createClient(remoteURL, username, password) {
     }
 
     return {
+
+        /**
+         * Create a directory
+         * @param {String} dirPath The path to create
+         * @param {OptionsWithHeaders=} options Options for the request
+         * @memberof ClientInterface
+         * @returns {Promise} A promise that resolves when the remote path has been created
+         */
+        createDirectory: function createDirectory(dirPath, options) {
+            var createOptions = deepmerge(
+                baseOptions,
+                options || {}
+            );
+            return createDir.createDirectory(dirPath, createOptions);
+        },
 
         /**
          * Get the contents of a remote directory
