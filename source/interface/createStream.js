@@ -1,4 +1,5 @@
-var joinURL = require("url-join");
+var joinURL = require("url-join"),
+    deepmerge = require("deepmerge");
 
 var Stream = require("stream"),
     PassThroughStream = Stream.PassThrough;
@@ -16,6 +17,29 @@ function createReadStream(filePath, options) {
             outStream.emit("error", err);
         });
     return outStream;
+}
+
+function createWriteStream(filePath, options) {
+    var writeStream = new PassThroughStream(),
+        headers = deepmerge({}, options.headers);
+    // if (typeof options.range === "object" && typeof options.range.start === "number") {
+    //     var rangeHeader = "bytes=" + options.range.start + "-";
+    //     if (typeof options.range.end === "number") {
+    //         rangeHeader += options.range.end;
+    //     }
+    //     options.headers.Range = rangeHeader;
+    // }
+    if (options.overwrite === false) {
+        headers["If-None-Match"] = "*";
+    }
+    var fetchURL = joinURL(options.remoteURL, filePath),
+        fetchOptions = {
+            method: "PUT",
+            headers: headers,
+            body: writeStream
+        };
+    fetch(fetchURL, fetchOptions);
+    return writeStream;
 }
 
 function getFileStream(filePath, options) {
@@ -39,5 +63,6 @@ function getFileStream(filePath, options) {
 }
 
 module.exports = {
-    createReadStream
+    createReadStream,
+    createWriteStream
 };

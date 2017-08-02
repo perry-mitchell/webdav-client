@@ -54,6 +54,21 @@ function createClient(remoteURL, username, password) {
         },
 
         /**
+         * Create a writeable stream to a remote file
+         * @param {String} remoteFilename The file to write to
+         * @param {OptionsHeadersAndFormat=} options Options for the request
+         * @memberof ClientInterface
+         * @returns {Writeable} A writeable stream
+         */
+        createWriteStream: function createWriteStream(remoteFilename, options) {
+            var createOptions = deepmerge(
+                baseOptions,
+                options || {}
+            );
+            return createStream.createWriteStream(remoteFilename, createOptions);
+        },
+
+        /**
          * Get the contents of a remote directory
          * @param {String} remotePath The path to fetch the contents of
          * @param {OptionsWithHeaders=} options Options for the remote the request
