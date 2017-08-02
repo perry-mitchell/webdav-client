@@ -51,12 +51,12 @@ describe("createReadStream", function() {
             });
     });
 
-    // it("streams a partial file when only start is provided", function() {
-    //     var stream = this.client.createReadStream("/sub1/irrelephant.jpg", { range: { start: 200  } });
-    //     return streamToBuffer(stream)
-    //         .then(function(buff) {
-    //             expect(buff.length).to.equal(79);
-    //         });
-    // });
+    it("streams a partial file when only the start is provided", function() {
+        var stream = this.client.createReadStream("/alrighty.jpg", { range: { start: 25000 } });
+        return streamToBuffer(stream)
+            .then(function(buff) {
+                expect(buff.length).to.equal(27130);
+            });
+    });
 
 });
