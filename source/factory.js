@@ -4,7 +4,8 @@ var authTools = require("./auth.js"),
     urlTools = require("./url.js");
 
 var directoryContents = require("./interface/directoryContents.js"),
-    createDir = require("./interface/createDirectory.js");
+    createDir = require("./interface/createDirectory.js"),
+    createStream = require("./interface/createStream.js");
 
 /**
  * @typedef {Object} ClientInterface
@@ -35,6 +36,21 @@ function createClient(remoteURL, username, password) {
                 options || {}
             );
             return createDir.createDirectory(dirPath, createOptions);
+        },
+
+        /**
+         * Create a readable stream of a remote file
+         * @param {String} remoteFilename The file to stream
+         * @param {OptionsHeadersAndFormat=} options Options for the request
+         * @memberof ClientInterface
+         * @returns {Readable} A readable stream
+         */
+        createReadStream: function createReadStream(remoteFilename, options) {
+            var createOptions = deepmerge(
+                baseOptions,
+                options || {}
+            );
+            return createStream.createReadStream(remoteFilename, createOptions);
         },
 
         /**
