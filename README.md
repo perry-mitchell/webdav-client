@@ -8,6 +8,16 @@ This client was branched from [webdav-fs](https://github.com/perry-mitchell/webd
 
 This WebDAV client library is designed to provide an improved API for low-level WebDAV integration. This client uses `window.fetch` when available in the browser.
 
+## Installation
+To install for use with NodeJS, execute the following shell command:
+
+```shell
+npm install webdav --save
+```
+
+### Webpack / Browserify
+WebDAV-client is browser friendly, after being transpiled. Refer to the use of WebDAV-fs in the [Buttercup mobile compatibility library](https://github.com/buttercup/buttercup-mobile-compat) or the [Buttercup browser extension](https://github.com/buttercup/buttercup-browser-extension) for guidance on preparation for the web.
+
 ## Usage
 Usage is very simple ([API](API.md)) - the main exported object is a factory to create adapter instances:
 
