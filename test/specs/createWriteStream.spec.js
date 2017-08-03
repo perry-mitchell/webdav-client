@@ -1,6 +1,6 @@
 var path = require("path"),
     fs = require("fs"),
-    WritableStream = require("stream").Writable,
+    PassThrough = require("stream").PassThrough,
     waitOn = require("wait-on");
 
 var SOURCE_FILENAME = path.resolve(__dirname, "../testContents/alrighty.jpg");
@@ -44,7 +44,7 @@ describe("createWriteStream", function() {
         var targetFile = path.resolve(__dirname, "../testContents/alrighty2.jpg");
         var writeStream = this.client.createWriteStream("/alrighty2.jpg"),
             readStream = fs.createReadStream(SOURCE_FILENAME);
-        expect(writeStream instanceof WritableStream).to.be.true;
+        expect(writeStream instanceof PassThrough).to.be.true;
         return new Promise(function(resolve, reject) {
             writeStream.on("end", function() {
                 // stupid stream needs time to close probably..
