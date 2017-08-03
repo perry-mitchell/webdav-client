@@ -231,3 +231,14 @@ Properties:
 | size          | Number  | Always       | File size - 0 for directories               |
 | type          | String  | Always       | Item type - "file" or "directory"           |
 | mime          | String  | Files only   | Mime type - for file items only             |
+
+## Compatibility
+This library has been tested to work with the following WebDAV servers or applications:
+
+ * [ownCloud](https://owncloud.org/)
+ * [Nextcloud](https://nextcloud.com/)
+ * [Yandex.ru](https://yandex.ru/)
+ * [jsDAV](https://github.com/mikedeboer/jsDAV)
+ * [webdav-server](https://github.com/OpenMarshal/npm-WebDAV-Server) _(1)_
+ 
+  _1. Limited range-request support_
