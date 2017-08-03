@@ -1,9 +1,7 @@
 # WebDAV client
 A WebDAV client written in JavaScript for NodeJS.
 
-[![Build Status](https://travis-ci.org/perry-mitchell/webdav-client.svg?branch=master)](https://travis-ci.org/perry-mitchell/webdav-client)
-
-[![NPM](https://nodei.co/npm/webdav.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/webdav) [![NPM](https://nodei.co/npm-dl/webdav.png?months=6&height=2)](https://www.npmjs.com/package/webdav)
+[![Build Status](https://travis-ci.org/perry-mitchell/webdav-client.svg?branch=master)](https://travis-ci.org/perry-mitchell/webdav-client) [![npm version](https://badge.fury.io/js/webdav.svg)](https://www.npmjs.com/package/webdav) ![monthly downloads](https://img.shields.io/npm/dm/webdav.svg)
 
 ## About
 This client was branched from [webdav-fs](https://github.com/perry-mitchell/webdav-fs) as the core functionality deserved its own repository. As **webdav-fs**' API was designed to resemble NodeJS' fs API, little could be done to improve the adapter interface for regular use.
