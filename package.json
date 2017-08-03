@@ -34,7 +34,7 @@
     "chai": "^3.5.0",
     "copy-dir": "~0.3.0",
     "directory-exists": "^1.0.1",
-    "file-exists": "^2.0.0",
+    "exists-file": "~3.0.2",
     "jsDAV": "^0.3.4",
     "jsdoc-to-markdown": "^2.0.1",
     "mkdirp": "^0.5.1",

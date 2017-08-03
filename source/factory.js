@@ -5,7 +5,8 @@ var authTools = require("./auth.js"),
 
 var directoryContents = require("./interface/directoryContents.js"),
     createDir = require("./interface/createDirectory.js"),
-    createStream = require("./interface/createStream.js");
+    createStream = require("./interface/createStream.js"),
+    deletion = require("./interface/delete.js");
 
 /**
  * @typedef {Object} ClientInterface
@@ -66,6 +67,21 @@ function createClient(remoteURL, username, password) {
                 options || {}
             );
             return createStream.createWriteStream(remoteFilename, createOptions);
+        },
+
+        /**
+         * Delete a remote file
+         * @param {String} remotePath The remote path to delete
+         * @param {OptionsWithHeaders=} options The options for the request
+         * @memberof ClientInterface
+         * @returns {Promise} A promise that resolves when the remote file as been deleted
+         */
+        deleteFile: function deleteFile(remotePath, options) {
+            var deleteOptions = deepmerge(
+                baseOptions,
+                options || {}
+            );
+            return deletion.deleteFile(remotePath, deleteOptions);
         },
 
         /**
