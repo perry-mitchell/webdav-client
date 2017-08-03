@@ -42,6 +42,6 @@
     "rimraf": "~2.6.1",
     "sinon": "^2.3.5",
     "wait-on": "^2.0.2",
-    "webdav-server": "~2.1.0"
+    "webdav-server": "~2.2.0"
   }
 }
