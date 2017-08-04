@@ -6,7 +6,8 @@ var authTools = require("./auth.js"),
 var directoryContents = require("./interface/directoryContents.js"),
     createDir = require("./interface/createDirectory.js"),
     createStream = require("./interface/createStream.js"),
-    deletion = require("./interface/delete.js");
+    deletion = require("./interface/delete.js"),
+    getFile = require("./interface/getFile.js");
 
 /**
  * @typedef {Object} ClientInterface
@@ -97,6 +98,27 @@ function createClient(remoteURL, username, password) {
                 options || {}
             );
             return directoryContents.getDirectoryContents(remotePath, getOptions);
+        },
+
+        /**
+         * Get the contents of a remote file
+         * @param {String} remoteFilename The file to fetch
+         * @param {OptionsHeadersAndFormat=} options Options for the request
+         * @memberof ClientInterface
+         * @returns {Promise.<Buffer|String>} A promise that resolves with the contents of the remote file
+         */
+        getFileContents: function getFileContents(remoteFilename, options) {
+            var getOptions = deepmerge(
+                baseOptions,
+                options || {}
+            );
+            getOptions.format = getOptions.format || "binary";
+            if (["binary", "text"].indexOf(getOptions.format) < 0) {
+                throw new Error("Unknown format: " + getOptions.format);
+            }
+            return (getOptions.format === "text") ?
+                getFile.getFileContentsString(remoteFilename, getOptions) :
+                getFile.getFileContentsBuffer(remoteFilename, getOptions);
         }
 
     };
