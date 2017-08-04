@@ -39,13 +39,14 @@ function getDirectoryContents(remotePath, options) {
                     if (err) {
                         return reject(err);
                     }
-                    return resolve(getDirectoryFiles(result, options.remotePath));
+                    return resolve(getDirectoryFiles(result, options.remotePath, remotePath));
                 });
             });
         });
 }
 
-function getDirectoryFiles(result, serverBasePath) {
+function getDirectoryFiles(result, serverBasePath, requestPath) {
+    var remoteTargetPath = path.join(serverBasePath, requestPath);
     // Extract the response items (directory contents)
     var multiStatus = getValueForKey("multistatus", result),
         responseItems = getValueForKey("response", multiStatus);
@@ -55,7 +56,7 @@ function getDirectoryFiles(result, serverBasePath) {
             var href = getSingleValue(getValueForKey("href", item));
             href = urlTools.normaliseHREF(href);
             href = urlTools.normalisePath(href);
-            return href !== serverBasePath;
+            return (href !== serverBasePath && href !== remoteTargetPath);
         })
         // Map all items to a consistent output structure (results)
         .map(function __mapResponseItem(item) {
