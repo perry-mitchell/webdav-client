@@ -9,7 +9,8 @@ var directoryContents = require("./interface/directoryContents.js"),
     deletion = require("./interface/delete.js"),
     getFile = require("./interface/getFile.js"),
     quota = require("./interface/quota.js"),
-    move = require("./interface/moveFile.js");
+    move = require("./interface/moveFile.js"),
+    putFile = require("./interface/putFile.js");
 
 /**
  * @typedef {Object} ClientInterface
@@ -145,11 +146,27 @@ function createClient(remoteURL, username, password) {
          * @returns {Promise} A promise that resolves once the request has completed
          */
         moveFile: function moveFile(remotePath, targetRemotePath, options) {
-            var altOptions = deepmerge(
+            var moveOptions = deepmerge(
                 baseOptions,
                 options || {}
             );
-            return move.moveFile(remotePath, targetRemotePath, altOptions);
+            return move.moveFile(remotePath, targetRemotePath, moveOptions);
+        },
+
+        /**
+         * Write contents to a remote file path
+         * @param {String} remoteFilename The path of the remote file
+         * @param {String|Buffer} data The data to write
+         * @param {OptionsHeadersAndFormat=} options The options for the request
+         * @returns {Promise} A promise that resolves once the contents have been written
+         * @memberof ClientInterface
+         */
+        putFileContents: function putFileContents(remoteFilename, data, options) {
+            var putOptions = deepmerge(
+                baseOptions,
+                options || {}
+            );
+            return putFile.putFileContents(remoteFilename, data, putOptions);
         }
 
     };
