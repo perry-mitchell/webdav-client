@@ -36,6 +36,15 @@ var directoryContents = require("./interface/directoryContents.js"),
  * @param {String=} username Optional username for authentication
  * @param {String=} password Optional password for authentication
  * @returns {ClientInterface} A new client interface instance
+ * @module WebDAV
+ * @example
+ *  const createClient = require("webdav");
+ *  const client = createClient(url, username, password);
+ *  client
+ *      .getDirectoryContents("/")
+ *      .then(contents => {
+ *          console.log(contents);
+ *      });
  */
 function createClient(remoteURL, username, password) {
     var baseOptions = {
@@ -149,6 +158,7 @@ function createClient(remoteURL, username, password) {
          * Get quota information
          * @param {OptionsHeadersAndFormat=} options Options for the request
          * @returns {null|Object} Returns null if failed, or an object with `used` and `available`
+         * @memberof ClientInterface
          */
         getQuota: function getQuota(options) {
             var getOptions = deepmerge(

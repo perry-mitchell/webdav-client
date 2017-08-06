@@ -1,18 +1,17 @@
+## Modules
+
+<dl>
+<dt><a href="#module_WebDAV">WebDAV</a> ⇒ <code><a href="#ClientInterface">ClientInterface</a></code></dt>
+<dd><p>Create a client adapter</p>
+</dd>
+</dl>
+
 ## Functions
 
 <dl>
-<dt><a href="#request">request(url, options)</a> ⇒ <code>Promise</code></dt>
-<dd><p>Perform a request</p>
-</dd>
 <dt><a href="#setFetchMethod">setFetchMethod(fn)</a></dt>
 <dd><p>Set the fetch method to use when making requests
 Defaults to <code>node-fetch</code>. Setting it to <code>null</code> will reset it to <code>node-fetch</code>.</p>
-</dd>
-<dt><a href="#getQuota">getQuota([options])</a> ⇒ <code>null</code> | <code>Object</code></dt>
-<dd><p>Get quota information</p>
-</dd>
-<dt><a href="#createWebDAVClient">createWebDAVClient(remoteURL)</a> ⇒ <code>Object</code></dt>
-<dd><p>Create a webdav client interface</p>
 </dd>
 </dl>
 
@@ -20,26 +19,39 @@ Defaults to <code>node-fetch</code>. Setting it to <code>null</code> will reset 
 
 <dl>
 <dt><a href="#ClientInterface">ClientInterface</a> : <code>Object</code></dt>
-<dd></dd>
+<dd><p>Client adapter</p>
+</dd>
 <dt><a href="#OptionsWithHeaders">OptionsWithHeaders</a> : <code>Object</code></dt>
-<dd></dd>
-<dt><a href="#OptionsHeadersAndFormat">OptionsHeadersAndFormat</a> : <code><a href="#OptionsWithHeaders">OptionsWithHeaders</a></code></dt>
-<dd></dd>
+<dd><p>Options with header object</p>
+</dd>
+<dt><a href="#PutOptions">PutOptions</a> : <code><a href="#OptionsWithHeaders">OptionsWithHeaders</a></code></dt>
+<dd><p>Options for creating a resource</p>
+</dd>
 </dl>
 
-<a name="request"></a>
+<a name="module_WebDAV"></a>
 
-## request(url, options) ⇒ <code>Promise</code>
-Perform a request
+## WebDAV ⇒ <code>[ClientInterface](#ClientInterface)</code>
+Create a client adapter
 
-**Kind**: global function  
-**Returns**: <code>Promise</code> - A promise that resolves with the result  
+**Returns**: <code>[ClientInterface](#ClientInterface)</code> - A new client interface instance  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| url | <code>String</code> | The URL to fetch |
-| options | <code>Object</code> | Fetch options |
+| remoteURL | <code>String</code> | The remote address of the webdav server |
+| [username] | <code>String</code> | Optional username for authentication |
+| [password] | <code>String</code> | Optional password for authentication |
 
+**Example**  
+```js
+const createClient = require("webdav");
+ const client = createClient(url, username, password);
+ client
+     .getDirectoryContents("/")
+     .then(contents => {
+         console.log(contents);
+     });
+```
 <a name="setFetchMethod"></a>
 
 ## setFetchMethod(fn)
@@ -52,35 +64,16 @@ Defaults to `node-fetch`. Setting it to `null` will reset it to `node-fetch`.
 | --- | --- | --- |
 | fn | <code>function</code> | Function to use - should perform like `fetch`. |
 
-<a name="getQuota"></a>
-
-## getQuota([options]) ⇒ <code>null</code> &#124; <code>Object</code>
-Get quota information
-
-**Kind**: global function  
-**Returns**: <code>null</code> &#124; <code>Object</code> - Returns null if failed, or an object with `used` and `available`  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [options] | <code>[OptionsHeadersAndFormat](#OptionsHeadersAndFormat)</code> | Options for the request |
-
-<a name="createWebDAVClient"></a>
-
-## createWebDAVClient(remoteURL) ⇒ <code>Object</code>
-Create a webdav client interface
-
-**Kind**: global function  
-**Returns**: <code>Object</code> - The client interface  
-**Access:** public  
-**See**: createClient  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| remoteURL | <code>String</code> | The target URL |
-
+**Example**  
+```js
+const createClient = require("webdav");
+ createClient.setFetchMethod(window.fetch);
+```
 <a name="ClientInterface"></a>
 
 ## ClientInterface : <code>Object</code>
+Client adapter
+
 **Kind**: global typedef  
 
 * [ClientInterface](#ClientInterface) : <code>Object</code>
@@ -90,6 +83,7 @@ Create a webdav client interface
     * [.deleteFile(remotePath, [options])](#ClientInterface.deleteFile) ⇒ <code>Promise</code>
     * [.getDirectoryContents(remotePath, [options])](#ClientInterface.getDirectoryContents) ⇒ <code>Promise.&lt;Array&gt;</code>
     * [.getFileContents(remoteFilename, [options])](#ClientInterface.getFileContents) ⇒ <code>Promise.&lt;(Buffer\|String)&gt;</code>
+    * [.getQuota([options])](#ClientInterface.getQuota) ⇒ <code>null</code> &#124; <code>Object</code>
     * [.moveFile(remotePath, targetRemotePath, [options])](#ClientInterface.moveFile) ⇒ <code>Promise</code>
     * [.putFileContents(remoteFilename, data, [options])](#ClientInterface.putFileContents) ⇒ <code>Promise</code>
     * [.stat(remotePath, [options])](#ClientInterface.stat) ⇒ <code>Promise.&lt;Object&gt;</code>
@@ -118,7 +112,7 @@ Create a readable stream of a remote file
 | Param | Type | Description |
 | --- | --- | --- |
 | remoteFilename | <code>String</code> | The file to stream |
-| [options] | <code>[OptionsHeadersAndFormat](#OptionsHeadersAndFormat)</code> | Options for the request |
+| [options] | <code>[OptionsWithHeaders](#OptionsWithHeaders)</code> | Options for the request |
 
 <a name="ClientInterface.createWriteStream"></a>
 
@@ -131,7 +125,7 @@ Create a writeable stream to a remote file
 | Param | Type | Description |
 | --- | --- | --- |
 | remoteFilename | <code>String</code> | The file to write to |
-| [options] | <code>[OptionsHeadersAndFormat](#OptionsHeadersAndFormat)</code> | Options for the request |
+| [options] | <code>[PutOptions](#PutOptions)</code> | Options for the request |
 
 <a name="ClientInterface.deleteFile"></a>
 
@@ -170,7 +164,19 @@ Get the contents of a remote file
 | Param | Type | Description |
 | --- | --- | --- |
 | remoteFilename | <code>String</code> | The file to fetch |
-| [options] | <code>[OptionsHeadersAndFormat](#OptionsHeadersAndFormat)</code> | Options for the request |
+| [options] | <code>OptionsHeadersAndFormat</code> | Options for the request |
+
+<a name="ClientInterface.getQuota"></a>
+
+### ClientInterface.getQuota([options]) ⇒ <code>null</code> &#124; <code>Object</code>
+Get quota information
+
+**Kind**: static method of <code>[ClientInterface](#ClientInterface)</code>  
+**Returns**: <code>null</code> &#124; <code>Object</code> - Returns null if failed, or an object with `used` and `available`  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| [options] | <code>OptionsHeadersAndFormat</code> | Options for the request |
 
 <a name="ClientInterface.moveFile"></a>
 
@@ -198,7 +204,7 @@ Write contents to a remote file path
 | --- | --- | --- |
 | remoteFilename | <code>String</code> | The path of the remote file |
 | data | <code>String</code> &#124; <code>Buffer</code> | The data to write |
-| [options] | <code>[OptionsHeadersAndFormat](#OptionsHeadersAndFormat)</code> | The options for the request |
+| [options] | <code>[PutOptions](#PutOptions)</code> | The options for the request |
 
 <a name="ClientInterface.stat"></a>
 
@@ -216,20 +222,24 @@ Stat a remote object
 <a name="OptionsWithHeaders"></a>
 
 ## OptionsWithHeaders : <code>Object</code>
+Options with header object
+
 **Kind**: global typedef  
 **Properties**
 
 | Name | Type | Description |
 | --- | --- | --- |
-| headers | <code>Object</code> | Optional headers to send with the request |
+| headers | <code>Object</code> | Headers key-value list |
 
-<a name="OptionsHeadersAndFormat"></a>
+<a name="PutOptions"></a>
 
-## OptionsHeadersAndFormat : <code>[OptionsWithHeaders](#OptionsWithHeaders)</code>
+## PutOptions : <code>[OptionsWithHeaders](#OptionsWithHeaders)</code>
+Options for creating a resource
+
 **Kind**: global typedef  
 **Properties**
 
 | Name | Type | Description |
 | --- | --- | --- |
-| format | <code>String</code> | Format of request/response payload (binary/text) |
+| overwrite | <code>Boolean</code> | Whether or not to overwrite existing files (default: true) |
 
