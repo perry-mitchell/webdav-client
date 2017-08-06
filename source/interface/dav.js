@@ -27,7 +27,22 @@ function getValueForKey(key, obj) {
     return undefined;
 }
 
+function translateDiskSpace(value) {
+    switch (value.toString()) {
+        case "-3":
+            return "unlimited";
+        case "-2":
+            /* falls-through */
+        case "-1":
+            // -1 is non-computed
+            return "unknown";
+        default:
+            return value;
+    }
+}
+
 module.exports = {
     getSingleValue: getSingleValue,
-    getValueForKey: getValueForKey
+    getValueForKey: getValueForKey,
+    translateDiskSpace: translateDiskSpace
 };

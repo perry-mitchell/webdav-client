@@ -7,7 +7,8 @@ var directoryContents = require("./interface/directoryContents.js"),
     createDir = require("./interface/createDirectory.js"),
     createStream = require("./interface/createStream.js"),
     deletion = require("./interface/delete.js"),
-    getFile = require("./interface/getFile.js");
+    getFile = require("./interface/getFile.js"),
+    quota = require("./interface/quota.js");
 
 /**
  * @typedef {Object} ClientInterface
@@ -119,6 +120,19 @@ function createClient(remoteURL, username, password) {
             return (getOptions.format === "text") ?
                 getFile.getFileContentsString(remoteFilename, getOptions) :
                 getFile.getFileContentsBuffer(remoteFilename, getOptions);
+        },
+
+        /**
+         * Get quota information
+         * @param {OptionsHeadersAndFormat=} options Options for the request
+         * @returns {null|Object} Returns null if failed, or an object with `used` and `available`
+         */
+        getQuota: function getQuota(options) {
+            var getOptions = deepmerge(
+                baseOptions,
+                options || {}
+            );
+            return quota.getQuota(getOptions);
         }
 
     };
