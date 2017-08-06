@@ -8,7 +8,8 @@ var directoryContents = require("./interface/directoryContents.js"),
     createStream = require("./interface/createStream.js"),
     deletion = require("./interface/delete.js"),
     getFile = require("./interface/getFile.js"),
-    quota = require("./interface/quota.js");
+    quota = require("./interface/quota.js"),
+    move = require("./interface/moveFile.js");
 
 /**
  * @typedef {Object} ClientInterface
@@ -133,6 +134,22 @@ function createClient(remoteURL, username, password) {
                 options || {}
             );
             return quota.getQuota(getOptions);
+        },
+
+        /**
+         * Move a remote item to another path
+         * @param {String} remotePath The remote item path
+         * @param {String} targetRemotePath The new path after moving
+         * @param {OptionsWithHeaders=} options Options for the request
+         * @memberof ClientInterface
+         * @returns {Promise} A promise that resolves once the request has completed
+         */
+        moveFile: function moveFile(remotePath, targetRemotePath, options) {
+            var altOptions = deepmerge(
+                baseOptions,
+                options || {}
+            );
+            return move.moveFile(remotePath, targetRemotePath, altOptions);
         }
 
     };
