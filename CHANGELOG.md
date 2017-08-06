@@ -1,5 +1,13 @@
 # WebDAV-client changelog
 
+## **1.0.0**
+_2017-08-06_
+
+ * Complete rewrite of the project
+ * Better testing setup with webdav-server
+ * **Bugfixes**:
+   * [Directory contents parse bug](https://github.com/perry-mitchell/webdav-client/issues/54)
+
 ## 1.0.0-rc1
 _2017-07-01_
 
