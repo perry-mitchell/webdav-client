@@ -1,4 +1,5 @@
-var xml2js = require("xml2js");
+var path = require("path"),
+    xml2js = require("xml2js");
 
 var DAV_KEY_PREFIXES = [
     "",
@@ -20,10 +21,12 @@ function getSingleValue(item) {
 }
 
 function getValueForKey(key, obj) {
-    var keys = generateKeysForName(key);
-    for (var i = 0, keyCount = keys.length; i < keyCount; i += 1) {
-        if (typeof obj[keys[i]] !== "undefined") {
-            return obj[keys[i]];
+    if (typeof obj === "object") {
+        var keys = generateKeysForName(key);
+        for (var i = 0, keyCount = keys.length; i < keyCount; i += 1) {
+            if (typeof obj[keys[i]] !== "undefined") {
+                return obj[keys[i]];
+            }
         }
     }
     return undefined;
@@ -39,6 +42,23 @@ function parseXML(xml) {
             return resolve(result);
         });
     });
+}
+
+function propsToStat(props, filename) {
+    // Last modified time, raw size and item type
+    var lastMod = getSingleValue(getValueForKey("getlastmodified", props)),
+        rawSize = getSingleValue(getValueForKey("getcontentlength", props)) || "0",
+        resourceType = getSingleValue(getValueForKey("resourcetype", props)),
+        type = getValueForKey("collection", resourceType) ?
+            "directory" :
+            "file";
+    return {
+        filename: filename,
+        basename: path.basename(filename),
+        lastmod: lastMod,
+        size: parseInt(rawSize, 10),
+        type: type
+    };
 }
 
 function translateDiskSpace(value) {
@@ -59,5 +79,6 @@ module.exports = {
     getSingleValue: getSingleValue,
     getValueForKey: getValueForKey,
     parseXML: parseXML,
+    propsToStat: propsToStat,
     translateDiskSpace: translateDiskSpace
 };

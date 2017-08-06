@@ -10,7 +10,8 @@ var directoryContents = require("./interface/directoryContents.js"),
     getFile = require("./interface/getFile.js"),
     quota = require("./interface/quota.js"),
     move = require("./interface/moveFile.js"),
-    putFile = require("./interface/putFile.js");
+    putFile = require("./interface/putFile.js"),
+    stats = require("./interface/stat.js");
 
 /**
  * @typedef {Object} ClientInterface
@@ -167,6 +168,21 @@ function createClient(remoteURL, username, password) {
                 options || {}
             );
             return putFile.putFileContents(remoteFilename, data, putOptions);
+        },
+
+        /**
+         * Stat a remote object
+         * @param {String} remotePath The path of the item
+         * @param {OptionsWithHeaders=} options Options for the request
+         * @memberof ClientInterface
+         * @returns {Promise.<Object>} A promise that resolves with the stat data
+         */
+        stat: function stat(remotePath, options) {
+            var getOptions = deepmerge(
+                baseOptions,
+                options || {}
+            );
+            return stats.getStat(remotePath, getOptions);
         }
 
     };

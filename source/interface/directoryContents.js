@@ -72,20 +72,7 @@ function getDirectoryFiles(result, serverBasePath, requestPath) {
             var filename = serverBasePath === "/" ?
                 href :
                 urlTools.normalisePath(path.relative(serverBasePath, href));
-            // Last modified time, raw size and item type
-            var lastMod = getSingleValue(getValueForKey("getlastmodified", props)),
-                rawSize = getSingleValue(getValueForKey("getcontentlength", props)) || "0",
-                resourceType = getSingleValue(getValueForKey("resourcetype", props)),
-                type = getValueForKey("collection", resourceType) ?
-                    "directory" :
-                    "file";
-            return {
-                filename: filename,
-                basename: path.basename(filename),
-                lastmod: lastMod,
-                size: parseInt(rawSize, 10),
-                type: type
-            };
+            return davTools.propsToStat(props, filename);
         });
 }
 

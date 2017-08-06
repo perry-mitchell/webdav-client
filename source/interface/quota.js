@@ -32,8 +32,8 @@ function getQuota(options) {
 function parseQuota(result) {
     var responseItem = null;
     try {
-        var multistatus = getValueForKey("multistatus", result),
-            responseItem = getSingleValue(getValueForKey("response", multistatus));
+        var multistatus = getValueForKey("multistatus", result);
+        responseItem = getSingleValue(getValueForKey("response", multistatus));
     } catch (e) {}
     if (responseItem) {
         var propstat = getSingleValue(getValueForKey("propstat", responseItem)),
