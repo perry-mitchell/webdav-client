@@ -18,10 +18,26 @@ function clean() {
     copyDir(path.resolve(__dirname, "../serverContents"), path.resolve(__dirname, "../testContents"));
 }
 
+function restoreFetch() {
+    createWebDAVClient.setFetchMethod();
+}
+
+function returnFakeResponse(xml) {
+    createWebDAVClient.setFetchMethod(function fakeFetch() {
+        return Promise.resolve({
+            text: function() {
+                return xml;
+            }
+        });
+    });
+}
+
 Object.assign(global, {
     clean: clean,
     createWebDAVClient: createWebDAVClient,
     createWebDAVServer: createWebDAVServer,
     expect: expect,
+    restoreFetch: restoreFetch,
+    returnFakeResponse: returnFakeResponse,
     sinon: sinon
 });
