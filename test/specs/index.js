@@ -3,8 +3,9 @@ require("./polyfill.js");
 var path = require("path");
 
 var createWebDAVClient = require("../../source/index.js"),
-    baseWebDAVServer = require("../server/index.js"),
-    createWebDAVServer = baseWebDAVServer.webdavClient;
+    baseWebDAVServer = require("../server/index.js");
+
+var createWebDAVServer = baseWebDAVServer.webdavClient;
 
 createWebDAVServer.test = baseWebDAVServer.test;
 

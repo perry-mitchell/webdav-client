@@ -10,18 +10,19 @@ function extractURLPath(fullURL) {
 }
 
 function normaliseHREF(href) {
-    href = href.replace(/^https?:\/\/[^\/]+/, "");
-    return href;
+    var normalisedHref = href.replace(/^https?:\/\/[^\/]+/, "");
+    return normalisedHref;
 }
 
 function normalisePath(pathStr) {
-    if (pathStr[0] !== "/") {
-        pathStr = "/" + pathStr;
+    var normalisedPath = pathStr;
+    if (normalisedPath[0] !== "/") {
+        normalisedPath = "/" + normalisedPath;
     }
-    if (/^.+\/$/.test(pathStr)) {
-        pathStr = pathStr.substr(0, pathStr.length - 1);
+    if (/^.+\/$/.test(normalisedPath)) {
+        normalisedPath = normalisedPath.substr(0, normalisedPath.length - 1);
     }
-    return pathStr;
+    return normalisedPath;
 }
 
 module.exports = {

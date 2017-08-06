@@ -1,7 +1,6 @@
 var path = require("path");
 
-var xml2js = require("xml2js"),
-    joinURL = require("url-join"),
+var joinURL = require("url-join"),
     deepmerge = require("deepmerge");
 
 var fetch = require("../request.js").fetch,
@@ -29,19 +28,9 @@ function getDirectoryContents(remotePath, options) {
             // Convert response to text
             return res.text();
         })
-        .then(function __handleResponseParsing(body) {
-            var parser = new xml2js.Parser({
-                ignoreAttrs: true
-            });
-            return new Promise(function __parseXML(resolve, reject) {
-                // Parse the XML response from the server
-                parser.parseString(body, function (err, result) {
-                    if (err) {
-                        return reject(err);
-                    }
-                    return resolve(getDirectoryFiles(result, options.remotePath, remotePath));
-                });
-            });
+        .then(davTools.parseXML)
+        .then(function __handleResult(result) {
+            return getDirectoryFiles(result, options.remotePath, remotePath);
         });
 }
 

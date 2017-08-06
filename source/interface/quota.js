@@ -1,5 +1,4 @@
-var xml2js = require("xml2js"),
-    deepmerge = require("deepmerge")
+var deepmerge = require("deepmerge");
 
 var responseHandlers = require("../response.js"),
     fetch = require("../request.js").fetch,
@@ -30,16 +29,21 @@ function getQuota(options) {
 }
 
 function parseQuota(result) {
-    var responseItem = null;
+    var responseItem = null,
+        multistatus,
+        propstat,
+        props,
+        quotaUsed,
+        quotaAvail;
     try {
-        var multistatus = getValueForKey("multistatus", result);
+        multistatus = getValueForKey("multistatus", result);
         responseItem = getSingleValue(getValueForKey("response", multistatus));
-    } catch (e) {}
+    } catch (e) { /* ignore */ }
     if (responseItem) {
-        var propstat = getSingleValue(getValueForKey("propstat", responseItem)),
-            props = getSingleValue(getValueForKey("prop", propstat)),
-            quotaUsed = getSingleValue(getValueForKey("quota-used-bytes", props)),
-            quotaAvail = getSingleValue(getValueForKey("quota-available-bytes", props));
+        propstat = getSingleValue(getValueForKey("propstat", responseItem));
+        props = getSingleValue(getValueForKey("prop", propstat));
+        quotaUsed = getSingleValue(getValueForKey("quota-used-bytes", props));
+        quotaAvail = getSingleValue(getValueForKey("quota-available-bytes", props));
         return (typeof quotaUsed !== "undefined" && typeof quotaAvail !== "undefined") ?
             {
                 used: parseInt(quotaUsed, 10),

@@ -1,6 +1,5 @@
 var joinURL = require("url-join"),
-    deepmerge = require("deepmerge"),
-    xml2js = require("xml2js");
+    deepmerge = require("deepmerge");
 
 var responseHandlers = require("../response.js"),
     fetch = require("../request.js").fetch,
@@ -32,11 +31,12 @@ function getStat(filename, options) {
 }
 
 function parseStat(result, filename) {
-    var responseItem = null;
+    var responseItem = null,
+        multistatus;
     try {
-        var multistatus = getValueForKey("multistatus", result);
+        multistatus = getValueForKey("multistatus", result);
         responseItem = getSingleValue(getValueForKey("response", multistatus));
-    } catch (e) {}
+    } catch (e) { /* ignore */ }
     if (!responseItem) {
         throw new Error("Failed getting item stat: bad response");
     }

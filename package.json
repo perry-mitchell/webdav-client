@@ -5,7 +5,9 @@
   "main": "source/index.js",
   "scripts": {
     "generate:docs": "jsdoc2md 'source/**/*.js' > API.md",
-    "test": "mocha -r test/specs/index.js test/specs/**/*.spec.js"
+    "test": "npm run test:lint && npm run test:unit",
+    "test:lint": "eslint source/ && eslint test/specs/",
+    "test:unit": "mocha -r test/specs/index.js test/specs/**/*.spec.js"
   },
   "repository": {
     "type": "git",
@@ -35,6 +37,7 @@
     "chai": "^3.5.0",
     "copy-dir": "~0.3.0",
     "directory-exists": "^1.0.1",
+    "eslint": "~4.4.0",
     "exists-file": "~3.0.2",
     "jsdoc-to-markdown": "^2.0.1",
     "mkdirp": "^0.5.1",

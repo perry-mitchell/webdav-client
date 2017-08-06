@@ -1,7 +1,8 @@
 function handleResponseCode(response) {
-    var status = parseInt(response.status, 10);
+    var status = parseInt(response.status, 10),
+        err;
     if (status >= 400) {
-        var err = new Error("Invalid response: " + status + " " + response.statusText);
+        err = new Error("Invalid response: " + status + " " + response.statusText);
         err.status = status;
         throw err;
     }

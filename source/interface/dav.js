@@ -21,9 +21,12 @@ function getSingleValue(item) {
 }
 
 function getValueForKey(key, obj) {
+    var keys,
+        i,
+        keyCount;
     if (typeof obj === "object") {
-        var keys = generateKeysForName(key);
-        for (var i = 0, keyCount = keys.length; i < keyCount; i += 1) {
+        keys = generateKeysForName(key);
+        for (i = 0, keyCount = keys.length; i < keyCount; i += 1) {
             if (typeof obj[keys[i]] !== "undefined") {
                 return obj[keys[i]];
             }

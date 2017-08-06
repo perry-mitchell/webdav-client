@@ -3,7 +3,9 @@ var ReadableStream = require("stream").Readable;
 function streamToBuffer(stream) {
     var buffs = [];
     return new Promise(function(resolve) {
-        stream.on("data", function(d) { buffs.push(d); });
+        stream.on("data", function(d) {
+            buffs.push(d);
+        });
         stream.on("end", function() {
             resolve(Buffer.concat(buffs));
         });

@@ -1,11 +1,11 @@
-var joinURL = require("url-join"),
-    deepmerge = require("deepmerge");
-
 var Stream = require("stream"),
-    PassThroughStream = Stream.PassThrough;
+    joinURL = require("url-join"),
+    deepmerge = require("deepmerge");
 
 var fetch = require("../request.js").fetch,
     responseHandlers = require("../response.js");
+
+var PassThroughStream = Stream.PassThrough;
 
 function createReadStream(filePath, options) {
     var outStream = new PassThroughStream();
@@ -43,8 +43,9 @@ function createWriteStream(filePath, options) {
 }
 
 function getFileStream(filePath, options) {
+    var rangeHeader;
     if (typeof options.range === "object" && typeof options.range.start === "number") {
-        var rangeHeader = "bytes=" + options.range.start + "-";
+        rangeHeader = "bytes=" + options.range.start + "-";
         if (typeof options.range.end === "number") {
             rangeHeader += options.range.end;
         }
