@@ -48,20 +48,27 @@ function parseXML(xml) {
 }
 
 function propsToStat(props, filename) {
-    // Last modified time, raw size and item type
+    // Last modified time, raw size, item type and mime
     var lastMod = getSingleValue(getValueForKey("getlastmodified", props)),
         rawSize = getSingleValue(getValueForKey("getcontentlength", props)) || "0",
         resourceType = getSingleValue(getValueForKey("resourcetype", props)),
+        mimeType = getSingleValue(getValueForKey("getcontenttype", props)),
         type = getValueForKey("collection", resourceType) ?
             "directory" :
             "file";
-    return {
+    var stat = {
         filename: filename,
         basename: path.basename(filename),
         lastmod: lastMod,
         size: parseInt(rawSize, 10),
         type: type
     };
+    if (type === "file") {
+        stat.mime = mimeType ?
+            mimeType.split(";")[0] :
+            "";
+    }
+    return stat;
 }
 
 function translateDiskSpace(value) {
