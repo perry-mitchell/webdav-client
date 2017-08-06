@@ -1,6 +1,7 @@
 *.log
+.DS_Store
 .history
 .vscode
 test.js
 node_modules
-test/resources/data
+test/testContents

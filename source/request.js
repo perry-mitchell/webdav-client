@@ -10,7 +10,7 @@ var fetchMethod = nodeFetch;
  */
 function request(url, options) {
     return fetchMethod(url, options);
-};
+}
 
 /**
  * Set the fetch method to use when making requests

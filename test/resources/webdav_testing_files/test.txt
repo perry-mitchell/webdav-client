@@ -1,3 +1,0 @@
-This is a text file.
-It has several lines.
-Wow.

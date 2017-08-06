@@ -1,20 +1,32 @@
-module.exports = {
+var URL = require("url-parse");
 
-    implantCredentials: function(url, username, password) {
-        return (username && username.length > 0) ?
-            url.replace(
-                /(https?:\/\/)/i,
-                "$1" + encodeURIComponent(username) + ":" + encodeURIComponent(password) + "@"
-            ) : url;
-    },
-
-    /**
-     * Strips the end slash off of a URL
-     */
-    sanitiseBaseURL: function(url) {
-        return url
-            .trim()
-            .replace(/\/$/, "");
+function extractURLPath(fullURL) {
+    var url = new URL(fullURL),
+        urlPath = url.pathname;
+    if (urlPath.length <= 0) {
+        urlPath = "/";
     }
+    return normalisePath(urlPath);
+}
 
+function normaliseHREF(href) {
+    var normalisedHref = href.replace(/^https?:\/\/[^\/]+/, "");
+    return normalisedHref;
+}
+
+function normalisePath(pathStr) {
+    var normalisedPath = pathStr;
+    if (normalisedPath[0] !== "/") {
+        normalisedPath = "/" + normalisedPath;
+    }
+    if (/^.+\/$/.test(normalisedPath)) {
+        normalisedPath = normalisedPath.substr(0, normalisedPath.length - 1);
+    }
+    return normalisedPath;
+}
+
+module.exports = {
+    extractURLPath: extractURLPath,
+    normaliseHREF: normaliseHREF,
+    normalisePath: normalisePath
 };

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<D:multistatus xmlns:D="DAV:">
+    <D:response>
+        <D:href>http://localhost:9988/webdav/server/</D:href>
+        <D:propstat>
+            <D:status>HTTP/1.1 200 OK</D:status>
+            <D:prop>
+                <D:getlastmodified>Sun, 06 Aug 2017 09:43:20 GMT</D:getlastmodified>
+                <D:lockdiscovery/>
+                <D:supportedlock>
+                    <D:lockentry>
+                        <D:lockscope>
+                            <D:exclusive/></D:lockscope>
+                        <D:locktype>
+                            <D:write/></D:locktype>
+                    </D:lockentry>
+                    <D:lockentry>
+                        <D:lockscope>
+                            <D:shared/></D:lockscope>
+                        <D:locktype>
+                            <D:write/></D:locktype>
+                    </D:lockentry>
+                </D:supportedlock>
+                <D:creationdate>2017-08-06T09:43:20-03:00</D:creationdate>
+                <D:resourcetype>
+                    <D:collection/></D:resourcetype>
+                <D:displayname>server</D:displayname>
+                <D:getetag>&quot;f48780e12fe315dd25882421c2e56c4f&quot;</D:getetag>
+            </D:prop>
+        </D:propstat>
+        <D:location>
+            <D:href>http://localhost:9988/webdav/server</D:href>
+        </D:location>
+    </D:response>
+</D:multistatus>

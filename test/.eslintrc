@@ -1,0 +1,17 @@
+{
+  "env": {
+    "mocha": true,
+    "jasmine": true
+  },
+  "globals": {
+    "clean": true,
+    "createWebDAVClient": true,
+    "createWebDAVServer": true,
+    "restoreFetch": true,
+    "returnFakeResponse": true
+  },
+  "rules": {
+    "no-unused-expressions": 0,
+    "padded-blocks": 0
+  }
+}
