@@ -3,7 +3,8 @@ var xml2js = require("xml2js"),
 
 var responseHandlers = require("../response.js"),
     fetch = require("../request.js").fetch,
-    davTools = require("./dav.js");
+    davTools = require("./dav.js"),
+    parseXML = require("./dav.js").parseXML;
 
 var getValueForKey = davTools.getValueForKey,
     getSingleValue = davTools.getSingleValue,
@@ -47,18 +48,6 @@ function parseQuota(result) {
             null;
     }
     return null;
-}
-
-function parseXML(xml) {
-    var parser = new xml2js.Parser({ ignoreAttrs: true });
-    return new Promise(function(resolve, reject) {
-        parser.parseString(xml, function __handleParseResult(err, result) {
-            if (err) {
-                return reject(err);
-            }
-            return resolve(result);
-        });
-    });
 }
 
 module.exports = {

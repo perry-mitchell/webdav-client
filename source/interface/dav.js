@@ -1,3 +1,5 @@
+var xml2js = require("xml2js");
+
 var DAV_KEY_PREFIXES = [
     "",
     "d:",
@@ -27,6 +29,18 @@ function getValueForKey(key, obj) {
     return undefined;
 }
 
+function parseXML(xml) {
+    var parser = new xml2js.Parser({ ignoreAttrs: true });
+    return new Promise(function(resolve, reject) {
+        parser.parseString(xml, function __handleParseResult(err, result) {
+            if (err) {
+                return reject(err);
+            }
+            return resolve(result);
+        });
+    });
+}
+
 function translateDiskSpace(value) {
     switch (value.toString()) {
         case "-3":
@@ -44,5 +58,6 @@ function translateDiskSpace(value) {
 module.exports = {
     getSingleValue: getSingleValue,
     getValueForKey: getValueForKey,
+    parseXML: parseXML,
     translateDiskSpace: translateDiskSpace
 };
