@@ -39,10 +39,12 @@ function parseQuota(result) {
             props = getSingleValue(getValueForKey("prop", propstat)),
             quotaUsed = getSingleValue(getValueForKey("quota-used-bytes", props)),
             quotaAvail = getSingleValue(getValueForKey("quota-available-bytes", props));
-        return {
-            used: quotaUsed,
-            available: translateDiskSpace(quotaAvail)
-        };
+        return (typeof quotaUsed !== "undefined" && typeof quotaAvail !== "undefined") ?
+            {
+                used: parseInt(quotaUsed, 10),
+                available: translateDiskSpace(quotaAvail)
+            } :
+            null;
     }
     return null;
 }

@@ -37,7 +37,7 @@ function translateDiskSpace(value) {
             // -1 is non-computed
             return "unknown";
         default:
-            return value;
+            return parseInt(value, 10);
     }
 }
 
