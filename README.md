@@ -239,6 +239,4 @@ This library has been tested to work with the following WebDAV servers or applic
  * [Nextcloud](https://nextcloud.com/)
  * [Yandex.ru](https://yandex.ru/)
  * [jsDAV](https://github.com/mikedeboer/jsDAV)
- * [webdav-server](https://github.com/OpenMarshal/npm-WebDAV-Server) _(1)_
- 
-  _1. Limited range-request support_
+ * [webdav-server](https://github.com/OpenMarshal/npm-WebDAV-Server)
