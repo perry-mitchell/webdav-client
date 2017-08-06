@@ -14,9 +14,29 @@ var directoryContents = require("./interface/directoryContents.js"),
     stats = require("./interface/stat.js");
 
 /**
+ * Client adapter
  * @typedef {Object} ClientInterface
  */
 
+/**
+ * Options with header object
+ * @typedef {Object} OptionsWithHeaders
+ * @property {Object} headers - Headers key-value list
+ */
+
+/**
+ * Options for creating a resource
+ * @typedef {OptionsWithHeaders} PutOptions
+ * @property {Boolean=} overwrite - Whether or not to overwrite existing files (default: true)
+ */
+
+/**
+ * Create a client adapter
+ * @param {String} remoteURL The remote address of the webdav server
+ * @param {String=} username Optional username for authentication
+ * @param {String=} password Optional password for authentication
+ * @returns {ClientInterface} A new client interface instance
+ */
 function createClient(remoteURL, username, password) {
     var baseOptions = {
         headers: {},
@@ -47,7 +67,7 @@ function createClient(remoteURL, username, password) {
         /**
          * Create a readable stream of a remote file
          * @param {String} remoteFilename The file to stream
-         * @param {OptionsHeadersAndFormat=} options Options for the request
+         * @param {OptionsWithHeaders=} options Options for the request
          * @memberof ClientInterface
          * @returns {Readable} A readable stream
          */
@@ -62,7 +82,7 @@ function createClient(remoteURL, username, password) {
         /**
          * Create a writeable stream to a remote file
          * @param {String} remoteFilename The file to write to
-         * @param {OptionsHeadersAndFormat=} options Options for the request
+         * @param {PutOptions=} options Options for the request
          * @memberof ClientInterface
          * @returns {Writeable} A writeable stream
          */
@@ -158,7 +178,7 @@ function createClient(remoteURL, username, password) {
          * Write contents to a remote file path
          * @param {String} remoteFilename The path of the remote file
          * @param {String|Buffer} data The data to write
-         * @param {OptionsHeadersAndFormat=} options The options for the request
+         * @param {PutOptions=} options The options for the request
          * @returns {Promise} A promise that resolves once the contents have been written
          * @memberof ClientInterface
          */
