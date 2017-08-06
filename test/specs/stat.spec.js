@@ -24,6 +24,7 @@ describe("stat", function() {
                 expect(stat).to.have.property("lastmod").that.is.a.string;
                 expect(stat).to.have.property("type", "file");
                 expect(stat).to.have.property("size", 52130);
+                expect(stat).to.have.property("mime", "image/jpeg");
             });
     });
 
