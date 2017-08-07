@@ -1,5 +1,10 @@
 # WebDAV-client changelog
 
+## 1.0.1
+_2017-08-07_
+
+ * Allow `test/` directory during publish (used downstream)
+
 ## **1.0.0**
 _2017-08-06_
 
