@@ -129,6 +129,11 @@
     "no-this-before-super": 2,
     "prefer-const": 2,
     "no-var": 2,
-    "prettier/prettier": "error"
+    "prettier/prettier": [
+      "error",
+      {
+        "tabWidth": 4
+      }
+    ]
   }
 }
