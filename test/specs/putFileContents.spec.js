@@ -1,11 +1,13 @@
-const path = require("path"),
-    fs = require("fs");
+"use strict";
+
+const path = require("path");
+const fs = require("fs");
 
 const bufferEquals = require("buffer-equals");
 
-const SOURCE_BIN = path.resolve(__dirname, "../testContents/alrighty.jpg"),
-    TARGET_BIN = path.resolve(__dirname, "../testContents/sub1/alrighty.jpg"),
-    TARGET_TXT = path.resolve(__dirname, "../testContents/newFile.txt");
+const SOURCE_BIN = path.resolve(__dirname, "../testContents/alrighty.jpg");
+const TARGET_BIN = path.resolve(__dirname, "../testContents/sub1/alrighty.jpg");
+const TARGET_TXT = path.resolve(__dirname, "../testContents/newFile.txt");
 
 describe("getFileContents", function() {
 

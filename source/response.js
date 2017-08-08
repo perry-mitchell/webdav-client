@@ -1,3 +1,5 @@
+"use strict";
+
 function handleResponseCode(response) {
     const status = parseInt(response.status, 10);
     let err;

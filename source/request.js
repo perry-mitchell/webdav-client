@@ -1,3 +1,5 @@
+"use strict";
+
 const nodeFetch = require("node-fetch");
 
 let fetchMethod = nodeFetch;

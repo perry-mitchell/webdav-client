@@ -1,24 +1,26 @@
-const joinURL = require("url-join"),
-    deepmerge = require("deepmerge");
+"use strict";
 
-const responseHandlers = require("../response.js"),
-    fetch = require("../request.js").fetch,
-    davTools = require("./dav.js"),
-    parseXML = require("./dav.js").parseXML,
-    urlTools = require("../url.js");
+const joinURL = require("url-join");
+const deepmerge = require("deepmerge");
 
-const getValueForKey = davTools.getValueForKey,
-    getSingleValue = davTools.getSingleValue;
+const responseHandlers = require("../response.js");
+const fetch = require("../request.js").fetch;
+const davTools = require("./dav.js");
+const parseXML = require("./dav.js").parseXML;
+const urlTools = require("../url.js");
+
+const getValueForKey = davTools.getValueForKey;
+const getSingleValue = davTools.getSingleValue;
 
 function getStat(filename, options) {
-    const fetchURL = joinURL(options.remoteURL, filename),
-        fetchOptions = {
-            method: "PROPFIND",
-            headers: deepmerge(
-                { Depth: 0 },
-                options.headers
-            )
-        };
+    const fetchURL = joinURL(options.remoteURL, filename);
+    const fetchOptions = {
+        method: "PROPFIND",
+        headers: deepmerge(
+            { Depth: 0 },
+            options.headers
+        )
+    };
     return fetch(fetchURL, fetchOptions)
         .then(responseHandlers.handleResponseCode)
         .then(function __convertToText(res) {
@@ -40,8 +42,8 @@ function parseStat(result, filename) {
     if (!responseItem) {
         throw new Error("Failed getting item stat: bad response");
     }
-    const propStat = getSingleValue(getValueForKey("propstat", responseItem)),
-        props = getSingleValue(getValueForKey("prop", propStat));
+    const propStat = getSingleValue(getValueForKey("propstat", responseItem));
+    const props = getSingleValue(getValueForKey("prop", propStat));
     const filePath = urlTools.normalisePath(filename);
     return davTools.propsToStat(props, filePath);
 }

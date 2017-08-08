@@ -1,27 +1,29 @@
+"use strict";
+
 const path = require("path");
 
-const joinURL = require("url-join"),
-    deepmerge = require("deepmerge");
+const joinURL = require("url-join");
+const deepmerge = require("deepmerge");
 
-const fetch = require("../request.js").fetch,
-    responseHandlers = require("../response.js"),
-    urlTools = require("../url.js"),
-    davTools = require("./dav.js");
+const fetch = require("../request.js").fetch;
+const responseHandlers = require("../response.js");
+const urlTools = require("../url.js");
+const davTools = require("./dav.js");
 
-const getValueForKey = davTools.getValueForKey,
-    getSingleValue = davTools.getSingleValue;
+const getValueForKey = davTools.getValueForKey;
+const getSingleValue = davTools.getSingleValue;
 
 function getDirectoryContents(remotePath, options) {
-    const fetchURL = joinURL(options.remoteURL, remotePath),
-        fetchOptions = {
-            method: "PROPFIND",
-            headers: deepmerge(
-                {
-                    Depth: 1
-                },
-                options.headers
-            )
-        };
+    const fetchURL = joinURL(options.remoteURL, remotePath);
+    const fetchOptions = {
+        method: "PROPFIND",
+        headers: deepmerge(
+            {
+                Depth: 1
+            },
+            options.headers
+        )
+    };
     return fetch(fetchURL, fetchOptions)
         .then(responseHandlers.handleResponseCode)
         .then(function __handleResponseFormat(res) {
@@ -37,8 +39,8 @@ function getDirectoryContents(remotePath, options) {
 function getDirectoryFiles(result, serverBasePath, requestPath) {
     const remoteTargetPath = path.join(serverBasePath, requestPath);
     // Extract the response items (directory contents)
-    const multiStatus = getValueForKey("multistatus", result),
-        responseItems = getValueForKey("response", multiStatus);
+    const multiStatus = getValueForKey("multistatus", result);
+    const responseItems = getValueForKey("response", multiStatus);
     return responseItems
         // Filter out the item pointing to the current directory (not needed)
         .filter(function __filterResponseItem(item) {
@@ -55,8 +57,8 @@ function getDirectoryFiles(result, serverBasePath, requestPath) {
             href = decodeURI(href);
             href = urlTools.normalisePath(href);
             // Each item should contain a stat object
-            const propStat = getSingleValue(getValueForKey("propstat", item)),
-                props = getSingleValue(getValueForKey("prop", propStat));
+            const propStat = getSingleValue(getValueForKey("propstat", item));
+            const props = getSingleValue(getValueForKey("prop", propStat));
             // Process the true full filename (minus the base server path)
             const filename = serverBasePath === "/" ?
                 href :

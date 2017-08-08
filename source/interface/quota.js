@@ -1,13 +1,15 @@
+"use strict";
+
 const deepmerge = require("deepmerge");
 
-const responseHandlers = require("../response.js"),
-    fetch = require("../request.js").fetch,
-    davTools = require("./dav.js"),
-    parseXML = require("./dav.js").parseXML;
+const responseHandlers = require("../response.js");
+const fetch = require("../request.js").fetch;
+const davTools = require("./dav.js");
+const parseXML = require("./dav.js").parseXML;
 
-const getValueForKey = davTools.getValueForKey,
-    getSingleValue = davTools.getSingleValue,
-    translateDiskSpace = davTools.translateDiskSpace;
+const getValueForKey = davTools.getValueForKey;
+const getSingleValue = davTools.getSingleValue;
+const translateDiskSpace = davTools.translateDiskSpace;
 
 function getQuota(options) {
     let fetchURL = options.remoteURL + "/";

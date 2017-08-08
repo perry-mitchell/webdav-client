@@ -1,5 +1,7 @@
-const path = require("path"),
-    directoryExists = require("directory-exists").sync;
+"use strict";
+
+const path = require("path");
+const directoryExists = require("directory-exists").sync;
 
 describe("createDirectory", function() {
 

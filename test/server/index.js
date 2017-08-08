@@ -1,5 +1,7 @@
-const path = require("path"),
-    ws = require("webdav-server").v2;
+"use strict";
+
+const path = require("path");
+const ws = require("webdav-server").v2;
 
 function createServer(dir, authType) {
     if (!dir) {

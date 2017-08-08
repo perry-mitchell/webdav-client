@@ -1,9 +1,11 @@
-const Stream = require("stream"),
-    joinURL = require("url-join"),
-    deepmerge = require("deepmerge");
+"use strict";
 
-const fetch = require("../request.js").fetch,
-    responseHandlers = require("../response.js");
+const Stream = require("stream");
+const joinURL = require("url-join");
+const deepmerge = require("deepmerge");
+
+const fetch = require("../request.js").fetch;
+const responseHandlers = require("../response.js");
 
 const PassThroughStream = Stream.PassThrough;
 
@@ -20,8 +22,8 @@ function createReadStream(filePath, options) {
 }
 
 function createWriteStream(filePath, options) {
-    const writeStream = new PassThroughStream(),
-        headers = deepmerge({}, options.headers);
+    const writeStream = new PassThroughStream();
+    const headers = deepmerge({}, options.headers);
     // if (typeof options.range === "object" && typeof options.range.start === "number") {
     //     var rangeHeader = "bytes=" + options.range.start + "-";
     //     if (typeof options.range.end === "number") {
@@ -32,12 +34,12 @@ function createWriteStream(filePath, options) {
     if (options.overwrite === false) {
         headers["If-None-Match"] = "*";
     }
-    const fetchURL = joinURL(options.remoteURL, filePath),
-        fetchOptions = {
-            method: "PUT",
-            headers: headers,
-            body: writeStream
-        };
+    const fetchURL = joinURL(options.remoteURL, filePath);
+    const fetchOptions = {
+        method: "PUT",
+        headers: headers,
+        body: writeStream
+    };
     fetch(fetchURL, fetchOptions);
     return writeStream;
 }
@@ -51,11 +53,11 @@ function getFileStream(filePath, options) {
         }
         options.headers.Range = rangeHeader;
     }
-    const fetchURL = joinURL(options.remoteURL, filePath),
-        fetchOptions = {
-            method: "GET",
-            headers: options.headers
-        };
+    const fetchURL = joinURL(options.remoteURL, filePath);
+    const fetchOptions = {
+        method: "GET",
+        headers: options.headers
+    };
     return fetch(fetchURL, fetchOptions)
         .then(responseHandlers.handleResponseCode)
         .then(function __mapResultToStream(res) {

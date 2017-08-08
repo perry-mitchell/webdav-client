@@ -1,17 +1,19 @@
+"use strict";
+
 const deepmerge = require("deepmerge");
 
-const authTools = require("./auth.js"),
-    urlTools = require("./url.js");
+const authTools = require("./auth.js");
+const urlTools = require("./url.js");
 
-const directoryContents = require("./interface/directoryContents.js"),
-    createDir = require("./interface/createDirectory.js"),
-    createStream = require("./interface/createStream.js"),
-    deletion = require("./interface/delete.js"),
-    getFile = require("./interface/getFile.js"),
-    quota = require("./interface/quota.js"),
-    move = require("./interface/moveFile.js"),
-    putFile = require("./interface/putFile.js"),
-    stats = require("./interface/stat.js");
+const directoryContents = require("./interface/directoryContents.js");
+const createDir = require("./interface/createDirectory.js");
+const createStream = require("./interface/createStream.js");
+const deletion = require("./interface/delete.js");
+const getFile = require("./interface/getFile.js");
+const quota = require("./interface/quota.js");
+const move = require("./interface/moveFile.js");
+const putFile = require("./interface/putFile.js");
+const stats = require("./interface/stat.js");
 
 /**
  * Client adapter

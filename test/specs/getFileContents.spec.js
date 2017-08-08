@@ -1,10 +1,12 @@
-const path = require("path"),
-    fs = require("fs");
+"use strict";
+
+const path = require("path");
+const fs = require("fs");
 
 const bufferEquals = require("buffer-equals");
 
-const SOURCE_BIN = path.resolve(__dirname, "../testContents/alrighty.jpg"),
-    SOURCE_TXT = path.resolve(__dirname, "../testContents/text document.txt");
+const SOURCE_BIN = path.resolve(__dirname, "../testContents/alrighty.jpg");
+const SOURCE_TXT = path.resolve(__dirname, "../testContents/text document.txt");
 
 describe("getFileContents", function() {
 

@@ -1,5 +1,7 @@
-const path = require("path"),
-    xml2js = require("xml2js");
+"use strict";
+
+const path = require("path");
+const xml2js = require("xml2js");
 
 const DAV_KEY_PREFIXES = [
     "",
@@ -49,13 +51,13 @@ function parseXML(xml) {
 
 function propsToStat(props, filename) {
     // Last modified time, raw size, item type and mime
-    const lastMod = getSingleValue(getValueForKey("getlastmodified", props)),
-        rawSize = getSingleValue(getValueForKey("getcontentlength", props)) || "0",
-        resourceType = getSingleValue(getValueForKey("resourcetype", props)),
-        mimeType = getSingleValue(getValueForKey("getcontenttype", props)),
-        type = getValueForKey("collection", resourceType) ?
-            "directory" :
-            "file";
+    const lastMod = getSingleValue(getValueForKey("getlastmodified", props));
+    const rawSize = getSingleValue(getValueForKey("getcontentlength", props)) || "0";
+    const resourceType = getSingleValue(getValueForKey("resourcetype", props));
+    const mimeType = getSingleValue(getValueForKey("getcontenttype", props));
+    const type = getValueForKey("collection", resourceType) ?
+        "directory" :
+        "file";
     const stat = {
         filename: filename,
         basename: path.basename(filename),
