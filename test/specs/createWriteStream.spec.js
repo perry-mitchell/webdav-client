@@ -1,9 +1,11 @@
-var path = require("path"),
-    fs = require("fs"),
-    PassThrough = require("stream").PassThrough,
-    waitOn = require("wait-on");
+"use strict";
 
-var SOURCE_FILENAME = path.resolve(__dirname, "../testContents/alrighty.jpg");
+const path = require("path");
+const fs = require("fs");
+const PassThrough = require("stream").PassThrough;
+const waitOn = require("wait-on");
+
+const SOURCE_FILENAME = path.resolve(__dirname, "../testContents/alrighty.jpg");
 
 function waitOnFile(filename) {
     return new Promise(function(resolve, reject) {
@@ -41,9 +43,9 @@ describe("createWriteStream", function() {
     });
 
     it("writes the file to the remote", function() {
-        var targetFile = path.resolve(__dirname, "../testContents/alrighty2.jpg");
-        var writeStream = this.client.createWriteStream("/alrighty2.jpg"),
-            readStream = fs.createReadStream(SOURCE_FILENAME);
+        const targetFile = path.resolve(__dirname, "../testContents/alrighty2.jpg");
+        const writeStream = this.client.createWriteStream("/alrighty2.jpg");
+        const readStream = fs.createReadStream(SOURCE_FILENAME);
         expect(writeStream instanceof PassThrough).to.be.true;
         return new Promise(function(resolve, reject) {
             writeStream.on("end", function() {

@@ -1,18 +1,20 @@
+"use strict";
+
 require("./polyfill.js");
 
-var path = require("path");
+const path = require("path");
 
-var createWebDAVClient = require("../../source/index.js"),
-    baseWebDAVServer = require("../server/index.js");
+const createWebDAVClient = require("../../source/index.js");
+const baseWebDAVServer = require("../server/index.js");
 
-var createWebDAVServer = baseWebDAVServer.webdavClient;
+const createWebDAVServer = baseWebDAVServer.webdavClient;
 
 createWebDAVServer.test = baseWebDAVServer.test;
 
-var expect = require("chai").expect,
-    sinon = require("sinon"),
-    rimraf = require("rimraf").sync,
-    copyDir = require("copy-dir").sync;
+const expect = require("chai").expect;
+const sinon = require("sinon");
+const rimraf = require("rimraf").sync;
+const copyDir = require("copy-dir").sync;
 
 function clean() {
     rimraf(path.resolve(__dirname, "../testContents"));

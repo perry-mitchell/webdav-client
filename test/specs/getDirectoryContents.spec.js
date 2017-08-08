@@ -1,3 +1,5 @@
+"use strict";
+
 describe("getDirectoryContents", function() {
 
     beforeEach(function() {
@@ -24,7 +26,7 @@ describe("getDirectoryContents", function() {
 
     it("returns correct directory results", function() {
         return this.client.getDirectoryContents("/").then(function(contents) {
-            var sub1 = contents.find(function(item) {
+            const sub1 = contents.find(function(item) {
                 return item.basename === "sub1";
             });
             expect(sub1.filename).to.equal("/sub1");
@@ -35,7 +37,7 @@ describe("getDirectoryContents", function() {
 
     it("returns results not including base directory", function() {
         return this.client.getDirectoryContents("/sub1").then(function(contents) {
-            var sub1 = contents.find(function(item) {
+            const sub1 = contents.find(function(item) {
                 return item.basename === "sub1";
             });
             expect(sub1).to.be.undefined;
@@ -44,7 +46,7 @@ describe("getDirectoryContents", function() {
 
     it("returns correct file results", function() {
         return this.client.getDirectoryContents("/").then(function(contents) {
-            var sub1 = contents.find(function(item) {
+            const sub1 = contents.find(function(item) {
                 return item.basename === "alrighty.jpg";
             });
             expect(sub1.filename).to.equal("/alrighty.jpg");
@@ -55,7 +57,7 @@ describe("getDirectoryContents", function() {
 
     it("returns correct file results in sub-directory", function() {
         return this.client.getDirectoryContents("/sub1").then(function(contents) {
-            var sub1 = contents.find(function(item) {
+            const sub1 = contents.find(function(item) {
                 return item.basename === "irrelephant.jpg";
             });
             expect(sub1.filename).to.equal("/sub1/irrelephant.jpg");

@@ -1,18 +1,20 @@
-var path = require("path"),
-    ws = require("webdav-server").v2;
+"use strict";
+
+const path = require("path");
+const ws = require("webdav-server").v2;
 
 function createServer(dir, authType) {
     if (!dir) {
         throw new Error("Expected target directory");
     }
-    var userManager = new ws.SimpleUserManager();
-    var user = userManager.addUser("webdav-user", "pa$$w0rd!");
-    var auth = (!authType || authType === "basic") ?
+    const userManager = new ws.SimpleUserManager();
+    const user = userManager.addUser("webdav-user", "pa$$w0rd!");
+    const auth = (!authType || authType === "basic") ?
         new ws.HTTPBasicAuthentication(userManager) :
         new ws.HTTPDigestAuthentication(userManager, "test");
-    var privilegeManager = new ws.SimplePathPrivilegeManager();
+    const privilegeManager = new ws.SimplePathPrivilegeManager();
     privilegeManager.setRights(user, "/", [ "all" ]);
-    var server = new ws.WebDAVServer({
+    const server = new ws.WebDAVServer({
         port: 9988,
         httpAuthentication: auth,
         privilegeManager: privilegeManager
@@ -34,7 +36,7 @@ function createServer(dir, authType) {
         }
 
     };
-};
+}
 
 createServer.test = {
     username: "webdav-user",

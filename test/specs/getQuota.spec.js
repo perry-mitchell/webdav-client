@@ -1,5 +1,7 @@
-var fs = require("fs"),
-    path = require("path");
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
 
 function useInvalidQuota() {
     returnFakeResponse(fs.readFileSync(path.resolve(__dirname, "../responses/quota-invalid.xml"), "utf8"));

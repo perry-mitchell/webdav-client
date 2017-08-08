@@ -1,6 +1,8 @@
-var path = require("path"),
-    fileExists = require("exists-file").sync,
-    directoryExists = require("directory-exists").sync;
+"use strict";
+
+const path = require("path");
+const fileExists = require("exists-file").sync;
+const directoryExists = require("directory-exists").sync;
 
 describe("moveFile", function() {
 

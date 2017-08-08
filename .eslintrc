@@ -153,6 +153,7 @@
     "no-class-assign": 2,
     "no-const-assign": 2,
     "no-this-before-super": 2,
-    "prefer-const": 1
+    "prefer-const": 2,
+    "no-var": 2
   }
 }

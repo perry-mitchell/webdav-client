@@ -1,5 +1,7 @@
-var setFetchMethod = require("./request.js").setFetchMethod,
-    createClient = require("./factory.js").createClient;
+"use strict";
+
+const setFetchMethod = require("./request.js").setFetchMethod;
+const createClient = require("./factory.js").createClient;
 
 createClient.setFetchMethod = setFetchMethod;
 

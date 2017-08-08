@@ -1,23 +1,25 @@
-var deepmerge = require("deepmerge");
+"use strict";
 
-var responseHandlers = require("../response.js"),
-    fetch = require("../request.js").fetch,
-    davTools = require("./dav.js"),
-    parseXML = require("./dav.js").parseXML;
+const deepmerge = require("deepmerge");
 
-var getValueForKey = davTools.getValueForKey,
-    getSingleValue = davTools.getSingleValue,
-    translateDiskSpace = davTools.translateDiskSpace;
+const responseHandlers = require("../response.js");
+const fetch = require("../request.js").fetch;
+const davTools = require("./dav.js");
+const parseXML = require("./dav.js").parseXML;
+
+const getValueForKey = davTools.getValueForKey;
+const getSingleValue = davTools.getSingleValue;
+const translateDiskSpace = davTools.translateDiskSpace;
 
 function getQuota(options) {
-    var fetchURL = options.remoteURL + "/",
-        fetchOptions = {
-            method: "PROPFIND",
-            headers: deepmerge(
-                { Depth: 0 },
-                options.headers
-            )
-        };
+    let fetchURL = options.remoteURL + "/";
+    const fetchOptions = {
+        method: "PROPFIND",
+        headers: deepmerge(
+            { Depth: 0 },
+            options.headers
+        )
+    };
     fetchURL = fetchURL.replace(/\/+$/g, "/");
     return fetch(fetchURL, fetchOptions)
         .then(responseHandlers.handleResponseCode)
@@ -29,7 +31,7 @@ function getQuota(options) {
 }
 
 function parseQuota(result) {
-    var responseItem = null,
+    let responseItem = null,
         multistatus,
         propstat,
         props,

@@ -1,8 +1,10 @@
-var deepmerge = require("deepmerge"),
-    joinURL = require("url-join");
+"use strict";
 
-var responseHandlers = require("../response.js"),
-    fetch = require("../request.js").fetch;
+const deepmerge = require("deepmerge");
+const joinURL = require("url-join");
+
+const responseHandlers = require("../response.js");
+const fetch = require("../request.js").fetch;
 
 function getPutContentsDefaults() {
     return {
@@ -14,7 +16,7 @@ function getPutContentsDefaults() {
 }
 
 function putFileContents(filePath, data, options) {
-    var putOptions = deepmerge.all([
+    const putOptions = deepmerge.all([
         getPutContentsDefaults(),
         { headers: { "Content-Length": data.length } },
         options || {}
@@ -22,12 +24,12 @@ function putFileContents(filePath, data, options) {
     if (putOptions.overwrite === false) {
         putOptions.headers["If-None-Match"] = "*";
     }
-    var fetchURL = joinURL(options.remoteURL, filePath),
-        fetchOptions = {
-            method: "PUT",
-            headers: putOptions.headers,
-            body: data
-        };
+    const fetchURL = joinURL(options.remoteURL, filePath);
+    const fetchOptions = {
+        method: "PUT",
+        headers: putOptions.headers,
+        body: data
+    };
     return fetch(fetchURL, fetchOptions)
         .then(responseHandlers.handleResponseCode);
 }
