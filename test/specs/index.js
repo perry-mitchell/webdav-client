@@ -17,30 +17,33 @@ const rimraf = require("rimraf").sync;
 const copyDir = require("copy-dir").sync;
 
 function clean() {
-    rimraf(path.resolve(__dirname, "../testContents"));
-    copyDir(path.resolve(__dirname, "../serverContents"), path.resolve(__dirname, "../testContents"));
+  rimraf(path.resolve(__dirname, "../testContents"));
+  copyDir(
+    path.resolve(__dirname, "../serverContents"),
+    path.resolve(__dirname, "../testContents")
+  );
 }
 
 function restoreFetch() {
-    createWebDAVClient.setFetchMethod();
+  createWebDAVClient.setFetchMethod();
 }
 
 function returnFakeResponse(xml) {
-    createWebDAVClient.setFetchMethod(function fakeFetch() {
-        return Promise.resolve({
-            text: function() {
-                return xml;
-            }
-        });
+  createWebDAVClient.setFetchMethod(function fakeFetch() {
+    return Promise.resolve({
+      text: function() {
+        return xml;
+      }
     });
+  });
 }
 
 Object.assign(global, {
-    clean: clean,
-    createWebDAVClient: createWebDAVClient,
-    createWebDAVServer: createWebDAVServer,
-    expect: expect,
-    restoreFetch: restoreFetch,
-    returnFakeResponse: returnFakeResponse,
-    sinon: sinon
+  clean: clean,
+  createWebDAVClient: createWebDAVClient,
+  createWebDAVServer: createWebDAVServer,
+  expect: expect,
+  restoreFetch: restoreFetch,
+  returnFakeResponse: returnFakeResponse,
+  sinon: sinon
 });

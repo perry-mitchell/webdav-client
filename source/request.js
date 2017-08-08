@@ -5,7 +5,7 @@ const nodeFetch = require("node-fetch");
 let fetchMethod = nodeFetch;
 
 function request(url, options) {
-    return fetchMethod(url, options);
+  return fetchMethod(url, options);
 }
 
 /**
@@ -17,10 +17,10 @@ function request(url, options) {
  *  createClient.setFetchMethod(window.fetch);
  */
 function setFetchMethod(fn) {
-    fetchMethod = fn || nodeFetch;
+  fetchMethod = fn || nodeFetch;
 }
 
 module.exports = {
-    fetch: request,
-    setFetchMethod: setFetchMethod
+  fetch: request,
+  setFetchMethod: setFetchMethod
 };
