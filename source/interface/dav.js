@@ -3,12 +3,7 @@
 const path = require("path");
 const xml2js = require("xml2js");
 
-const DAV_KEY_PREFIXES = [
-    "",
-    "d:",
-    "D:",
-    "lp1:"
-];
+const DAV_KEY_PREFIXES = ["", "d:", "D:", "lp1:"];
 
 function generateKeysForName(name) {
     return DAV_KEY_PREFIXES.map(function __mapKeyName(prefix) {
@@ -17,15 +12,11 @@ function generateKeysForName(name) {
 }
 
 function getSingleValue(item) {
-    return Array.isArray(item) ?
-        getSingleValue(item[0]) :
-        item;
+    return Array.isArray(item) ? getSingleValue(item[0]) : item;
 }
 
 function getValueForKey(key, obj) {
-    let keys,
-        i,
-        keyCount;
+    let keys, i, keyCount;
     if (typeof obj === "object") {
         keys = generateKeysForName(key);
         for (i = 0, keyCount = keys.length; i < keyCount; i += 1) {
@@ -52,12 +43,13 @@ function parseXML(xml) {
 function propsToStat(props, filename) {
     // Last modified time, raw size, item type and mime
     const lastMod = getSingleValue(getValueForKey("getlastmodified", props));
-    const rawSize = getSingleValue(getValueForKey("getcontentlength", props)) || "0";
+    const rawSize =
+        getSingleValue(getValueForKey("getcontentlength", props)) || "0";
     const resourceType = getSingleValue(getValueForKey("resourcetype", props));
     const mimeType = getSingleValue(getValueForKey("getcontenttype", props));
-    const type = getValueForKey("collection", resourceType) ?
-        "directory" :
-        "file";
+    const type = getValueForKey("collection", resourceType)
+        ? "directory"
+        : "file";
     const stat = {
         filename: filename,
         basename: path.basename(filename),
@@ -66,9 +58,7 @@ function propsToStat(props, filename) {
         type: type
     };
     if (type === "file") {
-        stat.mime = mimeType ?
-            mimeType.split(";")[0] :
-            "";
+        stat.mime = mimeType ? mimeType.split(";")[0] : "";
     }
     return stat;
 }
@@ -78,7 +68,7 @@ function translateDiskSpace(value) {
         case "-3":
             return "unlimited";
         case "-2":
-            /* falls-through */
+        /* falls-through */
         case "-1":
             // -1 is non-computed
             return "unknown";

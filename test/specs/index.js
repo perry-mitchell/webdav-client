@@ -18,7 +18,10 @@ const copyDir = require("copy-dir").sync;
 
 function clean() {
     rimraf(path.resolve(__dirname, "../testContents"));
-    copyDir(path.resolve(__dirname, "../serverContents"), path.resolve(__dirname, "../testContents"));
+    copyDir(
+        path.resolve(__dirname, "../serverContents"),
+        path.resolve(__dirname, "../testContents")
+    );
 }
 
 function restoreFetch() {

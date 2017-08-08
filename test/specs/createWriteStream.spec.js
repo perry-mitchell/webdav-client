@@ -11,11 +11,12 @@ function waitOnFile(filename) {
     return new Promise(function(resolve, reject) {
         waitOn(
             {
-                resources: [ filename ],
+                resources: [filename],
                 interval: 50,
                 timeout: 500,
                 window: 0
-            }, function(err) {
+            },
+            function(err) {
                 if (err) {
                     return reject(err);
                 }
@@ -26,7 +27,6 @@ function waitOnFile(filename) {
 }
 
 describe("createWriteStream", function() {
-
     beforeEach(function() {
         this.client = createWebDAVClient(
             "http://localhost:9988/webdav/server",
@@ -43,19 +43,20 @@ describe("createWriteStream", function() {
     });
 
     it("writes the file to the remote", function() {
-        const targetFile = path.resolve(__dirname, "../testContents/alrighty2.jpg");
+        const targetFile = path.resolve(
+            __dirname,
+            "../testContents/alrighty2.jpg"
+        );
         const writeStream = this.client.createWriteStream("/alrighty2.jpg");
         const readStream = fs.createReadStream(SOURCE_FILENAME);
         expect(writeStream instanceof PassThrough).to.be.true;
         return new Promise(function(resolve, reject) {
             writeStream.on("end", function() {
                 // stupid stream needs time to close probably..
-                waitOnFile(targetFile)
-                    .then(resolve, reject);
+                waitOnFile(targetFile).then(resolve, reject);
             });
             writeStream.on("error", reject);
             readStream.pipe(writeStream);
         });
     });
-
 });

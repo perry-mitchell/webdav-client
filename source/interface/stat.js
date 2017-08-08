@@ -16,10 +16,7 @@ function getStat(filename, options) {
     const fetchURL = joinURL(options.remoteURL, filename);
     const fetchOptions = {
         method: "PROPFIND",
-        headers: deepmerge(
-            { Depth: 0 },
-            options.headers
-        )
+        headers: deepmerge({ Depth: 0 }, options.headers)
     };
     return fetch(fetchURL, fetchOptions)
         .then(responseHandlers.handleResponseCode)
@@ -38,7 +35,9 @@ function parseStat(result, filename) {
     try {
         multistatus = getValueForKey("multistatus", result);
         responseItem = getSingleValue(getValueForKey("response", multistatus));
-    } catch (e) { /* ignore */ }
+    } catch (e) {
+        /* ignore */
+    }
     if (!responseItem) {
         throw new Error("Failed getting item stat: bad response");
     }

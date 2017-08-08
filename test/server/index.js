@@ -9,23 +9,27 @@ function createServer(dir, authType) {
     }
     const userManager = new ws.SimpleUserManager();
     const user = userManager.addUser("webdav-user", "pa$$w0rd!");
-    const auth = (!authType || authType === "basic") ?
-        new ws.HTTPBasicAuthentication(userManager) :
-        new ws.HTTPDigestAuthentication(userManager, "test");
+    const auth =
+        !authType || authType === "basic"
+            ? new ws.HTTPBasicAuthentication(userManager)
+            : new ws.HTTPDigestAuthentication(userManager, "test");
     const privilegeManager = new ws.SimplePathPrivilegeManager();
-    privilegeManager.setRights(user, "/", [ "all" ]);
+    privilegeManager.setRights(user, "/", ["all"]);
     const server = new ws.WebDAVServer({
         port: 9988,
         httpAuthentication: auth,
         privilegeManager: privilegeManager
     });
     return {
-
         start: function start() {
             return new Promise(function(resolve) {
-                server.setFileSystem("/webdav/server", new ws.PhysicalFileSystem(dir), function() {
-                    server.start(resolve);
-                });
+                server.setFileSystem(
+                    "/webdav/server",
+                    new ws.PhysicalFileSystem(dir),
+                    function() {
+                        server.start(resolve);
+                    }
+                );
             });
         },
 
@@ -34,7 +38,6 @@ function createServer(dir, authType) {
                 server.stop(resolve);
             });
         }
-
     };
 }
 
@@ -45,10 +48,7 @@ createServer.test = {
 };
 
 createServer.webdavClient = function(authType) {
-    return createServer(
-        path.resolve(__dirname, "../testContents"),
-        authType
-    );
+    return createServer(path.resolve(__dirname, "../testContents"), authType);
 };
 
 module.exports = createServer;

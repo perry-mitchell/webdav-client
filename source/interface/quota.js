@@ -15,10 +15,7 @@ function getQuota(options) {
     let fetchURL = options.remoteURL + "/";
     const fetchOptions = {
         method: "PROPFIND",
-        headers: deepmerge(
-            { Depth: 0 },
-            options.headers
-        )
+        headers: deepmerge({ Depth: 0 }, options.headers)
     };
     fetchURL = fetchURL.replace(/\/+$/g, "/");
     return fetch(fetchURL, fetchOptions)
@@ -40,18 +37,23 @@ function parseQuota(result) {
     try {
         multistatus = getValueForKey("multistatus", result);
         responseItem = getSingleValue(getValueForKey("response", multistatus));
-    } catch (e) { /* ignore */ }
+    } catch (e) {
+        /* ignore */
+    }
     if (responseItem) {
         propstat = getSingleValue(getValueForKey("propstat", responseItem));
         props = getSingleValue(getValueForKey("prop", propstat));
         quotaUsed = getSingleValue(getValueForKey("quota-used-bytes", props));
-        quotaAvail = getSingleValue(getValueForKey("quota-available-bytes", props));
-        return (typeof quotaUsed !== "undefined" && typeof quotaAvail !== "undefined") ?
-            {
-                used: parseInt(quotaUsed, 10),
-                available: translateDiskSpace(quotaAvail)
-            } :
-            null;
+        quotaAvail = getSingleValue(
+            getValueForKey("quota-available-bytes", props)
+        );
+        return typeof quotaUsed !== "undefined" &&
+        typeof quotaAvail !== "undefined"
+            ? {
+                  used: parseInt(quotaUsed, 10),
+                  available: translateDiskSpace(quotaAvail)
+              }
+            : null;
     }
     return null;
 }

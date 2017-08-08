@@ -6,17 +6,15 @@ const responseHandlers = require("../response.js");
 const fetch = require("../request.js").fetch;
 
 function getFileContentsBuffer(filePath, options) {
-    return makeFileRequest(filePath, options)
-        .then(function(res) {
-            return res.buffer();
-        });
+    return makeFileRequest(filePath, options).then(function(res) {
+        return res.buffer();
+    });
 }
 
 function getFileContentsString(filePath, options) {
-    return makeFileRequest(filePath, options)
-        .then(function(res) {
-            return res.text();
-        });
+    return makeFileRequest(filePath, options).then(function(res) {
+        return res.text();
+    });
 }
 
 function makeFileRequest(filePath, options) {
@@ -25,8 +23,9 @@ function makeFileRequest(filePath, options) {
         method: "GET",
         headers: options.headers
     };
-    return fetch(fetchURL, fetchOptions)
-        .then(responseHandlers.handleResponseCode);
+    return fetch(fetchURL, fetchOptions).then(
+        responseHandlers.handleResponseCode
+    );
 }
 
 module.exports = {

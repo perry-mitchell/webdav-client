@@ -4,7 +4,6 @@ const path = require("path");
 const directoryExists = require("directory-exists").sync;
 
 describe("createDirectory", function() {
-
     beforeEach(function() {
         this.client = createWebDAVClient(
             "http://localhost:9988/webdav/server",
@@ -27,5 +26,4 @@ describe("createDirectory", function() {
             expect(directoryExists(newDir)).to.be.true;
         });
     });
-
 });

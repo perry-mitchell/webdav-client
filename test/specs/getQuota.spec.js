@@ -4,15 +4,24 @@ const fs = require("fs");
 const path = require("path");
 
 function useInvalidQuota() {
-    returnFakeResponse(fs.readFileSync(path.resolve(__dirname, "../responses/quota-invalid.xml"), "utf8"));
+    returnFakeResponse(
+        fs.readFileSync(
+            path.resolve(__dirname, "../responses/quota-invalid.xml"),
+            "utf8"
+        )
+    );
 }
 
 function useValidQuota() {
-    returnFakeResponse(fs.readFileSync(path.resolve(__dirname, "../responses/quota-valid.xml"), "utf8"));
+    returnFakeResponse(
+        fs.readFileSync(
+            path.resolve(__dirname, "../responses/quota-valid.xml"),
+            "utf8"
+        )
+    );
 }
 
 describe("getQuota", function() {
-
     beforeEach(function() {
         // fake client, not actually used when mocking responses
         this.client = createWebDAVClient(
@@ -48,5 +57,4 @@ describe("getQuota", function() {
             expect(quotaInfo).to.be.null;
         });
     });
-
 });

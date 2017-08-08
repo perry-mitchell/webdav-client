@@ -30,8 +30,9 @@ function putFileContents(filePath, data, options) {
         headers: putOptions.headers,
         body: data
     };
-    return fetch(fetchURL, fetchOptions)
-        .then(responseHandlers.handleResponseCode);
+    return fetch(fetchURL, fetchOptions).then(
+        responseHandlers.handleResponseCode
+    );
 }
 
 module.exports = {
