@@ -55,7 +55,10 @@ function createClient(remoteURL, username, password) {
         remoteURL: remoteURL
     };
     if (username && username.length > 0) {
-        baseOptions.headers.Authorization = authTools.generateBasicAuthHeader(username, password);
+        baseOptions.headers.Authorization = authTools.generateBasicAuthHeader(
+            username,
+            password
+        );
     }
 
     return {
@@ -92,7 +95,10 @@ function createClient(remoteURL, username, password) {
          */
         createWriteStream: function createWriteStream(remoteFilename, options) {
             const createOptions = deepmerge(baseOptions, options || {});
-            return createStream.createWriteStream(remoteFilename, createOptions);
+            return createStream.createWriteStream(
+                remoteFilename,
+                createOptions
+            );
         },
 
         /**
@@ -114,9 +120,15 @@ function createClient(remoteURL, username, password) {
          * @returns {Promise.<Array>} A promise that resolves with an array of remote item stats
          * @memberof ClientInterface
          */
-        getDirectoryContents: function getDirectoryContents(remotePath, options) {
+        getDirectoryContents: function getDirectoryContents(
+            remotePath,
+            options
+        ) {
             const getOptions = deepmerge(baseOptions, options || {});
-            return directoryContents.getDirectoryContents(remotePath, getOptions);
+            return directoryContents.getDirectoryContents(
+                remotePath,
+                getOptions
+            );
         },
 
         /**
@@ -169,7 +181,11 @@ function createClient(remoteURL, username, password) {
          * @returns {Promise} A promise that resolves once the contents have been written
          * @memberof ClientInterface
          */
-        putFileContents: function putFileContents(remoteFilename, data, options) {
+        putFileContents: function putFileContents(
+            remoteFilename,
+            data,
+            options
+        ) {
             const putOptions = deepmerge(baseOptions, options || {});
             return putFile.putFileContents(remoteFilename, data, putOptions);
         },

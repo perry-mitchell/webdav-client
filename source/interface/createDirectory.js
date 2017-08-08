@@ -11,7 +11,9 @@ function createDirectory(dirPath, options) {
         method: "MKCOL",
         headers: options.headers
     };
-    return fetch(fetchURL, fetchOptions).then(responseHandlers.handleResponseCode);
+    return fetch(fetchURL, fetchOptions).then(
+        responseHandlers.handleResponseCode
+    );
 }
 
 module.exports = {

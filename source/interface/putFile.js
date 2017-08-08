@@ -16,7 +16,11 @@ function getPutContentsDefaults() {
 }
 
 function putFileContents(filePath, data, options) {
-    const putOptions = deepmerge.all([getPutContentsDefaults(), { headers: { "Content-Length": data.length } }, options || {}]);
+    const putOptions = deepmerge.all([
+        getPutContentsDefaults(),
+        { headers: { "Content-Length": data.length } },
+        options || {}
+    ]);
     if (putOptions.overwrite === false) {
         putOptions.headers["If-None-Match"] = "*";
     }
@@ -26,7 +30,9 @@ function putFileContents(filePath, data, options) {
         headers: putOptions.headers,
         body: data
     };
-    return fetch(fetchURL, fetchOptions).then(responseHandlers.handleResponseCode);
+    return fetch(fetchURL, fetchOptions).then(
+        responseHandlers.handleResponseCode
+    );
 }
 
 module.exports = {

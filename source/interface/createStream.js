@@ -46,7 +46,10 @@ function createWriteStream(filePath, options) {
 
 function getFileStream(filePath, options) {
     let rangeHeader;
-    if (typeof options.range === "object" && typeof options.range.start === "number") {
+    if (
+        typeof options.range === "object" &&
+        typeof options.range.start === "number"
+    ) {
         rangeHeader = "bytes=" + options.range.start + "-";
         if (typeof options.range.end === "number") {
             rangeHeader += options.range.end;
@@ -58,9 +61,11 @@ function getFileStream(filePath, options) {
         method: "GET",
         headers: options.headers
     };
-    return fetch(fetchURL, fetchOptions).then(responseHandlers.handleResponseCode).then(function __mapResultToStream(res) {
-        return res.body;
-    });
+    return fetch(fetchURL, fetchOptions)
+        .then(responseHandlers.handleResponseCode)
+        .then(function __mapResultToStream(res) {
+            return res.body;
+        });
 }
 
 module.exports = {
