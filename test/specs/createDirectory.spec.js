@@ -1,4 +1,4 @@
-var path = require("path"),
+const path = require("path"),
     directoryExists = require("directory-exists").sync;
 
 describe("createDirectory", function() {
@@ -19,7 +19,7 @@ describe("createDirectory", function() {
     });
 
     it("creates directories", function() {
-        var newDir = path.resolve(__dirname, "../testContents/sub2");
+        const newDir = path.resolve(__dirname, "../testContents/sub2");
         expect(directoryExists(newDir)).to.be.false;
         return this.client.createDirectory("/sub2").then(function() {
             expect(directoryExists(newDir)).to.be.true;

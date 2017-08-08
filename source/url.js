@@ -1,8 +1,8 @@
-var URL = require("url-parse");
+const URL = require("url-parse");
 
 function extractURLPath(fullURL) {
-    var url = new URL(fullURL),
-        urlPath = url.pathname;
+    const url = new URL(fullURL);
+    let urlPath = url.pathname;
     if (urlPath.length <= 0) {
         urlPath = "/";
     }
@@ -10,12 +10,12 @@ function extractURLPath(fullURL) {
 }
 
 function normaliseHREF(href) {
-    var normalisedHref = href.replace(/^https?:\/\/[^\/]+/, "");
+    const normalisedHref = href.replace(/^https?:\/\/[^\/]+/, "");
     return normalisedHref;
 }
 
 function normalisePath(pathStr) {
-    var normalisedPath = pathStr;
+    let normalisedPath = pathStr;
     if (normalisedPath[0] !== "/") {
         normalisedPath = "/" + normalisedPath;
     }

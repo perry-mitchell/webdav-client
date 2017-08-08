@@ -1,17 +1,17 @@
-var joinURL = require("url-join"),
+const joinURL = require("url-join"),
     deepmerge = require("deepmerge");
 
-var responseHandlers = require("../response.js"),
+const responseHandlers = require("../response.js"),
     fetch = require("../request.js").fetch,
     davTools = require("./dav.js"),
     parseXML = require("./dav.js").parseXML,
     urlTools = require("../url.js");
 
-var getValueForKey = davTools.getValueForKey,
+const getValueForKey = davTools.getValueForKey,
     getSingleValue = davTools.getSingleValue;
 
 function getStat(filename, options) {
-    var fetchURL = joinURL(options.remoteURL, filename),
+    const fetchURL = joinURL(options.remoteURL, filename),
         fetchOptions = {
             method: "PROPFIND",
             headers: deepmerge(
@@ -31,7 +31,7 @@ function getStat(filename, options) {
 }
 
 function parseStat(result, filename) {
-    var responseItem = null,
+    let responseItem = null,
         multistatus;
     try {
         multistatus = getValueForKey("multistatus", result);
@@ -40,9 +40,9 @@ function parseStat(result, filename) {
     if (!responseItem) {
         throw new Error("Failed getting item stat: bad response");
     }
-    var propStat = getSingleValue(getValueForKey("propstat", responseItem)),
+    const propStat = getSingleValue(getValueForKey("propstat", responseItem)),
         props = getSingleValue(getValueForKey("prop", propStat));
-    var filePath = urlTools.normalisePath(filename);
+    const filePath = urlTools.normalisePath(filename);
     return davTools.propsToStat(props, filePath);
 }
 

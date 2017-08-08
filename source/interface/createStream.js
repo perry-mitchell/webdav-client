@@ -1,14 +1,14 @@
-var Stream = require("stream"),
+const Stream = require("stream"),
     joinURL = require("url-join"),
     deepmerge = require("deepmerge");
 
-var fetch = require("../request.js").fetch,
+const fetch = require("../request.js").fetch,
     responseHandlers = require("../response.js");
 
-var PassThroughStream = Stream.PassThrough;
+const PassThroughStream = Stream.PassThrough;
 
 function createReadStream(filePath, options) {
-    var outStream = new PassThroughStream();
+    const outStream = new PassThroughStream();
     getFileStream(filePath, options)
         .then(function __handleStream(stream) {
             stream.pipe(outStream);
@@ -20,7 +20,7 @@ function createReadStream(filePath, options) {
 }
 
 function createWriteStream(filePath, options) {
-    var writeStream = new PassThroughStream(),
+    const writeStream = new PassThroughStream(),
         headers = deepmerge({}, options.headers);
     // if (typeof options.range === "object" && typeof options.range.start === "number") {
     //     var rangeHeader = "bytes=" + options.range.start + "-";
@@ -32,7 +32,7 @@ function createWriteStream(filePath, options) {
     if (options.overwrite === false) {
         headers["If-None-Match"] = "*";
     }
-    var fetchURL = joinURL(options.remoteURL, filePath),
+    const fetchURL = joinURL(options.remoteURL, filePath),
         fetchOptions = {
             method: "PUT",
             headers: headers,
@@ -43,7 +43,7 @@ function createWriteStream(filePath, options) {
 }
 
 function getFileStream(filePath, options) {
-    var rangeHeader;
+    let rangeHeader;
     if (typeof options.range === "object" && typeof options.range.start === "number") {
         rangeHeader = "bytes=" + options.range.start + "-";
         if (typeof options.range.end === "number") {
@@ -51,7 +51,7 @@ function getFileStream(filePath, options) {
         }
         options.headers.Range = rangeHeader;
     }
-    var fetchURL = joinURL(options.remoteURL, filePath),
+    const fetchURL = joinURL(options.remoteURL, filePath),
         fetchOptions = {
             method: "GET",
             headers: options.headers

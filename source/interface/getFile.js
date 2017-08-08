@@ -1,6 +1,6 @@
-var joinURL = require("url-join");
+const joinURL = require("url-join");
 
-var responseHandlers = require("../response.js"),
+const responseHandlers = require("../response.js"),
     fetch = require("../request.js").fetch;
 
 function getFileContentsBuffer(filePath, options) {
@@ -18,7 +18,7 @@ function getFileContentsString(filePath, options) {
 }
 
 function makeFileRequest(filePath, options) {
-    var fetchURL = joinURL(options.remoteURL, filePath),
+    const fetchURL = joinURL(options.remoteURL, filePath),
         fetchOptions = {
             method: "GET",
             headers: options.headers

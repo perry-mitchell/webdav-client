@@ -1,6 +1,6 @@
-var nodeFetch = require("node-fetch");
+const nodeFetch = require("node-fetch");
 
-var fetchMethod = nodeFetch;
+let fetchMethod = nodeFetch;
 
 function request(url, options) {
     return fetchMethod(url, options);

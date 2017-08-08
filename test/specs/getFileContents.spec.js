@@ -1,9 +1,9 @@
-var path = require("path"),
+const path = require("path"),
     fs = require("fs");
 
-var bufferEquals = require("buffer-equals");
+const bufferEquals = require("buffer-equals");
 
-var SOURCE_BIN = path.resolve(__dirname, "../testContents/alrighty.jpg"),
+const SOURCE_BIN = path.resolve(__dirname, "../testContents/alrighty.jpg"),
     SOURCE_TXT = path.resolve(__dirname, "../testContents/text document.txt");
 
 describe("getFileContents", function() {
@@ -25,14 +25,14 @@ describe("getFileContents", function() {
 
     it("reads a remote file into a buffer", function() {
         return this.client.getFileContents("/alrighty.jpg").then(function(bufferRemote) {
-            var bufferLocal = fs.readFileSync(SOURCE_BIN);
+            const bufferLocal = fs.readFileSync(SOURCE_BIN);
             expect(bufferEquals(bufferRemote, bufferLocal)).to.be.true;
         });
     });
 
     it("reads a remote file into a string", function() {
         return this.client.getFileContents("/text document.txt", { format: "text" }).then(function(stringRemote) {
-            var stringLocal = fs.readFileSync(SOURCE_TXT, "utf8");
+            const stringLocal = fs.readFileSync(SOURCE_TXT, "utf8");
             expect(stringRemote).to.equal(stringLocal);
         });
     });

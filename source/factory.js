@@ -1,9 +1,9 @@
-var deepmerge = require("deepmerge");
+const deepmerge = require("deepmerge");
 
-var authTools = require("./auth.js"),
+const authTools = require("./auth.js"),
     urlTools = require("./url.js");
 
-var directoryContents = require("./interface/directoryContents.js"),
+const directoryContents = require("./interface/directoryContents.js"),
     createDir = require("./interface/createDirectory.js"),
     createStream = require("./interface/createStream.js"),
     deletion = require("./interface/delete.js"),
@@ -47,7 +47,7 @@ var directoryContents = require("./interface/directoryContents.js"),
  *      });
  */
 function createClient(remoteURL, username, password) {
-    var baseOptions = {
+    const baseOptions = {
         headers: {},
         remotePath: urlTools.extractURLPath(remoteURL),
         remoteURL: remoteURL
@@ -66,7 +66,7 @@ function createClient(remoteURL, username, password) {
          * @returns {Promise} A promise that resolves when the remote path has been created
          */
         createDirectory: function createDirectory(dirPath, options) {
-            var createOptions = deepmerge(
+            const createOptions = deepmerge(
                 baseOptions,
                 options || {}
             );
@@ -81,7 +81,7 @@ function createClient(remoteURL, username, password) {
          * @returns {Readable} A readable stream
          */
         createReadStream: function createReadStream(remoteFilename, options) {
-            var createOptions = deepmerge(
+            const createOptions = deepmerge(
                 baseOptions,
                 options || {}
             );
@@ -96,7 +96,7 @@ function createClient(remoteURL, username, password) {
          * @returns {Writeable} A writeable stream
          */
         createWriteStream: function createWriteStream(remoteFilename, options) {
-            var createOptions = deepmerge(
+            const createOptions = deepmerge(
                 baseOptions,
                 options || {}
             );
@@ -111,7 +111,7 @@ function createClient(remoteURL, username, password) {
          * @returns {Promise} A promise that resolves when the remote file as been deleted
          */
         deleteFile: function deleteFile(remotePath, options) {
-            var deleteOptions = deepmerge(
+            const deleteOptions = deepmerge(
                 baseOptions,
                 options || {}
             );
@@ -126,7 +126,7 @@ function createClient(remoteURL, username, password) {
          * @memberof ClientInterface
          */
         getDirectoryContents: function getDirectoryContents(remotePath, options) {
-            var getOptions = deepmerge(
+            const getOptions = deepmerge(
                 baseOptions,
                 options || {}
             );
@@ -141,7 +141,7 @@ function createClient(remoteURL, username, password) {
          * @returns {Promise.<Buffer|String>} A promise that resolves with the contents of the remote file
          */
         getFileContents: function getFileContents(remoteFilename, options) {
-            var getOptions = deepmerge(
+            const getOptions = deepmerge(
                 baseOptions,
                 options || {}
             );
@@ -161,7 +161,7 @@ function createClient(remoteURL, username, password) {
          * @memberof ClientInterface
          */
         getQuota: function getQuota(options) {
-            var getOptions = deepmerge(
+            const getOptions = deepmerge(
                 baseOptions,
                 options || {}
             );
@@ -177,7 +177,7 @@ function createClient(remoteURL, username, password) {
          * @returns {Promise} A promise that resolves once the request has completed
          */
         moveFile: function moveFile(remotePath, targetRemotePath, options) {
-            var moveOptions = deepmerge(
+            const moveOptions = deepmerge(
                 baseOptions,
                 options || {}
             );
@@ -193,7 +193,7 @@ function createClient(remoteURL, username, password) {
          * @memberof ClientInterface
          */
         putFileContents: function putFileContents(remoteFilename, data, options) {
-            var putOptions = deepmerge(
+            const putOptions = deepmerge(
                 baseOptions,
                 options || {}
             );
@@ -208,7 +208,7 @@ function createClient(remoteURL, username, password) {
          * @returns {Promise.<Object>} A promise that resolves with the stat data
          */
         stat: function stat(remotePath, options) {
-            var getOptions = deepmerge(
+            const getOptions = deepmerge(
                 baseOptions,
                 options || {}
             );

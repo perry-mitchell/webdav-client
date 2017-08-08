@@ -1,9 +1,9 @@
-var path = require("path"),
+const path = require("path"),
     fs = require("fs");
 
-var bufferEquals = require("buffer-equals");
+const bufferEquals = require("buffer-equals");
 
-var SOURCE_BIN = path.resolve(__dirname, "../testContents/alrighty.jpg"),
+const SOURCE_BIN = path.resolve(__dirname, "../testContents/alrighty.jpg"),
     TARGET_BIN = path.resolve(__dirname, "../testContents/sub1/alrighty.jpg"),
     TARGET_TXT = path.resolve(__dirname, "../testContents/newFile.txt");
 
@@ -25,19 +25,19 @@ describe("getFileContents", function() {
     });
 
     it("writes binary files", function() {
-        var imgBin = fs.readFileSync(SOURCE_BIN);
+        const imgBin = fs.readFileSync(SOURCE_BIN);
         return this.client.putFileContents("/sub1/alrighty.jpg", imgBin)
             .then(function() {
-                var written = fs.readFileSync(TARGET_BIN);
+                const written = fs.readFileSync(TARGET_BIN);
                 expect(bufferEquals(written, imgBin)).to.be.true;
             });
     });
 
     it("writes text files", function() {
-        var text = "this is\nsome text\ncontent\t...\n";
+        const text = "this is\nsome text\ncontent\t...\n";
         return this.client.putFileContents("/newFile.txt", text)
             .then(function() {
-                var written = fs.readFileSync(TARGET_TXT, "utf8");
+                const written = fs.readFileSync(TARGET_TXT, "utf8");
                 expect(written).to.equal(text);
             });
     });
