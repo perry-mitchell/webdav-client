@@ -2,9 +2,11 @@
   "name": "webdav",
   "version": "1.0.1",
   "description": "WebDAV client for NodeJS",
-  "main": "source/index.js",
+  "main": "dist/index.js",
   "scripts": {
+    "build": "babel --out-dir dist source",
     "generate:docs": "jsdoc2md 'source/**/*.js' > API.md",
+    "prepare": "npm run build",
     "test": "npm run test:lint && npm run test:unit",
     "test:lint": "eslint source/ && eslint test/specs/",
     "test:unit": "mocha -r test/specs/index.js test/specs/**/*.spec.js"
@@ -33,6 +35,8 @@
     "xml2js": "~0.4.17"
   },
   "devDependencies": {
+    "babel-cli": "~6.26.0",
+    "babel-preset-env": "~1.6.0",
     "buffer-equals": "~1.0.4",
     "chai": "^3.5.0",
     "copy-dir": "~0.3.0",
