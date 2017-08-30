@@ -1,5 +1,10 @@
 # WebDAV-client changelog
 
+## 1.1.0
+_2017-08-30_
+
+ * Add transpilation process for published library
+
 ## 1.0.1
 _2017-08-07_
 
