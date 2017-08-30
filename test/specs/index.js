@@ -4,7 +4,7 @@ require("./polyfill.js");
 
 const path = require("path");
 
-const createWebDAVClient = require("../../build/index.js");
+const createWebDAVClient = require("../../dist/index.js");
 const baseWebDAVServer = require("../server/index.js");
 
 const createWebDAVServer = baseWebDAVServer.webdavClient;

@@ -6,4 +6,3 @@ test.js
 node_modules
 test/testContents
 /dist
-/build
