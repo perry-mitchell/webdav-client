@@ -24,7 +24,7 @@ function normalisePath(pathStr) {
     if (/^.+\/$/.test(normalisedPath)) {
         normalisedPath = normalisedPath.substr(0, normalisedPath.length - 1);
     }
-    return normalisedPath;
+    return decodeURIComponent(normalisedPath);
 }
 
 module.exports = {
