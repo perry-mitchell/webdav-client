@@ -78,4 +78,13 @@ describe("getDirectoryContents", function() {
                 expect(contents[0]).to.have.property("basename", "notreal.txt");
             });
     });
+
+    it("returns only the directory contents (issue #68)", function() {
+        return this.client
+            .getDirectoryContents("/two words")
+            .then(function(contents) {
+                expect(contents).to.have.lengthOf(1);
+                expect(contents[0].basename).to.equal("file.txt");
+            });
+    });
 });
