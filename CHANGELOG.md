@@ -1,5 +1,11 @@
 # WebDAV-client changelog
 
+## 1.1.1
+
+**Bugfixes**:
+
+ * ([#68](https://github.com/perry-mitchell/webdav-client/issues/68)): Fetched directory appearing in results
+
 ## 1.1.0
 _2017-08-30_
 
