@@ -7,12 +7,13 @@
     "build": "babel --out-dir dist source",
     "generate:docs": "jsdoc2md 'source/**/*.js' > API.md",
     "prepare": "npm run build",
+    "pub": "np",
     "test": "npm run test:lint && npm run test:unit",
     "test:lint": "eslint source/ && eslint test/specs/",
     "test:unit": "npm run build && mocha -r test/specs/index.js test/specs/**/*.spec.js"
   },
   "files": [
-    "source/",
+    "dist/",
     "test/server/",
     "*.md"
   ],
@@ -53,6 +54,7 @@
     "jsdoc-to-markdown": "^3.0.0",
     "mkdirp": "^0.5.1",
     "mocha": "^3.1.0",
+    "np": "~2.20.1",
     "prettier": "~1.5.3",
     "rimraf": "~2.6.1",
     "sinon": "^3.0.0",
