@@ -1,5 +1,10 @@
 # WebDAV-client changelog
 
+## 1.1.2
+_2018-02-21_
+
+ * Development bug fixes
+
 ## 1.1.1
 
 **Bugfixes**:
