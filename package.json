@@ -11,6 +11,11 @@
     "test:lint": "eslint source/ && eslint test/specs/",
     "test:unit": "npm run build && mocha -r test/specs/index.js test/specs/**/*.spec.js"
   },
+  "files": [
+    "source/",
+    "test/server/",
+    "*.md"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/perry-mitchell/webdav-client.git"
