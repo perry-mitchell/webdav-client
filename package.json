@@ -48,6 +48,8 @@
     "xml2js": "~0.4.17"
   },
   "devDependencies": {
+    "arraybuffer-equal": "~1.0.4",
+    "arraybuffer-to-buffer": "0.0.4",
     "babel-cli": "~6.26.0",
     "babel-preset-env": "~1.6.1",
     "buffer-equals": "~1.0.4",
