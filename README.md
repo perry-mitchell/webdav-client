@@ -1,5 +1,6 @@
-# WebDAV client
-A WebDAV client written in JavaScript for NodeJS.
+![WebDAV](https://raw.githubusercontent.com/perry-mitchell/webdav-client/master/webdav.jpg)
+
+> A WebDAV client written in JavaScript for NodeJS.
 
 [![Build Status](https://travis-ci.org/perry-mitchell/webdav-client.svg?branch=master)](https://travis-ci.org/perry-mitchell/webdav-client) [![npm version](https://badge.fury.io/js/webdav.svg)](https://www.npmjs.com/package/webdav) ![monthly downloads](https://img.shields.io/npm/dm/webdav.svg)
 
