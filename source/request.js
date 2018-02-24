@@ -2,7 +2,20 @@
 
 const nodeFetch = require("node-fetch");
 
+const SEP_PATH_POSIX = "__PATH_SEPARATOR_POSIX__";
+const SEP_PATH_WINDOWS = "__PATH_SEPARATOR_WINDOWS__";
+
 let fetchMethod = nodeFetch;
+
+function encodePath(path) {
+    const replaced = path
+        .replace(/(^|[^\\])\\\\($|[^\\])/g, "$1" + SEP_PATH_WINDOWS + "$2")
+        .replace(/(^|[^\/])\/($|[^\/])/g, "$1" + SEP_PATH_POSIX + "$2");
+    const formatted = encodeURIComponent(replaced);
+    return formatted
+        .split(SEP_PATH_WINDOWS).join("\\\\")
+        .split(SEP_PATH_POSIX).join("/");
+}
 
 function request(url, options) {
     return fetchMethod(url, options);
@@ -21,6 +34,7 @@ function setFetchMethod(fn) {
 }
 
 module.exports = {
+    encodePath: encodePath,
     fetch: request,
     setFetchMethod: setFetchMethod
 };
