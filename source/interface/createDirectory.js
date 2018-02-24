@@ -1,12 +1,13 @@
 "use strict";
 
 const joinURL = require("url-join");
-
-const fetch = require("../request.js").fetch;
 const responseHandlers = require("../response.js");
+const request = require("../request.js");
+const encodePath = request.encodePath;
+const fetch = request.fetch;
 
 function createDirectory(dirPath, options) {
-    const fetchURL = joinURL(options.remoteURL, dirPath);
+    const fetchURL = joinURL(options.remoteURL, encodePath(dirPath));
     const fetchOptions = {
         method: "MKCOL",
         headers: options.headers

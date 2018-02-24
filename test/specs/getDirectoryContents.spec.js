@@ -65,6 +65,15 @@ describe("getDirectoryContents", function() {
         });
     });
 
+    it("returns correct file results for files with special characters", function() {
+        return this.client.getDirectoryContents("/sub1").then(function(contents) {
+            const sub1 = contents.find(function(item) {
+                return item.basename === "ยากจน #1.txt";
+            });
+            expect(sub1.filename).to.equal("/sub1/ยากจน #1.txt");
+        });
+    });
+
     it("returns the contents of a directory with repetitive naming", function() {
         return this.client.getDirectoryContents("/webdav/server").then(function(contents) {
             expect(contents).to.be.an("array");

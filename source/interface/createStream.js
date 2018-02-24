@@ -3,9 +3,10 @@
 const Stream = require("stream");
 const joinURL = require("url-join");
 const deepmerge = require("deepmerge");
-
-const fetch = require("../request.js").fetch;
 const responseHandlers = require("../response.js");
+const request = require("../request.js");
+const encodePath = request.encodePath;
+const fetch = request.fetch;
 
 const PassThroughStream = Stream.PassThrough;
 
@@ -34,7 +35,7 @@ function createWriteStream(filePath, options) {
     if (options.overwrite === false) {
         headers["If-None-Match"] = "*";
     }
-    const fetchURL = joinURL(options.remoteURL, filePath);
+    const fetchURL = joinURL(options.remoteURL, encodePath(filePath));
     const fetchOptions = {
         method: "PUT",
         headers: headers,
@@ -53,7 +54,7 @@ function getFileStream(filePath, options) {
         }
         options.headers.Range = rangeHeader;
     }
-    const fetchURL = joinURL(options.remoteURL, filePath);
+    const fetchURL = joinURL(options.remoteURL, encodePath(filePath));
     const fetchOptions = {
         method: "GET",
         headers: options.headers

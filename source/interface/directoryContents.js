@@ -4,17 +4,18 @@ const path = require("path");
 
 const joinURL = require("url-join");
 const deepmerge = require("deepmerge");
-
-const fetch = require("../request.js").fetch;
 const responseHandlers = require("../response.js");
 const urlTools = require("../url.js");
 const davTools = require("./dav.js");
+const request = require("../request.js");
+const encodePath = request.encodePath;
+const fetch = request.fetch;
 
 const getValueForKey = davTools.getValueForKey;
 const getSingleValue = davTools.getSingleValue;
 
 function getDirectoryContents(remotePath, options) {
-    const fetchURL = joinURL(options.remoteURL, remotePath);
+    const fetchURL = joinURL(options.remoteURL, encodePath(remotePath));
     const fetchOptions = {
         method: "PROPFIND",
         headers: deepmerge(

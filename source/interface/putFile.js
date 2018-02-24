@@ -2,9 +2,10 @@
 
 const deepmerge = require("deepmerge");
 const joinURL = require("url-join");
-
 const responseHandlers = require("../response.js");
-const fetch = require("../request.js").fetch;
+const request = require("../request.js");
+const encodePath = request.encodePath;
+const fetch = request.fetch;
 
 function getPutContentsDefaults() {
     return {
@@ -24,7 +25,7 @@ function putFileContents(filePath, data, options) {
     if (putOptions.overwrite === false) {
         putOptions.headers["If-None-Match"] = "*";
     }
-    const fetchURL = joinURL(options.remoteURL, filePath);
+    const fetchURL = joinURL(options.remoteURL, encodePath(filePath));
     const fetchOptions = {
         method: "PUT",
         headers: putOptions.headers,
