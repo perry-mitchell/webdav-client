@@ -7,6 +7,11 @@ const SEP_PATH_WINDOWS = "__PATH_SEPARATOR_WINDOWS__";
 
 let fetchMethod = nodeFetch;
 
+/**
+ * Encode a path for use with WebDAV servers
+ * @param {String} path The path to encode
+ * @returns {String} The encoded path (separators protected)
+ */
 function encodePath(path) {
     const replaced = path
         .replace(/(^|[^\\])\\\\($|[^\\])/g, "$1" + SEP_PATH_WINDOWS + "$2")

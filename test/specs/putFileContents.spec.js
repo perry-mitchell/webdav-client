@@ -8,7 +8,7 @@ const TARGET_BIN = path.resolve(__dirname, "../testContents/sub1/alrighty.jpg");
 const TARGET_TXT = path.resolve(__dirname, "../testContents/newFile.txt");
 const TARGET_TXT_CHARS = path.resolve(__dirname, "../testContents/จะทำลาย.txt");
 
-describe("getFileContents", function() {
+describe("putFileContents", function() {
     beforeEach(function() {
         this.client = createWebDAVClient(
             "http://localhost:9988/webdav/server",
