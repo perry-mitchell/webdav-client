@@ -13,8 +13,10 @@ function encodePath(path) {
         .replace(/(^|[^\/])\/($|[^\/])/g, "$1" + SEP_PATH_POSIX + "$2");
     const formatted = encodeURIComponent(replaced);
     return formatted
-        .split(SEP_PATH_WINDOWS).join("\\\\")
-        .split(SEP_PATH_POSIX).join("/");
+        .split(SEP_PATH_WINDOWS)
+        .join("\\\\")
+        .split(SEP_PATH_POSIX)
+        .join("/");
 }
 
 function request(url, options) {
