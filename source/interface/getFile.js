@@ -7,7 +7,7 @@ const fetch = require("../request.js").fetch;
 
 function getFileContentsBuffer(filePath, options) {
     return makeFileRequest(filePath, options).then(function(res) {
-        return res.buffer();
+        return res.arrayBuffer();
     });
 }
 
