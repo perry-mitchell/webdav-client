@@ -4,16 +4,18 @@ const joinURL = require("url-join");
 const deepmerge = require("deepmerge");
 
 const responseHandlers = require("../response.js");
-const fetch = require("../request.js").fetch;
 const davTools = require("./dav.js");
-const parseXML = require("./dav.js").parseXML;
 const urlTools = require("../url.js");
+const request = require("../request.js");
+const encodePath = request.encodePath;
+const fetch = request.fetch;
+const parseXML = davTools.parseXML;
 
 const getValueForKey = davTools.getValueForKey;
 const getSingleValue = davTools.getSingleValue;
 
 function getStat(filename, options) {
-    const fetchURL = joinURL(options.remoteURL, filename);
+    const fetchURL = joinURL(options.remoteURL, encodePath(filename));
     const fetchOptions = {
         method: "PROPFIND",
         headers: deepmerge({ Depth: 0 }, options.headers)

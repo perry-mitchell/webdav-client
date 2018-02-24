@@ -2,12 +2,13 @@
 
 const joinURL = require("url-join");
 const deepmerge = require("deepmerge");
-
 const responseHandlers = require("../response.js");
-const fetch = require("../request.js").fetch;
+const request = require("../request.js");
+const encodePath = request.encodePath;
+const fetch = request.fetch;
 
 function moveFile(filename, destination, options) {
-    const fetchURL = joinURL(options.remoteURL, filename);
+    const fetchURL = joinURL(options.remoteURL, encodePath(filename));
     const fetchOptions = {
         method: "MOVE",
         headers: deepmerge(

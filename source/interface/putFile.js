@@ -2,7 +2,6 @@
 
 const deepmerge = require("deepmerge");
 const joinURL = require("url-join");
-
 const responseHandlers = require("../response.js");
 const request = require("../request.js");
 const encodePath = request.encodePath;

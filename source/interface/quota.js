@@ -5,7 +5,7 @@ const deepmerge = require("deepmerge");
 const responseHandlers = require("../response.js");
 const fetch = require("../request.js").fetch;
 const davTools = require("./dav.js");
-const parseXML = require("./dav.js").parseXML;
+const parseXML = davTools.parseXML;
 
 const getValueForKey = davTools.getValueForKey;
 const getSingleValue = davTools.getSingleValue;
