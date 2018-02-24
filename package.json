@@ -34,10 +34,10 @@
   },
   "homepage": "https://github.com/perry-mitchell/webdav-client#readme",
   "dependencies": {
-    "deepmerge": "~1.5.0",
-    "node-fetch": "~1.7.1",
-    "url-join": "~2.0.2",
-    "url-parse": "~1.1.9",
+    "deepmerge": "~2.0.1",
+    "node-fetch": "~2.0.0",
+    "url-join": "~4.0.0",
+    "url-parse": "~1.2.0",
     "xml2js": "~0.4.17"
   },
   "devDependencies": {
