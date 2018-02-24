@@ -1,6 +1,6 @@
 # WebDAV-client changelog
 
-# 1.2.0
+## 1.2.0
 _2018-02-24_
 
  * ([#74](https://github.com/perry-mitchell/webdav-client/issues/74)): TypeError: res.buffer is not a function (`ArrayBuffer` replaces `Buffer` for node-fetch)
