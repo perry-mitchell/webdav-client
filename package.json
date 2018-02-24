@@ -7,6 +7,7 @@
     "build": "babel --out-dir dist source",
     "format": "prettier --write '{source,test}/**/*.js'",
     "generate:docs": "jsdoc2md 'source/**/*.js' > API.md",
+    "precommit": "lint-staged",
     "prepare": "npm run build",
     "pub": "np",
     "test": "run-s test:unit test:format",
