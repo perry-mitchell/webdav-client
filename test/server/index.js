@@ -23,13 +23,9 @@ function createServer(dir, authType) {
     return {
         start: function start() {
             return new Promise(function(resolve) {
-                server.setFileSystem(
-                    "/webdav/server",
-                    new ws.PhysicalFileSystem(dir),
-                    function() {
-                        server.start(resolve);
-                    }
-                );
+                server.setFileSystem("/webdav/server", new ws.PhysicalFileSystem(dir), function() {
+                    server.start(resolve);
+                });
             });
         },
 

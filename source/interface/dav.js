@@ -43,13 +43,10 @@ function parseXML(xml) {
 function propsToStat(props, filename) {
     // Last modified time, raw size, item type and mime
     const lastMod = getSingleValue(getValueForKey("getlastmodified", props));
-    const rawSize =
-        getSingleValue(getValueForKey("getcontentlength", props)) || "0";
+    const rawSize = getSingleValue(getValueForKey("getcontentlength", props)) || "0";
     const resourceType = getSingleValue(getValueForKey("resourcetype", props));
     const mimeType = getSingleValue(getValueForKey("getcontenttype", props));
-    const type = getValueForKey("collection", resourceType)
-        ? "directory"
-        : "file";
+    const type = getValueForKey("collection", resourceType) ? "directory" : "file";
     const stat = {
         filename: filename,
         basename: path.basename(filename),

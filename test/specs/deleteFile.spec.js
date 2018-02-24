@@ -4,10 +4,7 @@ const path = require("path");
 const fileExists = require("exists-file").sync;
 const directoryExists = require("directory-exists").sync;
 
-const localFilePath = path.resolve(
-    __dirname,
-    "../testContents/text document.txt"
-);
+const localFilePath = path.resolve(__dirname, "../testContents/text document.txt");
 const localDirPath = path.resolve(__dirname, "../testContents/sub1");
 
 describe("deleteFile", function() {

@@ -25,20 +25,16 @@ describe("getFileContents", function() {
     });
 
     it("reads a remote file into a buffer", function() {
-        return this.client
-            .getFileContents("/alrighty.jpg")
-            .then(function(bufferRemote) {
-                const bufferLocal = fs.readFileSync(SOURCE_BIN);
-                expect(bufferEquals(bufferRemote, bufferLocal)).to.be.true;
-            });
+        return this.client.getFileContents("/alrighty.jpg").then(function(bufferRemote) {
+            const bufferLocal = fs.readFileSync(SOURCE_BIN);
+            expect(bufferEquals(bufferRemote, bufferLocal)).to.be.true;
+        });
     });
 
     it("reads a remote file into a string", function() {
-        return this.client
-            .getFileContents("/text document.txt", { format: "text" })
-            .then(function(stringRemote) {
-                const stringLocal = fs.readFileSync(SOURCE_TXT, "utf8");
-                expect(stringRemote).to.equal(stringLocal);
-            });
+        return this.client.getFileContents("/text document.txt", { format: "text" }).then(function(stringRemote) {
+            const stringLocal = fs.readFileSync(SOURCE_TXT, "utf8");
+            expect(stringRemote).to.equal(stringLocal);
+        });
     });
 });

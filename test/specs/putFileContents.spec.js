@@ -27,21 +27,17 @@ describe("getFileContents", function() {
 
     it("writes binary files", function() {
         const imgBin = fs.readFileSync(SOURCE_BIN);
-        return this.client
-            .putFileContents("/sub1/alrighty.jpg", imgBin)
-            .then(function() {
-                const written = fs.readFileSync(TARGET_BIN);
-                expect(bufferEquals(written, imgBin)).to.be.true;
-            });
+        return this.client.putFileContents("/sub1/alrighty.jpg", imgBin).then(function() {
+            const written = fs.readFileSync(TARGET_BIN);
+            expect(bufferEquals(written, imgBin)).to.be.true;
+        });
     });
 
     it("writes text files", function() {
         const text = "this is\nsome text\ncontent\t...\n";
-        return this.client
-            .putFileContents("/newFile.txt", text)
-            .then(function() {
-                const written = fs.readFileSync(TARGET_TXT, "utf8");
-                expect(written).to.equal(text);
-            });
+        return this.client.putFileContents("/newFile.txt", text).then(function() {
+            const written = fs.readFileSync(TARGET_TXT, "utf8");
+            expect(written).to.equal(text);
+        });
     });
 });

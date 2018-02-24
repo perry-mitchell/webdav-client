@@ -4,21 +4,11 @@ const fs = require("fs");
 const path = require("path");
 
 function useInvalidQuota() {
-    returnFakeResponse(
-        fs.readFileSync(
-            path.resolve(__dirname, "../responses/quota-invalid.xml"),
-            "utf8"
-        )
-    );
+    returnFakeResponse(fs.readFileSync(path.resolve(__dirname, "../responses/quota-invalid.xml"), "utf8"));
 }
 
 function useValidQuota() {
-    returnFakeResponse(
-        fs.readFileSync(
-            path.resolve(__dirname, "../responses/quota-valid.xml"),
-            "utf8"
-        )
-    );
+    returnFakeResponse(fs.readFileSync(path.resolve(__dirname, "../responses/quota-valid.xml"), "utf8"));
 }
 
 describe("getQuota", function() {

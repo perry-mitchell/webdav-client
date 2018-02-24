@@ -23,9 +23,7 @@ function makeFileRequest(filePath, options) {
         method: "GET",
         headers: options.headers
     };
-    return fetch(fetchURL, fetchOptions).then(
-        responseHandlers.handleResponseCode
-    );
+    return fetch(fetchURL, fetchOptions).then(responseHandlers.handleResponseCode);
 }
 
 module.exports = {
