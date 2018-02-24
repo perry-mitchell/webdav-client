@@ -5,8 +5,8 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "babel --out-dir dist source",
+    "docs": "jsdoc2md 'source/**/*.js' > API.md",
     "format": "prettier --write '{source,test}/**/*.js'",
-    "generate:docs": "jsdoc2md 'source/**/*.js' > API.md",
     "precommit": "lint-staged",
     "prepare": "npm run build",
     "pub": "np",
