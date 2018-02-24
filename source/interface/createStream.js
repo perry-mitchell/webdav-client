@@ -46,10 +46,7 @@ function createWriteStream(filePath, options) {
 
 function getFileStream(filePath, options) {
     let rangeHeader;
-    if (
-        typeof options.range === "object" &&
-        typeof options.range.start === "number"
-    ) {
+    if (typeof options.range === "object" && typeof options.range.start === "number") {
         rangeHeader = "bytes=" + options.range.start + "-";
         if (typeof options.range.end === "number") {
             rangeHeader += options.range.end;

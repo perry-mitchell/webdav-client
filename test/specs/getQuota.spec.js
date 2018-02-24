@@ -4,21 +4,11 @@ const fs = require("fs");
 const path = require("path");
 
 function useInvalidQuota() {
-    returnFakeResponse(
-        fs.readFileSync(
-            path.resolve(__dirname, "../responses/quota-invalid.xml"),
-            "utf8"
-        )
-    );
+    returnFakeResponse(fs.readFileSync(path.resolve(__dirname, "../responses/quota-invalid.xml"), "utf8"));
 }
 
 function useValidQuota() {
-    returnFakeResponse(
-        fs.readFileSync(
-            path.resolve(__dirname, "../responses/quota-valid.xml"),
-            "utf8"
-        )
-    );
+    returnFakeResponse(fs.readFileSync(path.resolve(__dirname, "../responses/quota-valid.xml"), "utf8"));
 }
 
 describe("getQuota", function() {
@@ -38,7 +28,7 @@ describe("getQuota", function() {
     it("returns correct available amount", function() {
         useValidQuota();
         return this.client.getQuota().then(function(quotaInfo) {
-            expect(quotaInfo).to.be.an.object;
+            expect(quotaInfo).to.be.an("object");
             expect(quotaInfo).to.have.property("available", "unlimited");
         });
     });
@@ -46,7 +36,7 @@ describe("getQuota", function() {
     it("returns correct used amount", function() {
         useValidQuota();
         return this.client.getQuota().then(function(quotaInfo) {
-            expect(quotaInfo).to.be.an.object;
+            expect(quotaInfo).to.be.an("object");
             expect(quotaInfo).to.have.property("used", 6864755191);
         });
     });

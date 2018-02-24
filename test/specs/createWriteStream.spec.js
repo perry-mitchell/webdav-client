@@ -43,10 +43,7 @@ describe("createWriteStream", function() {
     });
 
     it("writes the file to the remote", function() {
-        const targetFile = path.resolve(
-            __dirname,
-            "../testContents/alrighty2.jpg"
-        );
+        const targetFile = path.resolve(__dirname, "../testContents/alrighty2.jpg");
         const writeStream = this.client.createWriteStream("/alrighty2.jpg");
         const readStream = fs.createReadStream(SOURCE_FILENAME);
         expect(writeStream instanceof PassThrough).to.be.true;

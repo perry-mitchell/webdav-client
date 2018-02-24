@@ -45,10 +45,7 @@ describe("createReadStream", function() {
         const stream2 = this.client.createReadStream("/alrighty.jpg", {
             range: { start: 25000, end: 52129 }
         });
-        return Promise.all([
-            streamToBuffer(stream1),
-            streamToBuffer(stream2)
-        ]).then(function(buffers) {
+        return Promise.all([streamToBuffer(stream1), streamToBuffer(stream2)]).then(function(buffers) {
             const part1 = buffers.shift();
             const part2 = buffers.shift();
             expect(part1.length).to.equal(25000);
