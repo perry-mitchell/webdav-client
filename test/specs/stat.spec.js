@@ -18,7 +18,7 @@ describe("stat", function() {
 
     it("correctly stats files", function() {
         return this.client.stat("/alrighty.jpg").then(function(stat) {
-            expect(stat).to.be.an.object;
+            expect(stat).to.be.an("object");
             expect(stat).to.have.property("filename", "/alrighty.jpg");
             expect(stat).to.have.property("basename", "alrighty.jpg");
             expect(stat).to.have.property("lastmod").that.is.a.string;
@@ -30,7 +30,7 @@ describe("stat", function() {
 
     it("correctly stats directories", function() {
         return this.client.stat("/webdav/server").then(function(stat) {
-            expect(stat).to.be.an.object;
+            expect(stat).to.be.an("object");
             expect(stat).to.have.property("filename", "/webdav/server");
             expect(stat).to.have.property("basename", "server");
             expect(stat).to.have.property("lastmod").that.is.a.string;
@@ -41,7 +41,7 @@ describe("stat", function() {
 
     it("stats the root", function() {
         return this.client.stat("/").then(function(stat) {
-            expect(stat).to.be.an.object;
+            expect(stat).to.be.an("object");
             expect(stat).to.have.property("filename", "/");
             expect(stat).to.have.property("basename", "");
             expect(stat).to.have.property("lastmod").that.is.a.string;

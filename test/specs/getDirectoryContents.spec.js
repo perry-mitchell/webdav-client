@@ -18,8 +18,8 @@ describe("getDirectoryContents", function() {
 
     it("returns an array of items", function() {
         return this.client.getDirectoryContents("/").then(function(contents) {
-            expect(contents).to.be.an.array;
-            expect(contents[0]).to.be.an.object;
+            expect(contents).to.be.an("array");
+            expect(contents[0]).to.be.an("object");
         });
     });
 
@@ -67,8 +67,8 @@ describe("getDirectoryContents", function() {
 
     it("returns the contents of a directory with repetitive naming", function() {
         return this.client.getDirectoryContents("/webdav/server").then(function(contents) {
-            expect(contents).to.be.an.array;
-            expect(contents[0]).to.be.an.object;
+            expect(contents).to.be.an("array");
+            expect(contents[0]).to.be.an("object");
             expect(contents[0]).to.have.property("basename", "notreal.txt");
         });
     });

@@ -28,7 +28,7 @@ describe("getQuota", function() {
     it("returns correct available amount", function() {
         useValidQuota();
         return this.client.getQuota().then(function(quotaInfo) {
-            expect(quotaInfo).to.be.an.object;
+            expect(quotaInfo).to.be.an("object");
             expect(quotaInfo).to.have.property("available", "unlimited");
         });
     });
@@ -36,7 +36,7 @@ describe("getQuota", function() {
     it("returns correct used amount", function() {
         useValidQuota();
         return this.client.getQuota().then(function(quotaInfo) {
-            expect(quotaInfo).to.be.an.object;
+            expect(quotaInfo).to.be.an("object");
             expect(quotaInfo).to.have.property("used", 6864755191);
         });
     });
