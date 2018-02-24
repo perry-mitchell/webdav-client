@@ -1,7 +1,7 @@
 # WebDAV client
 A WebDAV client written in JavaScript for NodeJS.
 
-[![Build Status](https://travis-ci.org/perry-mitchell/webdav-client.svg?branch=master)](https://travis-ci.org/perry-mitchell/webdav-client) [![npm version](https://badge.fury.io/js/webdav.svg)](https://www.npmjs.com/package/webdav) ![monthly downloads](https://img.shields.io/npm/dm/webdav.svg) [![Donate](https://www.paypalobjects.com/webstatic/en_US/i/btn/png/btn_donate_74x21.png)](https://paypal.me/perryjamesmitchell)
+[![Build Status](https://travis-ci.org/perry-mitchell/webdav-client.svg?branch=master)](https://travis-ci.org/perry-mitchell/webdav-client) [![npm version](https://badge.fury.io/js/webdav.svg)](https://www.npmjs.com/package/webdav) ![monthly downloads](https://img.shields.io/npm/dm/webdav.svg)
 
 ## About
 This client was branched from [webdav-fs](https://github.com/perry-mitchell/webdav-fs) as the core functionality deserved its own repository. As **webdav-fs**' API was designed to resemble NodeJS' fs API, little could be done to improve the adapter interface for regular use.
@@ -240,9 +240,3 @@ This library has been tested to work with the following WebDAV servers or applic
  * [Yandex.ru](https://yandex.ru/)
  * [jsDAV](https://github.com/mikedeboer/jsDAV)
  * [webdav-server](https://github.com/OpenMarshal/npm-WebDAV-Server)
- 
-## Supporting this project
-I develop this project in my free time as programming is my passion. I do not expect payment for what I make public, but all donations go towards supporting my development efforts. I use this money to pay for servers, software and other necessities. I greatly appreciate whatever I am given, no matter what the amount. If you've donated I'm extremely grateful for the help!
-
-[![Donate](https://www.paypalobjects.com/webstatic/en_US/i/btn/png/btn_donate_74x21.png)](https://paypal.me/perryjamesmitchell)
-
