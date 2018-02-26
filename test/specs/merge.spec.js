@@ -1,4 +1,5 @@
-const { merge } = require("../../source/merge.js");
+const mergeTools = require("../../source/merge.js");
+const merge = mergeTools.merge;
 
 describe("merge", function() {
     describe("merge", function() {
