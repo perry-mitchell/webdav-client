@@ -2,8 +2,9 @@
     "presets": [
         ["env", {
             "targets": {
-                "node": "4"
-            }
+                "node": 4
+            },
+            "debug": true
         }]
     ]
 }
