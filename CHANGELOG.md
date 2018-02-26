@@ -1,5 +1,10 @@
 # WebDAV-client changelog
 
+## 1.2.1
+_2018-02-26_
+
+ * Downgrade `deepmerge` to 1.5.2 to fix Webpack bug
+
 ## 1.2.0
 _2018-02-24_
 
