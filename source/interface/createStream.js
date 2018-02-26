@@ -2,7 +2,7 @@
 
 const Stream = require("stream");
 const joinURL = require("url-join");
-const deepmerge = require("deepmerge");
+const { merge } = require("../merge.js");
 const responseHandlers = require("../response.js");
 const request = require("../request.js");
 const encodePath = request.encodePath;
@@ -24,7 +24,7 @@ function createReadStream(filePath, options) {
 
 function createWriteStream(filePath, options) {
     const writeStream = new PassThroughStream();
-    const headers = deepmerge({}, options.headers);
+    const headers = merge({}, options.headers);
     // if (typeof options.range === "object" && typeof options.range.start === "number") {
     //     var rangeHeader = "bytes=" + options.range.start + "-";
     //     if (typeof options.range.end === "number") {

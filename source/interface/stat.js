@@ -1,8 +1,7 @@
 "use strict";
 
 const joinURL = require("url-join");
-const deepmerge = require("deepmerge");
-
+const { merge } = require("../merge.js");
 const responseHandlers = require("../response.js");
 const davTools = require("./dav.js");
 const urlTools = require("../url.js");
@@ -18,7 +17,7 @@ function getStat(filename, options) {
     const fetchURL = joinURL(options.remoteURL, encodePath(filename));
     const fetchOptions = {
         method: "PROPFIND",
-        headers: deepmerge({ Depth: 0 }, options.headers)
+        headers: merge({ Depth: 0 }, options.headers)
     };
     return fetch(fetchURL, fetchOptions)
         .then(responseHandlers.handleResponseCode)

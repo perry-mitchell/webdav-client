@@ -1,7 +1,7 @@
 "use strict";
 
-const deepmerge = require("deepmerge");
 const joinURL = require("url-join");
+const { merge } = require("../merge.js");
 const responseHandlers = require("../response.js");
 const request = require("../request.js");
 const encodePath = request.encodePath;
@@ -17,11 +17,7 @@ function getPutContentsDefaults() {
 }
 
 function putFileContents(filePath, data, options) {
-    const putOptions = deepmerge.all([
-        getPutContentsDefaults(),
-        { headers: { "Content-Length": data.length } },
-        options || {}
-    ]);
+    const putOptions = merge(getPutContentsDefaults(), { headers: { "Content-Length": data.length } }, options || {});
     if (putOptions.overwrite === false) {
         putOptions.headers["If-None-Match"] = "*";
     }
