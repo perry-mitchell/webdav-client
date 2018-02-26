@@ -1,6 +1,9 @@
 {
-    "presets": ["env"],
-    "plugins": [
-        "transform-es2015-destructuring"
+    "presets": [
+        ["env", {
+            "targets": {
+                "node": "4"
+            }
+        }]
     ]
 }
