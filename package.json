@@ -50,6 +50,7 @@
     "xml2js": "~0.4.17"
   },
   "devDependencies": {
+    "@babel/plugin-transform-destructuring": "~7.0.0-beta.40",
     "arraybuffer-equal": "~1.0.4",
     "arraybuffer-to-buffer": "0.0.4",
     "babel-cli": "~6.26.0",
