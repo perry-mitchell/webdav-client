@@ -3,7 +3,7 @@
 const path = require("path");
 
 const joinURL = require("url-join");
-const deepmerge = require("deepmerge");
+const { merge } = require("../merge.js");
 const responseHandlers = require("../response.js");
 const urlTools = require("../url.js");
 const davTools = require("./dav.js");
@@ -18,7 +18,7 @@ function getDirectoryContents(remotePath, options) {
     const fetchURL = joinURL(options.remoteURL, encodePath(remotePath));
     const fetchOptions = {
         method: "PROPFIND",
-        headers: deepmerge(
+        headers: merge(
             {
                 Depth: 1
             },

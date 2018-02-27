@@ -1,8 +1,7 @@
 "use strict";
 
-const deepmerge = require("deepmerge");
-
 const responseHandlers = require("../response.js");
+const { merge } = require("../merge.js");
 const fetch = require("../request.js").fetch;
 const davTools = require("./dav.js");
 const parseXML = davTools.parseXML;
@@ -15,7 +14,7 @@ function getQuota(options) {
     let fetchURL = options.remoteURL + "/";
     const fetchOptions = {
         method: "PROPFIND",
-        headers: deepmerge({ Depth: 0 }, options.headers)
+        headers: merge({ Depth: 0 }, options.headers)
     };
     fetchURL = fetchURL.replace(/\/+$/g, "/");
     return fetch(fetchURL, fetchOptions)
