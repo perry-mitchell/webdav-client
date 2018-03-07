@@ -1,5 +1,12 @@
 # WebDAV-client changelog
 
+## 1.3.0
+_2018-03-07_
+
+ * Change `deepmerge` dependency to `merge`
+ * ([#79](https://github.com/perry-mitchell/webdav-client/issues/79)): getFileContents arrayBuffer default causes incompatibilities
+   * Use `buffer()` where available, and fallback to `arrayBuffer()` otherwise
+
 ## 1.2.1
 _2018-02-26_
 
