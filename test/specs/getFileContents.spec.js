@@ -37,7 +37,7 @@ describe("getFileContents", function() {
         });
     });
 
-    it.only("uses .arrayBuffer() when .buffer() is not available", function() {
+    it("uses .arrayBuffer() when .buffer() is not available", function() {
         setFetchMethod(function fakeFetch() {
             return nodeFetch.apply(null, arguments).then(function(response) {
                 return {
