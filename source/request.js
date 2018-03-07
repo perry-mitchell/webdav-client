@@ -25,7 +25,6 @@ function encodePath(path) {
 }
 
 function request(url, options) {
-    console.log("REQ", fetchMethod);
     return fetchMethod(url, options);
 }
 

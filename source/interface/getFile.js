@@ -8,7 +8,6 @@ const fetch = request.fetch;
 
 function getFileContentsBuffer(filePath, options) {
     return makeFileRequest(filePath, options).then(function(res) {
-        console.log(typeof res.buffer);
         return typeof res.buffer === "function" ? res.buffer() : res.arrayBuffer();
     });
 }
