@@ -1,13 +1,15 @@
 const path = require("path");
 const fs = require("fs");
 const bufferEquals = require("buffer-equals");
-const arrayBufferToBuffer = require("arraybuffer-to-buffer");
+const nodeFetch = require("node-fetch");
+const setFetchMethod = require("../../dist/request.js").setFetchMethod;
 
 const SOURCE_BIN = path.resolve(__dirname, "../testContents/alrighty.jpg");
 const SOURCE_TXT = path.resolve(__dirname, "../testContents/text document.txt");
 
 describe("getFileContents", function() {
     beforeEach(function() {
+        setFetchMethod(); // use default
         this.client = createWebDAVClient(
             "http://localhost:9988/webdav/server",
             createWebDAVServer.test.username,
@@ -23,13 +25,29 @@ describe("getFileContents", function() {
     });
 
     it("reads a remote file into a buffer", function() {
-        return this.client
-            .getFileContents("/alrighty.jpg")
-            .then(arrayBufferToBuffer)
-            .then(function(bufferRemote) {
-                const bufferLocal = fs.readFileSync(SOURCE_BIN);
-                expect(bufferEquals(bufferRemote, bufferLocal)).to.be.true;
+        return this.client.getFileContents("/alrighty.jpg").then(function(bufferRemote) {
+            const bufferLocal = fs.readFileSync(SOURCE_BIN);
+            expect(bufferEquals(bufferRemote, bufferLocal)).to.be.true;
+        });
+    });
+
+    it("uses .buffer() when available", function() {
+        return this.client.getFileContents("/alrighty.jpg").then(res => {
+            expect(res).to.be.an.instanceof(Buffer);
+        });
+    });
+
+    it.only("uses .arrayBuffer() when .buffer() is not available", function() {
+        setFetchMethod(function fakeFetch() {
+            return nodeFetch.apply(null, arguments).then(function(response) {
+                return {
+                    arrayBuffer: response.arrayBuffer.bind(response)
+                };
             });
+        }); // use fixed
+        return this.client.getFileContents("/alrighty.jpg").then(res => {
+            expect(res).to.be.an.instanceof(ArrayBuffer);
+        });
     });
 
     it("reads a remote file into a string", function() {
