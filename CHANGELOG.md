@@ -1,5 +1,10 @@
 # WebDAV-client changelog
 
+## 1.4.0
+_2018-03-13_
+
+ * Add `copyFile` method
+
 ## 1.3.0
 _2018-03-07_
 
