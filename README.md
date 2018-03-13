@@ -42,6 +42,9 @@ Each method returns a `Promise`.
 ### Adapter methods
 These methods can be called on the object returned from the main factory.
 
+#### copyFile(remotePath, targetPath _[, options]_)
+Copy a file or directory from one path to another.
+
 #### createDirectory(remotePath _[, options]_)
 Create a new directory at the remote path.
 
