@@ -161,7 +161,7 @@ function createClient(remoteURL, username, password) {
             return move.moveFile(remotePath, targetRemotePath, moveOptions);
         },
 
-           /**
+        /**
          * Copy a remote item to another path
          * @param {String} remotePath The remote item path
          * @param {String} targetRemotePath The path file will be copied to
