@@ -9,6 +9,8 @@ This client was branched from [webdav-fs](https://github.com/perry-mitchell/webd
 
 This WebDAV client library is designed to provide an improved API for low-level WebDAV integration. This client uses `window.fetch` when available in the browser.
 
+Please read our [contribution guide](CONTRIBUTING.md) if you plan on making an issue or PR.
+
 ## Installation
 To install for use with NodeJS, execute the following shell command:
 
