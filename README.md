@@ -18,9 +18,6 @@ To install for use with NodeJS, execute the following shell command:
 npm install webdav --save
 ```
 
-### Webpack / Browserify
-WebDAV-client is browser friendly, after being transpiled. Refer to the use of WebDAV-fs in the [Buttercup mobile compatibility library](https://github.com/buttercup/buttercup-mobile-compat) or the [Buttercup browser extension](https://github.com/buttercup/buttercup-browser-extension) for guidance on preparation for the web.
-
 ## Usage
 Usage is very simple ([API](API.md)) - the main exported object is a factory to create adapter instances:
 
@@ -245,3 +242,8 @@ This library has been tested to work with the following WebDAV servers or applic
  * [Yandex.ru](https://yandex.ru/)
  * [jsDAV](https://github.com/mikedeboer/jsDAV)
  * [webdav-server](https://github.com/OpenMarshal/npm-WebDAV-Server)
+
+### Webpack / Browserify
+WebDAV-client is browser friendly, after being transpiled. Refer to the use of WebDAV-fs in the [Buttercup mobile compatibility library](https://github.com/buttercup/buttercup-mobile-compat) or the [Buttercup browser extension](https://github.com/buttercup/buttercup-browser-extension) for guidance on preparation for the web.
+
+Please note that it is _not_ the responsibility of this library to be compatible with Webpack or Browserify. Small modifications may be made here to support them, but no guarantees of compatibility are made as there are an almost infinite number of configurations in both systems that could potentially cause issues with this library or a dependency therein.
