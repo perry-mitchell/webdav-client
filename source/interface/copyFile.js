@@ -1,18 +1,11 @@
-"use strict";
-
-var joinURL = require("url-join");
-
-var _require = require("../merge.js"),
-    merge = _require.merge;
-
-var responseHandlers = require("../response.js");
-var request = require("../request.js");
-var encodePath = request.encodePath;
-var fetch = request.fetch;
+const joinURL = require("url-join");
+const { merge } = require("../merge.js");
+const responseHandlers = require("../response.js");
+const { encodePath, fetch } = require("../request.js");
 
 function copyFile(filename, destination, options) {
-    var fetchURL = joinURL(options.remoteURL, encodePath(filename));
-    var fetchOptions = {
+    const fetchURL = joinURL(options.remoteURL, encodePath(filename));
+    const fetchOptions = {
         method: "COPY",
         headers: merge(
             {

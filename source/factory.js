@@ -60,6 +60,19 @@ function createClient(remoteURL, username, password) {
 
     return {
         /**
+         * Copy a remote item to another path
+         * @param {String} remotePath The remote item path
+         * @param {String} targetRemotePath The path file will be copied to
+         * @param {OptionsWithHeaders=} options Options for the request
+         * @memberof ClientInterface
+         * @returns {Promise} A promise that resolves once the request has completed
+         */
+        copyFile: function copyFile(remotePath, targetRemotePath, options) {
+            const copyOptions = merge(baseOptions, options || {});
+            return copy.copyFile(remotePath, targetRemotePath, copyOptions);
+        },
+
+        /**
          * Create a directory
          * @param {String} dirPath The path to create
          * @param {OptionsWithHeaders=} options Options for the request
@@ -159,19 +172,6 @@ function createClient(remoteURL, username, password) {
         moveFile: function moveFile(remotePath, targetRemotePath, options) {
             const moveOptions = merge(baseOptions, options || {});
             return move.moveFile(remotePath, targetRemotePath, moveOptions);
-        },
-
-        /**
-         * Copy a remote item to another path
-         * @param {String} remotePath The remote item path
-         * @param {String} targetRemotePath The path file will be copied to
-         * @param {OptionsWithHeaders=} options Options for the request
-         * @memberof ClientInterface
-         * @returns {Promise} A promise that resolves once the request has completed
-         */
-        copyFile: function copyFile(remotePath, targetRemotePath, options) {
-            const copyOptions = merge(baseOptions, options || {});
-            return copy.copyFile(remotePath, targetRemotePath, copyOptions);
         },
 
         /**
