@@ -151,8 +151,8 @@ function createClient(remoteURL, username, password) {
         },
 
         /**
-         * Get the contents of a remote file
-         * @param {String} remoteFilename The file link to fetch
+         * Get the download link of a remote file
+         * @param {String} remoteFilename The file url to fetch
          * @param {OptionsHeadersAndFormat=} options Options for the request
          * @memberof ClientInterface
          * @returns {String} Returns a http url string
