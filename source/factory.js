@@ -151,6 +151,18 @@ function createClient(remoteURL, username, password) {
         },
 
         /**
+         * Get the contents of a remote file
+         * @param {String} remoteFilename The file link to fetch
+         * @param {OptionsHeadersAndFormat=} options Options for the request
+         * @memberof ClientInterface
+         * @returns {String} Returns a http url string
+         */
+        getFileDownloadLink: function getFileDownloadLink(remoteFilename, options) {
+            var getOptions = merge(baseOptions, options || {});
+            return getFile.getFileLink(remoteFilename, getOptions);
+        },
+
+        /**
          * Get quota information
          * @param {OptionsHeadersAndFormat=} options Options for the request
          * @returns {null|Object} Returns null if failed, or an object with `used` and `available`
