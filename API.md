@@ -92,6 +92,7 @@ Client adapter
 **Kind**: global typedef  
 
 * [ClientInterface](#ClientInterface) : <code>Object</code>
+    * [.copyFile(remotePath, targetRemotePath, [options])](#ClientInterface.copyFile) ⇒ <code>Promise</code>
     * [.createDirectory(dirPath, [options])](#ClientInterface.createDirectory) ⇒ <code>Promise</code>
     * [.createReadStream(remoteFilename, [options])](#ClientInterface.createReadStream) ⇒ <code>Readable</code>
     * [.createWriteStream(remoteFilename, [options])](#ClientInterface.createWriteStream) ⇒ <code>Writeable</code>
@@ -102,6 +103,20 @@ Client adapter
     * [.moveFile(remotePath, targetRemotePath, [options])](#ClientInterface.moveFile) ⇒ <code>Promise</code>
     * [.putFileContents(remoteFilename, data, [options])](#ClientInterface.putFileContents) ⇒ <code>Promise</code>
     * [.stat(remotePath, [options])](#ClientInterface.stat) ⇒ <code>Promise.&lt;Object&gt;</code>
+
+<a name="ClientInterface.copyFile"></a>
+
+### ClientInterface.copyFile(remotePath, targetRemotePath, [options]) ⇒ <code>Promise</code>
+Copy a remote item to another path
+
+**Kind**: static method of [<code>ClientInterface</code>](#ClientInterface)  
+**Returns**: <code>Promise</code> - A promise that resolves once the request has completed  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| remotePath | <code>String</code> | The remote item path |
+| targetRemotePath | <code>String</code> | The path file will be copied to |
+| [options] | [<code>OptionsWithHeaders</code>](#OptionsWithHeaders) | Options for the request |
 
 <a name="ClientInterface.createDirectory"></a>
 

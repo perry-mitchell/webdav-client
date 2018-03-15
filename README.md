@@ -9,15 +9,14 @@ This client was branched from [webdav-fs](https://github.com/perry-mitchell/webd
 
 This WebDAV client library is designed to provide an improved API for low-level WebDAV integration. This client uses `window.fetch` when available in the browser.
 
+Please read our [contribution guide](CONTRIBUTING.md) if you plan on making an issue or PR.
+
 ## Installation
 To install for use with NodeJS, execute the following shell command:
 
 ```shell
 npm install webdav --save
 ```
-
-### Webpack / Browserify
-WebDAV-client is browser friendly, after being transpiled. Refer to the use of WebDAV-fs in the [Buttercup mobile compatibility library](https://github.com/buttercup/buttercup-mobile-compat) or the [Buttercup browser extension](https://github.com/buttercup/buttercup-browser-extension) for guidance on preparation for the web.
 
 ## Usage
 Usage is very simple ([API](API.md)) - the main exported object is a factory to create adapter instances:
@@ -42,6 +41,9 @@ Each method returns a `Promise`.
 
 ### Adapter methods
 These methods can be called on the object returned from the main factory.
+
+#### copyFile(remotePath, targetPath _[, options]_)
+Copy a file or directory from one path to another.
 
 #### createDirectory(remotePath _[, options]_)
 Create a new directory at the remote path.
@@ -243,3 +245,8 @@ This library has been tested to work with the following WebDAV servers or applic
  * [Yandex.ru](https://yandex.ru/)
  * [jsDAV](https://github.com/mikedeboer/jsDAV)
  * [webdav-server](https://github.com/OpenMarshal/npm-WebDAV-Server)
+
+### Webpack / Browserify
+WebDAV-client is browser friendly, after being transpiled. Refer to the use of WebDAV-fs in the [Buttercup mobile compatibility library](https://github.com/buttercup/buttercup-mobile-compat) or the [Buttercup browser extension](https://github.com/buttercup/buttercup-browser-extension) for guidance on preparation for the web.
+
+Please note that it is _not_ the responsibility of this library to be compatible with Webpack or Browserify. Small modifications may be made here to support them, but no guarantees of compatibility are made as there are an almost infinite number of configurations in both systems that could potentially cause issues with this library or a dependency therein.
