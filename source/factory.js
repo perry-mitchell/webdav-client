@@ -47,7 +47,14 @@ const stats = require("./interface/stat.js");
  *      .then(contents => {
  *          console.log(contents);
  *      });
- */
+ * @example
+ *  const createClient = require("webdav");
+ *  const client = createClient(url, {token_type: 'Bearer', access_token: 'tokenvalue'});
+ *  client
+ *      .getDirectoryContents("/")
+ *      .then(contents => {
+ *          console.log(contents);
+ *      }); */
 function createClient(remoteURL, username, password) {
     const baseOptions = {
         headers: {},
@@ -56,6 +63,9 @@ function createClient(remoteURL, username, password) {
     };
     if (username && username.length > 0) {
         baseOptions.headers.Authorization = authTools.generateBasicAuthHeader(username, password);
+    }
+    if (username && username.token_type) {
+        baseOptions.headers.Authorization = authTools.generateTokenAuthHeader(username);
     }
 
     return {

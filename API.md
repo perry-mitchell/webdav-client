@@ -55,6 +55,16 @@ const createClient = require("webdav");
          console.log(contents);
      });
 ```
+**Example**  
+```js
+const createClient = require("webdav");
+ const client = createClient(url, {token_type: 'Bearer', access_token: 'tokenvalue'});
+ client
+     .getDirectoryContents("/")
+     .then(contents => {
+         console.log(contents);
+     });
+```
 <a name="encodePath"></a>
 
 ## encodePath(path) ⇒ <code>String</code>
