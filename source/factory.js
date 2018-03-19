@@ -61,11 +61,12 @@ function createClient(remoteURL, username, password) {
         remotePath: urlTools.extractURLPath(remoteURL),
         remoteURL: remoteURL
     };
-    if (username && username.length > 0) {
-        baseOptions.headers.Authorization = authTools.generateBasicAuthHeader(username, password);
-    }
-    if (username && username.token_type) {
-        baseOptions.headers.Authorization = authTools.generateTokenAuthHeader(username);
+
+    if (username) {
+        baseOptions.headers.Authorization =
+            typeof username === "object"
+                ? authTools.generateTokenAuthHeader(username)
+                : authTools.generateBasicAuthHeader(username, password);
     }
 
     return {
