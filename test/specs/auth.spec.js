@@ -1,6 +1,6 @@
 const nock = require("nock");
 const Webdav = require("../../dist/factory");
-const { expect } = require("chai");
+const expect = require("chai").expect;
 const DUMMYSERVER = "https://dummy.webdav.server";
 
 describe("Authentication", function() {
