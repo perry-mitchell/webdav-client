@@ -1,13 +1,13 @@
 const nock = require("nock");
-const Webdav = require("../../source/factory");
+const Webdav = require("../../dist/factory");
 const { expect } = require("chai");
 const DUMMYSERVER = "https://dummy.webdav.server";
 
 describe("Authentication", function() {
-    afterEach(() => {
+    afterEach(function() {
         nock.cleanAll();
     });
-    it("should go unauthenticated if no credentials are passed", async () => {
+    it("should go unauthenticated if no credentials are passed", function() {
         nock(DUMMYSERVER)
             .get("/file")
             .reply(200, function() {
@@ -15,10 +15,10 @@ describe("Authentication", function() {
                 return "";
             });
         const webdav = Webdav.createClient(DUMMYSERVER);
-        await webdav.getFileContents("/file");
+        return webdav.getFileContents("/file");
     });
 
-    it("should use HTTP Basic if user and password are provided", async () => {
+    it("should use HTTP Basic if user and password are provided", function() {
         nock(DUMMYSERVER)
             .get("/file")
             .reply(200, function() {
@@ -26,10 +26,10 @@ describe("Authentication", function() {
                 return "";
             });
         const webdav = Webdav.createClient(DUMMYSERVER, "user", "pass");
-        await webdav.getFileContents("/file");
+        return webdav.getFileContents("/file");
     });
 
-    it("should use Bearer if an object is provided", async () => {
+    it("should use Bearer if an object is provided", function() {
         nock(DUMMYSERVER)
             .get("/file")
             .reply(200, function() {
@@ -37,6 +37,6 @@ describe("Authentication", function() {
                 return "";
             });
         const webdav = Webdav.createClient(DUMMYSERVER, { token_type: "Bearer", access_token: "ABC123" });
-        await webdav.getFileContents("/file");
+        return webdav.getFileContents("/file");
     });
 });
