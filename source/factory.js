@@ -163,13 +163,14 @@ function createClient(remoteURL, username, password) {
 
         /**
          * Get the download link of a remote file
+         * Only supported for Basic authentication or unauthenticated connections.
          * @param {String} remoteFilename The file url to fetch
          * @param {OptionsHeadersAndFormat=} options Options for the request
          * @memberof ClientInterface
-         * @returns {String} Returns a http url string
+         * @returns {String} A download URL
          */
         getFileDownloadLink: function getFileDownloadLink(remoteFilename, options) {
-            var getOptions = merge(baseOptions, options || {});
+            const getOptions = merge(baseOptions, options || {});
             return getFile.getFileLink(remoteFilename, getOptions);
         },
 
