@@ -115,6 +115,11 @@ client
 
 **Important**: When running on Node, `node-fetch` is used as the default fetch library. `node-fetch` provides the `.buffer()` method for responses, which returns a `Buffer` instance, but other libraries (and standard `fetch`) do not. When the `buffer` method is not available, this library will attempt to use `.arrayBuffer`. It is your responsibility to handle the output and any required conversion. The [`arraybuffer-to-buffer`](https://www.npmjs.com/package/arraybuffer-to-buffer) library makes it easy to convert back to a `Buffer` if you require it.
 
+#### getFileDownloadLink(remotePath _[, options]_)
+Get the external download link of a remote file. Only supported for non-authenticated connections or connections using Basic authentication.
+
+**Important note**: This method exposes the username and password **in the URL** - It is not recommended to send or store any output from this function.
+
 #### getFileStream(remotePath _[, options]_)
 Get a readable stream on a remote file. Returns a Promise that resolves with a readable stream instance.
 
