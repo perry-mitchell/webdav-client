@@ -27,7 +27,16 @@ function makeFileRequest(filePath, options) {
     return fetch(fetchURL, fetchOptions).then(responseHandlers.handleResponseCode);
 }
 
+function getFileLink(filePath, options) {
+    var fetchURL = joinURL(options.remoteURL, encodePath(filePath));
+    var Authorization = options.headers.Authorization.replace("Basic ", "");
+    Authorization = Buffer.from(Authorization, "base64");
+    var httpformat = fetchURL.includes("https") ? "https://" : "http://";
+    return fetchURL.replace(httpformat, httpformat + Authorization + "@");
+}
+
 module.exports = {
     getFileContentsBuffer: getFileContentsBuffer,
-    getFileContentsString: getFileContentsString
+    getFileContentsString: getFileContentsString,
+    getFileLink: getFileLink
 };
