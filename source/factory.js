@@ -239,5 +239,5 @@ function createClient(remoteURL, username, password) {
 }
 
 module.exports = {
-    createClient
+    createClient: createClient
 };
