@@ -70,5 +70,5 @@ function getDirectoryFiles(result, serverBasePath, requestPath) {
 }
 
 module.exports = {
-    getDirectoryContents
+    getDirectoryContents: getDirectoryContents
 };

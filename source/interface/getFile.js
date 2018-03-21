@@ -7,13 +7,13 @@ const encodePath = request.encodePath;
 const fetch = request.fetch;
 
 function getFileContentsBuffer(filePath, options) {
-    return makeFileRequest(filePath, options).then(function(res) {
+    return makeFileRequest(filePath, options).then(function (res) {
         return typeof res.buffer === "function" ? res.buffer() : res.arrayBuffer();
     });
 }
 
 function getFileContentsString(filePath, options) {
-    return makeFileRequest(filePath, options).then(function(res) {
+    return makeFileRequest(filePath, options).then(function (res) {
         return res.text();
     });
 }
@@ -36,7 +36,7 @@ function getFileLink(filePath, options) {
         }
         const authPart = options.headers.Authorization.replace(/^Basic /i, "").trim();
         const authContents = Buffer.from(authPart, "base64").toString("utf8");
-        fetchURL = fetchURL.replace(/^https?:\/\//, `${protocol}://${authContents}@`);
+        fetchURL = fetchURL.replace(/^https?:\/\//, protocol + "://" + authContents + "@");
     }
     return fetchURL;
 }
