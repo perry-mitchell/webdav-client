@@ -1,5 +1,11 @@
 # WebDAV-client changelog
 
+## 1.5.0
+_2018-03-19_
+
+ * Add OAuth2 authentication support (via token)
+ * Add `getFileDownloadLink` method
+
 ## 1.4.0
 _2018-03-13_
 

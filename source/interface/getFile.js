@@ -28,11 +28,17 @@ function makeFileRequest(filePath, options) {
 }
 
 function getFileLink(filePath, options) {
-    var fetchURL = joinURL(options.remoteURL, encodePath(filePath));
-    var Authorization = options.headers.Authorization.replace("Basic ", "");
-    Authorization = Buffer.from(Authorization, "base64");
-    var httpformat = fetchURL.includes("https") ? "https://" : "http://";
-    return fetchURL.replace(httpformat, httpformat + Authorization + "@");
+    let fetchURL = joinURL(options.remoteURL, encodePath(filePath));
+    const protocol = /^https:/i.test(fetchURL) ? "https" : "http";
+    if (options.headers.Authorization) {
+        if (/^Basic /i.test(options.headers.Authorization) === false) {
+            throw new Error("Failed retrieving download link: Invalid authorisation method");
+        }
+        const authPart = options.headers.Authorization.replace(/^Basic /i, "").trim();
+        const authContents = Buffer.from(authPart, "base64").toString("utf8");
+        fetchURL = fetchURL.replace(/^https?:\/\//, `${protocol}://${authContents}@`);
+    }
+    return fetchURL;
 }
 
 module.exports = {

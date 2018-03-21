@@ -55,6 +55,16 @@ const createClient = require("webdav");
          console.log(contents);
      });
 ```
+**Example**  
+```js
+const createClient = require("webdav");
+ const client = createClient(url, {token_type: 'Bearer', access_token: 'tokenvalue'});
+ client
+     .getDirectoryContents("/")
+     .then(contents => {
+         console.log(contents);
+     });
+```
 <a name="encodePath"></a>
 
 ## encodePath(path) ⇒ <code>String</code>
@@ -99,6 +109,7 @@ Client adapter
     * [.deleteFile(remotePath, [options])](#ClientInterface.deleteFile) ⇒ <code>Promise</code>
     * [.getDirectoryContents(remotePath, [options])](#ClientInterface.getDirectoryContents) ⇒ <code>Promise.&lt;Array&gt;</code>
     * [.getFileContents(remoteFilename, [options])](#ClientInterface.getFileContents) ⇒ <code>Promise.&lt;(Buffer\|String)&gt;</code>
+    * [.getFileDownloadLink(remoteFilename, [options])](#ClientInterface.getFileDownloadLink) ⇒ <code>String</code>
     * [.getQuota([options])](#ClientInterface.getQuota) ⇒ <code>null</code> \| <code>Object</code>
     * [.moveFile(remotePath, targetRemotePath, [options])](#ClientInterface.moveFile) ⇒ <code>Promise</code>
     * [.putFileContents(remoteFilename, data, [options])](#ClientInterface.putFileContents) ⇒ <code>Promise</code>
@@ -194,6 +205,20 @@ Get the contents of a remote file
 | Param | Type | Description |
 | --- | --- | --- |
 | remoteFilename | <code>String</code> | The file to fetch |
+| [options] | <code>OptionsHeadersAndFormat</code> | Options for the request |
+
+<a name="ClientInterface.getFileDownloadLink"></a>
+
+### ClientInterface.getFileDownloadLink(remoteFilename, [options]) ⇒ <code>String</code>
+Get the download link of a remote file
+Only supported for Basic authentication or unauthenticated connections.
+
+**Kind**: static method of [<code>ClientInterface</code>](#ClientInterface)  
+**Returns**: <code>String</code> - A download URL  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| remoteFilename | <code>String</code> | The file url to fetch |
 | [options] | <code>OptionsHeadersAndFormat</code> | Options for the request |
 
 <a name="ClientInterface.getQuota"></a>

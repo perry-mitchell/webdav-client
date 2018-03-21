@@ -2,7 +2,7 @@
 
 > A WebDAV client written in JavaScript for NodeJS.
 
-[![Build Status](https://travis-ci.org/perry-mitchell/webdav-client.svg?branch=master)](https://travis-ci.org/perry-mitchell/webdav-client) [![npm version](https://badge.fury.io/js/webdav.svg)](https://www.npmjs.com/package/webdav) ![monthly downloads](https://img.shields.io/npm/dm/webdav.svg)
+[![Build Status](https://travis-ci.org/perry-mitchell/webdav-client.svg?branch=master)](https://travis-ci.org/perry-mitchell/webdav-client) [![npm version](https://badge.fury.io/js/webdav.svg)](https://www.npmjs.com/package/webdav) [![monthly downloads](https://img.shields.io/npm/dm/webdav.svg)](https://www.npmjs.com/package/webdav)
 
 ## About
 This client was branched from [webdav-fs](https://github.com/perry-mitchell/webdav-fs) as the core functionality deserved its own repository. As **webdav-fs**' API was designed to resemble NodeJS' fs API, little could be done to improve the adapter interface for regular use.
@@ -38,6 +38,22 @@ client
 ```
 
 Each method returns a `Promise`.
+
+### Authentication
+`webdav` uses `Basic` authentication by default, if `username` and `password` are provided (if none are provided, no `Authorization` header is specified). It also supports OAuth tokens - simply pass the token data to the `username` field:
+
+```javascript
+createClient(
+    "https://address.com",
+    {
+        "access_token": "2YotnFZFEjr1zCsicMWpAA",
+        "token_type": "example",
+        "expires_in": 3600,
+        "refresh_token": "tGzv3JOkF0XG5Qx2TlKWIA",
+        "example_parameter": "example_value"
+    }
+);
+```
 
 ### Adapter methods
 These methods can be called on the object returned from the main factory.
@@ -98,6 +114,11 @@ client
 ```
 
 **Important**: When running on Node, `node-fetch` is used as the default fetch library. `node-fetch` provides the `.buffer()` method for responses, which returns a `Buffer` instance, but other libraries (and standard `fetch`) do not. When the `buffer` method is not available, this library will attempt to use `.arrayBuffer`. It is your responsibility to handle the output and any required conversion. The [`arraybuffer-to-buffer`](https://www.npmjs.com/package/arraybuffer-to-buffer) library makes it easy to convert back to a `Buffer` if you require it.
+
+#### getFileDownloadLink(remotePath _[, options]_)
+Get the external download link of a remote file. Only supported for non-authenticated connections or connections using Basic authentication.
+
+**Important note**: This method exposes the username and password **in the URL** - It is not recommended to send or store any output from this function.
 
 #### getFileStream(remotePath _[, options]_)
 Get a readable stream on a remote file. Returns a Promise that resolves with a readable stream instance.

@@ -47,15 +47,26 @@ const stats = require("./interface/stat.js");
  *      .then(contents => {
  *          console.log(contents);
  *      });
- */
+ * @example
+ *  const createClient = require("webdav");
+ *  const client = createClient(url, {token_type: 'Bearer', access_token: 'tokenvalue'});
+ *  client
+ *      .getDirectoryContents("/")
+ *      .then(contents => {
+ *          console.log(contents);
+ *      }); */
 function createClient(remoteURL, username, password) {
     const baseOptions = {
         headers: {},
         remotePath: urlTools.extractURLPath(remoteURL),
         remoteURL: remoteURL
     };
-    if (username && username.length > 0) {
-        baseOptions.headers.Authorization = authTools.generateBasicAuthHeader(username, password);
+
+    if (username) {
+        baseOptions.headers.Authorization =
+            typeof username === "object"
+                ? authTools.generateTokenAuthHeader(username)
+                : authTools.generateBasicAuthHeader(username, password);
     }
 
     return {
@@ -152,13 +163,14 @@ function createClient(remoteURL, username, password) {
 
         /**
          * Get the download link of a remote file
+         * Only supported for Basic authentication or unauthenticated connections.
          * @param {String} remoteFilename The file url to fetch
          * @param {OptionsHeadersAndFormat=} options Options for the request
          * @memberof ClientInterface
-         * @returns {String} Returns a http url string
+         * @returns {String} A download URL
          */
         getFileDownloadLink: function getFileDownloadLink(remoteFilename, options) {
-            var getOptions = merge(baseOptions, options || {});
+            const getOptions = merge(baseOptions, options || {});
             return getFile.getFileLink(remoteFilename, getOptions);
         },
 
