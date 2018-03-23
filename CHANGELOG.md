@@ -1,5 +1,10 @@
 # WebDAV-client changelog
 
+## 1.5.1
+_2018-03-23_
+
+ * ([#81](https://github.com/perry-mitchell/webdav-client/issues/81)): Bad encoding when paths are prefixed with directory separator
+
 ## 1.5.0
 _2018-03-19_
 
