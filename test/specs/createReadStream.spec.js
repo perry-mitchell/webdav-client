@@ -1,5 +1,3 @@
-"use strict";
-
 const ReadableStream = require("stream").Readable;
 
 function streamToBuffer(stream) {

@@ -1,5 +1,3 @@
-"use strict";
-
 const path = require("path");
 const fs = require("fs");
 const PassThrough = require("stream").PassThrough;

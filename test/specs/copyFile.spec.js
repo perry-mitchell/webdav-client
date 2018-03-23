@@ -1,5 +1,3 @@
-"use strict";
-
 const path = require("path");
 const fileExists = require("exists-file").sync;
 const directoryExists = require("directory-exists").sync;

@@ -1,5 +1,3 @@
-"use strict";
-
 describe("stat", function() {
     beforeEach(function() {
         this.client = createWebDAVClient(

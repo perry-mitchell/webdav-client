@@ -1,5 +1,3 @@
-"use strict";
-
 describe("getDirectoryContents", function() {
     beforeEach(function() {
         this.client = createWebDAVClient(
