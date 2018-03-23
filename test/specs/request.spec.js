@@ -16,5 +16,9 @@ describe("request", function() {
             expect(encodePath("one/two two/three")).to.equal("one/two%20two/three");
             expect(encodePath("file #32.txt")).to.equal("file%20%2332.txt");
         });
+
+        it("encodes paths prefixed with a path separator", function() {
+            expect(encodePath("/AB/C/DE")).to.equal("/AB/C/DE");
+        });
     });
 });
