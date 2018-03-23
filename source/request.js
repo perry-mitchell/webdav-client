@@ -13,9 +13,7 @@ let fetchMethod = nodeFetch;
  * @returns {String} The encoded path (separators protected)
  */
 function encodePath(path) {
-    const replaced = path
-        .replace(/(^|[^\\])\\\\($|[^\\])/g, "$1" + SEP_PATH_WINDOWS + "$2")
-        .replace(/(^|[^\/])\/($|[^\/])/g, "$1" + SEP_PATH_POSIX + "$2");
+    const replaced = path.replace(/\//g, SEP_PATH_POSIX).replace(/\\\\/g, SEP_PATH_WINDOWS);
     const formatted = encodeURIComponent(replaced);
     return formatted
         .split(SEP_PATH_WINDOWS)
