@@ -67,6 +67,6 @@ function getFileStream(filePath, options) {
 }
 
 module.exports = {
-    createReadStream: createReadStream,
-    createWriteStream: createWriteStream
+    createReadStream,
+    createWriteStream
 };

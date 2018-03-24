@@ -36,7 +36,7 @@ function getFileLink(filePath, options) {
         }
         const authPart = options.headers.Authorization.replace(/^Basic /i, "").trim();
         const authContents = Buffer.from(authPart, "base64").toString("utf8");
-        fetchURL = fetchURL.replace(/^https?:\/\//, protocol + "://" + authContents + "@");
+        fetchURL = fetchURL.replace(/^https?:\/\//, `${protocol}://${authContents}@`);
     }
     return fetchURL;
 }

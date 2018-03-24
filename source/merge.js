@@ -5,5 +5,5 @@ function merge(...args) {
 }
 
 module.exports = {
-    merge: merge
+    merge
 };

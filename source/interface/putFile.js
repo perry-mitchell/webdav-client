@@ -31,16 +31,16 @@ function putFileContents(filePath, data, options) {
 }
 
 function getFileUploadLink(filePath, options) {
-    var fetchURL = joinURL(options.remoteURL, encodePath(filePath));
+    let fetchURL = joinURL(options.remoteURL, encodePath(filePath));
     fetchURL += "?Content-Type=application/octet-stream";
-    var protocol = /^https:/i.test(fetchURL) ? "https" : "http";
+    const protocol = /^https:/i.test(fetchURL) ? "https" : "http";
     if (options.headers.Authorization) {
         if (/^Basic /i.test(options.headers.Authorization) === false) {
             throw new Error("Failed retrieving download link: Invalid authorisation method");
         }
-        var authPart = options.headers.Authorization.replace(/^Basic /i, "").trim();
-        var authContents = Buffer.from(authPart, "base64").toString("utf8");
-        fetchURL = fetchURL.replace(/^https?:\/\//, protocol + "://" + authContents + "@");
+        const authPart = options.headers.Authorization.replace(/^Basic /i, "").trim();
+        const authContents = Buffer.from(authPart, "base64").toString("utf8");
+        fetchURL = fetchURL.replace(/^https?:\/\//, `${protocol}://${authContents}@`);
     }
     return fetchURL;
 }
