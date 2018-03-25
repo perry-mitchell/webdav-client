@@ -46,6 +46,6 @@ function getFileUploadLink(filePath, options) {
 }
 
 module.exports = {
-    putFileContents: putFileContents,
-    getFileUploadLink: getFileUploadLink
+    getFileUploadLink,
+    putFileContents
 };
