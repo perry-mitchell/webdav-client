@@ -1,5 +1,10 @@
 # WebDAV-client changelog
 
+## 1.5.2
+_2018-03-25_
+
+ * Fix bug where requesting directory contents at paths with trailing slashes would return parent directory in results
+
 ## 1.5.1
 _2018-03-23_
 
