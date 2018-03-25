@@ -14,7 +14,10 @@ const fetch = request.fetch;
 const getValueForKey = davTools.getValueForKey;
 const getSingleValue = davTools.getSingleValue;
 
-function getDirectoryContents(remotePath, options) {
+function getDirectoryContents(remotePathRaw, options) {
+    // Strip the ending slash
+    const remotePath = remotePathRaw.replace(/\/$/, "");
+    // Join the URL and path for the request
     const fetchURL = joinURL(options.remoteURL, encodePath(remotePath));
     const fetchOptions = {
         method: "PROPFIND",

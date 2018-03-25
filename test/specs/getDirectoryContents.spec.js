@@ -41,6 +41,13 @@ describe("getDirectoryContents", function() {
         });
     });
 
+    it("returns only expected results when using trailing slash", function() {
+        return this.client.getDirectoryContents("/webdav/").then(function(contents) {
+            const items = contents.map(item => item.filename).join(",");
+            expect(items).to.equal("/webdav/server");
+        });
+    });
+
     it("returns correct file results", function() {
         return this.client.getDirectoryContents("/").then(function(contents) {
             const sub1 = contents.find(function(item) {
