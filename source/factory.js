@@ -60,7 +60,8 @@ const stats = require("./interface/stat.js");
  *      .getDirectoryContents("/")
  *      .then(contents => {
  *          console.log(contents);
- *      }); */
+ *      });
+ */
 function createClient(remoteURL, username, password) {
     const baseOptions = {
         headers: {},
