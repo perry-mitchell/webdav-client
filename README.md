@@ -107,7 +107,7 @@ Or with text:
 
 ```js
 client
-    .getFileContents("/doc.txt", "text")
+    .getFileContents("/doc.txt", { format: "text" })
     .then(function(text) {
         console.log(text);
     });
