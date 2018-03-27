@@ -212,6 +212,19 @@ function createClient(remoteURL, username, password) {
         },
 
         /**
+         * Get the upload link
+         * Only supported for Basic authentication or unauthenticated connections.
+         * @param {String} remoteFilename The path of the remote file location
+         * @param {PutOptions=} options The options for the request
+         * @memberof ClientInterface
+         * @returns {String} A upload URL
+         */
+        getFileUploadLink: function getFileUploadLink(remoteFilename, options) {
+            var putOptions = merge(baseOptions, options || {});
+            return putFile.getFileUploadLink(remoteFilename, putOptions);
+        },
+
+        /**
          * Stat a remote object
          * @param {String} remotePath The path of the item
          * @param {OptionsWithHeaders=} options Options for the request
