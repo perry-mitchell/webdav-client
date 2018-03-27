@@ -33,6 +33,12 @@ const stats = require("./interface/stat.js");
  */
 
 /**
+ * Options with headers and format
+ * @typedef {OptionsWithHeaders} OptionsHeadersAndFormat
+ * @property {String} format - The format to use (text/binary)
+ */
+
+/**
  * Create a client adapter
  * @param {String} remoteURL The remote address of the webdav server
  * @param {String=} username Optional username for authentication
