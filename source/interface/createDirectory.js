@@ -10,7 +10,8 @@ function createDirectory(dirPath, options) {
     const fetchURL = joinURL(options.remoteURL, encodePath(dirPath));
     const fetchOptions = {
         method: "MKCOL",
-        headers: options.headers
+        headers: options.headers,
+        agent: options.agent
     };
     return fetch(fetchURL, fetchOptions).then(responseHandlers.handleResponseCode);
 }

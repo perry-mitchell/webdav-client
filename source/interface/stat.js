@@ -17,7 +17,8 @@ function getStat(filename, options) {
     const fetchURL = joinURL(options.remoteURL, encodePath(filename));
     const fetchOptions = {
         method: "PROPFIND",
-        headers: merge({ Depth: 0 }, options.headers)
+        headers: merge({ Depth: 0 }, options.headers),
+        agent: options.agent
     };
     return fetch(fetchURL, fetchOptions)
         .then(responseHandlers.handleResponseCode)

@@ -25,7 +25,8 @@ function putFileContents(filePath, data, options) {
     const fetchOptions = {
         method: "PUT",
         headers: putOptions.headers,
-        body: data
+        body: data,
+        agent: options.agent
     };
     return fetch(fetchURL, fetchOptions).then(responseHandlers.handleResponseCode);
 }
