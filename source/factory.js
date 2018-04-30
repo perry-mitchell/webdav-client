@@ -43,6 +43,7 @@ const stats = require("./interface/stat.js");
  * @param {String} remoteURL The remote address of the webdav server
  * @param {String=} username Optional username for authentication
  * @param {String=} password Optional password for authentication
+ * @param {Agent} agent Optional http(s).Agent instance, allows custom proxy, certificate etc. Gets passed to node-fetch
  * @returns {ClientInterface} A new client interface instance
  * @module WebDAV
  * @example
@@ -62,11 +63,12 @@ const stats = require("./interface/stat.js");
  *          console.log(contents);
  *      });
  */
-function createClient(remoteURL, username, password) {
+function createClient(remoteURL, username, password, agent) {
     const baseOptions = {
         headers: {},
         remotePath: urlTools.extractURLPath(remoteURL),
-        remoteURL: remoteURL
+        remoteURL: remoteURL,
+        agent: agent ? agent : undefined
     };
 
     if (username) {

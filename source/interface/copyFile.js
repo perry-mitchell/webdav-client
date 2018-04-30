@@ -12,7 +12,8 @@ function copyFile(filename, destination, options) {
                 Destination: joinURL(options.remoteURL, destination)
             },
             options.headers
-        )
+        ),
+        agent: options.agent
     };
     return fetch(fetchURL, fetchOptions).then(responseHandlers.handleResponseCode);
 }

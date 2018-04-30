@@ -22,7 +22,8 @@ function makeFileRequest(filePath, options) {
     const fetchURL = joinURL(options.remoteURL, encodePath(filePath));
     const fetchOptions = {
         method: "GET",
-        headers: options.headers
+        headers: options.headers,
+        agent: options.agent
     };
     return fetch(fetchURL, fetchOptions).then(responseHandlers.handleResponseCode);
 }

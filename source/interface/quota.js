@@ -14,7 +14,8 @@ function getQuota(options) {
     let fetchURL = options.remoteURL + "/";
     const fetchOptions = {
         method: "PROPFIND",
-        headers: merge({ Depth: 0 }, options.headers)
+        headers: merge({ Depth: 0 }, options.headers),
+        agent: options.agent
     };
     fetchURL = fetchURL.replace(/\/+$/g, "/");
     return fetch(fetchURL, fetchOptions)

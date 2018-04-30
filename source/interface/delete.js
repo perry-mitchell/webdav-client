@@ -10,7 +10,8 @@ function deleteFile(filename, options) {
     const fetchURL = joinURL(options.remoteURL, encodePath(filename));
     const fetchOptions = {
         method: "DELETE",
-        headers: options.headers
+        headers: options.headers,
+        agent: options.agent
     };
     return fetch(fetchURL, fetchOptions).then(responseHandlers.handleResponseCode);
 }

@@ -26,7 +26,8 @@ function getDirectoryContents(remotePathRaw, options) {
                 Depth: 1
             },
             options.headers
-        )
+        ),
+        agent: options.agent
     };
     return fetch(fetchURL, fetchOptions)
         .then(responseHandlers.handleResponseCode)
