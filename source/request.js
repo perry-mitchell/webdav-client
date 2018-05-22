@@ -1,6 +1,7 @@
 "use strict";
 
 const nodeFetch = require("node-fetch");
+const fetch = require("./fetch");
 
 const SEP_PATH_POSIX = "__PATH_SEPARATOR_POSIX__";
 const SEP_PATH_WINDOWS = "__PATH_SEPARATOR_WINDOWS__";
@@ -23,7 +24,7 @@ function encodePath(path) {
 }
 
 function request(url, options) {
-    return fetchMethod(url, options);
+    return fetch(fetchMethod, url, options);
 }
 
 /**
