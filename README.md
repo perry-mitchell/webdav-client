@@ -69,6 +69,15 @@ Creates a readable stream on the remote path.
 
 Returns a readable stream instance.
 
+##### options.range
+Optionally request part of the remote file by specifying the `start` and `end` byte positions. The `end` byte position is optional and the rest of the file from `start` onwards will be streamed.
+
+```javascript
+var stream = client.createReadStream("/test/image.png", {
+    range: { start: 0, end: 499 } // first 500 bytes
+});
+```
+
 #### createWriteStream(remotePath _[, options]_)
 Creates a writeable stream to a remote path.
 
@@ -119,38 +128,6 @@ client
 Get the external download link of a remote file. Only supported for non-authenticated connections or connections using Basic authentication.
 
 **Important note**: This method exposes the username and password **in the URL** - It is not recommended to send or store any output from this function.
-
-#### getFileStream(remotePath _[, options]_)
-Get a readable stream on a remote file. Returns a Promise that resolves with a readable stream instance.
-
-_This is the underlying method to `createReadStream` (uses a `PassThrough` stream to delay the data). Due to the requirement of waiting on the request to complete before being able to get the **true** read stream, a Promise is returned that resolves when it becomes available. `createReadStream` simply creates and returns a `PassThrough` stream immediately and writes to it once this method resolves._
-
-```js
-var fs = require("fs");
-
-client
-    .getFileStream("/test/image.png")
-    .then(function(imageStream) {
-        imageStream.pipe(fs.createWriteStream("./image.png"));
-    });
-```
-
-`options` is an object that may look like the following:
-
-```json
-{
-    "headers": {}
-}
-```
-
-##### options.range
-Optionally request part of the remote file by specifying the `start` and `end` byte positions. The `end` byte position is optional and the rest of the file from `start` onwards will be streamed.
-
-```javascript
-var stream = client.getFileStream("/test/image.png", {
-    range: { start: 0, end: 499 } // first 500 bytes
-});
-```
 
 #### getQuota(_[options]_)
 Get quota information. Returns `null` upon failure or an object like so:
