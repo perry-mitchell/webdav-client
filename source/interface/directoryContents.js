@@ -65,7 +65,9 @@ function getDirectoryFiles(result, serverBasePath, requestPath) {
                 const props = getSingleValue(getValueForKey("prop", propStat));
                 // Process the true full filename (minus the base server path)
                 const filename =
-                    serverBasePath === "/" ? urlTools.normalisePath(href) : urlTools.normalisePath(path.relative(serverBasePath, href));
+                    serverBasePath === "/"
+                        ? urlTools.normalisePath(href)
+                        : urlTools.normalisePath(path.relative(serverBasePath, href));
                 return davTools.propsToStat(props, filename);
             })
     );
