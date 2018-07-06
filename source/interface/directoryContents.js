@@ -60,14 +60,14 @@ function getDirectoryFiles(result, serverBasePath, requestPath) {
                 // HREF is the file path (in full)
                 let href = getSingleValue(getValueForKey("href", item));
                 href = urlTools.normaliseHREF(href);
-                href = decodeURI(href);
-                href = urlTools.normalisePath(href);
                 // Each item should contain a stat object
                 const propStat = getSingleValue(getValueForKey("propstat", item));
                 const props = getSingleValue(getValueForKey("prop", propStat));
                 // Process the true full filename (minus the base server path)
                 const filename =
-                    serverBasePath === "/" ? href : urlTools.normalisePath(path.relative(serverBasePath, href));
+                    serverBasePath === "/"
+                        ? urlTools.normalisePath(href)
+                        : urlTools.normalisePath(path.relative(serverBasePath, href));
                 return davTools.propsToStat(props, filename);
             })
     );
