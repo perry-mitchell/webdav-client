@@ -1,5 +1,10 @@
 # WebDAV-client changelog
 
+## 1.5.3
+_2018-07-07_
+
+ * ([#91](https://github.com/perry-mitchell/webdav-client/issues/91) [#93](https://github.com/perry-mitchell/webdav-client/issues/93)): Bugfix: Encoding issues with special characters
+
 ## 1.5.2
 _2018-03-25_
 
