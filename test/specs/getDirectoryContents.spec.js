@@ -96,7 +96,6 @@ describe("getDirectoryContents", function() {
 
     it("returns correct directory contents when path contains encoded sequences (issue #93)", function() {
         return this.client.getDirectoryContents("/two%20words").then(function(contents) {
-            console.log(contents);
             expect(contents).to.have.lengthOf(1);
             expect(contents[0].basename).to.equal("file2.txt");
         });
