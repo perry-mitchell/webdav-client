@@ -42,7 +42,7 @@ function getDirectoryContents(remotePathRaw, options) {
 }
 
 function getDirectoryFiles(result, serverBasePath, requestPath) {
-    const remoteTargetPath = path.join(serverBasePath, requestPath);
+    const remoteTargetPath = path.posix.join(serverBasePath, requestPath);
     // Extract the response items (directory contents)
     const multiStatus = getValueForKey("multistatus", result);
     const responseItems = getValueForKey("response", multiStatus);
@@ -67,7 +67,7 @@ function getDirectoryFiles(result, serverBasePath, requestPath) {
                 const filename =
                     serverBasePath === "/"
                         ? urlTools.normalisePath(href)
-                        : urlTools.normalisePath(path.relative(serverBasePath, href));
+                        : urlTools.normalisePath(path.posix.relative(serverBasePath, href));
                 return davTools.propsToStat(props, filename);
             })
     );
