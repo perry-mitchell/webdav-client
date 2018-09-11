@@ -13,7 +13,7 @@ function moveFile(filename, destination, options) {
         method: "MOVE",
         headers: merge(
             {
-                Destination: joinURL(options.remoteURL, destination)
+                Destination: joinURL(options.remoteURL, encodePath(destination))
             },
             options.headers
         ),
