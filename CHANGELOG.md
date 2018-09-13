@@ -3,15 +3,15 @@
 ## 1.5.5
 _2018-09-13_
 
- * [#104](https://github.com/perry-mitchell/webdav-client/issues/104)) `path.posix` failed in browserify
+ * [#104](https://github.com/perry-mitchell/webdav-client/issues/104) `path.posix` failed in browserify
  * **Dev**:
    * Webpack & KarmaJS dev testing in Chrome
 
 ## 1.5.4
 _2018-09-11_
 
- * [#101](https://github.com/perry-mitchell/webdav-client/issues/101)) `getDirectoryContents` fails on windows
- * [#98](https://github.com/perry-mitchell/webdav-client/issues/98)) Moving items fails when destination contains spaces
+ * [#101](https://github.com/perry-mitchell/webdav-client/issues/101) `getDirectoryContents` fails on windows
+ * [#98](https://github.com/perry-mitchell/webdav-client/issues/98) Moving items fails when destination contains spaces
 
 ## 1.5.3
 _2018-07-07_
