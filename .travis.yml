@@ -1,8 +1,54 @@
-language: node_js
-node_js:
-  - "stable"
-  - 8
-  - 7
-  - 6
-  - 5
-  - 4
+matrix:
+  include:
+    - language: node_js
+      script: npm run test:node
+      node_js: "stable"
+      env:
+        - NAME="Node stable"
+    - language: node_js
+      script: npm run test:node
+      node_js: "9"
+      env:
+        - NAME="Node 9"
+    - language: node_js
+      script: npm run test:node
+      node_js: "8"
+      env:
+        - NAME="Node 8"
+    - language: node_js
+      script: npm run test:node
+      node_js: "7"
+      env:
+        - NAME="Node 7"
+    - language: node_js
+      script: npm run test:node
+      node_js: "6"
+      env: 
+        - NAME="Node 6"
+    - language: node_js
+      script: npm run test:node
+      node_js: "5"
+      env: 
+        - NAME="Node 5"
+    - language: node_js
+      script: npm run test:node
+      node_js: "4"
+      env: 
+        - NAME="Node 4"
+    - language: node_js
+      node_js: "8"
+      sudo: required
+      env:
+        - NAME="Web"
+      addons:
+        firefox: latest
+        apt:
+          sources:
+            - google-chrome
+          packages:
+            - google-chrome-stable
+      before_script:
+        - export DISPLAY=:99.0
+        - sh -e /etc/init.d/xvfb start
+        - sleep 3 # give xvfb some time to start
+      script: npm run test:web
