@@ -9,10 +9,10 @@
     "format": "prettier --write '{source,test}/**/*.js'",
     "precommit": "lint-staged",
     "prepare": "npm run build",
-    "test": "run-s test:unit test:format",
+    "test": "run-s test:node test:format",
     "test:format": "prettier-check '{source,test}/**/*.js'",
-    "test:unit": "npm run build && nyc mocha -r test/specs/index.js test/specs/**/*.spec.js",
-    "test:unit:watch": "nodemon --exec 'npm run test:unit' --ignore 'dist/'"
+    "test:node": "npm run build && nyc mocha -r test/specs/index.js test/specs/**/*.spec.js",
+    "test:node:watch": "nodemon --exec 'npm run test:node' --ignore 'dist/'"
   },
   "files": [
     "dist/",
