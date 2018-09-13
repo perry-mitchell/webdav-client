@@ -41,7 +41,6 @@ matrix:
       env:
         - NAME="Web"
       addons:
-        firefox: latest
         apt:
           sources:
             - google-chrome
