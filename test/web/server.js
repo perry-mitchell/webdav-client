@@ -16,3 +16,7 @@ process.on("SIGTERM", function() {
     server.stop();
     process.exit(0);
 });
+process.on("SIGINT", function() {
+    server.stop();
+    process.exit(0);
+});
