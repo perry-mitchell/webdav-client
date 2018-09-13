@@ -1,5 +1,12 @@
 # WebDAV-client changelog
 
+## 1.5.5
+_2018-09-13_
+
+ * [#104](https://github.com/perry-mitchell/webdav-client/issues/104)) `path.posix` failed in browserify
+ * **Dev**:
+   * Webpack & KarmaJS dev testing in Chrome
+
 ## 1.5.4
 _2018-09-11_
 
