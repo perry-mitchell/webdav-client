@@ -50,9 +50,10 @@
     "xml2js": "~0.4.17"
   },
   "devDependencies": {
-    "babel-cli": "~6.26.0",
-    "babel-core": "~6.26.3",
-    "babel-preset-env": "~1.7.0",
+    "@babel/cli": "~7.0.0",
+    "@babel/core": "~7.0.1",
+    "@babel/preset-env": "~7.0.0",
+    "babel-loader": "~8.0.2",
     "buffer-equals": "^1.0.4",
     "chai": "^4.1.2",
     "copy-dir": "^0.3.0",
@@ -72,6 +73,8 @@
     "rimraf": "^2.6.1",
     "sinon": "^3.0.0",
     "wait-on": "^2.0.2",
-    "webdav-server": "~2.3.22"
+    "webdav-server": "~2.3.22",
+    "webpack": "~4.18.1",
+    "webpack-cli": "~3.1.0"
   }
 }
