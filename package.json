@@ -50,10 +50,10 @@
     "xml2js": "~0.4.17"
   },
   "devDependencies": {
-    "@babel/cli": "~7.0.0",
-    "@babel/core": "~7.0.1",
-    "@babel/preset-env": "~7.0.0",
-    "babel-loader": "~8.0.2",
+    "babel-cli": "~6.26.0",
+    "babel-core": "~6.26.3",
+    "babel-loader": "~7.1.5",
+    "babel-preset-env": "~1.7.0",
     "buffer-equals": "^1.0.4",
     "chai": "^4.1.2",
     "copy-dir": "^0.3.0",
