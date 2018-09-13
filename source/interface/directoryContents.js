@@ -1,7 +1,6 @@
 "use strict";
 
-const path = require("path");
-
+const pathPosix = require("path-posix");
 const joinURL = require("url-join");
 const { merge } = require("../merge.js");
 const responseHandlers = require("../response.js");
@@ -42,7 +41,7 @@ function getDirectoryContents(remotePathRaw, options) {
 }
 
 function getDirectoryFiles(result, serverBasePath, requestPath) {
-    const remoteTargetPath = path.posix.join(serverBasePath, requestPath);
+    const remoteTargetPath = pathPosix.join(serverBasePath, requestPath);
     // Extract the response items (directory contents)
     const multiStatus = getValueForKey("multistatus", result);
     const responseItems = getValueForKey("response", multiStatus);
@@ -67,7 +66,7 @@ function getDirectoryFiles(result, serverBasePath, requestPath) {
                 const filename =
                     serverBasePath === "/"
                         ? urlTools.normalisePath(href)
-                        : urlTools.normalisePath(path.posix.relative(serverBasePath, href));
+                        : urlTools.normalisePath(pathPosix.relative(serverBasePath, href));
                 return davTools.propsToStat(props, filename);
             })
     );
