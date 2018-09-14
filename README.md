@@ -9,6 +9,8 @@ This client was branched from [webdav-fs](https://github.com/perry-mitchell/webd
 
 This WebDAV client library is designed to provide an improved API for low-level WebDAV integration. This client uses `window.fetch` when available in the browser.
 
+WebDAV client is compatible with NodeJS version 4 (latest minor) and newer. It is also compatible with Webpack when bundling, but not all features can be guaranteed to work (filesystem, streams etc.). Polyfilling for different browsers is almost always the consumer's responsibility.
+
 Please read our [contribution guide](CONTRIBUTING.md) if you plan on making an issue or PR.
 
 ## Installation
@@ -247,4 +249,6 @@ This library has been tested to work with the following WebDAV servers or applic
 ### Webpack / Browserify
 WebDAV-client is browser friendly, after being transpiled. Refer to the use of WebDAV-fs in the [Buttercup mobile compatibility library](https://github.com/buttercup/buttercup-mobile-compat) or the [Buttercup browser extension](https://github.com/buttercup/buttercup-browser-extension) for guidance on preparation for the web.
 
-Please note that it is _not_ the responsibility of this library to be compatible with Webpack or Browserify. Small modifications may be made here to support them, but no guarantees of compatibility are made as there are an almost infinite number of configurations in both systems that could potentially cause issues with this library or a dependency therein.
+You can also check out the [web tests](https://github.com/perry-mitchell/webdav-client/tree/master/test/web) to see a Webpack 4 configuration that bundles this library.
+
+Only Webpack 4 is officially supported in terms of bundlers. Browserify and Rollup should work but are not guaranteed to.
