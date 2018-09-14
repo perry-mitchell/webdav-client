@@ -81,7 +81,7 @@ var stream = client.createReadStream("/test/image.png", {
 #### createWriteStream(remotePath _[, options]_)
 Creates a writeable stream to a remote path.
 
-Returns a writeable stream instance.
+Returns a writeable stream instance. Note that the actual stream returned is a [Node `PassThroughStream`](PassThroughStream) instance, not a `stream.Writable`.
 
 #### deleteFile(remotePath _[, options]_)
 Delete a file or directory at `remotePath`.
