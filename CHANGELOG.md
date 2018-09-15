@@ -1,5 +1,10 @@
 # WebDAV-client changelog
 
+## 1.6.0
+_2018-09-15_
+
+ * Update dependencies, audit vulnerabilities
+
 ## 1.5.5
 _2018-09-13_
 
