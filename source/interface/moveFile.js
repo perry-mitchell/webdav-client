@@ -9,16 +9,12 @@ const fetch = request.fetch;
 
 function moveFile(filename, destination, options) {
     const fetchURL = joinURL(options.remoteURL, encodePath(filename));
-    const fetchOptions = {
+    const fetchOptions = merge(options, {
         method: "MOVE",
-        headers: merge(
-            {
-                Destination: joinURL(options.remoteURL, encodePath(destination))
-            },
-            options.headers
-        ),
-        agent: options.agent
-    };
+        headers: {
+            Destination: joinURL(options.remoteURL, encodePath(destination))
+        }
+    });
     return fetch(fetchURL, fetchOptions).then(responseHandlers.handleResponseCode);
 }
 

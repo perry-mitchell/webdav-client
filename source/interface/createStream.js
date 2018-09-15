@@ -24,24 +24,15 @@ function createReadStream(filePath, options) {
 
 function createWriteStream(filePath, options) {
     const writeStream = new PassThroughStream();
-    const headers = merge({}, options.headers);
-    // if (typeof options.range === "object" && typeof options.range.start === "number") {
-    //     var rangeHeader = "bytes=" + options.range.start + "-";
-    //     if (typeof options.range.end === "number") {
-    //         rangeHeader += options.range.end;
-    //     }
-    //     options.headers.Range = rangeHeader;
-    // }
     if (options.overwrite === false) {
-        headers["If-None-Match"] = "*";
+        options.headers["If-None-Match"] = "*";
     }
     const fetchURL = joinURL(options.remoteURL, encodePath(filePath));
-    const fetchOptions = {
-        method: "PUT",
-        headers: headers,
-        body: writeStream,
-        agent: options.agent
-    };
+    const fetchOptions = merge(options, {
+        method: "PUT"
+    });
+    // Outside merge because merge will strip type information
+    fetchOptions.body = writeStream;
     fetch(fetchURL, fetchOptions);
     return writeStream;
 }

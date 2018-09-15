@@ -3,6 +3,7 @@
 const joinURL = require("url-join");
 const responseHandlers = require("../response.js");
 const request = require("../request.js");
+const { merge } = require("../merge.js");
 const encodePath = request.encodePath;
 const fetch = request.fetch;
 
@@ -20,11 +21,9 @@ function getFileContentsString(filePath, options) {
 
 function makeFileRequest(filePath, options) {
     const fetchURL = joinURL(options.remoteURL, encodePath(filePath));
-    const fetchOptions = {
-        method: "GET",
-        headers: options.headers,
-        agent: options.agent
-    };
+    const fetchOptions = merge(options, {
+        method: "GET"
+    });
     return fetch(fetchURL, fetchOptions).then(responseHandlers.handleResponseCode);
 }
 

@@ -5,16 +5,12 @@ const { encodePath, fetch } = require("../request.js");
 
 function copyFile(filename, destination, options) {
     const fetchURL = joinURL(options.remoteURL, encodePath(filename));
-    const fetchOptions = {
+    const fetchOptions = merge(options, {
         method: "COPY",
-        headers: merge(
-            {
-                Destination: joinURL(options.remoteURL, destination)
-            },
-            options.headers
-        ),
-        agent: options.agent
-    };
+        headers: {
+            Destination: joinURL(options.remoteURL, destination)
+        }
+    });
     return fetch(fetchURL, fetchOptions).then(responseHandlers.handleResponseCode);
 }
 

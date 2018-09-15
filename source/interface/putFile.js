@@ -22,12 +22,10 @@ function putFileContents(filePath, data, options) {
         putOptions.headers["If-None-Match"] = "*";
     }
     const fetchURL = joinURL(options.remoteURL, encodePath(filePath));
-    const fetchOptions = {
+    const fetchOptions = merge(putOptions, {
         method: "PUT",
-        headers: putOptions.headers,
-        body: data,
-        agent: options.agent
-    };
+        body: data
+    });
     return fetch(fetchURL, fetchOptions).then(responseHandlers.handleResponseCode);
 }
 

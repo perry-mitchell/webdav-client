@@ -15,11 +15,10 @@ const getSingleValue = davTools.getSingleValue;
 
 function getStat(filename, options) {
     const fetchURL = joinURL(options.remoteURL, encodePath(filename));
-    const fetchOptions = {
+    const fetchOptions = merge(options, {
         method: "PROPFIND",
-        headers: merge({ Depth: 0 }, options.headers),
-        agent: options.agent
-    };
+        headers: { Depth: 0 }
+    });
     return fetch(fetchURL, fetchOptions)
         .then(responseHandlers.handleResponseCode)
         .then(function __convertToText(res) {

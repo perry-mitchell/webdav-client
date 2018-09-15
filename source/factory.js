@@ -67,9 +67,12 @@ function createClient(remoteURL, username, password, agent) {
     const baseOptions = {
         headers: {},
         remotePath: urlTools.extractURLPath(remoteURL),
-        remoteURL: remoteURL,
-        agent: agent ? agent : undefined
+        remoteURL: remoteURL
     };
+
+    if (agent) {
+        baseOptions.agent = agent;
+    }
 
     if (username) {
         baseOptions.headers.Authorization =

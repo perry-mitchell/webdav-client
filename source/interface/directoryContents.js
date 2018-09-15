@@ -18,16 +18,12 @@ function getDirectoryContents(remotePathRaw, options) {
     const remotePath = remotePathRaw.replace(/\/$/, "");
     // Join the URL and path for the request
     const fetchURL = joinURL(options.remoteURL, encodePath(remotePath));
-    const fetchOptions = {
+    const fetchOptions = merge(options, {
         method: "PROPFIND",
-        headers: merge(
-            {
-                Depth: 1
-            },
-            options.headers
-        ),
-        agent: options.agent
-    };
+        headers: {
+            Depth: 1
+        }
+    });
     return fetch(fetchURL, fetchOptions)
         .then(responseHandlers.handleResponseCode)
         .then(function __handleResponseFormat(res) {
