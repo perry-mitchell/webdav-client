@@ -30,6 +30,9 @@ Defaults to <code>node-fetch</code>. Setting it to <code>null</code> will reset 
 <dt><a href="#PutOptions">PutOptions</a> : <code><a href="#OptionsWithHeaders">OptionsWithHeaders</a></code></dt>
 <dd><p>Options for creating a resource</p>
 </dd>
+<dt><a href="#OptionsHeadersAndFormat">OptionsHeadersAndFormat</a> : <code><a href="#OptionsWithHeaders">OptionsWithHeaders</a></code></dt>
+<dd><p>Options with headers and format</p>
+</dd>
 </dl>
 
 <a name="module_WebDAV"></a>
@@ -44,6 +47,7 @@ Create a client adapter
 | remoteURL | <code>String</code> | The remote address of the webdav server |
 | [username] | <code>String</code> | Optional username for authentication |
 | [password] | <code>String</code> | Optional password for authentication |
+| agent | <code>Agent</code> | Optional http(s).Agent instance, allows custom proxy, certificate etc. Gets passed to node-fetch |
 
 **Example**  
 ```js
@@ -113,6 +117,7 @@ Client adapter
     * [.getQuota([options])](#ClientInterface.getQuota) ⇒ <code>null</code> \| <code>Object</code>
     * [.moveFile(remotePath, targetRemotePath, [options])](#ClientInterface.moveFile) ⇒ <code>Promise</code>
     * [.putFileContents(remoteFilename, data, [options])](#ClientInterface.putFileContents) ⇒ <code>Promise</code>
+    * [.getFileUploadLink(remoteFilename, [options])](#ClientInterface.getFileUploadLink) ⇒ <code>String</code>
     * [.stat(remotePath, [options])](#ClientInterface.stat) ⇒ <code>Promise.&lt;Object&gt;</code>
 
 <a name="ClientInterface.copyFile"></a>
@@ -205,7 +210,7 @@ Get the contents of a remote file
 | Param | Type | Description |
 | --- | --- | --- |
 | remoteFilename | <code>String</code> | The file to fetch |
-| [options] | <code>OptionsHeadersAndFormat</code> | Options for the request |
+| [options] | [<code>OptionsHeadersAndFormat</code>](#OptionsHeadersAndFormat) | Options for the request |
 
 <a name="ClientInterface.getFileDownloadLink"></a>
 
@@ -219,7 +224,7 @@ Only supported for Basic authentication or unauthenticated connections.
 | Param | Type | Description |
 | --- | --- | --- |
 | remoteFilename | <code>String</code> | The file url to fetch |
-| [options] | <code>OptionsHeadersAndFormat</code> | Options for the request |
+| [options] | [<code>OptionsHeadersAndFormat</code>](#OptionsHeadersAndFormat) | Options for the request |
 
 <a name="ClientInterface.getQuota"></a>
 
@@ -231,7 +236,7 @@ Get quota information
 
 | Param | Type | Description |
 | --- | --- | --- |
-| [options] | <code>OptionsHeadersAndFormat</code> | Options for the request |
+| [options] | [<code>OptionsHeadersAndFormat</code>](#OptionsHeadersAndFormat) | Options for the request |
 
 <a name="ClientInterface.moveFile"></a>
 
@@ -259,6 +264,20 @@ Write contents to a remote file path
 | --- | --- | --- |
 | remoteFilename | <code>String</code> | The path of the remote file |
 | data | <code>String</code> \| <code>Buffer</code> | The data to write |
+| [options] | [<code>PutOptions</code>](#PutOptions) | The options for the request |
+
+<a name="ClientInterface.getFileUploadLink"></a>
+
+### ClientInterface.getFileUploadLink(remoteFilename, [options]) ⇒ <code>String</code>
+Get the upload link
+Only supported for Basic authentication or unauthenticated connections.
+
+**Kind**: static method of [<code>ClientInterface</code>](#ClientInterface)  
+**Returns**: <code>String</code> - A upload URL  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| remoteFilename | <code>String</code> | The path of the remote file location |
 | [options] | [<code>PutOptions</code>](#PutOptions) | The options for the request |
 
 <a name="ClientInterface.stat"></a>
@@ -297,4 +316,16 @@ Options for creating a resource
 | Name | Type | Description |
 | --- | --- | --- |
 | [overwrite] | <code>Boolean</code> | Whether or not to overwrite existing files (default: true) |
+
+<a name="OptionsHeadersAndFormat"></a>
+
+## OptionsHeadersAndFormat : [<code>OptionsWithHeaders</code>](#OptionsWithHeaders)
+Options with headers and format
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| format | <code>String</code> | The format to use (text/binary) |
 
