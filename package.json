@@ -80,7 +80,7 @@
     "prettier-check": "^2.0.0",
     "rimraf": "^2.6.1",
     "sinon": "^6.3.3",
-    "wait-on": "^3.0.1",
+    "wait-on": "^2.1.2",
     "webdav-server": "^2.4.0",
     "webpack": "^4.19.0",
     "webpack-cli": "^3.1.0"
