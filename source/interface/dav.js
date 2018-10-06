@@ -26,7 +26,7 @@ function getValueForKey(key, obj) {
 }
 
 function parseXML(xml) {
-    const parser = new xml2js.Parser({ ignoreAttrs: false });
+    const parser = new xml2js.Parser({ ignoreAttrs: true });
     return new Promise(function(resolve, reject) {
         parser.parseString(xml, function __handleParseResult(err, result) {
             if (err) {
