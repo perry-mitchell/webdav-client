@@ -3,11 +3,10 @@
 const path = require("path");
 const xml2js = require("xml2js");
 
-const DAV_KEY_PREFIXES = ["", "d:", "D:", "lp1:"];
-
-function generateKeysForName(name) {
-    return DAV_KEY_PREFIXES.map(function __mapKeyName(prefix) {
-        return prefix + name;
+function findKey(baseKey, obj) {
+    return Object.keys(obj).find(function __findBaseKey(itemKey) {
+        const match = /^[a-z0-9]+:(.+)$/i.exec(itemKey);
+        return match ? match[1] === baseKey : itemKey === baseKey;
     });
 }
 
@@ -18,18 +17,16 @@ function getSingleValue(item) {
 function getValueForKey(key, obj) {
     let keys, i, keyCount;
     if (typeof obj === "object") {
-        keys = generateKeysForName(key);
-        for (i = 0, keyCount = keys.length; i < keyCount; i += 1) {
-            if (typeof obj[keys[i]] !== "undefined") {
-                return obj[keys[i]];
-            }
+        const actualKey = findKey(key, obj);
+        if (actualKey && typeof obj[actualKey] !== "undefined") {
+            return obj[actualKey];
         }
     }
     return undefined;
 }
 
 function parseXML(xml) {
-    const parser = new xml2js.Parser({ ignoreAttrs: true });
+    const parser = new xml2js.Parser({ ignoreAttrs: false });
     return new Promise(function(resolve, reject) {
         parser.parseString(xml, function __handleParseResult(err, result) {
             if (err) {
