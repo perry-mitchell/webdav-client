@@ -1,3 +1,10 @@
+const fs = require("fs");
+const path = require("path");
+
+function useSeafileResponse() {
+    returnFakeResponse(fs.readFileSync(path.resolve(__dirname, "../responses/seafile-propfind.xml"), "utf8"));
+}
+
 describe("getDirectoryContents", function() {
     beforeEach(function() {
         this.client = createWebDAVClient(
@@ -98,6 +105,36 @@ describe("getDirectoryContents", function() {
         return this.client.getDirectoryContents("/two%20words").then(function(contents) {
             expect(contents).to.have.lengthOf(1);
             expect(contents[0].basename).to.equal("file2.txt");
+        });
+    });
+
+    describe("when connected to Seafile server", function() {
+        beforeEach(function() {
+            this.client = createWebDAVClient(
+                "https://cloud.ascal-strasbg.fr/seafdav",
+                createWebDAVServer.test.username,
+                createWebDAVServer.test.password
+            );
+            useSeafileResponse();
+        });
+
+        afterEach(function() {
+            restoreFetch();
+        });
+
+        it("returns the correct response", function() {
+            return this.client.getDirectoryContents("/").then(function(contents) {
+                expect(contents).to.be.an("array");
+                expect(contents).to.deep.equal([
+                    {
+                        filename: "/Ma bibliothèque",
+                        basename: "Ma bibliothèque",
+                        lastmod: undefined,
+                        size: 0,
+                        type: "directory"
+                    }
+                ]);
+            });
         });
     });
 });
