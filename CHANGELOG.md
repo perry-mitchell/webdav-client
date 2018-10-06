@@ -1,5 +1,11 @@
 # WebDAV-client changelog
 
+## 1.6.1
+_2018-10-06_
+
+ * [#109](https://github.com/perry-mitchell/webdav-client/issues/109) `getDirectoryContents` fails on Seafile responses
+ * Remove dependency on just a handful of namespaces for multistatus responses
+
 ## 1.6.0
 _2018-09-15_
 
