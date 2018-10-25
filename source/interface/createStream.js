@@ -45,7 +45,7 @@ function createWriteStream(filePath, options) {
     fetch(fetchURL, fetchOptions)
         .then(responseHandlers.handleResponseCode)
         .catch(function __handleWriteError(err) {
-            writeStream.emit('error', err)
+            writeStream.emit("error", err);
         });
     return writeStream;
 }
