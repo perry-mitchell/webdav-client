@@ -42,7 +42,11 @@ function createWriteStream(filePath, options) {
         body: writeStream,
         agent: options.agent
     };
-    fetch(fetchURL, fetchOptions);
+    fetch(fetchURL, fetchOptions)
+        .then(responseHandlers.handleResponseCode)
+        .catch(function __handleWriteError(err) {
+            writeStream.emit("error", err);
+        });
     return writeStream;
 }
 
