@@ -21,7 +21,7 @@ function putFileContents(filePath, data, options) {
         url: joinURL(options.remoteURL, encodePath(filePath)),
         method: "PUT",
         headers: putOptions.headers,
-        body: data
+        data
     };
     prepareRequestOptions(requestOptions, options);
     return request(requestOptions).then(responseHandlers.handleResponseCode);
