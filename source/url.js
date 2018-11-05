@@ -1,5 +1,3 @@
-"use strict";
-
 const URL = require("url-parse");
 
 function extractURLPath(fullURL) {
@@ -28,7 +26,7 @@ function normalisePath(pathStr) {
 }
 
 module.exports = {
-    extractURLPath: extractURLPath,
-    normaliseHREF: normaliseHREF,
-    normalisePath: normalisePath
+    extractURLPath,
+    normaliseHREF,
+    normalisePath
 };

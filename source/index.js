@@ -1,8 +1,8 @@
-"use strict";
+const { axios, setRequestMethod } = require("./request.js");
+const { createClient } = require("./factory.js");
 
-const setFetchMethod = require("./request.js").setFetchMethod;
-const createClient = require("./factory.js").createClient;
-
-createClient.setFetchMethod = setFetchMethod;
-
-module.exports = createClient;
+module.exports = {
+    axios,
+    createClient,
+    setRequestMethod
+};
