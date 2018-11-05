@@ -1,11 +1,10 @@
-"use strict";
-
-const nodeFetch = require("node-fetch");
+const axios = require("axios");
+const { merge } = require("./merge.js");
 
 const SEP_PATH_POSIX = "__PATH_SEPARATOR_POSIX__";
 const SEP_PATH_WINDOWS = "__PATH_SEPARATOR_WINDOWS__";
 
-let fetchMethod = nodeFetch;
+let requestMethod = axios;
 
 /**
  * Encode a path for use with WebDAV servers
@@ -22,24 +21,37 @@ function encodePath(path) {
         .join("/");
 }
 
-function request(url, options) {
-    return fetchMethod(url, options);
+function prepareRequestOptions(requestOptions, methodOptions) {
+    if (methodOptions.httpAgent) {
+        requestOptions.httpAgent = methodOptions.httpAgent;
+    }
+    if (methodOptions.httpsAgent) {
+        requestOptions.httpsAgent = methodOptions.httpsAgent;
+    }
+    if (methodOptions.headers && typeof methodOptions.headers === "object") {
+        requestOptions.headers = merge(requestOptions.headers || {}, methodOptions.headers);
+    }
+}
+
+function request(requestOptions) {
+    return axios(requestOptions);
 }
 
 /**
- * Set the fetch method to use when making requests
- * Defaults to `node-fetch`. Setting it to `null` will reset it to `node-fetch`.
- * @param {Function} fn Function to use - should perform like `fetch`.
+ * Set the request method to use when making requests
+ * Defaults to `axios`. Setting it to `null` will reset it to `axios`.
+ * @param {Function} fn Function to use - should perform like `axios()`.
  * @example
  *  const createClient = require("webdav");
- *  createClient.setFetchMethod(window.fetch);
+ *  createClient.setRequestMethod(someMethod);
  */
-function setFetchMethod(fn) {
-    fetchMethod = fn || nodeFetch;
+function setRequestMethod(fn) {
+    requestMethod = fn || axios;
 }
 
 module.exports = {
-    encodePath: encodePath,
-    fetch: request,
-    setFetchMethod: setFetchMethod
+    axios,
+    encodePath,
+    prepareRequestOptions,
+    setRequestMethod
 };
