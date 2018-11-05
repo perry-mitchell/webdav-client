@@ -51,7 +51,8 @@ function getFileStream(filePath, options) {
     const requestOptions = {
         url: joinURL(options.remoteURL, encodePath(filePath)),
         method: "GET",
-        headers
+        headers,
+        responseType: "stream"
     };
     prepareRequestOptions(requestOptions, options);
     return request(requestOptions)

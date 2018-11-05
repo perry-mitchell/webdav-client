@@ -33,6 +33,22 @@ function prepareRequestOptions(requestOptions, methodOptions) {
     }
 }
 
+/**
+ * @typedef {Object} RequestOptions
+ * @property {String} url - The URL to request
+ * @property {String} method - The method to use (eg. "POST")
+ * @property {Object=} headers - Headers to set on the request
+ * @property {Object=} httpAgent - A HTTP agent instance
+ * @property {Object=} httpsAgent - A HTTPS agent interface
+ * @property {Object|String|*=} body - Body data for the request
+ */
+
+/**
+ * Make a request
+ * @param {RequestOptions} requestOptions Options for the request
+ * @see axios
+ * @returns {Promise.<Object>} A promise that resolves with a response object
+ */
 function request(requestOptions) {
     return axios(requestOptions);
 }
@@ -53,5 +69,6 @@ module.exports = {
     axios,
     encodePath,
     prepareRequestOptions,
+    request,
     setRequestMethod
 };

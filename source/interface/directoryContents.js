@@ -15,15 +15,12 @@ function getDirectoryContents(remotePathRaw, options) {
         method: "PROPFIND",
         headers: {
             Depth: 1
-        }
+        },
+        responseType: "text"
     };
     prepareRequestOptions(requestOptions, options);
     return request(requestOptions)
         .then(handleResponseCode)
-        .then(res => {
-            // Convert response to text
-            return res.text();
-        })
         .then(parseXML)
         .then(result => getDirectoryFiles(result, options.remotePath, remotePath));
 }
