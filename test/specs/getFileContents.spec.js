@@ -2,19 +2,18 @@ const path = require("path");
 const fs = require("fs");
 const bufferEquals = require("buffer-equals");
 const nodeFetch = require("node-fetch");
-const setFetchMethod = require("../../dist/request.js").setFetchMethod;
+const setRequestMethod = require("../../dist/request.js").setRequestMethod;
 
 const SOURCE_BIN = path.resolve(__dirname, "../testContents/alrighty.jpg");
 const SOURCE_TXT = path.resolve(__dirname, "../testContents/text document.txt");
 
 describe("getFileContents", function() {
     beforeEach(function() {
-        setFetchMethod(); // use default
-        this.client = createWebDAVClient(
-            "http://localhost:9988/webdav/server",
-            createWebDAVServer.test.username,
-            createWebDAVServer.test.password
-        );
+        restoreFetch(); // use default
+        this.client = createWebDAVClient("http://localhost:9988/webdav/server", {
+            username: createWebDAVServer.test.username,
+            password: createWebDAVServer.test.password
+        });
         clean();
         this.server = createWebDAVServer();
         return this.server.start();
@@ -38,7 +37,7 @@ describe("getFileContents", function() {
     });
 
     it("uses .arrayBuffer() when .buffer() is not available", function() {
-        setFetchMethod(function fakeFetch() {
+        setRequestMethod(function fakeFetch() {
             return nodeFetch.apply(null, arguments).then(function(response) {
                 return {
                     arrayBuffer: response.arrayBuffer.bind(response)

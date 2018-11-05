@@ -1,7 +1,7 @@
 const joinURL = require("url-join");
 const { merge } = require("../merge.js");
 const responseHandlers = require("../response.js");
-const { getSingleValue, getValueForKey, parseXML } = require("./dav.js");
+const { getSingleValue, getValueForKey, parseXML, propsToStat } = require("./dav.js");
 const urlTools = require("../url.js");
 const { encodePath, prepareRequestOptions, request } = require("../request.js");
 
@@ -9,12 +9,16 @@ function getStat(filename, options) {
     const requestOptions = {
         url: joinURL(options.remoteURL, encodePath(filename)),
         method: "PROPFIND",
-        headers: { Depth: 0 },
+        headers: {
+            Accept: "text/plain",
+            Depth: 0
+        },
         responseType: "text"
     };
     prepareRequestOptions(requestOptions, options);
     return request(requestOptions)
         .then(responseHandlers.handleResponseCode)
+        .then(res => res.data)
         .then(parseXML)
         .then(xml => parseStat(xml, filename));
 }
@@ -34,7 +38,7 @@ function parseStat(result, filename) {
     const propStat = getSingleValue(getValueForKey("propstat", responseItem));
     const props = getSingleValue(getValueForKey("prop", propStat));
     const filePath = urlTools.normalisePath(filename);
-    return davTools.propsToStat(props, filePath);
+    return propsToStat(props, filePath);
 }
 
 module.exports = {

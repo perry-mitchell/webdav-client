@@ -12,11 +12,10 @@ function useValidQuota() {
 describe("getQuota", function() {
     beforeEach(function() {
         // fake client, not actually used when mocking responses
-        this.client = createWebDAVClient(
-            "http://localhost:9988/webdav/server",
-            createWebDAVServer.test.username,
-            createWebDAVServer.test.password
-        );
+        this.client = createWebDAVClient("http://localhost:9988/webdav/server", {
+            username: createWebDAVServer.test.username,
+            password: createWebDAVServer.test.password
+        });
     });
 
     afterEach(function() {

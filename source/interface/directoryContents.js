@@ -14,6 +14,7 @@ function getDirectoryContents(remotePathRaw, options) {
         url: joinURL(options.remoteURL, encodePath(remotePath)),
         method: "PROPFIND",
         headers: {
+            Accept: "text/plain",
             Depth: 1
         },
         responseType: "text"
@@ -21,6 +22,7 @@ function getDirectoryContents(remotePathRaw, options) {
     prepareRequestOptions(requestOptions, options);
     return request(requestOptions)
         .then(handleResponseCode)
+        .then(res => res.data)
         .then(parseXML)
         .then(result => getDirectoryFiles(result, options.remotePath, remotePath));
 }

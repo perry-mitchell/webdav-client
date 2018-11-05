@@ -7,12 +7,16 @@ function getQuota(options) {
     const requestOptions = {
         url: joinURL(options.remoteURL, "/"),
         method: "PROPFIND",
-        headers: { Depth: 0 },
+        headers: {
+            Accept: "text/plain",
+            Depth: 0
+        },
         responseType: "text"
     };
     prepareRequestOptions(requestOptions, options);
     return request(requestOptions)
         .then(responseHandlers.handleResponseCode)
+        .then(res => res.data)
         .then(parseXML)
         .then(parseQuota);
 }
