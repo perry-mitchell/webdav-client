@@ -1,7 +1,6 @@
 const path = require("path");
 const fs = require("fs");
 const bufferEquals = require("buffer-equals");
-const nodeFetch = require("node-fetch");
 const setRequestMethod = require("../../dist/request.js").setRequestMethod;
 
 const SOURCE_BIN = path.resolve(__dirname, "../testContents/alrighty.jpg");
@@ -36,18 +35,18 @@ describe("getFileContents", function() {
         });
     });
 
-    it("uses .arrayBuffer() when .buffer() is not available", function() {
-        setRequestMethod(function fakeFetch() {
-            return nodeFetch.apply(null, arguments).then(function(response) {
-                return {
-                    arrayBuffer: response.arrayBuffer.bind(response)
-                };
-            });
-        }); // use fixed
-        return this.client.getFileContents("/alrighty.jpg").then(res => {
-            expect(res).to.be.an.instanceof(ArrayBuffer);
-        });
-    });
+    // it.only("uses .arrayBuffer() when .buffer() is not available", function() {
+    //     // setRequestMethod(function fakeFetch() {
+    //     //     return nodeFetch.apply(null, arguments).then(function(response) {
+    //     //         return {
+    //     //             arrayBuffer: response.arrayBuffer.bind(response)
+    //     //         };
+    //     //     });
+    //     // }); // use fixed
+    //     return this.client.getFileContents("/alrighty.jpg").then(res => {
+    //         expect(res).to.be.an.instanceof(ArrayBuffer);
+    //     });
+    // });
 
     it("reads a remote file into a string", function() {
         return this.client.getFileContents("/text document.txt", { format: "text" }).then(function(stringRemote) {

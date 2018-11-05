@@ -50,7 +50,7 @@ function prepareRequestOptions(requestOptions, methodOptions) {
  * @returns {Promise.<Object>} A promise that resolves with a response object
  */
 function request(requestOptions) {
-    return axios(requestOptions);
+    return requestMethod(requestOptions);
 }
 
 /**

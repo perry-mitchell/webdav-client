@@ -1,6 +1,6 @@
 const path = require("path");
 
-const createWebDAVClient = require("../../dist/index.js").createClient;
+const { createClient: createWebDAVClient, setRequestMethod } = require("../../dist/index.js");
 const baseWebDAVServer = require("../server/index.js");
 
 const createWebDAVServer = baseWebDAVServer.webdavClient;
@@ -18,13 +18,13 @@ function clean() {
 }
 
 function restoreFetch() {
-    createWebDAVClient.setRequestMethod();
+    setRequestMethod();
 }
 
 function returnFakeResponse(xml) {
-    createWebDAVClient.setRequestMethod(function fakeRequest() {
+    setRequestMethod(function fakeRequest() {
         return Promise.resolve({
-            xml
+            data: xml
         });
     });
 }

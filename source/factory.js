@@ -61,7 +61,7 @@ const stats = require("./interface/stat.js");
  *          console.log(contents);
  *      });
  */
-function createClient(remoteURL, { username, password, httpAgent, httpsAgent } = {}) {
+function createClient(remoteURL, { username, password, httpAgent, httpsAgent, token = null } = {}) {
     const baseOptions = {
         headers: {},
         remotePath: urlTools.extractURLPath(remoteURL),
@@ -69,14 +69,12 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent } =
         httpAgent,
         httpsAgent
     };
-
+    // Configure auth
     if (username) {
-        baseOptions.headers.Authorization =
-            typeof username === "object"
-                ? authTools.generateTokenAuthHeader(username)
-                : authTools.generateBasicAuthHeader(username, password);
+        baseOptions.headers.Authorization = authTools.generateBasicAuthHeader(username, password);
+    } else if (token && typeof token === "object") {
+        baseOptions.headers.Authorization = authTools.generateTokenAuthHeader(token);
     }
-
     return {
         /**
          * Copy a remote item to another path
