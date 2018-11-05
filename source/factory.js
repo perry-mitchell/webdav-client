@@ -1,5 +1,3 @@
-"use strict";
-
 const authTools = require("./auth.js");
 const urlTools = require("./url.js");
 const { merge } = require("./merge.js");
@@ -63,12 +61,13 @@ const stats = require("./interface/stat.js");
  *          console.log(contents);
  *      });
  */
-function createClient(remoteURL, username, password, agent) {
+function createClient(remoteURL, { username, password, httpAgent, httpsAgent } = {}) {
     const baseOptions = {
         headers: {},
         remotePath: urlTools.extractURLPath(remoteURL),
-        remoteURL: remoteURL,
-        agent: agent ? agent : undefined
+        remoteURL,
+        httpAgent,
+        httpsAgent
     };
 
     if (username) {
