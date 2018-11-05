@@ -7,34 +7,14 @@ matrix:
         - NAME="Node stable"
     - language: node_js
       script: npm run test:node
-      node_js: "9"
+      node_js: "10"
       env:
-        - NAME="Node 9"
+        - NAME="Node 10"
     - language: node_js
       script: npm run test:node
       node_js: "8"
       env:
         - NAME="Node 8"
-    - language: node_js
-      script: npm run test:node
-      node_js: "7"
-      env:
-        - NAME="Node 7"
-    - language: node_js
-      script: npm run test:node
-      node_js: "6"
-      env: 
-        - NAME="Node 6"
-    - language: node_js
-      script: npm run test:node
-      node_js: "5"
-      env: 
-        - NAME="Node 5"
-    - language: node_js
-      script: npm run test:node
-      node_js: "4"
-      env: 
-        - NAME="Node 4"
     - language: node_js
       node_js: "8"
       sudo: required
