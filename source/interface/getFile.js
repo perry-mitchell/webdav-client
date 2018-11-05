@@ -1,10 +1,6 @@
-"use strict";
-
 const joinURL = require("url-join");
 const responseHandlers = require("../response.js");
-const request = require("../request.js");
-const encodePath = request.encodePath;
-const fetch = request.fetch;
+const { encodePath, prepareRequestOptions, request } = require("../request.js");
 
 function getFileContentsBuffer(filePath, options) {
     return makeFileRequest(filePath, options).then(function(res) {
@@ -19,31 +15,30 @@ function getFileContentsString(filePath, options) {
 }
 
 function makeFileRequest(filePath, options) {
-    const fetchURL = joinURL(options.remoteURL, encodePath(filePath));
-    const fetchOptions = {
-        method: "GET",
-        headers: options.headers,
-        agent: options.agent
+    const requestOptions = {
+        url: joinURL(options.remoteURL, encodePath(filePath)),
+        method: "GET"
     };
-    return fetch(fetchURL, fetchOptions).then(responseHandlers.handleResponseCode);
+    prepareRequestOptions(requestOptions, options);
+    return request(requestOptions).then(responseHandlers.handleResponseCode);
 }
 
 function getFileLink(filePath, options) {
-    let fetchURL = joinURL(options.remoteURL, encodePath(filePath));
-    const protocol = /^https:/i.test(fetchURL) ? "https" : "http";
-    if (options.headers.Authorization) {
+    let url = joinURL(options.remoteURL, encodePath(filePath));
+    const protocol = /^https:/i.test(url) ? "https" : "http";
+    if (options.headers && options.headers.Authorization) {
         if (/^Basic /i.test(options.headers.Authorization) === false) {
             throw new Error("Failed retrieving download link: Invalid authorisation method");
         }
         const authPart = options.headers.Authorization.replace(/^Basic /i, "").trim();
         const authContents = Buffer.from(authPart, "base64").toString("utf8");
-        fetchURL = fetchURL.replace(/^https?:\/\//, `${protocol}://${authContents}@`);
+        url = url.replace(/^https?:\/\//, `${protocol}://${authContents}@`);
     }
-    return fetchURL;
+    return url;
 }
 
 module.exports = {
-    getFileContentsBuffer: getFileContentsBuffer,
-    getFileContentsString: getFileContentsString,
-    getFileLink: getFileLink
+    getFileContentsBuffer,
+    getFileContentsString,
+    getFileLink
 };

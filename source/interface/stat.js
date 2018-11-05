@@ -1,34 +1,22 @@
-"use strict";
-
 const joinURL = require("url-join");
 const { merge } = require("../merge.js");
 const responseHandlers = require("../response.js");
-const davTools = require("./dav.js");
+const { getSingleValue, getValueForKey, parseXML } = require("./dav.js");
 const urlTools = require("../url.js");
-const request = require("../request.js");
-const encodePath = request.encodePath;
-const fetch = request.fetch;
-const parseXML = davTools.parseXML;
-
-const getValueForKey = davTools.getValueForKey;
-const getSingleValue = davTools.getSingleValue;
+const { encodePath, prepareRequestOptions, request } = require("../request.js");
 
 function getStat(filename, options) {
-    const fetchURL = joinURL(options.remoteURL, encodePath(filename));
-    const fetchOptions = {
+    const requestOptions = {
+        url: joinURL(options.remoteURL, encodePath(filename)),
         method: "PROPFIND",
-        headers: merge({ Depth: 0 }, options.headers),
-        agent: options.agent
+        headers: { Depth: 0 }
     };
-    return fetch(fetchURL, fetchOptions)
+    prepareRequestOptions(requestOptions, options);
+    return request(requestOptions)
         .then(responseHandlers.handleResponseCode)
-        .then(function __convertToText(res) {
-            return res.text();
-        })
+        .then(res => res.text())
         .then(parseXML)
-        .then(function __handleResult(xml) {
-            return parseStat(xml, filename);
-        });
+        .then(xml => parseStat(xml, filename));
 }
 
 function parseStat(result, filename) {
@@ -50,5 +38,5 @@ function parseStat(result, filename) {
 }
 
 module.exports = {
-    getStat: getStat
+    getStat
 };

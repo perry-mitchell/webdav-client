@@ -1,28 +1,18 @@
-"use strict";
-
+const joinURL = require("url-join");
 const responseHandlers = require("../response.js");
-const { merge } = require("../merge.js");
-const fetch = require("../request.js").fetch;
-const davTools = require("./dav.js");
-const parseXML = davTools.parseXML;
-
-const getValueForKey = davTools.getValueForKey;
-const getSingleValue = davTools.getSingleValue;
-const translateDiskSpace = davTools.translateDiskSpace;
+const { encodePath, prepareRequestOptions, request } = require("../request.js");
+const { getSingleValue, getValueForKey, parseXML, translateDiskSpace } = require("./dav.js");
 
 function getQuota(options) {
-    let fetchURL = options.remoteURL + "/";
-    const fetchOptions = {
+    const requestOptions = {
+        url: joinURL(options.remoteURL, "/"),
         method: "PROPFIND",
-        headers: merge({ Depth: 0 }, options.headers),
-        agent: options.agent
+        headers: { Depth: 0 }
     };
-    fetchURL = fetchURL.replace(/\/+$/g, "/");
-    return fetch(fetchURL, fetchOptions)
+    prepareRequestOptions(requestOptions, options);
+    return request(requestOptions)
         .then(responseHandlers.handleResponseCode)
-        .then(function __convertToText(res) {
-            return res.text();
-        })
+        .then(res => res.text())
         .then(parseXML)
         .then(parseQuota);
 }
@@ -56,5 +46,5 @@ function parseQuota(result) {
 }
 
 module.exports = {
-    getQuota: getQuota
+    getQuota
 };

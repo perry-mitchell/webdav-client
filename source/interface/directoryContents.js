@@ -1,43 +1,31 @@
-"use strict";
-
 const pathPosix = require("path-posix");
 const joinURL = require("url-join");
 const { merge } = require("../merge.js");
-const responseHandlers = require("../response.js");
-const urlTools = require("../url.js");
-const davTools = require("./dav.js");
-const request = require("../request.js");
-const encodePath = request.encodePath;
-const fetch = request.fetch;
-
-const getValueForKey = davTools.getValueForKey;
-const getSingleValue = davTools.getSingleValue;
+const { handleResponseCode } = require("../response.js");
+const { normaliseHREF, normalisePath } = require("../url.js");
+const { getSingleValue, getValueForKey, parseXML, propsToStat } = require("./dav.js");
+const { encodePath, prepareRequestOptions, request } = require("../request.js");
 
 function getDirectoryContents(remotePathRaw, options) {
     // Strip the ending slash
     const remotePath = remotePathRaw.replace(/\/$/, "");
     // Join the URL and path for the request
-    const fetchURL = joinURL(options.remoteURL, encodePath(remotePath));
-    const fetchOptions = {
+    const requestOptions = {
+        url: joinURL(options.remoteURL, encodePath(remotePath)),
         method: "PROPFIND",
-        headers: merge(
-            {
-                Depth: 1
-            },
-            options.headers
-        ),
-        agent: options.agent
+        headers: {
+            Depth: 1
+        }
     };
-    return fetch(fetchURL, fetchOptions)
-        .then(responseHandlers.handleResponseCode)
-        .then(function __handleResponseFormat(res) {
+    prepareRequestOptions(requestOptions, options);
+    return request(requestOptions)
+        .then(handleResponseCode)
+        .then(res => {
             // Convert response to text
             return res.text();
         })
-        .then(davTools.parseXML)
-        .then(function __handleResult(result) {
-            return getDirectoryFiles(result, options.remotePath, remotePath);
-        });
+        .then(parseXML)
+        .then(result => getDirectoryFiles(result, options.remotePath, remotePath));
 }
 
 function getDirectoryFiles(result, serverBasePath, requestPath) {
@@ -48,26 +36,26 @@ function getDirectoryFiles(result, serverBasePath, requestPath) {
     return (
         responseItems
             // Filter out the item pointing to the current directory (not needed)
-            .filter(function __filterResponseItem(item) {
+            .filter(item => {
                 let href = getSingleValue(getValueForKey("href", item));
-                href = urlTools.normaliseHREF(href);
-                href = urlTools.normalisePath(href);
+                href = normaliseHREF(href);
+                href = normalisePath(href);
                 return href !== serverBasePath && href !== remoteTargetPath;
             })
             // Map all items to a consistent output structure (results)
-            .map(function __mapResponseItem(item) {
+            .map(item => {
                 // HREF is the file path (in full)
                 let href = getSingleValue(getValueForKey("href", item));
-                href = urlTools.normaliseHREF(href);
+                href = normaliseHREF(href);
                 // Each item should contain a stat object
                 const propStat = getSingleValue(getValueForKey("propstat", item));
                 const props = getSingleValue(getValueForKey("prop", propStat));
                 // Process the true full filename (minus the base server path)
                 const filename =
                     serverBasePath === "/"
-                        ? urlTools.normalisePath(href)
-                        : urlTools.normalisePath(pathPosix.relative(serverBasePath, href));
-                return davTools.propsToStat(props, filename);
+                        ? normalisePath(href)
+                        : normalisePath(pathPosix.relative(serverBasePath, href));
+                return propsToStat(props, filename);
             })
     );
 }
