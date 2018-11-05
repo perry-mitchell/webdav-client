@@ -27,7 +27,7 @@ function createWriteStream(filePath, options) {
         url: joinURL(options.remoteURL, encodePath(filePath)),
         method: "PUT",
         headers,
-        body: writeStream
+        data: writeStream
     };
     prepareRequestOptions(requestOptions, options);
     request(requestOptions)
@@ -57,9 +57,7 @@ function getFileStream(filePath, options) {
     prepareRequestOptions(requestOptions, options);
     return request(requestOptions)
         .then(responseHandlers.handleResponseCode)
-        .then(function __mapResultToStream(res) {
-            return res.body;
-        });
+        .then(res => res.data);
 }
 
 module.exports = {

@@ -3,39 +3,28 @@ const responseHandlers = require("../response.js");
 const { encodePath, prepareRequestOptions, request } = require("../request.js");
 
 function getFileContentsBuffer(filePath, options) {
-    // return makeFileRequest(filePath, options).then(function(res) {
-    //     return typeof res.buffer === "function" ? res.buffer() : res.arrayBuffer();
-    // });
     const requestOptions = {
         url: joinURL(options.remoteURL, encodePath(filePath)),
         method: "GET",
         responseType: "arraybuffer"
     };
     prepareRequestOptions(requestOptions, options);
-    return request(requestOptions).then(responseHandlers.handleResponseCode);
+    return request(requestOptions)
+        .then(responseHandlers.handleResponseCode)
+        .then(res => res.data);
 }
 
 function getFileContentsString(filePath, options) {
-    // return makeFileRequest(filePath, options).then(function(res) {
-    //     return res.text();
-    // });
     const requestOptions = {
         url: joinURL(options.remoteURL, encodePath(filePath)),
         method: "GET",
         responseType: "text"
     };
     prepareRequestOptions(requestOptions, options);
-    return request(requestOptions).then(responseHandlers.handleResponseCode);
+    return request(requestOptions)
+        .then(responseHandlers.handleResponseCode)
+        .then(res => res.data);
 }
-
-// function makeFileRequest(filePath, options) {
-//     const requestOptions = {
-//         url: joinURL(options.remoteURL, encodePath(filePath)),
-//         method: "GET"
-//     };
-//     prepareRequestOptions(requestOptions, options);
-//     return request(requestOptions).then(responseHandlers.handleResponseCode);
-// }
 
 function getFileLink(filePath, options) {
     let url = joinURL(options.remoteURL, encodePath(filePath));

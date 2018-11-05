@@ -21,6 +21,11 @@ function encodePath(path) {
         .join("/");
 }
 
+/**
+ * Process request options before being passed to Axios
+ * @param {RequestOptions} requestOptions The request options object
+ * @param {Object} methodOptions Provided options (external)
+ */
 function prepareRequestOptions(requestOptions, methodOptions) {
     if (methodOptions.httpAgent) {
         requestOptions.httpAgent = methodOptions.httpAgent;
