@@ -1,14 +1,14 @@
 const path = require("path");
 const fs = require("fs");
 const bufferEquals = require("buffer-equals");
-const setRequestMethod = require("../../dist/request.js").setRequestMethod;
+const getPatcher = require("../../dist/index.js").getPatcher;
 
 const SOURCE_BIN = path.resolve(__dirname, "../testContents/alrighty.jpg");
 const SOURCE_TXT = path.resolve(__dirname, "../testContents/text document.txt");
 
 describe("getFileContents", function() {
     beforeEach(function() {
-        restoreFetch(); // use default
+        getPatcher().restore("request"); // use default
         this.client = createWebDAVClient("http://localhost:9988/webdav/server", {
             username: createWebDAVServer.test.username,
             password: createWebDAVServer.test.password

@@ -1,10 +1,9 @@
 const axios = require("axios");
 const { merge } = require("./merge.js");
+const { getPatcher } = require("./patcher.js");
 
 const SEP_PATH_POSIX = "__PATH_SEPARATOR_POSIX__";
 const SEP_PATH_WINDOWS = "__PATH_SEPARATOR_WINDOWS__";
-
-let requestMethod = axios;
 
 /**
  * Encode a path for use with WebDAV servers
@@ -50,30 +49,25 @@ function prepareRequestOptions(requestOptions, methodOptions) {
 
 /**
  * Make a request
+ * This method can be patched by patching or plugging-in to the "request"
+ * item using {@link https://github.com/perry-mitchell/hot-patcher HotPatcher}.
+ * It uses {@link https://github.com/axios/axios Axios} by default.
  * @param {RequestOptions} requestOptions Options for the request
- * @see axios
  * @returns {Promise.<Object>} A promise that resolves with a response object
  */
 function request(requestOptions) {
-    return requestMethod(requestOptions);
-}
-
-/**
- * Set the request method to use when making requests
- * Defaults to `axios`. Setting it to `null` will reset it to `axios`.
- * @param {Function} fn Function to use - should perform like `axios()`.
- * @example
- *  const createClient = require("webdav");
- *  createClient.setRequestMethod(someMethod);
- */
-function setRequestMethod(fn) {
-    requestMethod = fn || axios;
+    return getPatcher().patchInline(
+        "request",
+        options => {
+            return axios(options);
+        },
+        requestOptions
+    );
 }
 
 module.exports = {
     axios,
     encodePath,
     prepareRequestOptions,
-    request,
-    setRequestMethod
+    request
 };
