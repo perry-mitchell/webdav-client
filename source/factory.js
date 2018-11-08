@@ -19,20 +19,14 @@ const stats = require("./interface/stat.js");
  */
 
 /**
- * Options with header object
- * @typedef {Object} OptionsWithHeaders
- * @property {Object} headers - Headers key-value list
- */
-
-/**
  * Options for creating a resource
- * @typedef {OptionsWithHeaders} PutOptions
+ * @typedef {UserOptions} PutOptions
  * @property {Boolean=} overwrite - Whether or not to overwrite existing files (default: true)
  */
 
 /**
  * Options with headers and format
- * @typedef {OptionsWithHeaders} OptionsHeadersAndFormat
+ * @typedef {UserOptions} OptionsWithFormat
  * @property {String} format - The format to use (text/binary)
  */
 
@@ -46,7 +40,7 @@ const stats = require("./interface/stat.js");
  * @module WebDAV
  * @example
  *  const createClient = require("webdav");
- *  const client = createClient(url, username, password);
+ *  const client = createClient(url, { username, password });
  *  client
  *      .getDirectoryContents("/")
  *      .then(contents => {
@@ -54,7 +48,9 @@ const stats = require("./interface/stat.js");
  *      });
  * @example
  *  const createClient = require("webdav");
- *  const client = createClient(url, {token_type: 'Bearer', access_token: 'tokenvalue'});
+ *  const client = createClient(url, {
+ *      token: { token_type: "Bearer", access_token: "tokenvalue" }
+ *  });
  *  client
  *      .getDirectoryContents("/")
  *      .then(contents => {
@@ -80,7 +76,7 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
          * Copy a remote item to another path
          * @param {String} remotePath The remote item path
          * @param {String} targetRemotePath The path file will be copied to
-         * @param {OptionsWithHeaders=} options Options for the request
+         * @param {UserOptions=} options Options for the request
          * @memberof ClientInterface
          * @returns {Promise} A promise that resolves once the request has completed
          */
@@ -92,7 +88,7 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
         /**
          * Create a directory
          * @param {String} dirPath The path to create
-         * @param {OptionsWithHeaders=} options Options for the request
+         * @param {UserOptions=} options Options for the request
          * @memberof ClientInterface
          * @returns {Promise} A promise that resolves when the remote path has been created
          */
@@ -104,7 +100,7 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
         /**
          * Create a readable stream of a remote file
          * @param {String} remoteFilename The file to stream
-         * @param {OptionsWithHeaders=} options Options for the request
+         * @param {UserOptions=} options Options for the request
          * @memberof ClientInterface
          * @returns {Readable} A readable stream
          */
@@ -128,7 +124,7 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
         /**
          * Delete a remote file
          * @param {String} remotePath The remote path to delete
-         * @param {OptionsWithHeaders=} options The options for the request
+         * @param {UserOptions=} options The options for the request
          * @memberof ClientInterface
          * @returns {Promise} A promise that resolves when the remote file as been deleted
          */
@@ -140,7 +136,7 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
         /**
          * Get the contents of a remote directory
          * @param {String} remotePath The path to fetch the contents of
-         * @param {OptionsWithHeaders=} options Options for the remote the request
+         * @param {UserOptions=} options Options for the remote the request
          * @returns {Promise.<Array>} A promise that resolves with an array of remote item stats
          * @memberof ClientInterface
          */
@@ -152,7 +148,7 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
         /**
          * Get the contents of a remote file
          * @param {String} remoteFilename The file to fetch
-         * @param {OptionsHeadersAndFormat=} options Options for the request
+         * @param {OptionsWithFormat=} options Options for the request
          * @memberof ClientInterface
          * @returns {Promise.<Buffer|String>} A promise that resolves with the contents of the remote file
          */
@@ -171,7 +167,7 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
          * Get the download link of a remote file
          * Only supported for Basic authentication or unauthenticated connections.
          * @param {String} remoteFilename The file url to fetch
-         * @param {OptionsHeadersAndFormat=} options Options for the request
+         * @param {UserOptions=} options Options for the request
          * @memberof ClientInterface
          * @returns {String} A download URL
          */
@@ -182,7 +178,7 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
 
         /**
          * Get quota information
-         * @param {OptionsHeadersAndFormat=} options Options for the request
+         * @param {UserOptions=} options Options for the request
          * @returns {null|Object} Returns null if failed, or an object with `used` and `available`
          * @memberof ClientInterface
          */
@@ -195,7 +191,7 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
          * Move a remote item to another path
          * @param {String} remotePath The remote item path
          * @param {String} targetRemotePath The new path after moving
-         * @param {OptionsWithHeaders=} options Options for the request
+         * @param {UserOptions=} options Options for the request
          * @memberof ClientInterface
          * @returns {Promise} A promise that resolves once the request has completed
          */
@@ -233,7 +229,7 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
         /**
          * Stat a remote object
          * @param {String} remotePath The path of the item
-         * @param {OptionsWithHeaders=} options Options for the request
+         * @param {UserOptions=} options Options for the request
          * @memberof ClientInterface
          * @returns {Promise.<Object>} A promise that resolves with the stat data
          */
