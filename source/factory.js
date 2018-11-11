@@ -88,6 +88,8 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
          * @param {UserOptions=} options Options for the request
          * @memberof ClientInterface
          * @returns {Promise} A promise that resolves once the request has completed
+         * @example
+         *      await client.copyFile("/photos/pic1.jpg", "/backup/pic1.jpg");
          */
         copyFile: function copyFile(remotePath, targetRemotePath, options) {
             const copyOptions = merge(baseOptions, options || {});
@@ -100,6 +102,8 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
          * @param {UserOptions=} options Options for the request
          * @memberof ClientInterface
          * @returns {Promise} A promise that resolves when the remote path has been created
+         * @example
+         *      await client.createDirectory("/my/directory");
          */
         createDirectory: function createDirectory(dirPath, options) {
             const createOptions = merge(baseOptions, options || {});
@@ -112,6 +116,9 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
          * @param {UserOptions=} options Options for the request
          * @memberof ClientInterface
          * @returns {Readable} A readable stream
+         * @example
+         *      const remote = client.createReadStream("/data.zip");
+         *      remote.pipe(someWriteStream);
          */
         createReadStream: function createReadStream(remoteFilename, options) {
             const createOptions = merge(baseOptions, options || {});
@@ -124,6 +131,9 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
          * @param {PutOptions=} options Options for the request
          * @memberof ClientInterface
          * @returns {Writeable} A writeable stream
+         * @example
+         *      const remote = client.createWriteStream("/data.zip");
+         *      fs.createReadStream("~/myData.zip").pipe(remote);
          */
         createWriteStream: function createWriteStream(remoteFilename, options) {
             const createOptions = merge(baseOptions, options || {});
@@ -136,6 +146,8 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
          * @param {UserOptions=} options The options for the request
          * @memberof ClientInterface
          * @returns {Promise} A promise that resolves when the remote file as been deleted
+         * @example
+         *      await client.deleteFile("/some/file.txt");
          */
         deleteFile: function deleteFile(remotePath, options) {
             const deleteOptions = merge(baseOptions, options || {});
@@ -148,6 +160,8 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
          * @param {OptionsForAdvancedResponses=} options Options for the remote the request
          * @returns {Promise.<Array>} A promise that resolves with an array of remote item stats
          * @memberof ClientInterface
+         * @example
+         *      const contents = await client.getDirectoryContents("/");
          */
         getDirectoryContents: function getDirectoryContents(remotePath, options) {
             const getOptions = merge(baseOptions, options || {});
@@ -160,6 +174,11 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
          * @param {OptionsWithFormat=} options Options for the request
          * @memberof ClientInterface
          * @returns {Promise.<Buffer|String>} A promise that resolves with the contents of the remote file
+         * @example
+         *      // Fetching data:
+         *      const buff = await client.getFileContents("/image.png");
+         *      // Fetching text:
+         *      const txt = await client.getFileContents("/list.txt", { format: "text" });
          */
         getFileContents: function getFileContents(remoteFilename, options) {
             const getOptions = merge(baseOptions, options || {});
@@ -203,6 +222,8 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
          * @param {UserOptions=} options Options for the request
          * @memberof ClientInterface
          * @returns {Promise} A promise that resolves once the request has completed
+         * @example
+         *      await client.moveFIle("/sub/file.dat", "/another/dir/file.dat");
          */
         moveFile: function moveFile(remotePath, targetRemotePath, options) {
             const moveOptions = merge(baseOptions, options || {});
@@ -216,6 +237,10 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
          * @param {PutOptions=} options The options for the request
          * @returns {Promise} A promise that resolves once the contents have been written
          * @memberof ClientInterface
+         * @example
+         *      await client.putFileContents("/dir/image.png", myImageBuffer);
+         *      // Put contents without overwriting:
+         *      await client.putFileContents("/dir/image.png", myImageBuffer, { overwrite: false });
          */
         putFileContents: function putFileContents(remoteFilename, data, options) {
             const putOptions = merge(baseOptions, options || {});

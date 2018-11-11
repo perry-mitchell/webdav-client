@@ -179,6 +179,10 @@ Copy a remote item to another path
 | targetRemotePath | <code>String</code> | The path file will be copied to |
 | [options] | [<code>UserOptions</code>](#UserOptions) | Options for the request |
 
+**Example**  
+```js
+await client.copyFile("/photos/pic1.jpg", "/backup/pic1.jpg");
+```
 <a name="ClientInterface.createDirectory"></a>
 
 ### ClientInterface.createDirectory(dirPath, [options]) ⇒ <code>Promise</code>
@@ -192,6 +196,10 @@ Create a directory
 | dirPath | <code>String</code> | The path to create |
 | [options] | [<code>UserOptions</code>](#UserOptions) | Options for the request |
 
+**Example**  
+```js
+await client.createDirectory("/my/directory");
+```
 <a name="ClientInterface.createReadStream"></a>
 
 ### ClientInterface.createReadStream(remoteFilename, [options]) ⇒ <code>Readable</code>
@@ -205,6 +213,11 @@ Create a readable stream of a remote file
 | remoteFilename | <code>String</code> | The file to stream |
 | [options] | [<code>UserOptions</code>](#UserOptions) | Options for the request |
 
+**Example**  
+```js
+const remote = client.createReadStream("/data.zip");
+     remote.pipe(someWriteStream);
+```
 <a name="ClientInterface.createWriteStream"></a>
 
 ### ClientInterface.createWriteStream(remoteFilename, [options]) ⇒ <code>Writeable</code>
@@ -218,6 +231,11 @@ Create a writeable stream to a remote file
 | remoteFilename | <code>String</code> | The file to write to |
 | [options] | [<code>PutOptions</code>](#PutOptions) | Options for the request |
 
+**Example**  
+```js
+const remote = client.createWriteStream("/data.zip");
+     fs.createReadStream("~/myData.zip").pipe(remote);
+```
 <a name="ClientInterface.deleteFile"></a>
 
 ### ClientInterface.deleteFile(remotePath, [options]) ⇒ <code>Promise</code>
@@ -231,6 +249,10 @@ Delete a remote file
 | remotePath | <code>String</code> | The remote path to delete |
 | [options] | [<code>UserOptions</code>](#UserOptions) | The options for the request |
 
+**Example**  
+```js
+await client.deleteFile("/some/file.txt");
+```
 <a name="ClientInterface.getDirectoryContents"></a>
 
 ### ClientInterface.getDirectoryContents(remotePath, [options]) ⇒ <code>Promise.&lt;Array&gt;</code>
@@ -244,6 +266,10 @@ Get the contents of a remote directory
 | remotePath | <code>String</code> | The path to fetch the contents of |
 | [options] | [<code>OptionsForAdvancedResponses</code>](#OptionsForAdvancedResponses) | Options for the remote the request |
 
+**Example**  
+```js
+const contents = await client.getDirectoryContents("/");
+```
 <a name="ClientInterface.getFileContents"></a>
 
 ### ClientInterface.getFileContents(remoteFilename, [options]) ⇒ <code>Promise.&lt;(Buffer\|String)&gt;</code>
@@ -257,6 +283,13 @@ Get the contents of a remote file
 | remoteFilename | <code>String</code> | The file to fetch |
 | [options] | [<code>OptionsWithFormat</code>](#OptionsWithFormat) | Options for the request |
 
+**Example**  
+```js
+// Fetching data:
+     const buff = await client.getFileContents("/image.png");
+     // Fetching text:
+     const txt = await client.getFileContents("/list.txt", { format: "text" });
+```
 <a name="ClientInterface.getFileDownloadLink"></a>
 
 ### ClientInterface.getFileDownloadLink(remoteFilename, [options]) ⇒ <code>String</code>
@@ -297,6 +330,10 @@ Move a remote item to another path
 | targetRemotePath | <code>String</code> | The new path after moving |
 | [options] | [<code>UserOptions</code>](#UserOptions) | Options for the request |
 
+**Example**  
+```js
+await client.moveFIle("/sub/file.dat", "/another/dir/file.dat");
+```
 <a name="ClientInterface.putFileContents"></a>
 
 ### ClientInterface.putFileContents(remoteFilename, data, [options]) ⇒ <code>Promise</code>
@@ -311,6 +348,12 @@ Write contents to a remote file path
 | data | <code>String</code> \| <code>Buffer</code> | The data to write |
 | [options] | [<code>PutOptions</code>](#PutOptions) | The options for the request |
 
+**Example**  
+```js
+await client.putFileContents("/dir/image.png", myImageBuffer);
+     // Put contents without overwriting:
+     await client.putFileContents("/dir/image.png", myImageBuffer, { overwrite: false });
+```
 <a name="ClientInterface.getFileUploadLink"></a>
 
 ### ClientInterface.getFileUploadLink(remoteFilename, [options]) ⇒ <code>String</code>
