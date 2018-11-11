@@ -40,7 +40,7 @@ const client = createClient(
 const directoryItems = await client.getDirectoryContents("/");
 ```
 
-Make sure to read the [API documentation](API.md) for more information on available adapter methods.
+Make sure to read the [API documentation](API.md) for more information on the [available adapter methods](API.md#ClientInterface).
 
 ### Authentication & Connection
 
