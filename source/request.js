@@ -68,13 +68,7 @@ function prepareRequestOptions(requestOptions, methodOptions) {
  * @returns {Promise.<Object>} A promise that resolves with a response object
  */
 function request(requestOptions) {
-    return getPatcher().patchInline(
-        "request",
-        options => {
-            return axios(options);
-        },
-        requestOptions
-    );
+    return getPatcher().patchInline("request", options => axios(options), requestOptions);
 }
 
 module.exports = {

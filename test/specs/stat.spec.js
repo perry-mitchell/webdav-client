@@ -46,4 +46,15 @@ describe("stat", function() {
             expect(stat).to.have.property("size", 0);
         });
     });
+
+    it("supports returning detailed results", function() {
+        return this.client.stat("/", { details: true }).then(function(details) {
+            expect(details)
+                .to.have.property("data")
+                .that.is.an("object");
+            expect(details)
+                .to.have.property("headers")
+                .that.is.an("object");
+        });
+    });
 });

@@ -28,6 +28,15 @@ const stats = require("./interface/stat.js");
  * Options with headers and format
  * @typedef {UserOptions} OptionsWithFormat
  * @property {String} format - The format to use (text/binary)
+ * @property {Boolean=} details - Provided detailed response information, such as response
+ *  headers (defaults to false). Only available on requests that return result data.
+ */
+
+/**
+ * Options for methods that resturn responses
+ * @typedef {UserOptions} OptionsForAdvancedResponses
+ * @property {Boolean=} details - Provided detailed response information, such as response
+ *  headers (defaults to false). Only available on requests that return result data.
  */
 
 /**
@@ -136,7 +145,7 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
         /**
          * Get the contents of a remote directory
          * @param {String} remotePath The path to fetch the contents of
-         * @param {UserOptions=} options Options for the remote the request
+         * @param {OptionsForAdvancedResponses=} options Options for the remote the request
          * @returns {Promise.<Array>} A promise that resolves with an array of remote item stats
          * @memberof ClientInterface
          */
@@ -178,7 +187,7 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
 
         /**
          * Get quota information
-         * @param {UserOptions=} options Options for the request
+         * @param {OptionsForAdvancedResponses=} options Options for the request
          * @returns {null|Object} Returns null if failed, or an object with `used` and `available`
          * @memberof ClientInterface
          */
@@ -229,7 +238,7 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
         /**
          * Stat a remote object
          * @param {String} remotePath The path of the item
-         * @param {UserOptions=} options Options for the request
+         * @param {OptionsForAdvancedResponses=} options Options for the request
          * @memberof ClientInterface
          * @returns {Promise.<Object>} A promise that resolves with the stat data
          */

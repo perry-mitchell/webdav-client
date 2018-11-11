@@ -1,6 +1,6 @@
 const joinURL = require("url-join");
 const { merge } = require("../merge.js");
-const responseHandlers = require("../response.js");
+const { handleResponseCode, processResponsePayload } = require("../response.js");
 const { getSingleValue, getValueForKey, parseXML, propsToStat } = require("./dav.js");
 const urlTools = require("../url.js");
 const { encodePath, prepareRequestOptions, request } = require("../request.js");
@@ -15,12 +15,17 @@ function getStat(filename, options) {
         },
         responseType: "text"
     };
+    let response = null;
     prepareRequestOptions(requestOptions, options);
     return request(requestOptions)
-        .then(responseHandlers.handleResponseCode)
-        .then(res => res.data)
+        .then(handleResponseCode)
+        .then(res => {
+            response = res;
+            return res.data;
+        })
         .then(parseXML)
-        .then(xml => parseStat(xml, filename));
+        .then(xml => parseStat(xml, filename))
+        .then(result => processResponsePayload(response, result, options.details));
 }
 
 function parseStat(result, filename) {

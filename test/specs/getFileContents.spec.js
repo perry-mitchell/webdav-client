@@ -24,14 +24,20 @@ describe("getFileContents", function() {
 
     it("reads a remote file into a buffer", function() {
         return this.client.getFileContents("/alrighty.jpg").then(bufferRemote => {
+            expect(bufferRemote).to.be.an.instanceof(Buffer);
             const bufferLocal = fs.readFileSync(SOURCE_BIN);
             expect(bufferEquals(bufferRemote, bufferLocal)).to.be.true;
         });
     });
 
-    it("uses .buffer() when available", function() {
-        return this.client.getFileContents("/alrighty.jpg").then(res => {
-            expect(res).to.be.an.instanceof(Buffer);
+    it("supports returning detailed results (buffer)", function() {
+        return this.client.getFileContents("/alrighty.jpg", { details: true }).then(details => {
+            expect(details)
+                .to.have.property("data")
+                .that.is.an.instanceof(Buffer);
+            expect(details)
+                .to.have.property("headers")
+                .that.is.an("object");
         });
     });
 
@@ -39,6 +45,17 @@ describe("getFileContents", function() {
         return this.client.getFileContents("/text document.txt", { format: "text" }).then(stringRemote => {
             const stringLocal = fs.readFileSync(SOURCE_TXT, "utf8");
             expect(stringRemote).to.equal(stringLocal);
+        });
+    });
+
+    it("supports returning detailed results (string)", function() {
+        return this.client.getFileContents("/text document.txt", { format: "text", details: true }).then(details => {
+            expect(details)
+                .to.have.property("data")
+                .that.is.a("string");
+            expect(details)
+                .to.have.property("headers")
+                .that.is.an("object");
         });
     });
 });

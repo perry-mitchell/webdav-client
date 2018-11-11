@@ -1,5 +1,5 @@
 const joinURL = require("url-join");
-const responseHandlers = require("../response.js");
+const { handleResponseCode, processResponsePayload } = require("../response.js");
 const { encodePath, prepareRequestOptions, request } = require("../request.js");
 
 function getFileContentsBuffer(filePath, options) {
@@ -10,8 +10,8 @@ function getFileContentsBuffer(filePath, options) {
     };
     prepareRequestOptions(requestOptions, options);
     return request(requestOptions)
-        .then(responseHandlers.handleResponseCode)
-        .then(res => res.data);
+        .then(handleResponseCode)
+        .then(res => processResponsePayload(res, res.data, options.details));
 }
 
 function getFileContentsString(filePath, options) {
@@ -22,8 +22,8 @@ function getFileContentsString(filePath, options) {
     };
     prepareRequestOptions(requestOptions, options);
     return request(requestOptions)
-        .then(responseHandlers.handleResponseCode)
-        .then(res => res.data);
+        .then(handleResponseCode)
+        .then(res => processResponsePayload(res, res.data, options.details));
 }
 
 function getFileLink(filePath, options) {

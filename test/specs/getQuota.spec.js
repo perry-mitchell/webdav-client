@@ -44,4 +44,17 @@ describe("getQuota", function() {
             expect(quotaInfo).to.be.null;
         });
     });
+
+    it("supports returning detailed results", function() {
+        useValidQuota();
+        return this.client.getQuota({ details: true }).then(function(details) {
+            console.log("DEETS", details);
+            expect(details)
+                .to.have.property("data")
+                .that.is.an("object");
+            expect(details)
+                .to.have.property("headers")
+                .that.is.an("object");
+        });
+    });
 });

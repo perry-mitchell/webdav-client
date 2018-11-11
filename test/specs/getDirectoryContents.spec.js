@@ -27,6 +27,17 @@ describe("getDirectoryContents", function() {
         });
     });
 
+    it("supports returning detailed results", function() {
+        return this.client.getDirectoryContents("/", { details: true }).then(function(details) {
+            expect(details)
+                .to.have.property("data")
+                .that.is.an("array");
+            expect(details)
+                .to.have.property("headers")
+                .that.is.an("object");
+        });
+    });
+
     it("returns correct directory results", function() {
         return this.client.getDirectoryContents("/").then(function(contents) {
             const sub1 = contents.find(function(item) {

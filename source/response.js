@@ -9,6 +9,16 @@ function handleResponseCode(response) {
     return response;
 }
 
+function processResponsePayload(response, data, isDetailed = false) {
+    return isDetailed
+        ? {
+              data,
+              headers: response.headers || {}
+          }
+        : data;
+}
+
 module.exports = {
-    handleResponseCode
+    handleResponseCode,
+    processResponsePayload
 };

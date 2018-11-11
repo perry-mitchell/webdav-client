@@ -1,5 +1,5 @@
 const joinURL = require("url-join");
-const responseHandlers = require("../response.js");
+const { handleResponseCode, processResponsePayload } = require("../response.js");
 const { encodePath, prepareRequestOptions, request } = require("../request.js");
 const { getSingleValue, getValueForKey, parseXML, translateDiskSpace } = require("./dav.js");
 
@@ -13,12 +13,17 @@ function getQuota(options) {
         },
         responseType: "text"
     };
+    let response = null;
     prepareRequestOptions(requestOptions, options);
     return request(requestOptions)
-        .then(responseHandlers.handleResponseCode)
-        .then(res => res.data)
+        .then(handleResponseCode)
+        .then(res => {
+            response = res;
+            return res.data;
+        })
         .then(parseXML)
-        .then(parseQuota);
+        .then(parseQuota)
+        .then(result => processResponsePayload(response, result, options.details));
 }
 
 function parseQuota(result) {
