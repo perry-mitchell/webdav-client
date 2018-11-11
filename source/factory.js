@@ -46,7 +46,7 @@ const stats = require("./interface/stat.js");
  * @param {String=} password Optional password for authentication
  * @param {Agent} agent Optional http(s).Agent instance, allows custom proxy, certificate etc. Gets passed to node-fetch
  * @returns {ClientInterface} A new client interface instance
- * @module WebDAV
+ * @memberof module:WebDAV
  * @example
  *  const createClient = require("webdav");
  *  const client = createClient(url, { username, password });
