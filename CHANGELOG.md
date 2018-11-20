@@ -1,7 +1,7 @@
 # WebDAV-Client changelog
 
 ## **v2.0.0**
-_2018-11-11_
+_2018-11-20_
 
  * **Major version update!**
    * Fetch has been replaced with Axios! tl;dr `fetch` is horrible when looking to make webdav-client compatible cross-platform. Axios is a great alternative.
