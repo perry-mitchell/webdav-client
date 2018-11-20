@@ -37,7 +37,16 @@ const client = createClient(
     }
 );
 
+// Get directory contents
 const directoryItems = await client.getDirectoryContents("/");
+// Outputs a structure like:
+// [{
+//     filename: "/my-file.txt",
+//     basename: "my-file.txt",
+//     lastmod: "Mon, 10 Oct 2018 23:24:11 GMT",
+//     size: 371,
+//     type: "file"
+// }]
 ```
 
 Make sure to read the [API documentation](API.md) for more information on the [available adapter methods](API.md#ClientInterface).
