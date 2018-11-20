@@ -22,10 +22,13 @@ describe("Authentication", function() {
         nock(DUMMYSERVER)
             .get("/file")
             .reply(200, function() {
-                expect(this.req.headers.authorization).to.deep.equal(["Basic dXNlcjpwYXNz"]);
+                expect(this.req.headers.authorization).to.equal("Basic dXNlcjpwYXNz");
                 return "";
             });
-        const webdav = Webdav.createClient(DUMMYSERVER, "user", "pass");
+        const webdav = Webdav.createClient(DUMMYSERVER, {
+            username: "user",
+            password: "pass"
+        });
         return webdav.getFileContents("/file");
     });
 
@@ -33,10 +36,15 @@ describe("Authentication", function() {
         nock(DUMMYSERVER)
             .get("/file")
             .reply(200, function() {
-                expect(this.req.headers.authorization).to.deep.equal(["Bearer ABC123"]);
+                expect(this.req.headers.authorization).to.deep.equal("Bearer ABC123");
                 return "";
             });
-        const webdav = Webdav.createClient(DUMMYSERVER, { token_type: "Bearer", access_token: "ABC123" });
+        const webdav = Webdav.createClient(DUMMYSERVER, {
+            token: {
+                token_type: "Bearer",
+                access_token: "ABC123"
+            }
+        });
         return webdav.getFileContents("/file");
     });
 });

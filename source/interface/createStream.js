@@ -1,22 +1,17 @@
-"use strict";
-
 const Stream = require("stream");
 const joinURL = require("url-join");
-const { merge } = require("../merge.js");
 const responseHandlers = require("../response.js");
-const request = require("../request.js");
-const encodePath = request.encodePath;
-const fetch = request.fetch;
+const { encodePath, prepareRequestOptions, request } = require("../request.js");
 
 const PassThroughStream = Stream.PassThrough;
 
 function createReadStream(filePath, options) {
     const outStream = new PassThroughStream();
     getFileStream(filePath, options)
-        .then(function __handleStream(stream) {
+        .then(stream => {
             stream.pipe(outStream);
         })
-        .catch(function __handleReadError(err) {
+        .catch(err => {
             outStream.emit("error", err);
         });
     return outStream;
@@ -24,27 +19,20 @@ function createReadStream(filePath, options) {
 
 function createWriteStream(filePath, options) {
     const writeStream = new PassThroughStream();
-    const headers = merge({}, options.headers);
-    // if (typeof options.range === "object" && typeof options.range.start === "number") {
-    //     var rangeHeader = "bytes=" + options.range.start + "-";
-    //     if (typeof options.range.end === "number") {
-    //         rangeHeader += options.range.end;
-    //     }
-    //     options.headers.Range = rangeHeader;
-    // }
+    const headers = {};
     if (options.overwrite === false) {
         headers["If-None-Match"] = "*";
     }
-    const fetchURL = joinURL(options.remoteURL, encodePath(filePath));
-    const fetchOptions = {
+    const requestOptions = {
+        url: joinURL(options.remoteURL, encodePath(filePath)),
         method: "PUT",
-        headers: headers,
-        body: writeStream,
-        agent: options.agent
+        headers,
+        data: writeStream
     };
-    fetch(fetchURL, fetchOptions)
+    prepareRequestOptions(requestOptions, options);
+    request(requestOptions)
         .then(responseHandlers.handleResponseCode)
-        .catch(function __handleWriteError(err) {
+        .catch(err => {
             writeStream.emit("error", err);
         });
     return writeStream;
@@ -52,24 +40,24 @@ function createWriteStream(filePath, options) {
 
 function getFileStream(filePath, options) {
     let rangeHeader;
+    const headers = {};
     if (typeof options.range === "object" && typeof options.range.start === "number") {
         rangeHeader = "bytes=" + options.range.start + "-";
         if (typeof options.range.end === "number") {
             rangeHeader += options.range.end;
         }
-        options.headers.Range = rangeHeader;
+        headers.Range = rangeHeader;
     }
-    const fetchURL = joinURL(options.remoteURL, encodePath(filePath));
-    const fetchOptions = {
+    const requestOptions = {
+        url: joinURL(options.remoteURL, encodePath(filePath)),
         method: "GET",
-        headers: options.headers,
-        agent: options.agent
+        headers,
+        responseType: "stream"
     };
-    return fetch(fetchURL, fetchOptions)
+    prepareRequestOptions(requestOptions, options);
+    return request(requestOptions)
         .then(responseHandlers.handleResponseCode)
-        .then(function __mapResultToStream(res) {
-            return res.body;
-        });
+        .then(res => res.data);
 }
 
 module.exports = {

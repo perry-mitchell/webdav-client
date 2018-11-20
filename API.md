@@ -1,20 +1,27 @@
 ## Modules
 
 <dl>
-<dt><a href="#module_WebDAV">WebDAV</a> ⇒ <code><a href="#ClientInterface">ClientInterface</a></code></dt>
-<dd><p>Create a client adapter</p>
-</dd>
+<dt><a href="#module_WebDAV">WebDAV</a></dt>
+<dd></dd>
 </dl>
 
 ## Functions
 
 <dl>
+<dt><a href="#getPatcher">getPatcher()</a> ⇒ <code>HotPatcher</code></dt>
+<dd><p>Get the HotPatcher instance for patching internal methods</p>
+</dd>
 <dt><a href="#encodePath">encodePath(path)</a> ⇒ <code>String</code></dt>
 <dd><p>Encode a path for use with WebDAV servers</p>
 </dd>
-<dt><a href="#setFetchMethod">setFetchMethod(fn)</a></dt>
-<dd><p>Set the fetch method to use when making requests
-Defaults to <code>node-fetch</code>. Setting it to <code>null</code> will reset it to <code>node-fetch</code>.</p>
+<dt><a href="#prepareRequestOptions">prepareRequestOptions(requestOptions, methodOptions)</a></dt>
+<dd><p>Process request options before being passed to Axios</p>
+</dd>
+<dt><a href="#request">request(requestOptions)</a> ⇒ <code>Promise.&lt;Object&gt;</code></dt>
+<dd><p>Make a request
+This method can be patched by patching or plugging-in to the &quot;request&quot;
+item using <a href="https://github.com/perry-mitchell/hot-patcher">HotPatcher</a>.
+It uses <a href="https://github.com/axios/axios">Axios</a> by default.</p>
 </dd>
 </dl>
 
@@ -24,19 +31,41 @@ Defaults to <code>node-fetch</code>. Setting it to <code>null</code> will reset 
 <dt><a href="#ClientInterface">ClientInterface</a> : <code>Object</code></dt>
 <dd><p>Client adapter</p>
 </dd>
-<dt><a href="#OptionsWithHeaders">OptionsWithHeaders</a> : <code>Object</code></dt>
-<dd><p>Options with header object</p>
-</dd>
-<dt><a href="#PutOptions">PutOptions</a> : <code><a href="#OptionsWithHeaders">OptionsWithHeaders</a></code></dt>
+<dt><a href="#PutOptions">PutOptions</a> : <code><a href="#UserOptions">UserOptions</a></code></dt>
 <dd><p>Options for creating a resource</p>
 </dd>
+<dt><a href="#OptionsWithFormat">OptionsWithFormat</a> : <code><a href="#UserOptions">UserOptions</a></code></dt>
+<dd><p>Options with headers and format</p>
+</dd>
+<dt><a href="#OptionsForAdvancedResponses">OptionsForAdvancedResponses</a> : <code><a href="#UserOptions">UserOptions</a></code></dt>
+<dd><p>Options for methods that resturn responses</p>
+</dd>
+<dt><a href="#UserOptions">UserOptions</a> : <code>Object</code></dt>
+<dd></dd>
+<dt><a href="#RequestOptions">RequestOptions</a> : <code>Object</code></dt>
+<dd></dd>
 </dl>
 
 <a name="module_WebDAV"></a>
 
-## WebDAV ⇒ [<code>ClientInterface</code>](#ClientInterface)
+## WebDAV
+
+* [WebDAV](#module_WebDAV)
+    * [.axios](#module_WebDAV.axios) : <code>function</code>
+    * [.createClient(remoteURL, [username], [password], agent)](#module_WebDAV.createClient) ⇒ [<code>ClientInterface</code>](#ClientInterface)
+
+<a name="module_WebDAV.axios"></a>
+
+### WebDAV.axios : <code>function</code>
+Axios request library
+
+**Kind**: static property of [<code>WebDAV</code>](#module_WebDAV)  
+<a name="module_WebDAV.createClient"></a>
+
+### WebDAV.createClient(remoteURL, [username], [password], agent) ⇒ [<code>ClientInterface</code>](#ClientInterface)
 Create a client adapter
 
+**Kind**: static method of [<code>WebDAV</code>](#module_WebDAV)  
 **Returns**: [<code>ClientInterface</code>](#ClientInterface) - A new client interface instance  
 
 | Param | Type | Description |
@@ -44,11 +73,12 @@ Create a client adapter
 | remoteURL | <code>String</code> | The remote address of the webdav server |
 | [username] | <code>String</code> | Optional username for authentication |
 | [password] | <code>String</code> | Optional password for authentication |
+| agent | <code>Agent</code> | Optional http(s).Agent instance, allows custom proxy, certificate etc. Gets passed to node-fetch |
 
 **Example**  
 ```js
 const createClient = require("webdav");
- const client = createClient(url, username, password);
+ const client = createClient(url, { username, password });
  client
      .getDirectoryContents("/")
      .then(contents => {
@@ -58,13 +88,22 @@ const createClient = require("webdav");
 **Example**  
 ```js
 const createClient = require("webdav");
- const client = createClient(url, {token_type: 'Bearer', access_token: 'tokenvalue'});
+ const client = createClient(url, {
+     token: { token_type: "Bearer", access_token: "tokenvalue" }
+ });
  client
      .getDirectoryContents("/")
      .then(contents => {
          console.log(contents);
      });
 ```
+<a name="getPatcher"></a>
+
+## getPatcher() ⇒ <code>HotPatcher</code>
+Get the HotPatcher instance for patching internal methods
+
+**Kind**: global function  
+**Returns**: <code>HotPatcher</code> - The internal HotPatcher instance  
 <a name="encodePath"></a>
 
 ## encodePath(path) ⇒ <code>String</code>
@@ -77,23 +116,33 @@ Encode a path for use with WebDAV servers
 | --- | --- | --- |
 | path | <code>String</code> | The path to encode |
 
-<a name="setFetchMethod"></a>
+<a name="prepareRequestOptions"></a>
 
-## setFetchMethod(fn)
-Set the fetch method to use when making requests
-Defaults to `node-fetch`. Setting it to `null` will reset it to `node-fetch`.
+## prepareRequestOptions(requestOptions, methodOptions)
+Process request options before being passed to Axios
 
 **Kind**: global function  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| fn | <code>function</code> | Function to use - should perform like `fetch`. |
+| requestOptions | [<code>RequestOptions</code>](#RequestOptions) | The request options object |
+| methodOptions | [<code>UserOptions</code>](#UserOptions) | Provided options (external) |
 
-**Example**  
-```js
-const createClient = require("webdav");
- createClient.setFetchMethod(window.fetch);
-```
+<a name="request"></a>
+
+## request(requestOptions) ⇒ <code>Promise.&lt;Object&gt;</code>
+Make a request
+This method can be patched by patching or plugging-in to the "request"
+item using [HotPatcher](https://github.com/perry-mitchell/hot-patcher).
+It uses [Axios](https://github.com/axios/axios) by default.
+
+**Kind**: global function  
+**Returns**: <code>Promise.&lt;Object&gt;</code> - A promise that resolves with a response object  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| requestOptions | [<code>RequestOptions</code>](#RequestOptions) | Options for the request |
+
 <a name="ClientInterface"></a>
 
 ## ClientInterface : <code>Object</code>
@@ -113,6 +162,7 @@ Client adapter
     * [.getQuota([options])](#ClientInterface.getQuota) ⇒ <code>null</code> \| <code>Object</code>
     * [.moveFile(remotePath, targetRemotePath, [options])](#ClientInterface.moveFile) ⇒ <code>Promise</code>
     * [.putFileContents(remoteFilename, data, [options])](#ClientInterface.putFileContents) ⇒ <code>Promise</code>
+    * [.getFileUploadLink(remoteFilename, [options])](#ClientInterface.getFileUploadLink) ⇒ <code>String</code>
     * [.stat(remotePath, [options])](#ClientInterface.stat) ⇒ <code>Promise.&lt;Object&gt;</code>
 
 <a name="ClientInterface.copyFile"></a>
@@ -127,8 +177,12 @@ Copy a remote item to another path
 | --- | --- | --- |
 | remotePath | <code>String</code> | The remote item path |
 | targetRemotePath | <code>String</code> | The path file will be copied to |
-| [options] | [<code>OptionsWithHeaders</code>](#OptionsWithHeaders) | Options for the request |
+| [options] | [<code>UserOptions</code>](#UserOptions) | Options for the request |
 
+**Example**  
+```js
+await client.copyFile("/photos/pic1.jpg", "/backup/pic1.jpg");
+```
 <a name="ClientInterface.createDirectory"></a>
 
 ### ClientInterface.createDirectory(dirPath, [options]) ⇒ <code>Promise</code>
@@ -140,8 +194,12 @@ Create a directory
 | Param | Type | Description |
 | --- | --- | --- |
 | dirPath | <code>String</code> | The path to create |
-| [options] | [<code>OptionsWithHeaders</code>](#OptionsWithHeaders) | Options for the request |
+| [options] | [<code>UserOptions</code>](#UserOptions) | Options for the request |
 
+**Example**  
+```js
+await client.createDirectory("/my/directory");
+```
 <a name="ClientInterface.createReadStream"></a>
 
 ### ClientInterface.createReadStream(remoteFilename, [options]) ⇒ <code>Readable</code>
@@ -153,8 +211,13 @@ Create a readable stream of a remote file
 | Param | Type | Description |
 | --- | --- | --- |
 | remoteFilename | <code>String</code> | The file to stream |
-| [options] | [<code>OptionsWithHeaders</code>](#OptionsWithHeaders) | Options for the request |
+| [options] | [<code>UserOptions</code>](#UserOptions) | Options for the request |
 
+**Example**  
+```js
+const remote = client.createReadStream("/data.zip");
+     remote.pipe(someWriteStream);
+```
 <a name="ClientInterface.createWriteStream"></a>
 
 ### ClientInterface.createWriteStream(remoteFilename, [options]) ⇒ <code>Writeable</code>
@@ -168,6 +231,11 @@ Create a writeable stream to a remote file
 | remoteFilename | <code>String</code> | The file to write to |
 | [options] | [<code>PutOptions</code>](#PutOptions) | Options for the request |
 
+**Example**  
+```js
+const remote = client.createWriteStream("/data.zip");
+     fs.createReadStream("~/myData.zip").pipe(remote);
+```
 <a name="ClientInterface.deleteFile"></a>
 
 ### ClientInterface.deleteFile(remotePath, [options]) ⇒ <code>Promise</code>
@@ -179,8 +247,12 @@ Delete a remote file
 | Param | Type | Description |
 | --- | --- | --- |
 | remotePath | <code>String</code> | The remote path to delete |
-| [options] | [<code>OptionsWithHeaders</code>](#OptionsWithHeaders) | The options for the request |
+| [options] | [<code>UserOptions</code>](#UserOptions) | The options for the request |
 
+**Example**  
+```js
+await client.deleteFile("/some/file.txt");
+```
 <a name="ClientInterface.getDirectoryContents"></a>
 
 ### ClientInterface.getDirectoryContents(remotePath, [options]) ⇒ <code>Promise.&lt;Array&gt;</code>
@@ -192,8 +264,12 @@ Get the contents of a remote directory
 | Param | Type | Description |
 | --- | --- | --- |
 | remotePath | <code>String</code> | The path to fetch the contents of |
-| [options] | [<code>OptionsWithHeaders</code>](#OptionsWithHeaders) | Options for the remote the request |
+| [options] | [<code>OptionsForAdvancedResponses</code>](#OptionsForAdvancedResponses) | Options for the remote the request |
 
+**Example**  
+```js
+const contents = await client.getDirectoryContents("/");
+```
 <a name="ClientInterface.getFileContents"></a>
 
 ### ClientInterface.getFileContents(remoteFilename, [options]) ⇒ <code>Promise.&lt;(Buffer\|String)&gt;</code>
@@ -205,8 +281,15 @@ Get the contents of a remote file
 | Param | Type | Description |
 | --- | --- | --- |
 | remoteFilename | <code>String</code> | The file to fetch |
-| [options] | <code>OptionsHeadersAndFormat</code> | Options for the request |
+| [options] | [<code>OptionsWithFormat</code>](#OptionsWithFormat) | Options for the request |
 
+**Example**  
+```js
+// Fetching data:
+     const buff = await client.getFileContents("/image.png");
+     // Fetching text:
+     const txt = await client.getFileContents("/list.txt", { format: "text" });
+```
 <a name="ClientInterface.getFileDownloadLink"></a>
 
 ### ClientInterface.getFileDownloadLink(remoteFilename, [options]) ⇒ <code>String</code>
@@ -219,7 +302,7 @@ Only supported for Basic authentication or unauthenticated connections.
 | Param | Type | Description |
 | --- | --- | --- |
 | remoteFilename | <code>String</code> | The file url to fetch |
-| [options] | <code>OptionsHeadersAndFormat</code> | Options for the request |
+| [options] | [<code>UserOptions</code>](#UserOptions) | Options for the request |
 
 <a name="ClientInterface.getQuota"></a>
 
@@ -231,7 +314,7 @@ Get quota information
 
 | Param | Type | Description |
 | --- | --- | --- |
-| [options] | <code>OptionsHeadersAndFormat</code> | Options for the request |
+| [options] | [<code>OptionsForAdvancedResponses</code>](#OptionsForAdvancedResponses) | Options for the request |
 
 <a name="ClientInterface.moveFile"></a>
 
@@ -245,8 +328,12 @@ Move a remote item to another path
 | --- | --- | --- |
 | remotePath | <code>String</code> | The remote item path |
 | targetRemotePath | <code>String</code> | The new path after moving |
-| [options] | [<code>OptionsWithHeaders</code>](#OptionsWithHeaders) | Options for the request |
+| [options] | [<code>UserOptions</code>](#UserOptions) | Options for the request |
 
+**Example**  
+```js
+await client.moveFIle("/sub/file.dat", "/another/dir/file.dat");
+```
 <a name="ClientInterface.putFileContents"></a>
 
 ### ClientInterface.putFileContents(remoteFilename, data, [options]) ⇒ <code>Promise</code>
@@ -261,6 +348,26 @@ Write contents to a remote file path
 | data | <code>String</code> \| <code>Buffer</code> | The data to write |
 | [options] | [<code>PutOptions</code>](#PutOptions) | The options for the request |
 
+**Example**  
+```js
+await client.putFileContents("/dir/image.png", myImageBuffer);
+     // Put contents without overwriting:
+     await client.putFileContents("/dir/image.png", myImageBuffer, { overwrite: false });
+```
+<a name="ClientInterface.getFileUploadLink"></a>
+
+### ClientInterface.getFileUploadLink(remoteFilename, [options]) ⇒ <code>String</code>
+Get the upload link
+Only supported for Basic authentication or unauthenticated connections.
+
+**Kind**: static method of [<code>ClientInterface</code>](#ClientInterface)  
+**Returns**: <code>String</code> - A upload URL  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| remoteFilename | <code>String</code> | The path of the remote file location |
+| [options] | [<code>PutOptions</code>](#PutOptions) | The options for the request |
+
 <a name="ClientInterface.stat"></a>
 
 ### ClientInterface.stat(remotePath, [options]) ⇒ <code>Promise.&lt;Object&gt;</code>
@@ -272,23 +379,11 @@ Stat a remote object
 | Param | Type | Description |
 | --- | --- | --- |
 | remotePath | <code>String</code> | The path of the item |
-| [options] | [<code>OptionsWithHeaders</code>](#OptionsWithHeaders) | Options for the request |
-
-<a name="OptionsWithHeaders"></a>
-
-## OptionsWithHeaders : <code>Object</code>
-Options with header object
-
-**Kind**: global typedef  
-**Properties**
-
-| Name | Type | Description |
-| --- | --- | --- |
-| headers | <code>Object</code> | Headers key-value list |
+| [options] | [<code>OptionsForAdvancedResponses</code>](#OptionsForAdvancedResponses) | Options for the request |
 
 <a name="PutOptions"></a>
 
-## PutOptions : [<code>OptionsWithHeaders</code>](#OptionsWithHeaders)
+## PutOptions : [<code>UserOptions</code>](#UserOptions)
 Options for creating a resource
 
 **Kind**: global typedef  
@@ -297,4 +392,57 @@ Options for creating a resource
 | Name | Type | Description |
 | --- | --- | --- |
 | [overwrite] | <code>Boolean</code> | Whether or not to overwrite existing files (default: true) |
+
+<a name="OptionsWithFormat"></a>
+
+## OptionsWithFormat : [<code>UserOptions</code>](#UserOptions)
+Options with headers and format
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| format | <code>String</code> | The format to use (text/binary) |
+| [details] | <code>Boolean</code> | Provided detailed response information, such as response  headers (defaults to false). Only available on requests that return result data. |
+
+<a name="OptionsForAdvancedResponses"></a>
+
+## OptionsForAdvancedResponses : [<code>UserOptions</code>](#UserOptions)
+Options for methods that resturn responses
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| [details] | <code>Boolean</code> | Provided detailed response information, such as response  headers (defaults to false). Only available on requests that return result data. |
+
+<a name="UserOptions"></a>
+
+## UserOptions : <code>Object</code>
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| [httpAgent] | <code>Object</code> | HTTP agent instance |
+| [httpsAgent] | <code>Object</code> | HTTPS agent instance |
+| [headers] | <code>Object</code> | Set additional request headers |
+| [withCredentials] | <code>Boolean</code> | Set whether or not credentials should  be included with the request. Defaults to value used by axios. |
+
+<a name="RequestOptions"></a>
+
+## RequestOptions : <code>Object</code>
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| url | <code>String</code> | The URL to request |
+| method | <code>String</code> | The method to use (eg. "POST") |
+| [headers] | <code>Object</code> | Headers to set on the request |
+| [httpAgent] | <code>Object</code> | A HTTP agent instance |
+| [httpsAgent] | <code>Object</code> | A HTTPS agent interface |
+| body | <code>Object</code> \| <code>String</code> \| <code>\*</code> | Body data for the request |
 

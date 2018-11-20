@@ -1,34 +1,31 @@
-"use strict";
-
 const joinURL = require("url-join");
 const { merge } = require("../merge.js");
-const responseHandlers = require("../response.js");
-const davTools = require("./dav.js");
+const { handleResponseCode, processResponsePayload } = require("../response.js");
+const { getSingleValue, getValueForKey, parseXML, propsToStat } = require("./dav.js");
 const urlTools = require("../url.js");
-const request = require("../request.js");
-const encodePath = request.encodePath;
-const fetch = request.fetch;
-const parseXML = davTools.parseXML;
-
-const getValueForKey = davTools.getValueForKey;
-const getSingleValue = davTools.getSingleValue;
+const { encodePath, prepareRequestOptions, request } = require("../request.js");
 
 function getStat(filename, options) {
-    const fetchURL = joinURL(options.remoteURL, encodePath(filename));
-    const fetchOptions = {
+    const requestOptions = {
+        url: joinURL(options.remoteURL, encodePath(filename)),
         method: "PROPFIND",
-        headers: merge({ Depth: 0 }, options.headers),
-        agent: options.agent
+        headers: {
+            Accept: "text/plain",
+            Depth: 0
+        },
+        responseType: "text"
     };
-    return fetch(fetchURL, fetchOptions)
-        .then(responseHandlers.handleResponseCode)
-        .then(function __convertToText(res) {
-            return res.text();
+    let response = null;
+    prepareRequestOptions(requestOptions, options);
+    return request(requestOptions)
+        .then(handleResponseCode)
+        .then(res => {
+            response = res;
+            return res.data;
         })
         .then(parseXML)
-        .then(function __handleResult(xml) {
-            return parseStat(xml, filename);
-        });
+        .then(xml => parseStat(xml, filename))
+        .then(result => processResponsePayload(response, result, options.details));
 }
 
 function parseStat(result, filename) {
@@ -46,9 +43,9 @@ function parseStat(result, filename) {
     const propStat = getSingleValue(getValueForKey("propstat", responseItem));
     const props = getSingleValue(getValueForKey("prop", propStat));
     const filePath = urlTools.normalisePath(filename);
-    return davTools.propsToStat(props, filePath);
+    return propsToStat(props, filePath);
 }
 
 module.exports = {
-    getStat: getStat
+    getStat
 };

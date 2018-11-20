@@ -1,10 +1,6 @@
-"use strict";
-
-require("./polyfill.js");
-
 const path = require("path");
 
-const createWebDAVClient = require("../../dist/index.js");
+const { createClient: createWebDAVClient, getPatcher } = require("../../dist/index.js");
 const baseWebDAVServer = require("../server/index.js");
 
 const createWebDAVServer = baseWebDAVServer.webdavClient;
@@ -22,15 +18,13 @@ function clean() {
 }
 
 function restoreFetch() {
-    createWebDAVClient.setFetchMethod();
+    getPatcher().restore("request");
 }
 
 function returnFakeResponse(xml) {
-    createWebDAVClient.setFetchMethod(function fakeFetch() {
+    getPatcher().patch("request", function fakeRequest() {
         return Promise.resolve({
-            text: function() {
-                return xml;
-            }
+            data: xml
         });
     });
 }

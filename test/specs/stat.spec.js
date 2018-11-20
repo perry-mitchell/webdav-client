@@ -1,10 +1,9 @@
 describe("stat", function() {
     beforeEach(function() {
-        this.client = createWebDAVClient(
-            "http://localhost:9988/webdav/server",
-            createWebDAVServer.test.username,
-            createWebDAVServer.test.password
-        );
+        this.client = createWebDAVClient("http://localhost:9988/webdav/server", {
+            username: createWebDAVServer.test.username,
+            password: createWebDAVServer.test.password
+        });
         clean();
         this.server = createWebDAVServer();
         return this.server.start();
@@ -45,6 +44,17 @@ describe("stat", function() {
             expect(stat).to.have.property("lastmod").that.is.a.string;
             expect(stat).to.have.property("type", "directory");
             expect(stat).to.have.property("size", 0);
+        });
+    });
+
+    it("supports returning detailed results", function() {
+        return this.client.stat("/", { details: true }).then(function(details) {
+            expect(details)
+                .to.have.property("data")
+                .that.is.an("object");
+            expect(details)
+                .to.have.property("headers")
+                .that.is.an("object");
         });
     });
 });

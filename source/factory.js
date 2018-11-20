@@ -1,5 +1,3 @@
-"use strict";
-
 const authTools = require("./auth.js");
 const urlTools = require("./url.js");
 const { merge } = require("./merge.js");
@@ -21,21 +19,24 @@ const stats = require("./interface/stat.js");
  */
 
 /**
- * Options with header object
- * @typedef {Object} OptionsWithHeaders
- * @property {Object} headers - Headers key-value list
- */
-
-/**
  * Options for creating a resource
- * @typedef {OptionsWithHeaders} PutOptions
+ * @typedef {UserOptions} PutOptions
  * @property {Boolean=} overwrite - Whether or not to overwrite existing files (default: true)
  */
 
 /**
  * Options with headers and format
- * @typedef {OptionsWithHeaders} OptionsHeadersAndFormat
+ * @typedef {UserOptions} OptionsWithFormat
  * @property {String} format - The format to use (text/binary)
+ * @property {Boolean=} details - Provided detailed response information, such as response
+ *  headers (defaults to false). Only available on requests that return result data.
+ */
+
+/**
+ * Options for methods that resturn responses
+ * @typedef {UserOptions} OptionsForAdvancedResponses
+ * @property {Boolean=} details - Provided detailed response information, such as response
+ *  headers (defaults to false). Only available on requests that return result data.
  */
 
 /**
@@ -45,10 +46,10 @@ const stats = require("./interface/stat.js");
  * @param {String=} password Optional password for authentication
  * @param {Agent} agent Optional http(s).Agent instance, allows custom proxy, certificate etc. Gets passed to node-fetch
  * @returns {ClientInterface} A new client interface instance
- * @module WebDAV
+ * @memberof module:WebDAV
  * @example
  *  const createClient = require("webdav");
- *  const client = createClient(url, username, password);
+ *  const client = createClient(url, { username, password });
  *  client
  *      .getDirectoryContents("/")
  *      .then(contents => {
@@ -56,36 +57,39 @@ const stats = require("./interface/stat.js");
  *      });
  * @example
  *  const createClient = require("webdav");
- *  const client = createClient(url, {token_type: 'Bearer', access_token: 'tokenvalue'});
+ *  const client = createClient(url, {
+ *      token: { token_type: "Bearer", access_token: "tokenvalue" }
+ *  });
  *  client
  *      .getDirectoryContents("/")
  *      .then(contents => {
  *          console.log(contents);
  *      });
  */
-function createClient(remoteURL, username, password, agent) {
+function createClient(remoteURL, { username, password, httpAgent, httpsAgent, token = null } = {}) {
     const baseOptions = {
         headers: {},
         remotePath: urlTools.extractURLPath(remoteURL),
-        remoteURL: remoteURL,
-        agent: agent ? agent : undefined
+        remoteURL,
+        httpAgent,
+        httpsAgent
     };
-
+    // Configure auth
     if (username) {
-        baseOptions.headers.Authorization =
-            typeof username === "object"
-                ? authTools.generateTokenAuthHeader(username)
-                : authTools.generateBasicAuthHeader(username, password);
+        baseOptions.headers.Authorization = authTools.generateBasicAuthHeader(username, password);
+    } else if (token && typeof token === "object") {
+        baseOptions.headers.Authorization = authTools.generateTokenAuthHeader(token);
     }
-
     return {
         /**
          * Copy a remote item to another path
          * @param {String} remotePath The remote item path
          * @param {String} targetRemotePath The path file will be copied to
-         * @param {OptionsWithHeaders=} options Options for the request
+         * @param {UserOptions=} options Options for the request
          * @memberof ClientInterface
          * @returns {Promise} A promise that resolves once the request has completed
+         * @example
+         *      await client.copyFile("/photos/pic1.jpg", "/backup/pic1.jpg");
          */
         copyFile: function copyFile(remotePath, targetRemotePath, options) {
             const copyOptions = merge(baseOptions, options || {});
@@ -95,9 +99,11 @@ function createClient(remoteURL, username, password, agent) {
         /**
          * Create a directory
          * @param {String} dirPath The path to create
-         * @param {OptionsWithHeaders=} options Options for the request
+         * @param {UserOptions=} options Options for the request
          * @memberof ClientInterface
          * @returns {Promise} A promise that resolves when the remote path has been created
+         * @example
+         *      await client.createDirectory("/my/directory");
          */
         createDirectory: function createDirectory(dirPath, options) {
             const createOptions = merge(baseOptions, options || {});
@@ -107,9 +113,12 @@ function createClient(remoteURL, username, password, agent) {
         /**
          * Create a readable stream of a remote file
          * @param {String} remoteFilename The file to stream
-         * @param {OptionsWithHeaders=} options Options for the request
+         * @param {UserOptions=} options Options for the request
          * @memberof ClientInterface
          * @returns {Readable} A readable stream
+         * @example
+         *      const remote = client.createReadStream("/data.zip");
+         *      remote.pipe(someWriteStream);
          */
         createReadStream: function createReadStream(remoteFilename, options) {
             const createOptions = merge(baseOptions, options || {});
@@ -122,6 +131,9 @@ function createClient(remoteURL, username, password, agent) {
          * @param {PutOptions=} options Options for the request
          * @memberof ClientInterface
          * @returns {Writeable} A writeable stream
+         * @example
+         *      const remote = client.createWriteStream("/data.zip");
+         *      fs.createReadStream("~/myData.zip").pipe(remote);
          */
         createWriteStream: function createWriteStream(remoteFilename, options) {
             const createOptions = merge(baseOptions, options || {});
@@ -131,9 +143,11 @@ function createClient(remoteURL, username, password, agent) {
         /**
          * Delete a remote file
          * @param {String} remotePath The remote path to delete
-         * @param {OptionsWithHeaders=} options The options for the request
+         * @param {UserOptions=} options The options for the request
          * @memberof ClientInterface
          * @returns {Promise} A promise that resolves when the remote file as been deleted
+         * @example
+         *      await client.deleteFile("/some/file.txt");
          */
         deleteFile: function deleteFile(remotePath, options) {
             const deleteOptions = merge(baseOptions, options || {});
@@ -143,9 +157,11 @@ function createClient(remoteURL, username, password, agent) {
         /**
          * Get the contents of a remote directory
          * @param {String} remotePath The path to fetch the contents of
-         * @param {OptionsWithHeaders=} options Options for the remote the request
+         * @param {OptionsForAdvancedResponses=} options Options for the remote the request
          * @returns {Promise.<Array>} A promise that resolves with an array of remote item stats
          * @memberof ClientInterface
+         * @example
+         *      const contents = await client.getDirectoryContents("/");
          */
         getDirectoryContents: function getDirectoryContents(remotePath, options) {
             const getOptions = merge(baseOptions, options || {});
@@ -155,9 +171,14 @@ function createClient(remoteURL, username, password, agent) {
         /**
          * Get the contents of a remote file
          * @param {String} remoteFilename The file to fetch
-         * @param {OptionsHeadersAndFormat=} options Options for the request
+         * @param {OptionsWithFormat=} options Options for the request
          * @memberof ClientInterface
          * @returns {Promise.<Buffer|String>} A promise that resolves with the contents of the remote file
+         * @example
+         *      // Fetching data:
+         *      const buff = await client.getFileContents("/image.png");
+         *      // Fetching text:
+         *      const txt = await client.getFileContents("/list.txt", { format: "text" });
          */
         getFileContents: function getFileContents(remoteFilename, options) {
             const getOptions = merge(baseOptions, options || {});
@@ -174,7 +195,7 @@ function createClient(remoteURL, username, password, agent) {
          * Get the download link of a remote file
          * Only supported for Basic authentication or unauthenticated connections.
          * @param {String} remoteFilename The file url to fetch
-         * @param {OptionsHeadersAndFormat=} options Options for the request
+         * @param {UserOptions=} options Options for the request
          * @memberof ClientInterface
          * @returns {String} A download URL
          */
@@ -185,7 +206,7 @@ function createClient(remoteURL, username, password, agent) {
 
         /**
          * Get quota information
-         * @param {OptionsHeadersAndFormat=} options Options for the request
+         * @param {OptionsForAdvancedResponses=} options Options for the request
          * @returns {null|Object} Returns null if failed, or an object with `used` and `available`
          * @memberof ClientInterface
          */
@@ -198,9 +219,11 @@ function createClient(remoteURL, username, password, agent) {
          * Move a remote item to another path
          * @param {String} remotePath The remote item path
          * @param {String} targetRemotePath The new path after moving
-         * @param {OptionsWithHeaders=} options Options for the request
+         * @param {UserOptions=} options Options for the request
          * @memberof ClientInterface
          * @returns {Promise} A promise that resolves once the request has completed
+         * @example
+         *      await client.moveFIle("/sub/file.dat", "/another/dir/file.dat");
          */
         moveFile: function moveFile(remotePath, targetRemotePath, options) {
             const moveOptions = merge(baseOptions, options || {});
@@ -214,6 +237,10 @@ function createClient(remoteURL, username, password, agent) {
          * @param {PutOptions=} options The options for the request
          * @returns {Promise} A promise that resolves once the contents have been written
          * @memberof ClientInterface
+         * @example
+         *      await client.putFileContents("/dir/image.png", myImageBuffer);
+         *      // Put contents without overwriting:
+         *      await client.putFileContents("/dir/image.png", myImageBuffer, { overwrite: false });
          */
         putFileContents: function putFileContents(remoteFilename, data, options) {
             const putOptions = merge(baseOptions, options || {});
@@ -236,7 +263,7 @@ function createClient(remoteURL, username, password, agent) {
         /**
          * Stat a remote object
          * @param {String} remotePath The path of the item
-         * @param {OptionsWithHeaders=} options Options for the request
+         * @param {OptionsForAdvancedResponses=} options Options for the request
          * @memberof ClientInterface
          * @returns {Promise.<Object>} A promise that resolves with the stat data
          */

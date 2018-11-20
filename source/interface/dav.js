@@ -1,5 +1,3 @@
-"use strict";
-
 const path = require("path");
 const xml2js = require("xml2js");
 

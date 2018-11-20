@@ -12,11 +12,10 @@ function useValidQuota() {
 describe("getQuota", function() {
     beforeEach(function() {
         // fake client, not actually used when mocking responses
-        this.client = createWebDAVClient(
-            "http://localhost:9988/webdav/server",
-            createWebDAVServer.test.username,
-            createWebDAVServer.test.password
-        );
+        this.client = createWebDAVClient("http://localhost:9988/webdav/server", {
+            username: createWebDAVServer.test.username,
+            password: createWebDAVServer.test.password
+        });
     });
 
     afterEach(function() {
@@ -43,6 +42,19 @@ describe("getQuota", function() {
         useInvalidQuota();
         return this.client.getQuota().then(function(quotaInfo) {
             expect(quotaInfo).to.be.null;
+        });
+    });
+
+    it("supports returning detailed results", function() {
+        useValidQuota();
+        return this.client.getQuota({ details: true }).then(function(details) {
+            console.log("DEETS", details);
+            expect(details)
+                .to.have.property("data")
+                .that.is.an("object");
+            expect(details)
+                .to.have.property("headers")
+                .that.is.an("object");
         });
     });
 });

@@ -4,11 +4,10 @@ const directoryExists = require("directory-exists").sync;
 
 describe("copyFile", function() {
     beforeEach(function() {
-        this.client = createWebDAVClient(
-            "http://localhost:9988/webdav/server",
-            createWebDAVServer.test.username,
-            createWebDAVServer.test.password
-        );
+        this.client = createWebDAVClient("http://localhost:9988/webdav/server", {
+            username: createWebDAVServer.test.username,
+            password: createWebDAVServer.test.password
+        });
         clean();
         this.server = createWebDAVServer();
         return this.server.start();

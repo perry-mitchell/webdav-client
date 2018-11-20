@@ -1,5 +1,3 @@
-"use strict";
-
 function handleResponseCode(response) {
     const status = parseInt(response.status, 10);
     let err;
@@ -11,6 +9,16 @@ function handleResponseCode(response) {
     return response;
 }
 
+function processResponsePayload(response, data, isDetailed = false) {
+    return isDetailed
+        ? {
+              data,
+              headers: response.headers || {}
+          }
+        : data;
+}
+
 module.exports = {
-    handleResponseCode: handleResponseCode
+    handleResponseCode,
+    processResponsePayload
 };

@@ -1,8 +1,17 @@
-"use strict";
+const { axios } = require("./request.js");
+const { createClient } = require("./factory.js");
+const { getPatcher } = require("./patcher.js");
 
-const setFetchMethod = require("./request.js").setFetchMethod;
-const createClient = require("./factory.js").createClient;
-
-createClient.setFetchMethod = setFetchMethod;
-
-module.exports = createClient;
+/**
+ * @module WebDAV
+ */
+module.exports = {
+    /**
+     * Axios request library
+     * @type {Function}
+     * @memberof module:WebDAV
+     */
+    axios,
+    createClient,
+    getPatcher
+};

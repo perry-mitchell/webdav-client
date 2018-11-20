@@ -1,27 +1,19 @@
-"use strict";
-
 const joinURL = require("url-join");
-const { merge } = require("../merge.js");
 const responseHandlers = require("../response.js");
-const request = require("../request.js");
-const encodePath = request.encodePath;
-const fetch = request.fetch;
+const { encodePath, prepareRequestOptions, request } = require("../request.js");
 
 function moveFile(filename, destination, options) {
-    const fetchURL = joinURL(options.remoteURL, encodePath(filename));
-    const fetchOptions = {
+    const requestOptions = {
+        url: joinURL(options.remoteURL, encodePath(filename)),
         method: "MOVE",
-        headers: merge(
-            {
-                Destination: joinURL(options.remoteURL, encodePath(destination))
-            },
-            options.headers
-        ),
-        agent: options.agent
+        headers: {
+            Destination: joinURL(options.remoteURL, encodePath(destination))
+        }
     };
-    return fetch(fetchURL, fetchOptions).then(responseHandlers.handleResponseCode);
+    prepareRequestOptions(requestOptions, options);
+    return request(requestOptions).then(responseHandlers.handleResponseCode);
 }
 
 module.exports = {
-    moveFile: moveFile
+    moveFile
 };

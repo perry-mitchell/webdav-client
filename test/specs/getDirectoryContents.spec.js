@@ -7,11 +7,10 @@ function useSeafileResponse() {
 
 describe("getDirectoryContents", function() {
     beforeEach(function() {
-        this.client = createWebDAVClient(
-            "http://localhost:9988/webdav/server",
-            createWebDAVServer.test.username,
-            createWebDAVServer.test.password
-        );
+        this.client = createWebDAVClient("http://localhost:9988/webdav/server", {
+            username: createWebDAVServer.test.username,
+            password: createWebDAVServer.test.password
+        });
         clean();
         this.server = createWebDAVServer();
         return this.server.start();
@@ -25,6 +24,17 @@ describe("getDirectoryContents", function() {
         return this.client.getDirectoryContents("/").then(function(contents) {
             expect(contents).to.be.an("array");
             expect(contents[0]).to.be.an("object");
+        });
+    });
+
+    it("supports returning detailed results", function() {
+        return this.client.getDirectoryContents("/", { details: true }).then(function(details) {
+            expect(details)
+                .to.have.property("data")
+                .that.is.an("array");
+            expect(details)
+                .to.have.property("headers")
+                .that.is.an("object");
         });
     });
 

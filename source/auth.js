@@ -1,8 +1,8 @@
-"use strict";
-
 function generateBasicAuthHeader(username, password) {
-    return "Basic " + Buffer.from(username + ":" + password).toString("base64");
+    const buffer = Buffer.from(`${username}:${password}`);
+    return `Basic ${buffer.toString("base64")}`;
 }
+
 function generateTokenAuthHeader(tokenInfo) {
     return `${tokenInfo.token_type} ${tokenInfo.access_token}`;
 }

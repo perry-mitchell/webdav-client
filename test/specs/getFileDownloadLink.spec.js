@@ -1,7 +1,10 @@
 describe("getFileDownloadLink", function() {
     beforeEach(function() {
         this.clientPub = createWebDAVClient("http://test.com");
-        this.clientAuth = createWebDAVClient("https://test.com", "user", "pass");
+        this.clientAuth = createWebDAVClient("https://test.com", {
+            username: "user",
+            password: "pass"
+        });
     });
 
     it("generates authenticated links", function() {
