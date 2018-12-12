@@ -1,5 +1,10 @@
 # WebDAV-Client changelog
 
+## v2.2.0
+_2018-12-12_
+
+ * Replace Buffer usage for base64 encoding with `base-64` package
+
 ## v2.1.0
 _2018-12-12_
 
