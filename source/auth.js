@@ -1,6 +1,8 @@
+const { toBase64 } = require("./encode.js");
+
 function generateBasicAuthHeader(username, password) {
-    const buffer = Buffer.from(`${username}:${password}`);
-    return `Basic ${buffer.toString("base64")}`;
+    const encoded = toBase64(`${username}:${password}`);
+    return `Basic ${encoded}`;
 }
 
 function generateTokenAuthHeader(tokenInfo) {
