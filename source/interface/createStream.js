@@ -1,11 +1,10 @@
-const Stream = require("stream");
 const joinURL = require("url-join");
 const responseHandlers = require("../response.js");
 const { encodePath, prepareRequestOptions, request } = require("../request.js");
 
-const PassThroughStream = Stream.PassThrough;
-
 function createReadStream(filePath, options) {
+    const Stream = require("stream");
+    const PassThroughStream = Stream.PassThrough;
     const outStream = new PassThroughStream();
     getFileStream(filePath, options)
         .then(stream => {
@@ -18,6 +17,8 @@ function createReadStream(filePath, options) {
 }
 
 function createWriteStream(filePath, options) {
+    const Stream = require("stream");
+    const PassThroughStream = Stream.PassThrough;
     const writeStream = new PassThroughStream();
     const headers = {};
     if (options.overwrite === false) {
