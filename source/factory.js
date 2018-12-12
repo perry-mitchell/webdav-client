@@ -236,7 +236,7 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
          * @memberof ClientInterface
          * @returns {Promise} A promise that resolves once the request has completed
          * @example
-         *      await client.moveFIle("/sub/file.dat", "/another/dir/file.dat");
+         *      await client.moveFile("/sub/file.dat", "/another/dir/file.dat");
          */
         moveFile: function moveFile(remotePath, targetRemotePath, options) {
             const moveOptions = merge(baseOptions, options || {});
