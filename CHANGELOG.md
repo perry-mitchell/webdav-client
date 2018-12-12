@@ -1,5 +1,11 @@
 # WebDAV-Client changelog
 
+## v2.1.0
+_2018-12-12_
+
+ * Move node core imports into functions (downstream compatibility - React Native)
+ * Upgrade dependencies
+
 ## **v2.0.0**
 _2018-11-20_
 
