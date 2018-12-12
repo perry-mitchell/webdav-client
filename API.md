@@ -40,6 +40,10 @@ It uses <a href="https://github.com/axios/axios">Axios</a> by default.</p>
 <dt><a href="#OptionsForAdvancedResponses">OptionsForAdvancedResponses</a> : <code><a href="#UserOptions">UserOptions</a></code></dt>
 <dd><p>Options for methods that resturn responses</p>
 </dd>
+<dt><a href="#AuthToken">AuthToken</a> : <code>Object</code></dt>
+<dd></dd>
+<dt><a href="#CreateClientOptions">CreateClientOptions</a> : <code>Object</code></dt>
+<dd></dd>
 <dt><a href="#UserOptions">UserOptions</a> : <code>Object</code></dt>
 <dd></dd>
 <dt><a href="#RequestOptions">RequestOptions</a> : <code>Object</code></dt>
@@ -52,7 +56,7 @@ It uses <a href="https://github.com/axios/axios">Axios</a> by default.</p>
 
 * [WebDAV](#module_WebDAV)
     * [.axios](#module_WebDAV.axios) : <code>function</code>
-    * [.createClient(remoteURL, [username], [password], agent)](#module_WebDAV.createClient) ⇒ [<code>ClientInterface</code>](#ClientInterface)
+    * [.createClient(remoteURL, [options])](#module_WebDAV.createClient) ⇒ [<code>ClientInterface</code>](#ClientInterface)
 
 <a name="module_WebDAV.axios"></a>
 
@@ -62,7 +66,7 @@ Axios request library
 **Kind**: static property of [<code>WebDAV</code>](#module_WebDAV)  
 <a name="module_WebDAV.createClient"></a>
 
-### WebDAV.createClient(remoteURL, [username], [password], agent) ⇒ [<code>ClientInterface</code>](#ClientInterface)
+### WebDAV.createClient(remoteURL, [options]) ⇒ [<code>ClientInterface</code>](#ClientInterface)
 Create a client adapter
 
 **Kind**: static method of [<code>WebDAV</code>](#module_WebDAV)  
@@ -71,9 +75,7 @@ Create a client adapter
 | Param | Type | Description |
 | --- | --- | --- |
 | remoteURL | <code>String</code> | The remote address of the webdav server |
-| [username] | <code>String</code> | Optional username for authentication |
-| [password] | <code>String</code> | Optional password for authentication |
-| agent | <code>Agent</code> | Optional http(s).Agent instance, allows custom proxy, certificate etc. Gets passed to node-fetch |
+| [options] | [<code>CreateClientOptions</code>](#CreateClientOptions) | Client options |
 
 **Example**  
 ```js
@@ -417,6 +419,31 @@ Options for methods that resturn responses
 | Name | Type | Description |
 | --- | --- | --- |
 | [details] | <code>Boolean</code> | Provided detailed response information, such as response  headers (defaults to false). Only available on requests that return result data. |
+
+<a name="AuthToken"></a>
+
+## AuthToken : <code>Object</code>
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| token_type | <code>String</code> | The type of token (eg "Bearer") |
+| access_token | <code>String</code> | The token access code |
+
+<a name="CreateClientOptions"></a>
+
+## CreateClientOptions : <code>Object</code>
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| [username] | <code>String</code> | The username for authentication |
+| [password] | <code>String</code> | The password for authentication |
+| [httpAgent] | <code>http.Agent</code> | Override the HTTP Agent instance for requests |
+| [httpsAgent] | <code>https.Agent</code> | Override the HTTPS Agent instance for requests |
+| [token] | [<code>AuthToken</code>](#AuthToken) | Optional OAuth token |
 
 <a name="UserOptions"></a>
 

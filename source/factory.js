@@ -40,11 +40,24 @@ const stats = require("./interface/stat.js");
  */
 
 /**
+ * @typedef {Object} AuthToken
+ * @property {String} token_type - The type of token (eg "Bearer")
+ * @property {String} access_token - The token access code
+ */
+
+/**
+ * @typedef {Object} CreateClientOptions
+ * @property {String=} username - The username for authentication
+ * @property {String=} password - The password for authentication
+ * @property {http.Agent=} httpAgent - Override the HTTP Agent instance for requests
+ * @property {https.Agent=} httpsAgent - Override the HTTPS Agent instance for requests
+ * @property {AuthToken=} token - Optional OAuth token
+ */
+
+/**
  * Create a client adapter
  * @param {String} remoteURL The remote address of the webdav server
- * @param {String=} username Optional username for authentication
- * @param {String=} password Optional password for authentication
- * @param {Agent} agent Optional http(s).Agent instance, allows custom proxy, certificate etc. Gets passed to node-fetch
+ * @param {CreateClientOptions=} options Client options
  * @returns {ClientInterface} A new client interface instance
  * @memberof module:WebDAV
  * @example
