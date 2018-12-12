@@ -1,6 +1,7 @@
 const joinURL = require("url-join");
 const { handleResponseCode, processResponsePayload } = require("../response.js");
 const { encodePath, prepareRequestOptions, request } = require("../request.js");
+const { fromBase64 } = require("../encode.js");
 
 function getFileContentsBuffer(filePath, options) {
     const requestOptions = {
@@ -34,7 +35,7 @@ function getFileLink(filePath, options) {
             throw new Error("Failed retrieving download link: Invalid authorisation method");
         }
         const authPart = options.headers.Authorization.replace(/^Basic /i, "").trim();
-        const authContents = Buffer.from(authPart, "base64").toString("utf8");
+        const authContents = fromBase64(authPart);
         url = url.replace(/^https?:\/\//, `${protocol}://${authContents}@`);
     }
     return url;
