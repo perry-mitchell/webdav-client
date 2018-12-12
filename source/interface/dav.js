@@ -1,4 +1,3 @@
-const path = require("path");
 const xml2js = require("xml2js");
 
 function findKey(baseKey, obj) {
@@ -36,6 +35,7 @@ function parseXML(xml) {
 }
 
 function propsToStat(props, filename) {
+    const path = require("path");
     // Last modified time, raw size, item type and mime
     const lastMod = getSingleValue(getValueForKey("getlastmodified", props));
     const rawSize = getSingleValue(getValueForKey("getcontentlength", props)) || "0";
