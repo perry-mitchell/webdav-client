@@ -46,7 +46,7 @@ createServer.test = {
     port: 9988
 };
 
-createServer.webdavClient = function(authType) {
+createServer.webdavServer = function(authType) {
     return createServer(path.resolve(__dirname, "../testContents"), authType);
 };
 
