@@ -4,7 +4,7 @@ const path = require("path");
 const rimraf = require("rimraf").sync;
 const copyDir = require("copy-dir").sync;
 const createServerBase = require("../server/index.js");
-const createServer = createServerBase.webdavClient;
+const createServer = createServerBase.webdavServer;
 
 rimraf(path.resolve(__dirname, "../testContents"));
 copyDir(path.resolve(__dirname, "../serverContents"), path.resolve(__dirname, "../testContents"));

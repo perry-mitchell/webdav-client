@@ -3,7 +3,7 @@ const path = require("path");
 const { createClient: createWebDAVClient, getPatcher } = require("../../dist/index.js");
 const baseWebDAVServer = require("../server/index.js");
 
-const createWebDAVServer = baseWebDAVServer.webdavClient;
+const createWebDAVServer = baseWebDAVServer.webdavServer;
 
 createWebDAVServer.test = baseWebDAVServer.test;
 

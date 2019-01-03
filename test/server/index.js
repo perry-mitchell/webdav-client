@@ -20,7 +20,7 @@ function createServer(dir, authType) {
         httpAuthentication: auth,
         privilegeManager: privilegeManager
     });
-    console.log("Created server on with config:", 9988, authType);
+    console.log(`Created server on localhost with port: 9988, and authType: ${authType}`);
     return {
         start: function start() {
             return new Promise(function(resolve) {
@@ -46,7 +46,7 @@ createServer.test = {
     port: 9988
 };
 
-createServer.webdavClient = function(authType) {
+createServer.webdavServer = function(authType) {
     return createServer(path.resolve(__dirname, "../testContents"), authType);
 };
 
