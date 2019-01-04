@@ -1,11 +1,11 @@
 const joinURL = require("url-join");
 const { handleResponseCode, processResponsePayload } = require("../response.js");
-const { encodePath, prepareRequestOptions, request } = require("../request.js");
+const { appendSlash, encodePath, prepareRequestOptions, request } = require("../request.js");
 const { getSingleValue, getValueForKey, parseXML, translateDiskSpace } = require("./dav.js");
 
 function getQuota(options) {
     const requestOptions = {
-        url: joinURL(options.remoteURL, "/"),
+        url: appendSlash(joinURL(options.remoteURL)),
         method: "PROPFIND",
         headers: {
             Accept: "text/plain",
