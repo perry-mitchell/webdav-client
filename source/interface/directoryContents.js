@@ -4,12 +4,12 @@ const { merge } = require("../merge.js");
 const { handleResponseCode, processResponsePayload } = require("../response.js");
 const { normaliseHREF, normalisePath } = require("../url.js");
 const { getSingleValue, getValueForKey, parseXML, propsToStat } = require("./dav.js");
-const { appendSlash, encodePath, prepareRequestOptions, request } = require("../request.js");
+const { encodePath, prepareRequestOptions, request } = require("../request.js");
 
 function getDirectoryContents(remotePath, options) {
     // Join the URL and path for the request
     const requestOptions = {
-        url: appendSlash(joinURL(options.remoteURL, encodePath(appendSlash(remotePath)))),
+        url: joinURL(options.remoteURL, encodePath(remotePath), "/"),
         method: "PROPFIND",
         headers: {
             Accept: "text/plain",

@@ -6,15 +6,6 @@ const SEP_PATH_POSIX = "__PATH_SEPARATOR_POSIX__";
 const SEP_PATH_WINDOWS = "__PATH_SEPARATOR_WINDOWS__";
 
 /**
- * Appends a slash to a path
- * @param {String} path The path to append a slash to
- * @returns {String} The path with a trailing slash
- */
-function appendSlash(path) {
-    return path.replace(/\/+$/, "") + "/";
-}
-
-/**
  * Encode a path for use with WebDAV servers
  * @param {String} path The path to encode
  * @returns {String} The encoded path (separators protected)
