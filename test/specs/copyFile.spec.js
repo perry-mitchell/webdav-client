@@ -30,4 +30,10 @@ describe("copyFile", function() {
             expect(directoryExists(path.resolve(__dirname, "../testContents/sub1/webdav"))).to.be.true;
         });
     });
+
+    it("copies files with special characters", function() {
+        return this.client.copyFile("/sub1/ยากจน #1.txt", "/sub1/ยากจน #2.txt").then(function() {
+            expect(fileExists(path.resolve(__dirname, "../testContents/sub1/ยากจน #2.txt"))).to.be.true;
+        });
+    });
 });
