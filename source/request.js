@@ -73,7 +73,6 @@ function request(requestOptions) {
 
 module.exports = {
     axios,
-    appendSlash,
     encodePath,
     prepareRequestOptions,
     request
