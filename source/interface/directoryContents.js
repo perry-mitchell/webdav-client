@@ -6,12 +6,10 @@ const { normaliseHREF, normalisePath } = require("../url.js");
 const { getSingleValue, getValueForKey, parseXML, propsToStat } = require("./dav.js");
 const { encodePath, prepareRequestOptions, request } = require("../request.js");
 
-function getDirectoryContents(remotePathRaw, options) {
-    // Strip the ending slash
-    const remotePath = remotePathRaw.replace(/\/$/, "");
+function getDirectoryContents(remotePath, options) {
     // Join the URL and path for the request
     const requestOptions = {
-        url: joinURL(options.remoteURL, encodePath(remotePath)),
+        url: joinURL(options.remoteURL, encodePath(remotePath), "/"),
         method: "PROPFIND",
         headers: {
             Accept: "text/plain",
