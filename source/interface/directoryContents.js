@@ -6,12 +6,10 @@ const { normaliseHREF, normalisePath } = require("../url.js");
 const { getSingleValue, getValueForKey, parseXML, propsToStat } = require("./dav.js");
 const { encodePath, prepareRequestOptions, request } = require("../request.js");
 
-function getDirectoryContents(remotePathRaw, options) {
-    // Strip the ending slash
-    const remotePath = remotePathRaw.replace(/\/$/, "");
+function getDirectoryContents(remotePath, options) {
     // Join the URL and path for the request
     const requestOptions = {
-        url: joinURL(options.remoteURL, encodePath(remotePath)),
+        url: joinURL(options.remoteURL, encodePath(remotePath), "/"),
         method: "PROPFIND",
         headers: {
             Accept: "text/plain",
@@ -33,7 +31,8 @@ function getDirectoryContents(remotePathRaw, options) {
 }
 
 function getDirectoryFiles(result, serverBasePath, requestPath) {
-    const remoteTargetPath = pathPosix.join(serverBasePath, requestPath);
+    const remoteTargetPath = pathPosix.join(serverBasePath, requestPath, "/");
+    const serverBase = pathPosix.join(serverBasePath, "/");
     // Extract the response items (directory contents)
     const multiStatus = getValueForKey("multistatus", result);
     const responseItems = getValueForKey("response", multiStatus);
@@ -42,9 +41,8 @@ function getDirectoryFiles(result, serverBasePath, requestPath) {
             // Filter out the item pointing to the current directory (not needed)
             .filter(item => {
                 let href = getSingleValue(getValueForKey("href", item));
-                href = normaliseHREF(href);
-                href = normalisePath(href);
-                return href !== serverBasePath && href !== remoteTargetPath;
+                href = pathPosix.join(normalisePath(normaliseHREF(href)), "/");
+                return href !== serverBase && href !== remoteTargetPath;
             })
             // Map all items to a consistent output structure (results)
             .map(item => {
@@ -56,9 +54,7 @@ function getDirectoryFiles(result, serverBasePath, requestPath) {
                 const props = getSingleValue(getValueForKey("prop", propStat));
                 // Process the true full filename (minus the base server path)
                 const filename =
-                    serverBasePath === "/"
-                        ? normalisePath(href)
-                        : normalisePath(pathPosix.relative(serverBasePath, href));
+                    serverBase === "/" ? normalisePath(href) : normalisePath(pathPosix.relative(serverBase, href));
                 return propsToStat(props, filename);
             })
     );
