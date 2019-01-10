@@ -7,7 +7,7 @@ function copyFile(filename, destination, options) {
         url: joinURL(options.remoteURL, encodePath(filename)),
         method: "COPY",
         headers: {
-            Destination: joinURL(options.remoteURL, destination)
+            Destination: joinURL(options.remoteURL, encodePath(destination))
         }
     };
     prepareRequestOptions(requestOptions, options);
