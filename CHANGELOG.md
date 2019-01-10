@@ -1,5 +1,12 @@
 # WebDAV-Client changelog
 
+## v2.2.1
+_2019-01-10_
+
+ * [#121](https://github.com/perry-mitchell/webdav-client/issues/121) Unexpected close tag - trailing slash bug
+ * [#127](https://github.com/perry-mitchell/webdav-client/issues/127) Force trailing slash
+ * [#126](https://github.com/perry-mitchell/webdav-client/issues/126) `copyFile`: Failed to execute 'setRequestHeader' on 'XMLHttpRequest': Value is not a valid ByteString
+
 ## v2.2.0
 _2018-12-12_
 
