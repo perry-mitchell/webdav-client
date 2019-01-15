@@ -96,4 +96,10 @@ describe("getDirectoryContents", function() {
             expect(contents[0].basename).to.equal("file2.txt");
         });
     });
+
+    it("returns etags from propfind", function() {
+        return this.client.getDirectoryContents("/", { depth: 1 }).then(function(contents) {
+            expect(contents[0]).to.have.property("etag");
+        });
+    });
 });
