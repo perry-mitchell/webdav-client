@@ -55,6 +55,9 @@ describe("stat", function() {
             expect(details)
                 .to.have.property("headers")
                 .that.is.an("object");
+            expect(details.data)
+                .to.have.property("props")
+                .that.is.an("object");
         });
     });
 });
