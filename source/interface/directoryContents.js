@@ -26,11 +26,11 @@ function getDirectoryContents(remotePath, options) {
             return res.data;
         })
         .then(parseXML)
-        .then(result => getDirectoryFiles(result, options.remotePath, remotePath))
+        .then(result => getDirectoryFiles(result, options.remotePath, remotePath, options.details))
         .then(files => processResponsePayload(response, files, options.details));
 }
 
-function getDirectoryFiles(result, serverBasePath, requestPath) {
+function getDirectoryFiles(result, serverBasePath, requestPath, isDetailed = false) {
     const remoteTargetPath = pathPosix.join(serverBasePath, requestPath, "/");
     const serverBase = pathPosix.join(serverBasePath, "/");
     // Extract the response items (directory contents)
@@ -55,7 +55,7 @@ function getDirectoryFiles(result, serverBasePath, requestPath) {
                 // Process the true full filename (minus the base server path)
                 const filename =
                     serverBase === "/" ? normalisePath(href) : normalisePath(pathPosix.relative(serverBase, href));
-                return propsToStat(props, filename);
+                return propsToStat(props, filename, isDetailed);
             })
     );
 }

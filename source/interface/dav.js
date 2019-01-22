@@ -1,5 +1,13 @@
 const xml2js = require("xml2js");
 
+function extractKey(xmlKey) {
+    const match = /^([a-z0-9]+:)?(.+)$/i.exec(xmlKey);
+    if (!match) {
+        throw new Error(`Failed to extract key for response XML: ${xmlKey}`);
+    }
+    return match[2];
+}
+
 function findKey(baseKey, obj) {
     return Object.keys(obj).find(function __findBaseKey(itemKey) {
         const match = /^[a-z0-9]+:(.+)$/i.exec(itemKey);
@@ -23,7 +31,7 @@ function getValueForKey(key, obj) {
 }
 
 function parseXML(xml) {
-    const parser = new xml2js.Parser({ ignoreAttrs: true });
+    const parser = new xml2js.Parser({ emptyTag: true, ignoreAttrs: true });
     return new Promise(function(resolve, reject) {
         parser.parseString(xml, function __handleParseResult(err, result) {
             if (err) {
@@ -34,7 +42,7 @@ function parseXML(xml) {
     });
 }
 
-function propsToStat(props, filename) {
+function propsToStat(props, filename, isDetailed = false) {
     const path = require("path");
     // Last modified time, raw size, item type and mime
     const lastMod = getSingleValue(getValueForKey("getlastmodified", props));
@@ -51,6 +59,17 @@ function propsToStat(props, filename) {
     };
     if (type === "file") {
         stat.mime = mimeType ? mimeType.split(";")[0] : "";
+    }
+    if (isDetailed) {
+        stat.props = Object.keys(props)
+            .map(extractKey)
+            .reduce(
+                (output, propName) =>
+                    Object.assign(output, {
+                        [propName]: getSingleValue(getValueForKey(propName, props))
+                    }),
+                {}
+            );
     }
     return stat;
 }
@@ -70,9 +89,9 @@ function translateDiskSpace(value) {
 }
 
 module.exports = {
-    getSingleValue: getSingleValue,
-    getValueForKey: getValueForKey,
-    parseXML: parseXML,
-    propsToStat: propsToStat,
-    translateDiskSpace: translateDiskSpace
+    getSingleValue,
+    getValueForKey,
+    parseXML,
+    propsToStat,
+    translateDiskSpace
 };
