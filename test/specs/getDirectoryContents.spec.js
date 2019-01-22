@@ -35,6 +35,9 @@ describe("getDirectoryContents", function() {
             expect(details)
                 .to.have.property("headers")
                 .that.is.an("object");
+            expect(details.data[0])
+                .to.have.property("props")
+                .that.is.an("object");
         });
     });
 

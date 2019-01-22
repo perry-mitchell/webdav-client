@@ -24,11 +24,11 @@ function getStat(filename, options) {
             return res.data;
         })
         .then(parseXML)
-        .then(xml => parseStat(xml, filename))
+        .then(xml => parseStat(xml, filename, options.details))
         .then(result => processResponsePayload(response, result, options.details));
 }
 
-function parseStat(result, filename) {
+function parseStat(result, filename, isDetailed = false) {
     let responseItem = null,
         multistatus;
     try {
@@ -43,7 +43,9 @@ function parseStat(result, filename) {
     const propStat = getSingleValue(getValueForKey("propstat", responseItem));
     const props = getSingleValue(getValueForKey("prop", propStat));
     const filePath = urlTools.normalisePath(filename);
-    return propsToStat(props, filePath);
+    const stat = propsToStat(props, filePath);
+    if (isDetailed) stat.props = props;
+    return stat;
 }
 
 module.exports = {
