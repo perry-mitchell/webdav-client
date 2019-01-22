@@ -47,14 +47,32 @@ describe("stat", function() {
         });
     });
 
-    it("supports returning detailed results", function() {
-        return this.client.stat("/", { details: true }).then(function(details) {
-            expect(details)
-                .to.have.property("data")
-                .that.is.an("object");
-            expect(details)
-                .to.have.property("headers")
-                .that.is.an("object");
+    describe("with details: true", function() {
+        it("returns data property", function() {
+            return this.client.stat("/", { details: true }).then(function(result) {
+                expect(result)
+                    .to.have.property("data")
+                    .that.is.an("object");
+            });
+        });
+
+        it("returns headers", function() {
+            return this.client.stat("/", { details: true }).then(function(result) {
+                expect(result)
+                    .to.have.property("headers")
+                    .that.is.an("object");
+            });
+        });
+
+        it("returns props", function() {
+            return this.client.stat("/", { details: true }).then(function(result) {
+                expect(result.data)
+                    .to.have.property("props")
+                    .that.is.an("object");
+                expect(result.data.props)
+                    .to.have.property("getlastmodified")
+                    .that.matches(/GMT$/);
+            });
         });
     });
 });

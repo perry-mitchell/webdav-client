@@ -27,17 +27,6 @@ describe("getDirectoryContents", function() {
         });
     });
 
-    it("supports returning detailed results", function() {
-        return this.client.getDirectoryContents("/", { details: true }).then(function(details) {
-            expect(details)
-                .to.have.property("data")
-                .that.is.an("array");
-            expect(details)
-                .to.have.property("headers")
-                .that.is.an("object");
-        });
-    });
-
     it("returns correct directory results", function() {
         return this.client.getDirectoryContents("/").then(function(contents) {
             const sub1 = contents.find(function(item) {
@@ -115,6 +104,31 @@ describe("getDirectoryContents", function() {
         return this.client.getDirectoryContents("/two%20words").then(function(contents) {
             expect(contents).to.have.lengthOf(1);
             expect(contents[0].basename).to.equal("file2.txt");
+        });
+    });
+
+    describe("when using details: true", function() {
+        it("returns data and headers properties", function() {
+            return this.client.getDirectoryContents("/", { details: true }).then(function(details) {
+                expect(details)
+                    .to.have.property("data")
+                    .that.is.an("array");
+                expect(details)
+                    .to.have.property("headers")
+                    .that.is.an("object");
+            });
+        });
+
+        it("returns props on each directory item", function() {
+            return this.client.getDirectoryContents("/", { details: true }).then(function(details) {
+                const alrightyJpg = details.data.find(item => item.basename === "alrighty.jpg");
+                expect(alrightyJpg)
+                    .to.have.property("props")
+                    .that.is.an("object");
+                expect(alrightyJpg.props)
+                    .to.have.property("getlastmodified")
+                    .that.matches(/GMT$/);
+            });
         });
     });
 

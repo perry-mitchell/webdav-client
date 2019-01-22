@@ -1,6 +1,6 @@
 {
   "name": "webdav",
-  "version": "2.2.1",
+  "version": "2.3.0",
   "description": "WebDAV client for NodeJS",
   "main": "dist/index.js",
   "scripts": {
@@ -53,7 +53,7 @@
     "path-posix": "^1.0.0",
     "url-join": "^4.0.0",
     "url-parse": "^1.4.4",
-    "xml2js": "^0.4.17"
+    "xml2js": "^0.4.19"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

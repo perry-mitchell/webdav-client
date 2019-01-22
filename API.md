@@ -334,7 +334,7 @@ Move a remote item to another path
 
 **Example**  
 ```js
-await client.moveFIle("/sub/file.dat", "/another/dir/file.dat");
+await client.moveFile("/sub/file.dat", "/another/dir/file.dat");
 ```
 <a name="ClientInterface.putFileContents"></a>
 
