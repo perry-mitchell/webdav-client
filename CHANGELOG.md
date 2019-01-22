@@ -1,5 +1,10 @@
 # WebDAV-Client changelog
 
+## v2.3.0
+_2019-01-22_
+
+ * [#134](https://github.com/perry-mitchell/webdav-client/issues/134) Allow access to all returned properties
+
 ## v2.2.1
 _2019-01-10_
 
