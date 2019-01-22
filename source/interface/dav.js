@@ -49,7 +49,7 @@ function propsToStat(props, filename) {
         lastmod: lastMod,
         size: parseInt(rawSize, 10),
         type: type,
-        etag: etag.replace(/"/g, "")
+        etag: (etag) ? etag.replace(/"/g, "") : null
     };
     if (type === "file") {
         stat.mime = mimeType ? mimeType.split(";")[0] : "";
