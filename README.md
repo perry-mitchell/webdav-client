@@ -74,6 +74,10 @@ createClient(
 
 ### Returned data structures
 
+#### Directory contents items
+
+Each item returned by `getDirectoryContents` is basically an [item stat](#item-stat). If the `details: true` option is set, each item stat (as mentioned in the stat documentation) will also include the `props` property containing extra properties returned by the server. No particular property in `props`, not its format or value, is guaranteed.
+
 #### Detailed responses
 
 Requests that return results, such as `getDirectoryContents`, `getFileContents`, `getQuota` and `stat`, can be configured to return more detailed information, such as response headers. Pass `{ details: true }` to their options argument to receive an object like the following:
@@ -120,6 +124,7 @@ Properties:
 | size          | Number  | Always       | File size - 0 for directories               |
 | type          | String  | Always       | Item type - "file" or "directory"           |
 | mime          | String  | Files only   | Mime type - for file items only             |
+| props         | Object  | `details: true` | Props object containing all item properties returned by the server |
 
 ## Compatibility
 This library has been tested to work with the following WebDAV servers or applications:
