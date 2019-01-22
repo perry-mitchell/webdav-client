@@ -98,7 +98,7 @@ describe("getDirectoryContents", function() {
     });
 
     it("returns etags from propfind", function() {
-        return this.client.getDirectoryContents("/", { depth: 1 }).then(function(contents) {
+        return this.client.getDirectoryContents("/").then(function(contents) {
             expect(contents[0]).to.have.property("etag");
         });
     });
