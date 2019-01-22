@@ -43,9 +43,7 @@ function parseStat(result, filename, isDetailed = false) {
     const propStat = getSingleValue(getValueForKey("propstat", responseItem));
     const props = getSingleValue(getValueForKey("prop", propStat));
     const filePath = urlTools.normalisePath(filename);
-    const stat = propsToStat(props, filePath);
-    if (isDetailed) stat.props = props;
-    return stat;
+    return propsToStat(props, filePath, isDetailed);
 }
 
 module.exports = {

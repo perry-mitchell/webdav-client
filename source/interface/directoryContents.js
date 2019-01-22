@@ -55,9 +55,7 @@ function getDirectoryFiles(result, serverBasePath, requestPath, isDetailed = fal
                 // Process the true full filename (minus the base server path)
                 const filename =
                     serverBase === "/" ? normalisePath(href) : normalisePath(pathPosix.relative(serverBase, href));
-                const stat = propsToStat(props, filename);
-                if (isDetailed) stat.props = props;
-                return stat;
+                return propsToStat(props, filename, isDetailed);
             })
     );
 }
