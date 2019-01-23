@@ -12,7 +12,8 @@ function getDirectoryContents(remotePath, options) {
         url: joinURL(options.remoteURL, encodePath(remotePath), "/"),
         method: "PROPFIND",
         headers: {
-            Accept: "text/plain"
+            Accept: "text/plain",
+            Depth: 1
         },
         responseType: "text"
     };
