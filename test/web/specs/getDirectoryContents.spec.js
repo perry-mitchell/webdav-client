@@ -99,7 +99,9 @@ describe("getDirectoryContents", function() {
 
     it("returns etags from propfind", function() {
         return this.client.getDirectoryContents("/").then(function(contents) {
-            expect(contents[0]).to.have.property("etag");
+            expect(contents[0])
+                .to.have.property("etag")
+                .that.matches(/^[a-f0-9]{32}$/);
         });
     });
 });
