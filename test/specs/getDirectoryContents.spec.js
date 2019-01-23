@@ -152,6 +152,7 @@ describe("getDirectoryContents", function() {
                 expect(contents).to.deep.equal([
                     {
                         filename: "/Ma bibliothèque",
+                        etag: "2920f985ebc6692632c7c3ab46b3919556239d37",
                         basename: "Ma bibliothèque",
                         lastmod: undefined,
                         size: 0,

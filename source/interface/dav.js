@@ -50,12 +50,14 @@ function propsToStat(props, filename, isDetailed = false) {
     const resourceType = getSingleValue(getValueForKey("resourcetype", props));
     const mimeType = getSingleValue(getValueForKey("getcontenttype", props));
     const type = getValueForKey("collection", resourceType) ? "directory" : "file";
+    const etag = getSingleValue(getValueForKey("getetag", props));
     const stat = {
         filename: filename,
         basename: path.basename(filename),
         lastmod: lastMod,
         size: parseInt(rawSize, 10),
-        type: type
+        type: type,
+        etag: (etag) ? etag.replace(/"/g, "") : null
     };
     if (type === "file") {
         stat.mime = mimeType ? mimeType.split(";")[0] : "";
