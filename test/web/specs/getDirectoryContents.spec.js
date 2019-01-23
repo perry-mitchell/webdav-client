@@ -104,4 +104,10 @@ describe("getDirectoryContents", function() {
                 .that.matches(/^[a-f0-9]{32}$/);
         });
     });
+
+    it("returns all directory contents when deep = true which translates to depth:'infinity')", function() {
+        return this.client.getDirectoryContents("/", { deep: true }).then(function(contents) {
+            expect(contents.length).to.equal(12);
+        });
+    });
 });

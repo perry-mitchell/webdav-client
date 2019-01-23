@@ -18,7 +18,8 @@ function createServer(dir, authType) {
     const server = new ws.WebDAVServer({
         port: 9988,
         httpAuthentication: auth,
-        privilegeManager: privilegeManager
+        privilegeManager: privilegeManager,
+        maxRequestDepth: Infinity
     });
     console.log(`Created server on localhost with port: 9988, and authType: ${authType}`);
     return {
