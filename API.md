@@ -44,6 +44,9 @@ It uses <a href="https://github.com/axios/axios">Axios</a> by default.</p>
 <dd></dd>
 <dt><a href="#CreateClientOptions">CreateClientOptions</a> : <code>Object</code></dt>
 <dd></dd>
+<dt><a href="#Stat">Stat</a> : <code>Object</code></dt>
+<dd><p>A stat result</p>
+</dd>
 <dt><a href="#UserOptions">UserOptions</a> : <code>Object</code></dt>
 <dd></dd>
 <dt><a href="#RequestOptions">RequestOptions</a> : <code>Object</code></dt>
@@ -158,14 +161,14 @@ Client adapter
     * [.createReadStream(remoteFilename, [options])](#ClientInterface.createReadStream) ⇒ <code>Readable</code>
     * [.createWriteStream(remoteFilename, [options])](#ClientInterface.createWriteStream) ⇒ <code>Writeable</code>
     * [.deleteFile(remotePath, [options])](#ClientInterface.deleteFile) ⇒ <code>Promise</code>
-    * [.getDirectoryContents(remotePath, [options])](#ClientInterface.getDirectoryContents) ⇒ <code>Promise.&lt;Array&gt;</code>
+    * [.getDirectoryContents(remotePath, [options])](#ClientInterface.getDirectoryContents) ⇒ <code>Promise.&lt;Array.&lt;Stat&gt;&gt;</code>
     * [.getFileContents(remoteFilename, [options])](#ClientInterface.getFileContents) ⇒ <code>Promise.&lt;(Buffer\|String)&gt;</code>
     * [.getFileDownloadLink(remoteFilename, [options])](#ClientInterface.getFileDownloadLink) ⇒ <code>String</code>
     * [.getQuota([options])](#ClientInterface.getQuota) ⇒ <code>null</code> \| <code>Object</code>
     * [.moveFile(remotePath, targetRemotePath, [options])](#ClientInterface.moveFile) ⇒ <code>Promise</code>
     * [.putFileContents(remoteFilename, data, [options])](#ClientInterface.putFileContents) ⇒ <code>Promise</code>
     * [.getFileUploadLink(remoteFilename, [options])](#ClientInterface.getFileUploadLink) ⇒ <code>String</code>
-    * [.stat(remotePath, [options])](#ClientInterface.stat) ⇒ <code>Promise.&lt;Object&gt;</code>
+    * [.stat(remotePath, [options])](#ClientInterface.stat) ⇒ [<code>Promise.&lt;Stat&gt;</code>](#Stat)
 
 <a name="ClientInterface.copyFile"></a>
 
@@ -257,11 +260,11 @@ await client.deleteFile("/some/file.txt");
 ```
 <a name="ClientInterface.getDirectoryContents"></a>
 
-### ClientInterface.getDirectoryContents(remotePath, [options]) ⇒ <code>Promise.&lt;Array&gt;</code>
+### ClientInterface.getDirectoryContents(remotePath, [options]) ⇒ <code>Promise.&lt;Array.&lt;Stat&gt;&gt;</code>
 Get the contents of a remote directory
 
 **Kind**: static method of [<code>ClientInterface</code>](#ClientInterface)  
-**Returns**: <code>Promise.&lt;Array&gt;</code> - A promise that resolves with an array of remote item stats  
+**Returns**: <code>Promise.&lt;Array.&lt;Stat&gt;&gt;</code> - A promise that resolves with an array of remote item stats  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -372,11 +375,11 @@ Only supported for Basic authentication or unauthenticated connections.
 
 <a name="ClientInterface.stat"></a>
 
-### ClientInterface.stat(remotePath, [options]) ⇒ <code>Promise.&lt;Object&gt;</code>
+### ClientInterface.stat(remotePath, [options]) ⇒ [<code>Promise.&lt;Stat&gt;</code>](#Stat)
 Stat a remote object
 
 **Kind**: static method of [<code>ClientInterface</code>](#ClientInterface)  
-**Returns**: <code>Promise.&lt;Object&gt;</code> - A promise that resolves with the stat data  
+**Returns**: [<code>Promise.&lt;Stat&gt;</code>](#Stat) - A promise that resolves with the stat data  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -444,6 +447,25 @@ Options for methods that resturn responses
 | [httpAgent] | <code>http.Agent</code> | Override the HTTP Agent instance for requests |
 | [httpsAgent] | <code>https.Agent</code> | Override the HTTPS Agent instance for requests |
 | [token] | [<code>AuthToken</code>](#AuthToken) | Optional OAuth token |
+
+<a name="Stat"></a>
+
+## Stat : <code>Object</code>
+A stat result
+
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| filename | <code>String</code> | The full path and filename of the remote item |
+| basename | <code>String</code> | The base filename of the remote item, without the path |
+| lastmod | <code>String</code> | The last modification date (eg. "Sun, 13 Mar 2016 04:23:32 GMT") |
+| size | <code>Number</code> | The size of the remote item |
+| type | <code>String</code> | The type of the item (file/directory) |
+| [mime] | <code>String</code> | The file mimetype (not present on directories) |
+| etag | <code>String</code> \| <code>null</code> | The ETag of the remote item (as supported by the server) |
+| [props] | <code>Object</code> | Additionally returned properties from the server, unprocessed, if     `details: true` is specified in the options |
 
 <a name="UserOptions"></a>
 

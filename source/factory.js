@@ -55,6 +55,20 @@ const stats = require("./interface/stat.js");
  */
 
 /**
+ * A stat result
+ * @typedef {Object} Stat
+ * @property {String} filename The full path and filename of the remote item
+ * @property {String} basename The base filename of the remote item, without the path
+ * @property {String} lastmod The last modification date (eg. "Sun, 13 Mar 2016 04:23:32 GMT")
+ * @property {Number} size The size of the remote item
+ * @property {String} type The type of the item (file/directory)
+ * @property {String=} mime The file mimetype (not present on directories)
+ * @property {String|null} etag The ETag of the remote item (as supported by the server)
+ * @property {Object=} props Additionally returned properties from the server, unprocessed, if
+ *     `details: true` is specified in the options
+ */
+
+/**
  * Create a client adapter
  * @param {String} remoteURL The remote address of the webdav server
  * @param {CreateClientOptions=} options Client options
@@ -171,7 +185,7 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
          * Get the contents of a remote directory
          * @param {String} remotePath The path to fetch the contents of
          * @param {OptionsForAdvancedResponses=} options Options for the remote the request
-         * @returns {Promise.<Array>} A promise that resolves with an array of remote item stats
+         * @returns {Promise.<Array.<Stat>>} A promise that resolves with an array of remote item stats
          * @memberof ClientInterface
          * @example
          *      const contents = await client.getDirectoryContents("/");
@@ -278,7 +292,7 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
          * @param {String} remotePath The path of the item
          * @param {OptionsForAdvancedResponses=} options Options for the request
          * @memberof ClientInterface
-         * @returns {Promise.<Object>} A promise that resolves with the stat data
+         * @returns {Promise.<Stat>} A promise that resolves with the stat data
          */
         stat: function stat(remotePath, options) {
             const getOptions = merge(baseOptions, options || {});
