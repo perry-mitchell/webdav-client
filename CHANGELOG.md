@@ -1,5 +1,10 @@
 # WebDAV-Client changelog
 
+## v2.4.0
+_2019-01-23_
+
+ * [#132](https://github.com/perry-mitchell/webdav-client/issues/132) ETags in `getDirectoryContents` results and stats
+
 ## v2.3.0
 _2019-01-22_
 

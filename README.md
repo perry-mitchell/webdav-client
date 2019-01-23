@@ -97,7 +97,8 @@ Item stats are objects with properties that descibe a file or directory. They re
     "basename": "test",
     "lastmod": "Tue, 05 Apr 2016 14:39:18 GMT",
     "size": 0,
-    "type": "directory"
+    "type": "directory",
+    "etag": null
 }
 ```
 
@@ -110,7 +111,8 @@ or:
     "lastmod": "Sun, 13 Mar 2016 04:23:32 GMT",
     "size": 42497,
     "type": "file",
-    "mime": "image/jpeg"
+    "mime": "image/jpeg",
+    "etag": "33a728c7f288ede1fecc90ac6a10e062"
 }
 ```
 
@@ -124,6 +126,7 @@ Properties:
 | size          | Number  | Always       | File size - 0 for directories               |
 | type          | String  | Always       | Item type - "file" or "directory"           |
 | mime          | String  | Files only   | Mime type - for file items only             |
+| etag          | String / null | When supported | [ETag](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag) of the file |
 | props         | Object  | `details: true` | Props object containing all item properties returned by the server |
 
 ## Compatibility
