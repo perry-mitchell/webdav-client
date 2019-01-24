@@ -72,11 +72,146 @@ createClient(
 
 `webdav` also allows for overriding the built in HTTP and HTTPS agents by setting the properties `httpAgent` & `httpsAgent` accordingly. These should be instances of node's [http.Agent](https://nodejs.org/api/http.html#http_class_http_agent) and [https.Agent](https://nodejs.org/api/https.html#https_class_https_agent) respectively.
 
+### Methods
+
+#### copyFile
+
+Copy a file from one remote location to another:
+
+```javascript
+await client.copyFile("/sub/item.txt", "/destination/item.txt");
+```
+
+#### createDirectory
+
+Create a new directory:
+
+```javascript
+await client.createDirectory("/completely/new/path");
+```
+
+#### createReadStream
+
+Create a read stream targeted at a remote file:
+
+```javascript
+client
+    .createReadStream("/video.mp4")
+    .pipe(fs.createWriteStream("~/video.np4"));
+```
+
+#### createWriteStream
+
+Create a write stream targeted at a remote file:
+
+```javascript
+fs.createReadStream("~/Music/song.mp3")
+    .pipe(client.createWriteStream("/music/song.mp3"));
+```
+
+#### deleteFile
+
+Delete a remote file:
+
+```javascript
+await client.deleteFile("/tmp.dat");
+```
+
+#### getDirectoryContents
+
+Get the contents of a remote directory. Returns an array of [item stats](#item-stat).
+
+```javascript
+// Get current directory contents:
+const contents = await client.getDirectoryContents("/");
+// Get all contents:
+const contents = await client.getDirectoryContents("/", { deep: true });
+```
+
+#### getFileContents
+
+Fetch the contents of a remote file. Binary contents are returned by default (Buffer):
+
+```javascript
+const buff = await client.getFileContents("/package.zip");
+```
+
+It is recommended to use streams if the files being transferred are large.
+
+Text files can also be fetched:
+
+```javascript
+const str = await client.getFileContents("/config.json", { format: "text" });
+```
+
+#### getFileDownloadLink
+
+Return a public link where a file can be downloaded. **This exposes authentication details in the URL**.
+
+```javascript
+const downloadLink = client.getFileDownloadLink("/image.png");
+```
+
+_Not all servers may support this feature. Only Basic authentication and unauthenticated connections support this method._
+
+#### getFileUploadLink
+
+Return a URL for a file upload:
+
+```javascript
+const uploadLink = client.getFileUploadLink("/image.png");
+```
+
+_See `getFileDownloadLink` for support details._
+
+#### getQuota
+
+Get the quota information for the current account:
+
+```javascript
+const quota = await client.getQuota();
+// {
+//     "used": 1938743,
+//     "available": "unlimited"
+// }
+```
+
+#### moveFile
+
+Move a remote file to another remote location:
+
+```javascript
+await client.moveFile("/file1.png", "/file2.png");
+```
+
+#### putFileContents
+
+Write data to a remote file:
+
+```javascript
+// Write a buffer:
+await client.putFileContents("/my/file.jpg", imageBuffer, { overwrite: false });
+// Write a text file:
+await client.putFileContents("/my/file.txt", str);
+```
+
+#### stat
+
+Get a file or directory stat object:
+
+```javascript
+const stat = await client.stat("/some/file.tar.gz");
+```
+
+Returns an [item stat](#item-stat).
+
 ### Returned data structures
 
 #### Directory contents items
 
 Each item returned by `getDirectoryContents` is basically an [item stat](#item-stat). If the `details: true` option is set, each item stat (as mentioned in the stat documentation) will also include the `props` property containing extra properties returned by the server. No particular property in `props`, not its format or value, is guaranteed.
+
+You can request all files in the file-tree (infinite depth) by calling `getDirectoryContents` with the option `deep: true`. All items will be returned in a flat array, where the `filename` will hold the absolute path.
 
 #### Detailed responses
 
