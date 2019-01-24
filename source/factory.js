@@ -40,6 +40,11 @@ const stats = require("./interface/stat.js");
  */
 
 /**
+ * @typedef {OptionsForAdvancedResponses} GetDirectoryContentsOptions
+ * @property {Boolean=} deep - Return deep (infinite) items (default: false)
+ */
+
+/**
  * @typedef {Object} AuthToken
  * @property {String} token_type - The type of token (eg "Bearer")
  * @property {String} access_token - The token access code
@@ -184,7 +189,7 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
         /**
          * Get the contents of a remote directory
          * @param {String} remotePath The path to fetch the contents of
-         * @param {OptionsForAdvancedResponses=} options Options for the remote the request
+         * @param {GetDirectoryContentsOptions=} options Options for the remote the request
          * @returns {Promise.<Array.<Stat>>} A promise that resolves with an array of remote item stats
          * @memberof ClientInterface
          * @example
