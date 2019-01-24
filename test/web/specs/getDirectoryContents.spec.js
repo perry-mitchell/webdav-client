@@ -110,4 +110,16 @@ describe("getDirectoryContents", function() {
             expect(contents.length).to.equal(12);
         });
     });
+
+    it("glob filter test')", function() {
+        const options = {
+            deep: true,
+            glob: {
+                pattern: "*.+(jpg|txt)"
+            }
+        };
+        return this.client.getDirectoryContents("/", options).then(function(contents) {
+            expect(contents.length).to.equal(7);
+        });
+    });
 });

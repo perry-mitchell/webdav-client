@@ -1,3 +1,5 @@
+import minimatch from "minimatch";
+
 function handleResponseCode(response) {
     const status = parseInt(response.status, 10);
     let err;
@@ -18,7 +20,12 @@ function processResponsePayload(response, data, isDetailed = false) {
         : data;
 }
 
+function processGlobFilter(files, glob) {
+    return files.filter(file => minimatch(file.filename, glob.pattern, { matchBase: true }));
+}
+
 module.exports = {
     handleResponseCode,
-    processResponsePayload
+    processResponsePayload,
+    processGlobFilter
 };
