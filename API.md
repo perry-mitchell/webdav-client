@@ -40,6 +40,8 @@ It uses <a href="https://github.com/axios/axios">Axios</a> by default.</p>
 <dt><a href="#OptionsForAdvancedResponses">OptionsForAdvancedResponses</a> : <code><a href="#UserOptions">UserOptions</a></code></dt>
 <dd><p>Options for methods that resturn responses</p>
 </dd>
+<dt><a href="#GetDirectoryContentsOptions">GetDirectoryContentsOptions</a> : <code><a href="#OptionsForAdvancedResponses">OptionsForAdvancedResponses</a></code></dt>
+<dd></dd>
 <dt><a href="#AuthToken">AuthToken</a> : <code>Object</code></dt>
 <dd></dd>
 <dt><a href="#CreateClientOptions">CreateClientOptions</a> : <code>Object</code></dt>
@@ -164,10 +166,10 @@ Client adapter
     * [.getDirectoryContents(remotePath, [options])](#ClientInterface.getDirectoryContents) ⇒ <code>Promise.&lt;Array.&lt;Stat&gt;&gt;</code>
     * [.getFileContents(remoteFilename, [options])](#ClientInterface.getFileContents) ⇒ <code>Promise.&lt;(Buffer\|String)&gt;</code>
     * [.getFileDownloadLink(remoteFilename, [options])](#ClientInterface.getFileDownloadLink) ⇒ <code>String</code>
-    * [.getQuota([options])](#ClientInterface.getQuota) ⇒ <code>null</code> \| <code>Object</code>
+    * [.getFileUploadLink(remoteFilename, [options])](#ClientInterface.getFileUploadLink) ⇒ <code>String</code>
+    * [.getQuota([options])](#ClientInterface.getQuota) ⇒ <code>Promise.&lt;(null\|Object)&gt;</code>
     * [.moveFile(remotePath, targetRemotePath, [options])](#ClientInterface.moveFile) ⇒ <code>Promise</code>
     * [.putFileContents(remoteFilename, data, [options])](#ClientInterface.putFileContents) ⇒ <code>Promise</code>
-    * [.getFileUploadLink(remoteFilename, [options])](#ClientInterface.getFileUploadLink) ⇒ <code>String</code>
     * [.stat(remotePath, [options])](#ClientInterface.stat) ⇒ [<code>Promise.&lt;Stat&gt;</code>](#Stat)
 
 <a name="ClientInterface.copyFile"></a>
@@ -269,7 +271,7 @@ Get the contents of a remote directory
 | Param | Type | Description |
 | --- | --- | --- |
 | remotePath | <code>String</code> | The path to fetch the contents of |
-| [options] | [<code>OptionsForAdvancedResponses</code>](#OptionsForAdvancedResponses) | Options for the remote the request |
+| [options] | [<code>GetDirectoryContentsOptions</code>](#GetDirectoryContentsOptions) | Options for the remote the request |
 
 **Example**  
 ```js
@@ -309,13 +311,27 @@ Only supported for Basic authentication or unauthenticated connections.
 | remoteFilename | <code>String</code> | The file url to fetch |
 | [options] | [<code>UserOptions</code>](#UserOptions) | Options for the request |
 
+<a name="ClientInterface.getFileUploadLink"></a>
+
+### ClientInterface.getFileUploadLink(remoteFilename, [options]) ⇒ <code>String</code>
+Get a file upload link
+Only supported for Basic authentication or unauthenticated connections.
+
+**Kind**: static method of [<code>ClientInterface</code>](#ClientInterface)  
+**Returns**: <code>String</code> - A upload URL  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| remoteFilename | <code>String</code> | The path of the remote file location |
+| [options] | [<code>PutOptions</code>](#PutOptions) | The options for the request |
+
 <a name="ClientInterface.getQuota"></a>
 
-### ClientInterface.getQuota([options]) ⇒ <code>null</code> \| <code>Object</code>
+### ClientInterface.getQuota([options]) ⇒ <code>Promise.&lt;(null\|Object)&gt;</code>
 Get quota information
 
 **Kind**: static method of [<code>ClientInterface</code>](#ClientInterface)  
-**Returns**: <code>null</code> \| <code>Object</code> - Returns null if failed, or an object with `used` and `available`  
+**Returns**: <code>Promise.&lt;(null\|Object)&gt;</code> - Returns null if failed, or an object with `used` and `available`  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -359,20 +375,6 @@ await client.putFileContents("/dir/image.png", myImageBuffer);
      // Put contents without overwriting:
      await client.putFileContents("/dir/image.png", myImageBuffer, { overwrite: false });
 ```
-<a name="ClientInterface.getFileUploadLink"></a>
-
-### ClientInterface.getFileUploadLink(remoteFilename, [options]) ⇒ <code>String</code>
-Get the upload link
-Only supported for Basic authentication or unauthenticated connections.
-
-**Kind**: static method of [<code>ClientInterface</code>](#ClientInterface)  
-**Returns**: <code>String</code> - A upload URL  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| remoteFilename | <code>String</code> | The path of the remote file location |
-| [options] | [<code>PutOptions</code>](#PutOptions) | The options for the request |
-
 <a name="ClientInterface.stat"></a>
 
 ### ClientInterface.stat(remotePath, [options]) ⇒ [<code>Promise.&lt;Stat&gt;</code>](#Stat)
@@ -422,6 +424,16 @@ Options for methods that resturn responses
 | Name | Type | Description |
 | --- | --- | --- |
 | [details] | <code>Boolean</code> | Provided detailed response information, such as response  headers (defaults to false). Only available on requests that return result data. |
+
+<a name="GetDirectoryContentsOptions"></a>
+
+## GetDirectoryContentsOptions : [<code>OptionsForAdvancedResponses</code>](#OptionsForAdvancedResponses)
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| [deep] | <code>Boolean</code> | Return deep (infinite) items (default: false) |
 
 <a name="AuthToken"></a>
 
