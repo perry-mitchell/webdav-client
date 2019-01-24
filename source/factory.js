@@ -237,9 +237,22 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
         },
 
         /**
+         * Get a file upload link
+         * Only supported for Basic authentication or unauthenticated connections.
+         * @param {String} remoteFilename The path of the remote file location
+         * @param {PutOptions=} options The options for the request
+         * @memberof ClientInterface
+         * @returns {String} A upload URL
+         */
+        getFileUploadLink: function getFileUploadLink(remoteFilename, options) {
+            var putOptions = merge(baseOptions, options || {});
+            return putFile.getFileUploadLink(remoteFilename, putOptions);
+        },
+
+        /**
          * Get quota information
          * @param {OptionsForAdvancedResponses=} options Options for the request
-         * @returns {null|Object} Returns null if failed, or an object with `used` and `available`
+         * @returns {Promise.<null|Object>} Returns null if failed, or an object with `used` and `available`
          * @memberof ClientInterface
          */
         getQuota: function getQuota(options) {
@@ -277,19 +290,6 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
         putFileContents: function putFileContents(remoteFilename, data, options) {
             const putOptions = merge(baseOptions, options || {});
             return putFile.putFileContents(remoteFilename, data, putOptions);
-        },
-
-        /**
-         * Get the upload link
-         * Only supported for Basic authentication or unauthenticated connections.
-         * @param {String} remoteFilename The path of the remote file location
-         * @param {PutOptions=} options The options for the request
-         * @memberof ClientInterface
-         * @returns {String} A upload URL
-         */
-        getFileUploadLink: function getFileUploadLink(remoteFilename, options) {
-            var putOptions = merge(baseOptions, options || {});
-            return putFile.getFileUploadLink(remoteFilename, putOptions);
         },
 
         /**
