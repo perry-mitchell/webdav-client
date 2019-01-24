@@ -13,7 +13,7 @@ function getDirectoryContents(remotePath, options) {
         method: "PROPFIND",
         headers: {
             Accept: "text/plain",
-            Depth: 1
+            Depth: options.deep ? "infinity" : 1
         },
         responseType: "text"
     };
