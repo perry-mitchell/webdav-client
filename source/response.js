@@ -1,4 +1,4 @@
-import minimatch from "minimatch";
+const minimatch = require("minimatch");
 
 function handleResponseCode(response) {
     const status = parseInt(response.status, 10);
