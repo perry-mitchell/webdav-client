@@ -114,7 +114,7 @@ describe("getDirectoryContents", function() {
         });
     });
 
-    it("glob filter test')", function() {
+    it("supports globbing files", function() {
         const options = {
             deep: true,
             glob: {
