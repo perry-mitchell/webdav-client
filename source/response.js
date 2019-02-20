@@ -26,6 +26,6 @@ function processGlobFilter(files, glob) {
 
 module.exports = {
     handleResponseCode,
-    processResponsePayload,
-    processGlobFilter
+    processGlobFilter,
+    processResponsePayload
 };
