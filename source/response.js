@@ -11,6 +11,10 @@ function handleResponseCode(response) {
     return response;
 }
 
+function processGlobFilter(files, glob) {
+    return files.filter(file => minimatch(file.filename, glob.pattern, { matchBase: true }));
+}
+
 function processResponsePayload(response, data, isDetailed = false) {
     return isDetailed
         ? {
@@ -18,10 +22,6 @@ function processResponsePayload(response, data, isDetailed = false) {
               headers: response.headers || {}
           }
         : data;
-}
-
-function processGlobFilter(files, glob) {
-    return files.filter(file => minimatch(file.filename, glob.pattern, { matchBase: true }));
 }
 
 module.exports = {
