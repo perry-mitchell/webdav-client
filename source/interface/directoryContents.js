@@ -1,7 +1,7 @@
 const pathPosix = require("path-posix");
 const joinURL = require("url-join");
 const { merge } = require("../merge.js");
-const { handleResponseCode, processResponsePayload, processGlobFilter } = require("../response.js");
+const { handleResponseCode, processGlobFilter, processResponsePayload } = require("../response.js");
 const { normaliseHREF, normalisePath } = require("../url.js");
 const { getSingleValue, getValueForKey, parseXML, propsToStat } = require("./dav.js");
 const { encodePath, prepareRequestOptions, request } = require("../request.js");
