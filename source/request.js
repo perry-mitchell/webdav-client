@@ -47,6 +47,9 @@ function prepareRequestOptions(requestOptions, methodOptions) {
     if (typeof methodOptions.withCredentials === "boolean") {
         requestOptions.withCredentials = methodOptions.withCredentials;
     }
+    if (methodOptions.maxContentLength) {
+        requestOptions.maxContentLength = methodOptions.maxContentLength;
+    }
 }
 
 /**

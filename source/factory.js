@@ -40,6 +40,11 @@ const stats = require("./interface/stat.js");
  */
 
 /**
+ * @typedef {OptionsForAdvancedResponses} GetDirectoryContentsOptions
+ * @property {Boolean=} deep - Return deep (infinite) items (default: false)
+ */
+
+/**
  * @typedef {Object} AuthToken
  * @property {String} token_type - The type of token (eg "Bearer")
  * @property {String} access_token - The token access code
@@ -184,7 +189,7 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
         /**
          * Get the contents of a remote directory
          * @param {String} remotePath The path to fetch the contents of
-         * @param {OptionsForAdvancedResponses=} options Options for the remote the request
+         * @param {GetDirectoryContentsOptions=} options Options for the remote the request
          * @returns {Promise.<Array.<Stat>>} A promise that resolves with an array of remote item stats
          * @memberof ClientInterface
          * @example
@@ -232,9 +237,22 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
         },
 
         /**
+         * Get a file upload link
+         * Only supported for Basic authentication or unauthenticated connections.
+         * @param {String} remoteFilename The path of the remote file location
+         * @param {PutOptions=} options The options for the request
+         * @memberof ClientInterface
+         * @returns {String} A upload URL
+         */
+        getFileUploadLink: function getFileUploadLink(remoteFilename, options) {
+            var putOptions = merge(baseOptions, options || {});
+            return putFile.getFileUploadLink(remoteFilename, putOptions);
+        },
+
+        /**
          * Get quota information
          * @param {OptionsForAdvancedResponses=} options Options for the request
-         * @returns {null|Object} Returns null if failed, or an object with `used` and `available`
+         * @returns {Promise.<null|Object>} Returns null if failed, or an object with `used` and `available`
          * @memberof ClientInterface
          */
         getQuota: function getQuota(options) {
@@ -272,19 +290,6 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
         putFileContents: function putFileContents(remoteFilename, data, options) {
             const putOptions = merge(baseOptions, options || {});
             return putFile.putFileContents(remoteFilename, data, putOptions);
-        },
-
-        /**
-         * Get the upload link
-         * Only supported for Basic authentication or unauthenticated connections.
-         * @param {String} remoteFilename The path of the remote file location
-         * @param {PutOptions=} options The options for the request
-         * @memberof ClientInterface
-         * @returns {String} A upload URL
-         */
-        getFileUploadLink: function getFileUploadLink(remoteFilename, options) {
-            var putOptions = merge(baseOptions, options || {});
-            return putFile.getFileUploadLink(remoteFilename, putOptions);
         },
 
         /**

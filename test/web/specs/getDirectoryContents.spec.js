@@ -105,9 +105,12 @@ describe("getDirectoryContents", function() {
         });
     });
 
-    it("returns all directory contents when deep = true which translates to depth:'infinity')", function() {
-        return this.client.getDirectoryContents("/", { deep: true }).then(function(contents) {
-            expect(contents.length).to.equal(12);
+    describe("when using 'deep' option", function() {
+        it("returns all directory contents from the entire file tree", function() {
+            return this.client.getDirectoryContents("/", { deep: true }).then(function(contents) {
+                expect(contents.find(item => item.filename === "/alrighty.jpg")).to.be.an("object");
+                expect(contents.find(item => item.filename === "/sub1/ยากจน #1.txt")).to.be.an("object");
+            });
         });
     });
 

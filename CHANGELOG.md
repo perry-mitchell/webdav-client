@@ -1,5 +1,10 @@
 # WebDAV-Client changelog
 
+## v2.5.0
+_2019-01-24_
+
+ * [#130](https://github.com/perry-mitchell/webdav-client/issues/130) Support for `deep` option on `getDirectoryContents`
+
 ## v2.4.0
 _2019-01-23_
 
