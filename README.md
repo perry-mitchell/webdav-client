@@ -128,6 +128,12 @@ const contents = await client.getDirectoryContents("/");
 const contents = await client.getDirectoryContents("/", { deep: true });
 ```
 
+Files can be globbed using the `glob` option (processed using [`minimatch`](https://github.com/isaacs/minimatch)). When using a glob pattern it is recommended to fetch `deep` contents:
+
+```javascript
+const images = await client.getDirectoryContents("/", { deep: true, glob: "/**/*.{png,jpg,gif}" });
+```
+
 #### getFileContents
 
 Fetch the contents of a remote file. Binary contents are returned by default (Buffer):

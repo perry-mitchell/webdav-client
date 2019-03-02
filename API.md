@@ -434,6 +434,7 @@ Options for methods that resturn responses
 | Name | Type | Description |
 | --- | --- | --- |
 | [deep] | <code>Boolean</code> | Return deep (infinite) items (default: false) |
+| [glob] | <code>String</code> | Glob pattern for matching certain files |
 
 <a name="AuthToken"></a>
 
