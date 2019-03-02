@@ -4,6 +4,7 @@
 _2019-03-03_
 
  * [#122](https://github.com/perry-mitchell/webdav-client/issues/122) Glob functionality
+ * [#144](https://github.com/perry-mitchell/webdav-client/issues/144) Support uploading larger files
 
 ## v2.5.0
 _2019-01-24_
