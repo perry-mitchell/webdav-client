@@ -1,5 +1,10 @@
 # WebDAV-Client changelog
 
+## v2.6.0
+_2019-03-03_
+
+ * [#122](https://github.com/perry-mitchell/webdav-client/issues/122) Glob functionality
+
 ## v2.5.0
 _2019-01-24_
 
