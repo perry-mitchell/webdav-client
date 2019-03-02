@@ -117,12 +117,11 @@ describe("getDirectoryContents", function() {
     it("supports globbing files", function() {
         const options = {
             deep: true,
-            glob: {
-                pattern: "*.+(jpg|txt)"
-            }
+            glob: "/webdav/**/*.txt"
         };
         return this.client.getDirectoryContents("/", options).then(function(contents) {
-            expect(contents.length).to.equal(7);
+            expect(contents).to.have.lengthOf(1);
+            expect(contents[0].filename).to.equal("/webdav/server/notreal.txt");
         });
     });
 });
