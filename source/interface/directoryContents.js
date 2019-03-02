@@ -28,8 +28,7 @@ function getDirectoryContents(remotePath, options) {
         .then(parseXML)
         .then(result => getDirectoryFiles(result, options.remotePath, remotePath, options.details))
         .then(files => processResponsePayload(response, files, options.details))
-        .then(files => options.glob && options.glob.pattern ? processGlobFilter(files, options.glob) : files)
-        ;
+        .then(files => (options.glob ? processGlobFilter(files, options.glob) : files));
 }
 
 function getDirectoryFiles(result, serverBasePath, requestPath, isDetailed = false) {

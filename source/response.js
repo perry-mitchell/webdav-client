@@ -12,7 +12,7 @@ function handleResponseCode(response) {
 }
 
 function processGlobFilter(files, glob) {
-    return files.filter(file => minimatch(file.filename, glob.pattern, { matchBase: true }));
+    return files.filter(file => minimatch(file.filename, glob, { matchBase: true }));
 }
 
 function processResponsePayload(response, data, isDetailed = false) {
