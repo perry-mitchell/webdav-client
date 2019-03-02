@@ -113,4 +113,16 @@ describe("getDirectoryContents", function() {
             });
         });
     });
+
+    it("supports globbing files", function() {
+        const options = {
+            deep: true,
+            glob: {
+                pattern: "*.+(jpg|txt)"
+            }
+        };
+        return this.client.getDirectoryContents("/", options).then(function(contents) {
+            expect(contents.length).to.equal(7);
+        });
+    });
 });
