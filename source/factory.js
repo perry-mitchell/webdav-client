@@ -99,7 +99,7 @@ const stats = require("./interface/stat.js");
  *          console.log(contents);
  *      });
  */
-function createClient(remoteURL, { username, password, httpAgent, httpsAgent, token = null } = {}) {
+function createClient(remoteURL, { username, password, httpAgent, httpsAgent, token = null, digest = false } = {}) {
     const baseOptions = {
         headers: {},
         remotePath: urlTools.extractURLPath(remoteURL),
@@ -108,7 +108,9 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
         httpsAgent
     };
     // Configure auth
-    if (username) {
+    if (digest) {
+        baseOptions._digest = { username, password, nc: 0, algorithm: "md5", hasDigestAuth: false };
+    } else if (username) {
         baseOptions.headers.Authorization = authTools.generateBasicAuthHeader(username, password);
     } else if (token && typeof token === "object") {
         baseOptions.headers.Authorization = authTools.generateTokenAuthHeader(token);
