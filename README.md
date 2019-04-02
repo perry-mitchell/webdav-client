@@ -201,6 +201,16 @@ await client.putFileContents("/my/file.jpg", imageBuffer, { overwrite: false });
 await client.putFileContents("/my/file.txt", str);
 ```
 
+Handling Upload Progress (browsers only):  
+*This uses the axios onUploadProgress callback which uses the native XMLHttpRequest [progress event](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequestEventTarget/onprogress).*
+
+```javascript
+// Upload a file and log the progress to the console:
+await client.putFileContents("/my/file.jpg", imageFile, { onUploadProgress: progress => {
+    console.log(`Uploaded ${progress.loaded} bytes of ${progress.total}`);
+} });
+```
+
 #### stat
 
 Get a file or directory stat object:
