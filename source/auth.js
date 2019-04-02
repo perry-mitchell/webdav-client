@@ -1,5 +1,5 @@
-const crypto = require("crypto");
 const { toBase64 } = require("./encode.js");
+const { md5, ha1Compute } = require("./crypto.js");
 
 function generateBasicAuthHeader(username, password) {
     const encoded = toBase64(`${username}:${password}`);
@@ -11,22 +11,6 @@ function generateTokenAuthHeader(tokenInfo) {
 }
 
 function generateDigestAuthHeader(options, digest) {
-    function md5(data) {
-        return crypto
-            .createHash("md5")
-            .update(data)
-            .digest("hex");
-    }
-
-    function ha1Compute(algorithm, user, realm, pass, nonce, cnonce) {
-        const ha1 = md5(`${user}:${realm}:${pass}`);
-        if (algorithm && algorithm.toLowerCase() === "md5-sess") {
-            return md5(`${ha1}:${nonce}:${cnonce}`);
-        } else {
-            return ha1;
-        }
-    }
-
     const url = options.url.replace("//", "");
     const uri = url.indexOf("/") == -1 ? "/" : url.slice(url.indexOf("/"));
 
