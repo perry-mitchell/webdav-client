@@ -50,6 +50,9 @@ function prepareRequestOptions(requestOptions, methodOptions) {
     if (methodOptions.maxContentLength) {
         requestOptions.maxContentLength = methodOptions.maxContentLength;
     }
+    if (methodOptions.onUploadProgress && typeof methodOptions.onUploadProgress === "function") {
+        requestOptions.onUploadProgress = methodOptions.onUploadProgress;
+    }
 }
 
 /**

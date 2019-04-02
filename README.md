@@ -273,11 +273,13 @@ Properties:
 ## Compatibility
 This library has been tested to work with the following WebDAV servers or applications:
 
- * [ownCloud](https://owncloud.org/)
- * [Nextcloud](https://nextcloud.com/)
+ * [ownCloud](https://owncloud.org/) ¹
+ * [Nextcloud](https://nextcloud.com/) ¹
  * [Yandex.ru](https://yandex.ru/)
  * [jsDAV](https://github.com/mikedeboer/jsDAV)
  * [webdav-server](https://github.com/OpenMarshal/npm-WebDAV-Server)
+ 
+ ¹ These services will work if CORS is correctly configured to return the proper headers. This may not work by default.
 
 ### CORS
 CORS is a security enforcement technique employed by browsers to ensure requests are executed to and from expected contexts. It can conflict with this library if the target server doesn't return CORS headers when making requests from a browser. It is your responsibility to handle this.
