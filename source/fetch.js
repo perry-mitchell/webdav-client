@@ -50,8 +50,7 @@ function fetch(requestOptions) {
     const _digest = requestOptions._digest;
     delete requestOptions._digest;
 
-    requestOptions.validateStatus = status => ((status >= 200 && status < 300) || status == 401);
-
+    // If client is already using digest authentication, include the digest authorization header
     if (_digest.hasDigestAuth) {
         requestOptions = merge(requestOptions, {
             headers: {
@@ -60,6 +59,7 @@ function fetch(requestOptions) {
         });
     }
 
+    // Perform the request and handle digest authentication
     return request(requestOptions).then(function(response) {
         if (response.status == 401) {
             _digest.hasDigestAuth = parseAuth(response, _digest);
