@@ -50,6 +50,9 @@ function prepareRequestOptions(requestOptions, methodOptions) {
     if (methodOptions.maxContentLength) {
         requestOptions.maxContentLength = methodOptions.maxContentLength;
     }
+    if (methodOptions.onUploadProgress && typeof methodOptions.onUploadProgress === "function") {
+        requestOptions.onUploadProgress = methodOptions.onUploadProgress;
+    }
     if (methodOptions._digest) {
         requestOptions._digest = methodOptions._digest;
         requestOptions.validateStatus = status => ((status >= 200 && status < 300) || status == 401);
