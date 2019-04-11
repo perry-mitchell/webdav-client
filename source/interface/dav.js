@@ -60,7 +60,7 @@ function propsToStat(props, filename, isDetailed = false) {
         etag: etag ? etag.replace(/"/g, "") : null
     };
     if (type === "file") {
-        stat.mime = mimeType ? mimeType.split(";")[0] : "";
+        stat.mime = mimeType && typeof mimeType === "string" ? mimeType.split(";")[0] : "";
     }
     if (isDetailed) {
         stat.props = Object.keys(props)
