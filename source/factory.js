@@ -77,7 +77,7 @@ const stats = require("./interface/stat.js");
 /**
  * Create a client adapter
  * @param {String} remoteURL The remote address of the webdav server
- * @param {CreateClientOptions=} options Client options
+ * @param {CreateClientOptions=} opts Client options
  * @returns {ClientInterface} A new client interface instance
  * @memberof module:WebDAV
  * @example
@@ -99,8 +99,12 @@ const stats = require("./interface/stat.js");
  *          console.log(contents);
  *      });
  */
-function createClient(remoteURL, { username, password, httpAgent, httpsAgent, token = null } = {}) {
-    const baseOptions = {
+function createClient(remoteURL, opts = {}) {
+    if (!opts || typeof opts !== "object") {
+        throw new Error("Options must be an object, if specified");
+    }
+    const { username, password, httpAgent, httpsAgent, token = null } = opts;
+    const runtimeOptions = {
         headers: {},
         remotePath: urlTools.extractURLPath(remoteURL),
         remoteURL,
@@ -109,9 +113,9 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
     };
     // Configure auth
     if (username) {
-        baseOptions.headers.Authorization = authTools.generateBasicAuthHeader(username, password);
+        runtimeOptions.headers.Authorization = authTools.generateBasicAuthHeader(username, password);
     } else if (token && typeof token === "object") {
-        baseOptions.headers.Authorization = authTools.generateTokenAuthHeader(token);
+        runtimeOptions.headers.Authorization = authTools.generateTokenAuthHeader(token);
     }
     return {
         /**
@@ -125,7 +129,7 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
          *      await client.copyFile("/photos/pic1.jpg", "/backup/pic1.jpg");
          */
         copyFile: function copyFile(remotePath, targetRemotePath, options) {
-            const copyOptions = merge(baseOptions, options || {});
+            const copyOptions = merge(runtimeOptions, options || {});
             return copy.copyFile(remotePath, targetRemotePath, copyOptions);
         },
 
@@ -139,7 +143,7 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
          *      await client.createDirectory("/my/directory");
          */
         createDirectory: function createDirectory(dirPath, options) {
-            const createOptions = merge(baseOptions, options || {});
+            const createOptions = merge(runtimeOptions, options || {});
             return createDir.createDirectory(dirPath, createOptions);
         },
 
@@ -154,7 +158,7 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
          *      remote.pipe(someWriteStream);
          */
         createReadStream: function createReadStream(remoteFilename, options) {
-            const createOptions = merge(baseOptions, options || {});
+            const createOptions = merge(runtimeOptions, options || {});
             return createStream.createReadStream(remoteFilename, createOptions);
         },
 
@@ -169,7 +173,7 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
          *      fs.createReadStream("~/myData.zip").pipe(remote);
          */
         createWriteStream: function createWriteStream(remoteFilename, options) {
-            const createOptions = merge(baseOptions, options || {});
+            const createOptions = merge(runtimeOptions, options || {});
             return createStream.createWriteStream(remoteFilename, createOptions);
         },
 
@@ -183,7 +187,7 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
          *      await client.deleteFile("/some/file.txt");
          */
         deleteFile: function deleteFile(remotePath, options) {
-            const deleteOptions = merge(baseOptions, options || {});
+            const deleteOptions = merge(runtimeOptions, options || {});
             return deletion.deleteFile(remotePath, deleteOptions);
         },
 
@@ -197,7 +201,7 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
          *      const contents = await client.getDirectoryContents("/");
          */
         getDirectoryContents: function getDirectoryContents(remotePath, options) {
-            const getOptions = merge(baseOptions, options || {});
+            const getOptions = merge(runtimeOptions, options || {});
             return directoryContents.getDirectoryContents(remotePath, getOptions);
         },
 
@@ -214,7 +218,7 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
          *      const txt = await client.getFileContents("/list.txt", { format: "text" });
          */
         getFileContents: function getFileContents(remoteFilename, options) {
-            const getOptions = merge(baseOptions, options || {});
+            const getOptions = merge(runtimeOptions, options || {});
             getOptions.format = getOptions.format || "binary";
             if (["binary", "text"].indexOf(getOptions.format) < 0) {
                 throw new Error("Unknown format: " + getOptions.format);
@@ -233,7 +237,7 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
          * @returns {String} A download URL
          */
         getFileDownloadLink: function getFileDownloadLink(remoteFilename, options) {
-            const getOptions = merge(baseOptions, options || {});
+            const getOptions = merge(runtimeOptions, options || {});
             return getFile.getFileLink(remoteFilename, getOptions);
         },
 
@@ -246,7 +250,7 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
          * @returns {String} A upload URL
          */
         getFileUploadLink: function getFileUploadLink(remoteFilename, options) {
-            var putOptions = merge(baseOptions, options || {});
+            var putOptions = merge(runtimeOptions, options || {});
             return putFile.getFileUploadLink(remoteFilename, putOptions);
         },
 
@@ -257,7 +261,7 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
          * @memberof ClientInterface
          */
         getQuota: function getQuota(options) {
-            const getOptions = merge(baseOptions, options || {});
+            const getOptions = merge(runtimeOptions, options || {});
             return quota.getQuota(getOptions);
         },
 
@@ -272,7 +276,7 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
          *      await client.moveFile("/sub/file.dat", "/another/dir/file.dat");
          */
         moveFile: function moveFile(remotePath, targetRemotePath, options) {
-            const moveOptions = merge(baseOptions, options || {});
+            const moveOptions = merge(runtimeOptions, options || {});
             return move.moveFile(remotePath, targetRemotePath, moveOptions);
         },
 
@@ -289,7 +293,7 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
          *      await client.putFileContents("/dir/image.png", myImageBuffer, { overwrite: false });
          */
         putFileContents: function putFileContents(remoteFilename, data, options) {
-            const putOptions = merge(baseOptions, options || {});
+            const putOptions = merge(runtimeOptions, options || {});
             return putFile.putFileContents(remoteFilename, data, putOptions);
         },
 
@@ -301,7 +305,7 @@ function createClient(remoteURL, { username, password, httpAgent, httpsAgent, to
          * @returns {Promise.<Stat>} A promise that resolves with the stat data
          */
         stat: function stat(remotePath, options) {
-            const getOptions = merge(baseOptions, options || {});
+            const getOptions = merge(runtimeOptions, options || {});
             return stats.getStat(remotePath, getOptions);
         }
     };
