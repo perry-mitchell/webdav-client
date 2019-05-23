@@ -1,5 +1,11 @@
 # WebDAV-Client changelog
 
+## v2.7.0
+_2019-05-23_
+
+ * [#149](https://github.com/perry-mitchell/webdav-client/issues/149) Upload progress for `putFileContents`
+ * [#154](https://github.com/perry-mitchell/webdav-client/pull/154) Normalise MIME type
+
 ## v2.6.0
 _2019-03-03_
 
