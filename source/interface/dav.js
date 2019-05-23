@@ -43,7 +43,7 @@ function parseXML(xml) {
 }
 
 function propsToStat(props, filename, isDetailed = false) {
-    const path = require("path");
+    const path = require("path-posix");
     // Last modified time, raw size, item type and mime
     const lastMod = getSingleValue(getValueForKey("getlastmodified", props));
     const rawSize = getSingleValue(getValueForKey("getcontentlength", props)) || "0";
