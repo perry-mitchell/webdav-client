@@ -1,5 +1,10 @@
 # WebDAV-Client changelog
 
+## v2.8.0
+_2018-05-26_
+
+ * Remove `path` dependency
+
 ## v2.7.0
 _2019-05-23_
 
