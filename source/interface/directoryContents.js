@@ -1,9 +1,8 @@
 const pathPosix = require("path-posix");
 const joinURL = require("url-join");
-const { merge } = require("../merge.js");
 const { handleResponseCode, processGlobFilter, processResponsePayload } = require("../response.js");
 const { normaliseHREF, normalisePath } = require("../url.js");
-const { getSingleValue, getValueForKey, parseXML, propsToStat } = require("./dav.js");
+const { getSingleValue, getValueForKey, parseXML, propsToStat, buildPropFindBody } = require("./dav.js");
 const { encodePath, prepareRequestOptions, request } = require("../request.js");
 
 function getDirectoryContents(remotePath, options) {
@@ -17,6 +16,10 @@ function getDirectoryContents(remotePath, options) {
         },
         responseType: "text"
     };
+    if (options.properties) {
+        requestOptions.data = buildPropFindBody(options.properties, options.namespaces);
+        requestOptions.headers["Content-Type"] = "application/xml; charset=utf-8";
+    }
     let response = null;
     prepareRequestOptions(requestOptions, options);
     return request(requestOptions)

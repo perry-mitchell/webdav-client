@@ -42,7 +42,10 @@ const stats = require("./interface/stat.js");
 /**
  * @typedef {OptionsForAdvancedResponses} GetDirectoryContentsOptions
  * @property {Boolean=} deep - Return deep (infinite) items (default: false)
+ * @property {Boolean=} details - Response objects hold all properties (default: false)
  * @property {String=} glob - Glob pattern for matching certain files
+ * @property {Array=} properties - Array of properties which shall be use in the PROPFIND request body
+ * @property {Array=} namespaces - Array of XML namespaces which are used in the PROPFIND request body
  */
 
 /**

@@ -90,10 +90,49 @@ function translateDiskSpace(value) {
     }
 }
 
+function parseClarkNotation(propertyName) {
+    const result = propertyName.match(/^{([^}]+)}(.*)$/);
+    if (!result) {
+        return;
+    }
+
+    return {
+        name: result[2],
+        namespace: result[1]
+    };
+}
+
+function buildPropFindBody(properties, xmlNamespaces) {
+    // set DAV namespace to d - best practice over all
+    xmlNamespaces["DAV:"] = "d";
+    let body = '<?xml version="1.0"?>\n' + "<d:propfind ";
+    for (let namespace in xmlNamespaces) {
+        body += " xmlns:" + xmlNamespaces[namespace] + '="' + namespace + '"';
+    }
+    body += ">\n" + "  <d:prop>\n";
+
+    for (let ii in properties) {
+        if (!properties.hasOwnProperty(ii)) {
+            continue;
+        }
+
+        const property = parseClarkNotation(properties[ii]);
+        if (xmlNamespaces[property.namespace]) {
+            body += "    <" + xmlNamespaces[property.namespace] + ":" + property.name + " />\n";
+        } else {
+            body += "    <x:" + property.name + ' xmlns:x="' + property.namespace + '" />\n';
+        }
+    }
+    body += "  </d:prop>\n";
+    body += "</d:propfind>";
+    return body;
+}
+
 module.exports = {
     getSingleValue,
     getValueForKey,
     parseXML,
     propsToStat,
-    translateDiskSpace
+    translateDiskSpace,
+    buildPropFindBody
 };
