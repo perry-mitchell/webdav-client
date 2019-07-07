@@ -1,5 +1,10 @@
 # WebDAV-Client changelog
 
+## 2.9.0
+_2019-07-07_
+
+ * [#40](https://github.com/perry-mitchell/webdav-client/issues/40) Digest authentication support
+
 ## v2.8.0
 _2018-05-26_
 
