@@ -61,7 +61,7 @@ It uses <a href="https://github.com/axios/axios">Axios</a> by default.</p>
 
 * [WebDAV](#module_WebDAV)
     * [.axios](#module_WebDAV.axios) : <code>function</code>
-    * [.createClient(remoteURL, [options])](#module_WebDAV.createClient) ⇒ [<code>ClientInterface</code>](#ClientInterface)
+    * [.createClient(remoteURL, [opts])](#module_WebDAV.createClient) ⇒ [<code>ClientInterface</code>](#ClientInterface)
 
 <a name="module_WebDAV.axios"></a>
 
@@ -71,7 +71,7 @@ Axios request library
 **Kind**: static property of [<code>WebDAV</code>](#module_WebDAV)  
 <a name="module_WebDAV.createClient"></a>
 
-### WebDAV.createClient(remoteURL, [options]) ⇒ [<code>ClientInterface</code>](#ClientInterface)
+### WebDAV.createClient(remoteURL, [opts]) ⇒ [<code>ClientInterface</code>](#ClientInterface)
 Create a client adapter
 
 **Kind**: static method of [<code>WebDAV</code>](#module_WebDAV)  
@@ -80,7 +80,7 @@ Create a client adapter
 | Param | Type | Description |
 | --- | --- | --- |
 | remoteURL | <code>String</code> | The remote address of the webdav server |
-| [options] | [<code>CreateClientOptions</code>](#CreateClientOptions) | Client options |
+| [opts] | [<code>CreateClientOptions</code>](#CreateClientOptions) | Client options |
 
 **Example**  
 ```js

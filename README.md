@@ -57,7 +57,19 @@ Make sure to read the [API documentation](API.md) for more information on the [a
 
 ### Authentication & Connection
 
-`webdav` uses `Basic` authentication by default, if `username` and `password` are provided (if none are provided, no `Authorization` header is specified). It also supports OAuth tokens - simply pass the token data to the `token` field:
+`webdav` uses `Basic` authentication by default, if `username` and `password` are provided (if none are provided, no `Authorization` header is specified). It also supports OAuth tokens and Digest auth.
+
+#### Basic or no authentication
+
+You can use the client without authentication if the server doesn't require it - simply avoid passing any values to `username`, `password`, `token` or `digest` in the config.
+
+To use basic authentication, simply pass a `username` and `password` in the config.
+
+`webdav` also allows for overriding the built in HTTP and HTTPS agents by setting the properties `httpAgent` & `httpsAgent` accordingly. These should be instances of node's [http.Agent](https://nodejs.org/api/http.html#http_class_http_agent) and [https.Agent](https://nodejs.org/api/https.html#https_class_https_agent) respectively.
+
+#### OAuth tokens
+
+To use a token to authenticate, simply pass the token data to the `token` field:
 
 ```javascript
 createClient(
@@ -74,7 +86,20 @@ createClient(
 );
 ```
 
-`webdav` also allows for overriding the built in HTTP and HTTPS agents by setting the properties `httpAgent` & `httpsAgent` accordingly. These should be instances of node's [http.Agent](https://nodejs.org/api/http.html#http_class_http_agent) and [https.Agent](https://nodejs.org/api/https.html#https_class_https_agent) respectively.
+#### Digest authentication
+
+If a server requires digest-based authentication, you can enable this functionality by setting `digest` to true:
+
+```javascript
+createClient(
+    "https://address.com",
+    {
+        username: "someUser",
+        password: "myS3curePa$$w0rd",
+        digest: true
+    }
+);
+```
 
 ### Methods
 
