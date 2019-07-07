@@ -14,6 +14,10 @@ This library is compatibale with NodeJS version 6 and above (for version 4 suppo
 
 Please read the [contribution guide](CONTRIBUTING.md) if you plan on making an issue or PR.
 
+### Usage in the Browser
+
+No transpiled package is provided, however it should be fine to transpile it with Webpack and Rollup (tested with Webpack in [external projects](https://github.com/buttercup/buttercup-browser-extension/blob/f980416d8c97e627ff9d8f3e1f48d09fcdfd53df/source/setup/library/remote.js#L1)). You must make sure to transpile/bundle all necessary WebDAV client dependencies, **including** NodeJS built-ins like `path`.
+
 ## Installation
 
 Simple install as a dependency using npm:

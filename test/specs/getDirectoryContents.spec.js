@@ -134,11 +134,10 @@ describe("getDirectoryContents", function() {
 
     describe("when connected to Seafile server", function() {
         beforeEach(function() {
-            this.client = createWebDAVClient(
-                "https://cloud.ascal-strasbg.fr/seafdav",
-                createWebDAVServer.test.username,
-                createWebDAVServer.test.password
-            );
+            this.client = createWebDAVClient("https://cloud.ascal-strasbg.fr/seafdav", {
+                username: createWebDAVServer.test.username,
+                password: createWebDAVServer.test.password
+            });
             useSeafileResponse();
         });
 

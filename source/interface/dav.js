@@ -43,7 +43,7 @@ function parseXML(xml) {
 }
 
 function propsToStat(props, filename, isDetailed = false) {
-    const path = require("path");
+    const path = require("path-posix");
     // Last modified time, raw size, item type and mime
     const lastMod = getSingleValue(getValueForKey("getlastmodified", props));
     const rawSize = getSingleValue(getValueForKey("getcontentlength", props)) || "0";
@@ -60,7 +60,7 @@ function propsToStat(props, filename, isDetailed = false) {
         etag: etag ? etag.replace(/"/g, "") : null
     };
     if (type === "file") {
-        stat.mime = mimeType ? mimeType.split(";")[0] : "";
+        stat.mime = mimeType && typeof mimeType === "string" ? mimeType.split(";")[0] : "";
     }
     if (isDetailed) {
         stat.props = Object.keys(props)
