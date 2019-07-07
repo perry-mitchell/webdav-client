@@ -1,6 +1,6 @@
 const axios = require("axios");
+const fetch = require("./fetch.js");
 const { merge } = require("./merge.js");
-const { getPatcher } = require("./patcher.js");
 
 const SEP_PATH_POSIX = "__PATH_SEPARATOR_POSIX__";
 const SEP_PATH_WINDOWS = "__PATH_SEPARATOR_WINDOWS__";
@@ -53,6 +53,10 @@ function prepareRequestOptions(requestOptions, methodOptions) {
     if (methodOptions.onUploadProgress && typeof methodOptions.onUploadProgress === "function") {
         requestOptions.onUploadProgress = methodOptions.onUploadProgress;
     }
+    if (methodOptions._digest) {
+        requestOptions._digest = methodOptions._digest;
+        requestOptions.validateStatus = status => ((status >= 200 && status < 300) || status == 401);
+    }
 }
 
 /**
@@ -74,7 +78,7 @@ function prepareRequestOptions(requestOptions, methodOptions) {
  * @returns {Promise.<Object>} A promise that resolves with a response object
  */
 function request(requestOptions) {
-    return getPatcher().patchInline("request", options => axios(options), requestOptions);
+    return fetch(requestOptions);
 }
 
 module.exports = {

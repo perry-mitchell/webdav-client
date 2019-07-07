@@ -103,7 +103,7 @@ function createClient(remoteURL, opts = {}) {
     if (!opts || typeof opts !== "object") {
         throw new Error("Options must be an object, if specified");
     }
-    const { username, password, httpAgent, httpsAgent, token = null } = opts;
+    const { username, password, httpAgent, httpsAgent, token = null, digest = false } = opts;
     const runtimeOptions = {
         headers: {},
         remotePath: urlTools.extractURLPath(remoteURL),
@@ -112,7 +112,9 @@ function createClient(remoteURL, opts = {}) {
         httpsAgent
     };
     // Configure auth
-    if (username) {
+    if (digest) {
+        runtimeOptions._digest = { username, password, nc: 0, algorithm: "md5", hasDigestAuth: false };
+    } else if (username) {
         runtimeOptions.headers.Authorization = authTools.generateBasicAuthHeader(username, password);
     } else if (token && typeof token === "object") {
         runtimeOptions.headers.Authorization = authTools.generateTokenAuthHeader(token);
