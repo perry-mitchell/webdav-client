@@ -9,10 +9,17 @@ function createServer(dir, authType) {
     }
     const userManager = new ws.SimpleUserManager();
     const user = userManager.addUser("webdav-user", "pa$$w0rd!");
-    const auth =
-        !authType || authType === "basic"
-            ? new ws.HTTPBasicAuthentication(userManager)
-            : new ws.HTTPDigestAuthentication(userManager, "test");
+    let auth;
+    switch (authType) {
+        case "digest":
+            auth = new ws.HTTPDigestAuthentication(userManager, "test");
+            break;
+        case "basic":
+        /* falls-through */
+        default:
+            auth = new ws.HTTPBasicAuthentication(userManager);
+            break;
+    }
     const privilegeManager = new ws.SimplePathPrivilegeManager();
     privilegeManager.setRights(user, "/", ["all"]);
     const server = new ws.WebDAVServer({

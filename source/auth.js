@@ -6,22 +6,22 @@ function generateBasicAuthHeader(username, password) {
     return `Basic ${encoded}`;
 }
 
-function generateTokenAuthHeader(tokenInfo) {
-    return `${tokenInfo.token_type} ${tokenInfo.access_token}`;
-}
-
 function generateDigestAuthHeader(options, digest) {
     const url = options.url.replace("//", "");
     const uri = url.indexOf("/") == -1 ? "/" : url.slice(url.indexOf("/"));
-
     const method = options.method ? options.method.toUpperCase() : "GET";
-
     const qop = /(^|,)\s*auth\s*($|,)/.test(digest.qop) ? "auth" : false;
     const ncString = `00000000${digest.nc}`.slice(-8);
     const cnonce = digest.cnonce;
-    const ha1 = ha1Compute(digest.algorithm, digest.username, digest.realm, digest.password, digest.nonce, digest.cnonce);
+    const ha1 = ha1Compute(
+        digest.algorithm,
+        digest.username,
+        digest.realm,
+        digest.password,
+        digest.nonce,
+        digest.cnonce
+    );
     const ha2 = md5(`${method}:${uri}`);
-
     const digestResponse = qop
         ? md5(`${ha1}:${digest.nonce}:${ncString}:${digest.cnonce}:${qop}:${ha2}`)
         : md5(`${ha1}:${digest.nonce}:${ha2}`);
@@ -51,6 +51,10 @@ function generateDigestAuthHeader(options, digest) {
     }
 
     return `Digest ${authHeader.join(", ")}`;
+}
+
+function generateTokenAuthHeader(tokenInfo) {
+    return `${tokenInfo.token_type} ${tokenInfo.access_token}`;
 }
 
 module.exports = {
