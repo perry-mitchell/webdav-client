@@ -1,6 +1,11 @@
 # WebDAV-Client changelog
 
-## 2.9.0
+## v2.9.1
+_2019-07-07_
+
+ * [#162](https://github.com/perry-mitchell/webdav-client/issues/162) etag.replace is not a function (etag string validation)
+
+## v2.9.0
 _2019-07-07_
 
  * [#40](https://github.com/perry-mitchell/webdav-client/issues/40) Digest authentication support
