@@ -55,7 +55,7 @@ function prepareRequestOptions(requestOptions, methodOptions) {
     }
     if (methodOptions._digest) {
         requestOptions._digest = methodOptions._digest;
-        requestOptions.validateStatus = status => ((status >= 200 && status < 300) || status == 401);
+        requestOptions.validateStatus = status => (status >= 200 && status < 300) || status == 401;
     }
 }
 

@@ -1,7 +1,9 @@
 const { createHash } = require("crypto");
 
 function md5(data) {
-    return createHash("md5").update(data).digest("hex");
+    return createHash("md5")
+        .update(data)
+        .digest("hex");
 }
 
 function ha1Compute(algorithm, user, realm, pass, nonce, cnonce) {
