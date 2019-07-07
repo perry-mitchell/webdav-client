@@ -63,7 +63,7 @@
     "babel-preset-env": "^1.7.0",
     "buffer-equals": "^2.0.0",
     "chai": "^4.2.0",
-    "concurrently": "^4.1.0",
+    "concurrently": "^4.1.1",
     "copy-dir": "^0.4.0",
     "directory-exists": "^2.0.1",
     "exists-file": "^3.0.2",
@@ -85,7 +85,7 @@
     "sinon": "^7.2.3",
     "wait-on": "^3.2.0",
     "webdav-server": "^2.4.5",
-    "webpack": "^4.29.0",
-    "webpack-cli": "^3.2.1"
+    "webpack": "^4.35.2",
+    "webpack-cli": "^3.3.5"
   }
 }
