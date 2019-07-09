@@ -26,6 +26,7 @@ function encodePath(path) {
  * @property {Object=} httpsAgent - HTTPS agent instance
  * @property {Object=} headers - Set additional request headers
  * @property {Boolean=} withCredentials - Set whether or not credentials should
+ * @property {Object|String|*=} body - Set additional body
  *  be included with the request. Defaults to value used by axios.
  */
 
@@ -40,6 +41,9 @@ function prepareRequestOptions(requestOptions, methodOptions) {
     }
     if (methodOptions.httpsAgent) {
         requestOptions.httpsAgent = methodOptions.httpsAgent;
+    }
+    if (methodOptions.body) {
+        requestOptions.body = methodOptions.body;
     }
     if (methodOptions.headers && typeof methodOptions.headers === "object") {
         requestOptions.headers = merge(requestOptions.headers || {}, methodOptions.headers);
