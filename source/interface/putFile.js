@@ -1,3 +1,4 @@
+const stream = require('stream');
 const joinURL = require("url-join");
 const { merge } = require("../merge.js");
 const responseHandlers = require("../response.js");
@@ -14,7 +15,11 @@ function getPutContentsDefaults() {
 }
 
 function putFileContents(filePath, data, options) {
-    const putOptions = merge(getPutContentsDefaults(), { headers: { "Content-Length": data.length } }, options || {});
+    const headers = {};
+    if (!(data instanceof stream.Readable)) {
+        headers["Content-Length"] = data.length;
+    }
+    const putOptions = merge(getPutContentsDefaults(), { headers }, options || {});
     if (putOptions.overwrite === false) {
         putOptions.headers["If-None-Match"] = "*";
     }
