@@ -182,13 +182,13 @@ function createClient(remoteURL, opts = {}) {
 
         /**
          * Send a custom request
+         * @param {String} remotePath The remote path
          * @param {RequestOptions=}  requestOptions the request options
          * @param {Options=} options Options for the request
          * @memberof ClientInterface
          * @returns {Promise<Any>} A promise that resolves with response of the request
          * @example
-         *      const contents = await client.customRequest({
-         *          url: "http://localhost:9988/webdav/server/alrighty.jpg",
+         *      const contents = await client.customRequest("/alrighty.jpg", {
          *          method: "PROPFIND",
          *          headers: {
          *              Accept: "text/plain",
@@ -197,9 +197,9 @@ function createClient(remoteURL, opts = {}) {
          *          responseType: "text"
          *      });
          */
-        customRequest: function customRequest(requestOptions, options) {
+        customRequest: function customRequest(remotePath, requestOptions, options) {
             const customOptions = merge(runtimeOptions, options || {});
-            return custom.customRequest(requestOptions, customOptions);
+            return custom.customRequest(remotePath, requestOptions, customOptions);
         },
 
         /**

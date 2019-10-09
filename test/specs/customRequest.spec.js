@@ -20,8 +20,7 @@ describe("custom", function() {
     it("send and parse stat custom request", function() {
         let response = null;
         return this.client
-            .customRequest({
-                url: "http://localhost:9988/webdav/server/alrighty.jpg",
+            .customRequest("/alrighty.jpg", {
                 method: "PROPFIND",
                 headers: {
                     Accept: "text/plain",
