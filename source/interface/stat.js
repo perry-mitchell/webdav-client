@@ -47,5 +47,6 @@ function parseStat(result, filename, isDetailed = false) {
 }
 
 module.exports = {
-    getStat
+    getStat,
+    parseStat
 };
