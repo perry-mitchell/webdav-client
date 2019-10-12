@@ -25,6 +25,8 @@ matrix:
       sudo: required
       env:
         - NAME="Web"
+      services:
+        - xvfb
       addons:
         apt:
           sources:
