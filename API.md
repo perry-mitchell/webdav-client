@@ -162,6 +162,7 @@ Client adapter
     * [.createDirectory(dirPath, [options])](#ClientInterface.createDirectory) ⇒ <code>Promise</code>
     * [.createReadStream(remoteFilename, [options])](#ClientInterface.createReadStream) ⇒ <code>Readable</code>
     * [.createWriteStream(remoteFilename, [options])](#ClientInterface.createWriteStream) ⇒ <code>Writeable</code>
+    * [.customRequest(remotePath, [requestOptions], [options])](#ClientInterface.customRequest) ⇒ <code>Promise.&lt;Any&gt;</code>
     * [.deleteFile(remotePath, [options])](#ClientInterface.deleteFile) ⇒ <code>Promise</code>
     * [.getDirectoryContents(remotePath, [options])](#ClientInterface.getDirectoryContents) ⇒ <code>Promise.&lt;Array.&lt;Stat&gt;&gt;</code>
     * [.getFileContents(remoteFilename, [options])](#ClientInterface.getFileContents) ⇒ <code>Promise.&lt;(Buffer\|String)&gt;</code>
@@ -242,6 +243,31 @@ Create a writeable stream to a remote file
 ```js
 const remote = client.createWriteStream("/data.zip");
      fs.createReadStream("~/myData.zip").pipe(remote);
+```
+<a name="ClientInterface.customRequest"></a>
+
+### ClientInterface.customRequest(remotePath, [requestOptions], [options]) ⇒ <code>Promise.&lt;Any&gt;</code>
+Send a custom request
+
+**Kind**: static method of [<code>ClientInterface</code>](#ClientInterface)  
+**Returns**: <code>Promise.&lt;Any&gt;</code> - A promise that resolves with response of the request  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| remotePath | <code>String</code> | The remote path |
+| [requestOptions] | [<code>RequestOptions</code>](#RequestOptions) | the request options |
+| [options] | <code>Options</code> | Options for the request |
+
+**Example**  
+```js
+const contents = await client.customRequest("/alrighty.jpg", {
+         method: "PROPFIND",
+         headers: {
+             Accept: "text/plain",
+             Depth: 0
+         },
+         responseType: "text"
+     });
 ```
 <a name="ClientInterface.deleteFile"></a>
 
@@ -491,7 +517,8 @@ A stat result
 | [httpAgent] | <code>Object</code> | HTTP agent instance |
 | [httpsAgent] | <code>Object</code> | HTTPS agent instance |
 | [headers] | <code>Object</code> | Set additional request headers |
-| [withCredentials] | <code>Boolean</code> | Set whether or not credentials should  be included with the request. Defaults to value used by axios. |
+| [withCredentials] | <code>Boolean</code> | Set whether or not credentials should |
+| data | <code>Object</code> \| <code>String</code> \| <code>\*</code> | Set additional body  be included with the request. Defaults to value used by axios. |
 
 <a name="RequestOptions"></a>
 
@@ -506,5 +533,5 @@ A stat result
 | [headers] | <code>Object</code> | Headers to set on the request |
 | [httpAgent] | <code>Object</code> | A HTTP agent instance |
 | [httpsAgent] | <code>Object</code> | A HTTPS agent interface |
-| body | <code>Object</code> \| <code>String</code> \| <code>\*</code> | Body data for the request |
+| data | <code>Object</code> \| <code>String</code> \| <code>\*</code> | Body data for the request |
 

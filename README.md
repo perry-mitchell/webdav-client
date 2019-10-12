@@ -250,6 +250,21 @@ const stat = await client.stat("/some/file.tar.gz");
 
 Returns an [item stat](#item-stat).
 
+### Custom requests
+
+Custom requests can be made to the attached host:
+
+```javascript
+const contents = await client.customRequest("/alrighty.jpg", {
+    method: "PROPFIND",
+    headers: {
+        Accept: "text/plain",
+        Depth: 0
+    },
+    responseType: "text"
+});
+```
+
 ### Returned data structures
 
 #### Directory contents items
