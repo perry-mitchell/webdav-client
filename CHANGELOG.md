@@ -1,5 +1,10 @@
 # WebDAV-Client changelog
 
+## v2.10.0
+_2019-10-12_
+
+ * [#174](https://github.com/perry-mitchell/webdav-client/pull/174) `customRequest` method for making custom requests
+
 ## v2.9.1
 _2019-07-07_
 
