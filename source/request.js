@@ -51,6 +51,9 @@ function prepareRequestOptions(requestOptions, methodOptions) {
     if (typeof methodOptions.withCredentials === "boolean") {
         requestOptions.withCredentials = methodOptions.withCredentials;
     }
+    if (methodOptions.cancelToken && typeof methodOptions.cancelToken === "object") {
+        requestOptions.cancelToken = merge(requestOptions.cancelToken || {}, methodOptions.cancelToken);
+    }
     if (methodOptions.maxContentLength) {
         requestOptions.maxContentLength = methodOptions.maxContentLength;
     }
