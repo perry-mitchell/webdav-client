@@ -1,6 +1,5 @@
-const joinURL = require("url-join");
 const { handleResponseCode } = require("../response.js");
-const { encodePath, prepareRequestOptions, request } = require("../request.js");
+const { encodePath, joinURL, prepareRequestOptions, request } = require("../request.js");
 
 function customRequest(remotePath, requestOptions, options) {
     if (!requestOptions.url) {

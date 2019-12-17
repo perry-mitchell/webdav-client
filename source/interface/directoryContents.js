@@ -1,13 +1,11 @@
 const pathPosix = require("path-posix");
-const joinURL = require("url-join");
 const { merge } = require("../merge.js");
 const { handleResponseCode, processGlobFilter, processResponsePayload } = require("../response.js");
 const { normaliseHREF, normalisePath } = require("../url.js");
 const { getSingleValue, getValueForKey, parseXML, propsToStat } = require("./dav.js");
-const { encodePath, prepareRequestOptions, request } = require("../request.js");
+const { encodePath, joinURL, prepareRequestOptions, request } = require("../request.js");
 
 function getDirectoryContents(remotePath, options) {
-    // Join the URL and path for the request
     const requestOptions = {
         url: joinURL(options.remoteURL, encodePath(remotePath), "/"),
         method: "PROPFIND",

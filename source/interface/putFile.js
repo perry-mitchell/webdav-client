@@ -1,7 +1,6 @@
-const joinURL = require("url-join");
 const { merge } = require("../merge.js");
 const responseHandlers = require("../response.js");
-const { encodePath, prepareRequestOptions, request } = require("../request.js");
+const { encodePath, joinURL, prepareRequestOptions, request } = require("../request.js");
 const { fromBase64 } = require("../encode.js");
 
 function getPutContentsDefaults() {
