@@ -1,9 +1,8 @@
-const joinURL = require("url-join");
 const { merge } = require("../merge.js");
 const { handleResponseCode, processResponsePayload } = require("../response.js");
 const { getSingleValue, getValueForKey, parseXML, propsToStat } = require("./dav.js");
 const urlTools = require("../url.js");
-const { encodePath, prepareRequestOptions, request } = require("../request.js");
+const { encodePath, joinURL, prepareRequestOptions, request } = require("../request.js");
 
 function getStat(filename, options) {
     const requestOptions = {

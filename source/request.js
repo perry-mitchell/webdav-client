@@ -1,4 +1,5 @@
 const axios = require("axios");
+const joinURLParts = require("url-join");
 const fetch = require("./fetch.js");
 const { merge } = require("./merge.js");
 
@@ -18,6 +19,22 @@ function encodePath(path) {
         .join("\\\\")
         .split(SEP_PATH_POSIX)
         .join("/");
+}
+
+/**
+ * Join URL segments
+ * @param  {...String} parts URL segments to join
+ * @returns {String} A joined URL string
+ */
+function joinURL(...parts) {
+    return joinURLParts(
+        parts.reduce((output, nextPart, partIndex) => {
+            if (partIndex === 0 || nextPart !== "/" || (nextPart === "/" && output[output.length - 1] !== "/")) {
+                output.push(nextPart);
+            }
+            return output;
+        }, [])
+    );
 }
 
 /**
@@ -88,6 +105,7 @@ function request(requestOptions) {
 module.exports = {
     axios,
     encodePath,
+    joinURL,
     prepareRequestOptions,
     request
 };

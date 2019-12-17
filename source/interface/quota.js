@@ -1,6 +1,5 @@
-const joinURL = require("url-join");
 const { handleResponseCode, processResponsePayload } = require("../response.js");
-const { encodePath, prepareRequestOptions, request } = require("../request.js");
+const { encodePath, joinURL, prepareRequestOptions, request } = require("../request.js");
 const { getSingleValue, getValueForKey, parseXML, translateDiskSpace } = require("./dav.js");
 
 function getQuota(options) {
