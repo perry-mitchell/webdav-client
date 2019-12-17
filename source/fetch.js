@@ -1,4 +1,4 @@
-const axios = require("axios");
+const { request: cowl } = require("cowl");
 const { merge } = require("./merge.js");
 const { getPatcher } = require("./patcher.js");
 const { generateDigestAuthHeader } = require("./auth.js");
@@ -37,7 +37,7 @@ function parseAuth(response, _digest) {
 }
 
 function request(requestOptions) {
-    return getPatcher().patchInline("request", options => axios(options), requestOptions);
+    return getPatcher().patchInline("request", options => cowl(options), requestOptions);
 }
 
 function fetch(requestOptions) {

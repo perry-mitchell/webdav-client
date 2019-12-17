@@ -1,4 +1,4 @@
-const axios = require("axios");
+const { request: cowl } = require("cowl");
 const fetch = require("./fetch.js");
 const { merge } = require("./merge.js");
 
@@ -36,10 +36,12 @@ function encodePath(path) {
  */
 function prepareRequestOptions(requestOptions, methodOptions) {
     if (methodOptions.httpAgent) {
-        requestOptions.httpAgent = methodOptions.httpAgent;
+        requestOptions.nodeJsOptions = requestOptions.nodeJsOptions || {};
+        requestOptions.nodeJsOptions.httpAgent = methodOptions.httpAgent;
     }
     if (methodOptions.httpsAgent) {
-        requestOptions.httpsAgent = methodOptions.httpsAgent;
+        requestOptions.nodeJsOptions = requestOptions.nodeJsOptions || {};
+        requestOptions.nodeJsOptions.httpsAgent = methodOptions.httpsAgent;
     }
     if (methodOptions.headers && typeof methodOptions.headers === "object") {
         requestOptions.headers = merge(requestOptions.headers || {}, methodOptions.headers);
@@ -69,20 +71,12 @@ function prepareRequestOptions(requestOptions, methodOptions) {
  * @property {Object|String|*=} body - Body data for the request
  */
 
-/**
- * Make a request
- * This method can be patched by patching or plugging-in to the "request"
- * item using {@link https://github.com/perry-mitchell/hot-patcher HotPatcher}.
- * It uses {@link https://github.com/axios/axios Axios} by default.
- * @param {RequestOptions} requestOptions Options for the request
- * @returns {Promise.<Object>} A promise that resolves with a response object
- */
 function request(requestOptions) {
-    return fetch(requestOptions);
+    return cowl(requestOptions);
 }
 
 module.exports = {
-    axios,
+    cowl,
     encodePath,
     prepareRequestOptions,
     request

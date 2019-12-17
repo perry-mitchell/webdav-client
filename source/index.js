@@ -1,4 +1,4 @@
-const { axios } = require("./request.js");
+const { cowl } = require("./request.js");
 const { createClient } = require("./factory.js");
 const { getPatcher } = require("./patcher.js");
 
@@ -6,12 +6,7 @@ const { getPatcher } = require("./patcher.js");
  * @module WebDAV
  */
 module.exports = {
-    /**
-     * Axios request library
-     * @type {Function}
-     * @memberof module:WebDAV
-     */
-    axios,
+    cowl,
     createClient,
     getPatcher
 };

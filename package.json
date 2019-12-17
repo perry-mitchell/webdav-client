@@ -46,8 +46,8 @@
   },
   "homepage": "https://github.com/perry-mitchell/webdav-client#readme",
   "dependencies": {
-    "axios": "^0.19.0",
     "base-64": "^0.1.0",
+    "cowl": "^0.8.0",
     "hot-patcher": "^0.5.0",
     "merge": "^1.2.1",
     "minimatch": "^3.0.4",

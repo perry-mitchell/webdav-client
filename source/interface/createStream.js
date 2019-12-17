@@ -28,7 +28,7 @@ function createWriteStream(filePath, options) {
         url: joinURL(options.remoteURL, encodePath(filePath)),
         method: "PUT",
         headers,
-        data: writeStream
+        body: writeStream
     };
     prepareRequestOptions(requestOptions, options);
     request(requestOptions)
