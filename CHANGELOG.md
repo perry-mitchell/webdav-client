@@ -1,5 +1,11 @@
 # WebDAV-Client changelog
 
+## v2.10.1
+_2019-12-17_
+
+ * **Bugfix**:
+   * [#185](https://github.com/perry-mitchell/webdav-client/issues/185) Extra trailing slash after join for URL components on root account requests
+
 ## v2.10.0
 _2019-10-12_
 
