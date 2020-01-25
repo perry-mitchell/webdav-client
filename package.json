@@ -18,7 +18,7 @@
     "test:node:watch": "nodemon --exec 'npm run test:node' --ignore 'dist/'",
     "test:web": "npm run test:web:pack && concurrently --success 'first' --kill-others 'npm run test:web:karma' 'npm run test:web:server'",
     "test:web:karma": "sleep 2 && karma start test/web/karma.conf.js",
-    "test:web:pack": "webpack --mode development --config test/web/webpack.config.js",
+    "test:web:pack": "webpack --mode development --config webpack.config.js",
     "test:web:server": "node test/web/server.js"
   },
   "files": [
