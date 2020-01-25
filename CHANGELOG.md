@@ -1,5 +1,11 @@
 # WebDAV-Client changelog
 
+## v2.10.2
+_2020-01-25_
+
+ * **Bugfix**:
+   * [#189](https://github.com/perry-mitchell/webdav-client/issues/189) Maximum call stack size exceeded during digest auth usage (property merging)
+
 ## v2.10.1
 _2019-12-17_
 
