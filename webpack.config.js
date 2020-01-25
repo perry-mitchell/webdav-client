@@ -1,9 +1,9 @@
 const path = require("path");
 
-const TEST_DIST = path.resolve(__dirname, "../../dist/test");
+const DIST = path.resolve(__dirname, "./dist/web");
 
 module.exports = {
-    entry: path.resolve(__dirname, "../../source/index.js"),
+    entry: path.resolve(__dirname, "./source/index.js"),
 
     module: {
         rules: [
@@ -23,10 +23,16 @@ module.exports = {
         ]
     },
 
+    node: {
+        buffer: "empty",
+        fs: "empty",
+        path: "empty"
+    },
+
     output: {
         filename: "webdav.js",
-        path: TEST_DIST,
-        library: "webdav",
+        path: DIST,
+        library: "WebDAV",
         libraryTarget: "umd"
     }
 };

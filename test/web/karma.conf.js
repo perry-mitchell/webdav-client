@@ -12,7 +12,7 @@ module.exports = function(config) {
         autoWatch: false,
         customLaunchers: {
             CustomChrome: {
-                base: "Chrome",
+                base: "ChromeHeadless",
                 flags: ["--disable-web-security"],
                 debug: true
             }
