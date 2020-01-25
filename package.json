@@ -56,10 +56,10 @@
     "xml2js": "^0.4.23"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.3",
-    "babel-loader": "^7.1.5",
-    "babel-preset-env": "^1.7.0",
+    "@babel/cli": "^7.8.3",
+    "@babel/core": "^7.8.3",
+    "@babel/preset-env": "^7.8.3",
+    "babel-loader": "^8.0.6",
     "buffer-equals": "^2.0.0",
     "chai": "^4.2.0",
     "concurrently": "^5.0.2",
