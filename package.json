@@ -84,7 +84,7 @@
     "sinon": "^8.1.1",
     "wait-on": "^4.0.0",
     "webdav-server": "^2.4.6",
-    "webpack": "^4.35.2",
-    "webpack-cli": "^3.3.5"
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10"
   }
 }
