@@ -49,7 +49,6 @@
     "axios": "^0.19.0",
     "base-64": "^0.1.0",
     "hot-patcher": "^0.5.0",
-    "merge": "^1.2.1",
     "minimatch": "^3.0.4",
     "path-posix": "^1.0.0",
     "url-join": "^4.0.1",
