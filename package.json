@@ -11,7 +11,7 @@
     "docs": "jsdoc2md 'source/**/*.js' > API.md",
     "format": "prettier --write '{source,test}/**/*.js'",
     "precommit": "lint-staged",
-    "prepare:publish:web": "mkdirp ./web && cp ./dist/web/webdav.js ./web/index.js",
+    "prepare:publish:web": "mkdirp ./web && mv ./dist/web/webdav.js ./web/index.js",
     "prepublishOnly": "run-s build prepare:publish:web",
     "test": "run-s test:node test:web test:format",
     "test:format": "prettier-check '{source,test}/**/*.js'",
