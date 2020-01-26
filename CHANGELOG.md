@@ -1,5 +1,13 @@
 # WebDAV-Client changelog
 
+## v3.0.0
+_2020-01-26_
+
+ * Removed support for NodeJS < 10
+ * Web support
+ * Replaced XML parsing library (no dependencies, no streaming - better web support)
+ * `createReadStream` and `createWriteStream` stubbed but disabled in web version
+
 ## v2.10.2
 _2020-01-25_
 

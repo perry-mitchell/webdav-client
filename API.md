@@ -14,6 +14,9 @@
 <dt><a href="#encodePath">encodePath(path)</a> ⇒ <code>String</code></dt>
 <dd><p>Encode a path for use with WebDAV servers</p>
 </dd>
+<dt><a href="#joinURL">joinURL(...parts)</a> ⇒ <code>String</code></dt>
+<dd><p>Join URL segments</p>
+</dd>
 <dt><a href="#prepareRequestOptions">prepareRequestOptions(requestOptions, methodOptions)</a></dt>
 <dd><p>Process request options before being passed to Axios</p>
 </dd>
@@ -122,6 +125,18 @@ Encode a path for use with WebDAV servers
 | Param | Type | Description |
 | --- | --- | --- |
 | path | <code>String</code> | The path to encode |
+
+<a name="joinURL"></a>
+
+## joinURL(...parts) ⇒ <code>String</code>
+Join URL segments
+
+**Kind**: global function  
+**Returns**: <code>String</code> - A joined URL string  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| ...parts | <code>String</code> | URL segments to join |
 
 <a name="prepareRequestOptions"></a>
 
