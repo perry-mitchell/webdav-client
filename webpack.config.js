@@ -25,8 +25,14 @@ module.exports = {
 
     node: {
         buffer: "empty",
+        crypto: "empty",
+        dns: "empty",
         fs: "empty",
-        path: "empty"
+        http: "empty",
+        https: "empty",
+        net: "empty",
+        path: "empty",
+        stream: "empty"
     },
 
     output: {
