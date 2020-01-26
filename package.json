@@ -7,11 +7,12 @@
     "build": "npm run clean && run-p build:node build:web",
     "build:node": "babel --out-dir dist/node source",
     "build:web": "webpack --mode production --config webpack.config.js",
-    "clean": "rimraf dist",
+    "clean": "rimraf dist web",
     "docs": "jsdoc2md 'source/**/*.js' > API.md",
     "format": "prettier --write '{source,test}/**/*.js'",
     "precommit": "lint-staged",
-    "prepublishOnly": "npm run build",
+    "prepare:publish:web": "mkdirp ./web && cp ./dist/web/webdav.js ./web/index.js",
+    "prepublishOnly": "run-s build prepare:publish:web",
     "test": "run-s test:node test:web test:format",
     "test:format": "prettier-check '{source,test}/**/*.js'",
     "test:node": "npm run build:node && mocha -r test/specs/index.js test/specs/**/*.spec.js",
@@ -23,6 +24,7 @@
   },
   "files": [
     "dist/",
+    "web/",
     "test/server/",
     "*.md"
   ],
