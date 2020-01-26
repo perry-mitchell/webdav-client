@@ -51,12 +51,12 @@
   "dependencies": {
     "axios": "^0.19.2",
     "base-64": "^0.1.0",
+    "fast-xml-parser": "^3.16.0",
     "hot-patcher": "^0.5.0",
     "minimatch": "^3.0.4",
     "path-posix": "^1.0.0",
     "url-join": "^4.0.1",
-    "url-parse": "^1.4.7",
-    "xml2js": "^0.4.23"
+    "url-parse": "^1.4.7"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.3",

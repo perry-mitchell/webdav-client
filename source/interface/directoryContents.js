@@ -2,7 +2,7 @@ const pathPosix = require("path-posix");
 const { merge } = require("../merge.js");
 const { handleResponseCode, processGlobFilter, processResponsePayload } = require("../response.js");
 const { normaliseHREF, normalisePath } = require("../url.js");
-const { getSingleValue, getValueForKey, parseXML, propsToStat } = require("./dav.js");
+const { parseXML, propsToStat } = require("./dav.js");
 const { encodePath, joinURL, prepareRequestOptions, request } = require("../request.js");
 
 function getDirectoryContents(remotePath, options) {
@@ -33,24 +33,31 @@ function getDirectoryFiles(result, serverBasePath, requestPath, isDetailed = fal
     const remoteTargetPath = pathPosix.join(serverBasePath, requestPath, "/");
     const serverBase = pathPosix.join(serverBasePath, "/");
     // Extract the response items (directory contents)
-    const multiStatus = getValueForKey("multistatus", result);
-    const responseItems = getValueForKey("response", multiStatus);
+    const {
+        multistatus: {
+            response: responseItems
+        }
+    } = result;
     return (
         responseItems
             // Filter out the item pointing to the current directory (not needed)
             .filter(item => {
-                let href = getSingleValue(getValueForKey("href", item));
+                // let href = getSingleValue(getValueForKey("href", item));
+                let href = item.href;
                 href = pathPosix.join(normalisePath(normaliseHREF(href)), "/");
                 return href !== serverBase && href !== remoteTargetPath;
             })
             // Map all items to a consistent output structure (results)
             .map(item => {
                 // HREF is the file path (in full)
-                let href = getSingleValue(getValueForKey("href", item));
+                let href = item.href;
                 href = normaliseHREF(href);
                 // Each item should contain a stat object
-                const propStat = getSingleValue(getValueForKey("propstat", item));
-                const props = getSingleValue(getValueForKey("prop", propStat));
+                const {
+                    propstat: {
+                        prop: props
+                    }
+                } = item;
                 // Process the true full filename (minus the base server path)
                 const filename =
                     serverBase === "/" ? normalisePath(href) : normalisePath(pathPosix.relative(serverBase, href));

@@ -1,56 +1,28 @@
-const xml2js = require("xml2js");
-
-function extractKey(xmlKey) {
-    const match = /^([a-z0-9]+:)?(.+)$/i.exec(xmlKey);
-    if (!match) {
-        throw new Error(`Failed to extract key for response XML: ${xmlKey}`);
-    }
-    return match[2];
-}
-
-function findKey(baseKey, obj) {
-    return Object.keys(obj).find(function __findBaseKey(itemKey) {
-        const match = /^[a-z0-9]+:(.+)$/i.exec(itemKey);
-        return match ? match[1] === baseKey : itemKey === baseKey;
-    });
-}
-
-function getSingleValue(item) {
-    return Array.isArray(item) ? getSingleValue(item[0]) : item;
-}
-
-function getValueForKey(key, obj) {
-    let keys, i, keyCount;
-    if (typeof obj === "object") {
-        const actualKey = findKey(key, obj);
-        if (actualKey && typeof obj[actualKey] !== "undefined") {
-            return obj[actualKey];
-        }
-    }
-    return undefined;
-}
+const xmlParser = require("fast-xml-parser");
 
 function parseXML(xml) {
-    const parser = new xml2js.Parser({ emptyTag: true, ignoreAttrs: true });
-    return new Promise(function(resolve, reject) {
-        parser.parseString(xml, function __handleParseResult(err, result) {
-            if (err) {
-                return reject(err);
-            }
-            return resolve(result);
+    return new Promise(resolve => {
+        const result = xmlParser.parse(xml, {
+            arrayMode: false,
+            ignoreNameSpace: true
         });
+        resolve(result);
     });
 }
 
 function propsToStat(props, filename, isDetailed = false) {
     const path = require("path-posix");
     // Last modified time, raw size, item type and mime
-    const lastMod = getSingleValue(getValueForKey("getlastmodified", props));
-    const rawSize = getSingleValue(getValueForKey("getcontentlength", props)) || "0";
-    const resourceType = getSingleValue(getValueForKey("resourcetype", props));
-    const mimeType = getSingleValue(getValueForKey("getcontenttype", props));
-    const type = getValueForKey("collection", resourceType) ? "directory" : "file";
-    const etag = getSingleValue(getValueForKey("getetag", props));
+    const {
+        getlastmodified: lastMod,
+        getcontentlength: rawSize = "0",
+        resourcetype: resourceType,
+        getcontenttype: mimeType,
+        getetag: etag
+    } = props;
+    const type = resourceType && typeof resourceType === "object" && typeof resourceType.collection !== "undefined"
+        ? "directory"
+        : "file";
     const stat = {
         filename: filename,
         basename: path.basename(filename),
@@ -63,15 +35,7 @@ function propsToStat(props, filename, isDetailed = false) {
         stat.mime = mimeType && typeof mimeType === "string" ? mimeType.split(";")[0] : "";
     }
     if (isDetailed) {
-        stat.props = Object.keys(props)
-            .map(extractKey)
-            .reduce(
-                (output, propName) =>
-                    Object.assign(output, {
-                        [propName]: getSingleValue(getValueForKey(propName, props))
-                    }),
-                {}
-            );
+        stat.props = props;
     }
     return stat;
 }
@@ -91,8 +55,6 @@ function translateDiskSpace(value) {
 }
 
 module.exports = {
-    getSingleValue,
-    getValueForKey,
     parseXML,
     propsToStat,
     translateDiskSpace

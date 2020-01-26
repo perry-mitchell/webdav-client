@@ -1,6 +1,6 @@
 const { handleResponseCode, processResponsePayload } = require("../response.js");
 const { encodePath, joinURL, prepareRequestOptions, request } = require("../request.js");
-const { getSingleValue, getValueForKey, parseXML, translateDiskSpace } = require("./dav.js");
+const { parseXML, translateDiskSpace } = require("./dav.js");
 
 function getQuota(options) {
     const requestOptions = {
@@ -26,29 +26,24 @@ function getQuota(options) {
 }
 
 function parseQuota(result) {
-    let responseItem = null,
-        multistatus,
-        propstat,
-        props,
-        quotaUsed,
-        quotaAvail;
     try {
-        multistatus = getValueForKey("multistatus", result);
-        responseItem = getSingleValue(getValueForKey("response", multistatus));
-    } catch (e) {
-        /* ignore */
-    }
-    if (responseItem) {
-        propstat = getSingleValue(getValueForKey("propstat", responseItem));
-        props = getSingleValue(getValueForKey("prop", propstat));
-        quotaUsed = getSingleValue(getValueForKey("quota-used-bytes", props));
-        quotaAvail = getSingleValue(getValueForKey("quota-available-bytes", props));
+        const responseItem = result.multistatus.response;
+        const {
+            propstat: {
+                prop: {
+                    "quota-used-bytes": quotaUsed,
+                    "quota-available-bytes": quotaAvail
+                }
+            }
+        } = responseItem;
         return typeof quotaUsed !== "undefined" && typeof quotaAvail !== "undefined"
             ? {
-                  used: parseInt(quotaUsed, 10),
-                  available: translateDiskSpace(quotaAvail)
-              }
+                used: parseInt(quotaUsed, 10),
+                available: translateDiskSpace(quotaAvail)
+            }
             : null;
+    } catch (err) {
+        /* ignore */
     }
     return null;
 }
