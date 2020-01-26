@@ -20,9 +20,10 @@ function propsToStat(props, filename, isDetailed = false) {
         getcontenttype: mimeType,
         getetag: etag
     } = props;
-    const type = resourceType && typeof resourceType === "object" && typeof resourceType.collection !== "undefined"
-        ? "directory"
-        : "file";
+    const type =
+        resourceType && typeof resourceType === "object" && typeof resourceType.collection !== "undefined"
+            ? "directory"
+            : "file";
     const stat = {
         filename: filename,
         basename: path.basename(filename),

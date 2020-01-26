@@ -1,4 +1,5 @@
 const path = require("path");
+const { DefinePlugin } = require("webpack");
 
 const DIST = path.resolve(__dirname, "./dist/web");
 
@@ -40,5 +41,11 @@ module.exports = {
         path: DIST,
         library: "WebDAV",
         libraryTarget: "umd"
-    }
+    },
+
+    plugins: [
+        new DefinePlugin({
+            WEB: "true"
+        })
+    ]
 };

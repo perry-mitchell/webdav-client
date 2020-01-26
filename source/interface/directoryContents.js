@@ -34,9 +34,7 @@ function getDirectoryFiles(result, serverBasePath, requestPath, isDetailed = fal
     const serverBase = pathPosix.join(serverBasePath, "/");
     // Extract the response items (directory contents)
     const {
-        multistatus: {
-            response: responseItems
-        }
+        multistatus: { response: responseItems }
     } = result;
     return (
         responseItems
@@ -54,9 +52,7 @@ function getDirectoryFiles(result, serverBasePath, requestPath, isDetailed = fal
                 href = normaliseHREF(href);
                 // Each item should contain a stat object
                 const {
-                    propstat: {
-                        prop: props
-                    }
+                    propstat: { prop: props }
                 } = item;
                 // Process the true full filename (minus the base server path)
                 const filename =

@@ -4,7 +4,6 @@ const { merge } = require("./merge.js");
 
 const directoryContents = require("./interface/directoryContents.js");
 const createDir = require("./interface/createDirectory.js");
-const createStream = require("./interface/createStream.js");
 const custom = require("./interface/custom.js");
 const deletion = require("./interface/delete.js");
 const getFile = require("./interface/getFile.js");
@@ -161,8 +160,13 @@ function createClient(remoteURL, opts = {}) {
          *      remote.pipe(someWriteStream);
          */
         createReadStream: function createReadStream(remoteFilename, options) {
-            const createOptions = merge(runtimeOptions, options || {});
-            return createStream.createReadStream(remoteFilename, createOptions);
+            if (typeof WEB !== "undefined" && WEB === true) {
+                throw new Error("createReadStream not implemented in web environment");
+            } else {
+                const createStream = require("./interface/createStream.js");
+                const createOptions = merge(runtimeOptions, options || {});
+                return createStream.createReadStream(remoteFilename, createOptions);
+            }
         },
 
         /**
@@ -176,8 +180,13 @@ function createClient(remoteURL, opts = {}) {
          *      fs.createReadStream("~/myData.zip").pipe(remote);
          */
         createWriteStream: function createWriteStream(remoteFilename, options) {
-            const createOptions = merge(runtimeOptions, options || {});
-            return createStream.createWriteStream(remoteFilename, createOptions);
+            if (typeof WEB !== "undefined" && WEB === true) {
+                throw new Error("createWriteStream not implemented in web environment");
+            } else {
+                const createStream = require("./interface/createStream.js");
+                const createOptions = merge(runtimeOptions, options || {});
+                return createStream.createWriteStream(remoteFilename, createOptions);
+            }
         },
 
         /**

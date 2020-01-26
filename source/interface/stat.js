@@ -38,9 +38,7 @@ function parseStat(result, filename, isDetailed = false) {
         throw new Error("Failed getting item stat: bad response");
     }
     const {
-        propstat: {
-            prop: props
-        }
+        propstat: { prop: props }
     } = responseItem;
     const filePath = urlTools.normalisePath(filename);
     return propsToStat(props, filePath, isDetailed);
