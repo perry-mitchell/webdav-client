@@ -2,7 +2,7 @@ module.exports = function(config) {
     config.set({
         basePath: "../../",
         frameworks: ["mocha", "chai"],
-        files: ["dist/test/webdav.js", "test/web/specs/index.js", "test/web/specs/*.spec.js"],
+        files: ["dist/web/webdav.js", "test/web/specs/index.js", "test/web/specs/*.spec.js"],
         exclude: [],
         preprocessors: {},
         reporters: ["dots"],
