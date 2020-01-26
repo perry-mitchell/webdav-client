@@ -1,6 +1,6 @@
 describe("getDirectoryContents", function() {
     beforeEach(function() {
-        this.client = webdav.createClient("http://localhost:9988/webdav/server", {
+        this.client = window.WebDAV.createClient("http://localhost:9988/webdav/server", {
             username: webdavConfig.username,
             password: webdavConfig.password
         });

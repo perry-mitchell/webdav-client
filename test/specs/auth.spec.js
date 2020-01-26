@@ -1,5 +1,5 @@
 const nock = require("nock");
-const Webdav = require("../../dist/factory");
+const Webdav = require("../../dist/node/factory");
 const expect = require("chai").expect;
 const DUMMYSERVER = "https://dummy.webdav.server";
 

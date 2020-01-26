@@ -1,4 +1,5 @@
 const axios = require("axios");
+const joinURLParts = require("url-join");
 const fetch = require("./fetch.js");
 const { merge } = require("./merge.js");
 
@@ -21,11 +22,28 @@ function encodePath(path) {
 }
 
 /**
+ * Join URL segments
+ * @param  {...String} parts URL segments to join
+ * @returns {String} A joined URL string
+ */
+function joinURL(...parts) {
+    return joinURLParts(
+        parts.reduce((output, nextPart, partIndex) => {
+            if (partIndex === 0 || nextPart !== "/" || (nextPart === "/" && output[output.length - 1] !== "/")) {
+                output.push(nextPart);
+            }
+            return output;
+        }, [])
+    );
+}
+
+/**
  * @typedef {Object} UserOptions
  * @property {Object=} httpAgent - HTTP agent instance
  * @property {Object=} httpsAgent - HTTPS agent instance
  * @property {Object=} headers - Set additional request headers
  * @property {Boolean=} withCredentials - Set whether or not credentials should
+ * @property {Object|String|*=} data - Set additional body
  *  be included with the request. Defaults to value used by axios.
  */
 
@@ -40,6 +58,9 @@ function prepareRequestOptions(requestOptions, methodOptions) {
     }
     if (methodOptions.httpsAgent) {
         requestOptions.httpsAgent = methodOptions.httpsAgent;
+    }
+    if (methodOptions.data) {
+        requestOptions.data = methodOptions.data;
     }
     if (methodOptions.headers && typeof methodOptions.headers === "object") {
         requestOptions.headers = merge(requestOptions.headers || {}, methodOptions.headers);
@@ -66,7 +87,7 @@ function prepareRequestOptions(requestOptions, methodOptions) {
  * @property {Object=} headers - Headers to set on the request
  * @property {Object=} httpAgent - A HTTP agent instance
  * @property {Object=} httpsAgent - A HTTPS agent interface
- * @property {Object|String|*=} body - Body data for the request
+ * @property {Object|String|*=} data - Body data for the request
  */
 
 /**
@@ -84,6 +105,7 @@ function request(requestOptions) {
 module.exports = {
     axios,
     encodePath,
+    joinURL,
     prepareRequestOptions,
     request
 };

@@ -10,13 +10,31 @@ WebDAV is a well-known, stable and highly flexible protocol for interacting with
 
 This library provides a **WebDAV client** interface that makes interacting with WebDAV enabled services easy. The API returns promises and resolve with the results. It parses and prepares directory-contents requests for easy consumption, as well as providing methods for fetching things like file stats and quotas.
 
-This library is compatibale with NodeJS version 6 and above (for version 4 support, use versions in the range of `1.*`). Version 1.x is now in maintenance mode and will receive no further feature additions. It will receive the odd bug fix when necessary.
-
 Please read the [contribution guide](CONTRIBUTING.md) if you plan on making an issue or PR.
+
+### Node support
+
+This library is compatibale with NodeJS version 10 and above (For version 6/8 support, use versions in the range of `2.*`. For version 4 support, use versions in the range of `1.*`). Version 2.x is now in maintenance mode and will receive no further feature additions. It will receive the odd bug fix when necessary. Version 1.x is no longer supported.
 
 ### Usage in the Browser
 
-No transpiled package is provided, however it should be fine to transpile it with Webpack and Rollup (tested with Webpack in [external projects](https://github.com/buttercup/buttercup-browser-extension/blob/f980416d8c97e627ff9d8f3e1f48d09fcdfd53df/source/setup/library/remote.js#L1)). You must make sure to transpile/bundle all necessary WebDAV client dependencies, **including** NodeJS built-ins like `path`.
+As of version 3, WebDAV client is now supported in the browser. The compilation settings specify a minimum supported browser version of Internet Explorer 11, however testing in this browser is not performed regularly.
+
+_Although you may choose to transpile this library's default entry point (NodeJS) yourself, it is not advised - use the dedicated web version instead._
+
+You can use the web version via a different entry point:
+
+```javascript
+import { createClient } from "webdav/web";
+```
+
+The browser version uses a UMD-style module definition, meaning you can simply load the library within your browser using a `<script>` tag. When using this method the library is made available on the window object as such: `window.WebDAV`. For example:
+
+```javascript
+const client = window.WebDAV.createClient(/* ... */);
+```
+
+**NB:** Streams are not available within the browser, so `createReadStream` and `createWriteStream` are just stubbed. Calling them will throw an exception.
 
 ## Installation
 
@@ -249,6 +267,21 @@ const stat = await client.stat("/some/file.tar.gz");
 ```
 
 Returns an [item stat](#item-stat).
+
+### Custom requests
+
+Custom requests can be made to the attached host:
+
+```javascript
+const contents = await client.customRequest("/alrighty.jpg", {
+    method: "PROPFIND",
+    headers: {
+        Accept: "text/plain",
+        Depth: 0
+    },
+    responseType: "text"
+});
+```
 
 ### Returned data structures
 

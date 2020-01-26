@@ -28,11 +28,11 @@ function createServer(dir, authType) {
         privilegeManager: privilegeManager,
         maxRequestDepth: Infinity
     });
-    console.log(`Created server on localhost with port: 9988, and authType: ${authType}`);
+    // console.log(`Created server on localhost with port: 9988, and authType: ${authType}`);
     return {
         start: function start() {
             return new Promise(function(resolve) {
-                console.log("Starting WebDAV server at directory:", dir);
+                // console.log("Starting WebDAV server at directory:", dir);
                 server.setFileSystem("/webdav/server", new ws.PhysicalFileSystem(dir), function() {
                     server.start(resolve);
                 });
@@ -41,7 +41,7 @@ function createServer(dir, authType) {
 
         stop: function stop() {
             return new Promise(function(resolve) {
-                console.log("Stopping WebDAV server");
+                // console.log("Stopping WebDAV server");
                 server.stop(resolve);
             });
         }

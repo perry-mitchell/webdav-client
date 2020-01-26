@@ -4,7 +4,7 @@ const { merge } = require("./merge.js");
 
 const directoryContents = require("./interface/directoryContents.js");
 const createDir = require("./interface/createDirectory.js");
-const createStream = require("./interface/createStream.js");
+const custom = require("./interface/custom.js");
 const deletion = require("./interface/delete.js");
 const getFile = require("./interface/getFile.js");
 const quota = require("./interface/quota.js");
@@ -160,8 +160,13 @@ function createClient(remoteURL, opts = {}) {
          *      remote.pipe(someWriteStream);
          */
         createReadStream: function createReadStream(remoteFilename, options) {
-            const createOptions = merge(runtimeOptions, options || {});
-            return createStream.createReadStream(remoteFilename, createOptions);
+            if (typeof WEB !== "undefined" && WEB === true) {
+                throw new Error("createReadStream not implemented in web environment");
+            } else {
+                const createStream = require("./interface/createStream.js");
+                const createOptions = merge(runtimeOptions, options || {});
+                return createStream.createReadStream(remoteFilename, createOptions);
+            }
         },
 
         /**
@@ -175,8 +180,35 @@ function createClient(remoteURL, opts = {}) {
          *      fs.createReadStream("~/myData.zip").pipe(remote);
          */
         createWriteStream: function createWriteStream(remoteFilename, options) {
-            const createOptions = merge(runtimeOptions, options || {});
-            return createStream.createWriteStream(remoteFilename, createOptions);
+            if (typeof WEB !== "undefined" && WEB === true) {
+                throw new Error("createWriteStream not implemented in web environment");
+            } else {
+                const createStream = require("./interface/createStream.js");
+                const createOptions = merge(runtimeOptions, options || {});
+                return createStream.createWriteStream(remoteFilename, createOptions);
+            }
+        },
+
+        /**
+         * Send a custom request
+         * @param {String} remotePath The remote path
+         * @param {RequestOptions=}  requestOptions the request options
+         * @param {Options=} options Options for the request
+         * @memberof ClientInterface
+         * @returns {Promise<Any>} A promise that resolves with response of the request
+         * @example
+         *      const contents = await client.customRequest("/alrighty.jpg", {
+         *          method: "PROPFIND",
+         *          headers: {
+         *              Accept: "text/plain",
+         *              Depth: 0
+         *          },
+         *          responseType: "text"
+         *      });
+         */
+        customRequest: function customRequest(remotePath, requestOptions, options) {
+            const customOptions = merge(runtimeOptions, options || {});
+            return custom.customRequest(remotePath, requestOptions, customOptions);
         },
 
         /**

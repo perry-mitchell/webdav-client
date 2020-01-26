@@ -1,5 +1,30 @@
 # WebDAV-Client changelog
 
+## v3.0.0
+_2020-01-26_
+
+ * Removed support for NodeJS < 10
+ * Web support
+ * Replaced XML parsing library (no dependencies, no streaming - better web support)
+ * `createReadStream` and `createWriteStream` stubbed but disabled in web version
+
+## v2.10.2
+_2020-01-25_
+
+ * **Bugfix**:
+   * [#189](https://github.com/perry-mitchell/webdav-client/issues/189) Maximum call stack size exceeded during digest auth usage (property merging)
+
+## v2.10.1
+_2019-12-17_
+
+ * **Bugfix**:
+   * [#185](https://github.com/perry-mitchell/webdav-client/issues/185) Extra trailing slash after join for URL components on root account requests
+
+## v2.10.0
+_2019-10-12_
+
+ * [#174](https://github.com/perry-mitchell/webdav-client/pull/174) `customRequest` method for making custom requests
+
 ## v2.9.1
 _2019-07-07_
 

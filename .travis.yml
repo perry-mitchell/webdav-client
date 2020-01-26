@@ -7,32 +7,21 @@ matrix:
         - NAME="Node stable"
     - language: node_js
       script: npm run test:node
+      node_js: "12"
+      env:
+        - NAME="Node 12"
+    - language: node_js
+      script: npm run test:node
       node_js: "10"
       env:
         - NAME="Node 10"
     - language: node_js
-      script: npm run test:node
-      node_js: "8"
-      env:
-        - NAME="Node 8"
-    - language: node_js
-      script: npm run test:node
-      node_js: "6"
-      env:
-        - NAME="Node 6"
-    - language: node_js
-      node_js: "8"
+      node_js: "12"
       sudo: required
       env:
         - NAME="Web"
+      services:
+        - xvfb
       addons:
-        apt:
-          sources:
-            - google-chrome
-          packages:
-            - google-chrome-stable
-      before_script:
-        - export DISPLAY=:99.0
-        - sh -e /etc/init.d/xvfb start
-        - sleep 3 # give xvfb some time to start
+        chrome: stable
       script: npm run test:web

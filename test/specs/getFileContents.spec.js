@@ -1,7 +1,7 @@
 const path = require("path");
 const fs = require("fs");
 const bufferEquals = require("buffer-equals");
-const getPatcher = require("../../dist/index.js").getPatcher;
+const getPatcher = require("../../dist/node/index.js").getPatcher;
 
 const SOURCE_BIN = path.resolve(__dirname, "../testContents/alrighty.jpg");
 const SOURCE_TXT = path.resolve(__dirname, "../testContents/text document.txt");

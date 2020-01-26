@@ -1,4 +1,4 @@
-const request = require("../../dist/request.js");
+const request = require("../../dist/node/request.js");
 const encodePath = request.encodePath;
 
 describe("request", function() {
