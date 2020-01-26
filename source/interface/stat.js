@@ -1,6 +1,6 @@
 const { merge } = require("../merge.js");
 const { handleResponseCode, processResponsePayload } = require("../response.js");
-const { getSingleValue, getValueForKey, parseXML, propsToStat } = require("./dav.js");
+const { parseXML, propsToStat } = require("./dav.js");
 const urlTools = require("../url.js");
 const { encodePath, joinURL, prepareRequestOptions, request } = require("../request.js");
 
@@ -28,19 +28,18 @@ function getStat(filename, options) {
 }
 
 function parseStat(result, filename, isDetailed = false) {
-    let responseItem = null,
-        multistatus;
+    let responseItem = null;
     try {
-        multistatus = getValueForKey("multistatus", result);
-        responseItem = getSingleValue(getValueForKey("response", multistatus));
+        responseItem = result.multistatus.response;
     } catch (e) {
         /* ignore */
     }
     if (!responseItem) {
         throw new Error("Failed getting item stat: bad response");
     }
-    const propStat = getSingleValue(getValueForKey("propstat", responseItem));
-    const props = getSingleValue(getValueForKey("prop", propStat));
+    const {
+        propstat: { prop: props }
+    } = responseItem;
     const filePath = urlTools.normalisePath(filename);
     return propsToStat(props, filePath, isDetailed);
 }
