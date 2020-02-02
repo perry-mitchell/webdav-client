@@ -19,7 +19,14 @@ function propsToStat(props, filename, isDetailed = false) {
         resourcetype: resourceType,
         getcontenttype: mimeType,
         getetag: etag
-    } = props;
+    } = props ? props : 
+    {
+      getlastmodified: null, 
+      getcontentlength: null, 
+      resourceType: null, 
+      getcontenttype: null, 
+      getetag: null
+    };
     const type =
         resourceType && typeof resourceType === "object" && typeof resourceType.collection !== "undefined"
             ? "directory"
@@ -35,7 +42,7 @@ function propsToStat(props, filename, isDetailed = false) {
     if (type === "file") {
         stat.mime = mimeType && typeof mimeType === "string" ? mimeType.split(";")[0] : "";
     }
-    if (isDetailed) {
+    if (props && isDetailed) {
         stat.props = props;
     }
     return stat;
