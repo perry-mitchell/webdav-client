@@ -13,7 +13,20 @@ function getPutContentsDefaults() {
 }
 
 function putFileContents(filePath, data, options) {
-    const putOptions = merge(getPutContentsDefaults(), { headers: { "Content-Length": data.length } }, options || {});
+    const headers = {
+        "Content-Length": data.length
+    };
+    if (typeof WEB === "undefined") {
+        // We're running under NodeJS, so it's safe to check if the
+        // input is a stream
+        const stream = require("stream");
+        if (data instanceof stream.Readable) {
+            // Input was a stream, remove the content length as this
+            // is not known yet
+            delete headers["Content-Length"];
+        }
+    }
+    const putOptions = merge(getPutContentsDefaults(), { headers }, options || {});
     if (putOptions.overwrite === false) {
         putOptions.headers["If-None-Match"] = "*";
     }

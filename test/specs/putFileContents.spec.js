@@ -46,4 +46,13 @@ describe("putFileContents", function() {
             expect(written).to.equal(text);
         });
     });
+
+    it("can use Readable stream as data source", function() {
+        const imgBin = fs.readFileSync(SOURCE_BIN);
+        const imgStream = fs.createReadStream(SOURCE_BIN);
+        return this.client.putFileContents("/sub1/alrighty.jpg", imgStream).then(function() {
+            const written = fs.readFileSync(TARGET_BIN);
+            expect(bufferEquals(written, imgBin)).to.be.true;
+        });
+    });
 });
