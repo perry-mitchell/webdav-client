@@ -27,7 +27,7 @@ function getQuota(options) {
 
 function parseQuota(result) {
     try {
-        const [ responseItem ] = result.multistatus.response;
+        const [responseItem] = result.multistatus.response;
         const {
             propstat: {
                 prop: { "quota-used-bytes": quotaUsed, "quota-available-bytes": quotaAvail }

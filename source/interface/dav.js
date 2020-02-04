@@ -31,7 +31,6 @@ function normaliseResult(result) {
         "multistatus.response",
         nestedProp.get(output, "multistatus.response").map(response => normaliseResponse(response))
     );
-    console.log(JSON.stringify(output, undefined, 2));
     return output;
 }
 
@@ -49,11 +48,11 @@ function propsToStat(props, filename, isDetailed = false) {
     const path = require("path-posix");
     // Last modified time, raw size, item type and mime
     const {
-        getlastmodified: lastMod,
+        getlastmodified: lastMod = null,
         getcontentlength: rawSize = "0",
-        resourcetype: resourceType,
-        getcontenttype: mimeType,
-        getetag: etag
+        resourcetype: resourceType = null,
+        getcontenttype: mimeType = null,
+        getetag: etag = null
     } = props;
     const type =
         resourceType && typeof resourceType === "object" && typeof resourceType.collection !== "undefined"
