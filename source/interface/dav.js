@@ -1,4 +1,39 @@
 const xmlParser = require("fast-xml-parser");
+const nestedProp = require("nested-property");
+
+function getPropertyOfType(obj, prop, type) {
+    const val = nestedProp.get(obj, prop);
+    if (type === "array" && Array.isArray(val) === false) {
+        return [val];
+    } else if (type === "object" && Array.isArray(val)) {
+        return val[0];
+    }
+    return val;
+}
+
+function normaliseResponse(response) {
+    const output = Object.assign({}, response);
+    nestedProp.set(output, "propstat", getPropertyOfType(output, "propstat", "object"));
+    nestedProp.set(output, "propstat.prop", getPropertyOfType(output, "propstat.prop", "object"));
+    return output;
+}
+
+function normaliseResult(result) {
+    const { multistatus } = result;
+    if (!multistatus) {
+        throw new Error("Invalid response: No root multistatus found");
+    }
+    const output = {};
+    output.multistatus = Array.isArray(multistatus) ? multistatus[0] : multistatus;
+    nestedProp.set(output, "multistatus.response", getPropertyOfType(output, "multistatus.response", "array"));
+    nestedProp.set(
+        output,
+        "multistatus.response",
+        nestedProp.get(output, "multistatus.response").map(response => normaliseResponse(response))
+    );
+    console.log(JSON.stringify(output, undefined, 2));
+    return output;
+}
 
 function parseXML(xml) {
     return new Promise(resolve => {
@@ -6,7 +41,7 @@ function parseXML(xml) {
             arrayMode: false,
             ignoreNameSpace: true
         });
-        resolve(result);
+        resolve(normaliseResult(result));
     });
 }
 
