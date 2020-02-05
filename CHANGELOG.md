@@ -1,5 +1,10 @@
 # WebDAV-Client changelog
 
+## v3.2.0
+_2020-02-05_
+
+ * `exists` method
+
 ## v3.1.0
 _2020-02-05_
 

@@ -179,6 +179,7 @@ Client adapter
     * [.createWriteStream(remoteFilename, [options])](#ClientInterface.createWriteStream) ⇒ <code>Writeable</code>
     * [.customRequest(remotePath, [requestOptions], [options])](#ClientInterface.customRequest) ⇒ <code>Promise.&lt;Any&gt;</code>
     * [.deleteFile(remotePath, [options])](#ClientInterface.deleteFile) ⇒ <code>Promise</code>
+    * [.exists(remotePath, [options])](#ClientInterface.exists) ⇒ <code>Promise.&lt;Boolean&gt;</code>
     * [.getDirectoryContents(remotePath, [options])](#ClientInterface.getDirectoryContents) ⇒ <code>Promise.&lt;Array.&lt;Stat&gt;&gt;</code>
     * [.getFileContents(remoteFilename, [options])](#ClientInterface.getFileContents) ⇒ <code>Promise.&lt;(Buffer\|String)&gt;</code>
     * [.getFileDownloadLink(remoteFilename, [options])](#ClientInterface.getFileDownloadLink) ⇒ <code>String</code>
@@ -300,6 +301,26 @@ Delete a remote file
 **Example**  
 ```js
 await client.deleteFile("/some/file.txt");
+```
+<a name="ClientInterface.exists"></a>
+
+### ClientInterface.exists(remotePath, [options]) ⇒ <code>Promise.&lt;Boolean&gt;</code>
+Check if a remote file or directory exists
+
+**Kind**: static method of [<code>ClientInterface</code>](#ClientInterface)  
+**Returns**: <code>Promise.&lt;Boolean&gt;</code> - A promise that resolves with true if the path exists
+ or false if it does not  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| remotePath | <code>String</code> | The remote path to check |
+| [options] | [<code>UserOptions</code>](#UserOptions) | The options for the request |
+
+**Example**  
+```js
+if (await client.exists("/some-path/file.txt")) {
+         // Do something
+     }
 ```
 <a name="ClientInterface.getDirectoryContents"></a>
 
