@@ -164,6 +164,16 @@ Delete a remote file:
 await client.deleteFile("/tmp.dat");
 ```
 
+### exists
+
+Check if a file or directory exists:
+
+```javascript
+if (await client.exists("/some/path") === false) {
+    await client.createDirectory("/some/path");
+}
+```
+
 #### getDirectoryContents
 
 Get the contents of a remote directory. Returns an array of [item stats](#item-stat).
