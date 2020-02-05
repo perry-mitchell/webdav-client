@@ -1,4 +1,38 @@
 const xmlParser = require("fast-xml-parser");
+const nestedProp = require("nested-property");
+
+function getPropertyOfType(obj, prop, type) {
+    const val = nestedProp.get(obj, prop);
+    if (type === "array" && Array.isArray(val) === false) {
+        return [val];
+    } else if (type === "object" && Array.isArray(val)) {
+        return val[0];
+    }
+    return val;
+}
+
+function normaliseResponse(response) {
+    const output = Object.assign({}, response);
+    nestedProp.set(output, "propstat", getPropertyOfType(output, "propstat", "object"));
+    nestedProp.set(output, "propstat.prop", getPropertyOfType(output, "propstat.prop", "object"));
+    return output;
+}
+
+function normaliseResult(result) {
+    const { multistatus } = result;
+    if (!multistatus) {
+        throw new Error("Invalid response: No root multistatus found");
+    }
+    const output = {};
+    output.multistatus = Array.isArray(multistatus) ? multistatus[0] : multistatus;
+    nestedProp.set(output, "multistatus.response", getPropertyOfType(output, "multistatus.response", "array"));
+    nestedProp.set(
+        output,
+        "multistatus.response",
+        nestedProp.get(output, "multistatus.response").map(response => normaliseResponse(response))
+    );
+    return output;
+}
 
 function parseXML(xml) {
     return new Promise(resolve => {
@@ -6,7 +40,7 @@ function parseXML(xml) {
             arrayMode: false,
             ignoreNameSpace: true
         });
-        resolve(result);
+        resolve(normaliseResult(result));
     });
 }
 
@@ -14,11 +48,11 @@ function propsToStat(props, filename, isDetailed = false) {
     const path = require("path-posix");
     // Last modified time, raw size, item type and mime
     const {
-        getlastmodified: lastMod,
+        getlastmodified: lastMod = null,
         getcontentlength: rawSize = "0",
-        resourcetype: resourceType,
-        getcontenttype: mimeType,
-        getetag: etag
+        resourcetype: resourceType = null,
+        getcontenttype: mimeType = null,
+        getetag: etag = null
     } = props;
     const type =
         resourceType && typeof resourceType === "object" && typeof resourceType.collection !== "undefined"

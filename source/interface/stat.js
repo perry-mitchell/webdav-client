@@ -30,7 +30,7 @@ function getStat(filename, options) {
 function parseStat(result, filename, isDetailed = false) {
     let responseItem = null;
     try {
-        responseItem = result.multistatus.response;
+        responseItem = result.multistatus.response[0];
     } catch (e) {
         /* ignore */
     }

@@ -65,7 +65,7 @@ const stats = require("./interface/stat.js");
  * @typedef {Object} Stat
  * @property {String} filename The full path and filename of the remote item
  * @property {String} basename The base filename of the remote item, without the path
- * @property {String} lastmod The last modification date (eg. "Sun, 13 Mar 2016 04:23:32 GMT")
+ * @property {String|null} lastmod The last modification date (eg. "Sun, 13 Mar 2016 04:23:32 GMT")
  * @property {Number} size The size of the remote item
  * @property {String} type The type of the item (file/directory)
  * @property {String=} mime The file mimetype (not present on directories)

@@ -153,7 +153,7 @@ describe("getDirectoryContents", function() {
                         filename: "/Ma bibliothèque",
                         etag: "2920f985ebc6692632c7c3ab46b3919556239d37",
                         basename: "Ma bibliothèque",
-                        lastmod: undefined,
+                        lastmod: null,
                         size: 0,
                         type: "directory"
                     }
