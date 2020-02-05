@@ -514,7 +514,7 @@ A stat result
 | --- | --- | --- |
 | filename | <code>String</code> | The full path and filename of the remote item |
 | basename | <code>String</code> | The base filename of the remote item, without the path |
-| lastmod | <code>String</code> | The last modification date (eg. "Sun, 13 Mar 2016 04:23:32 GMT") |
+| lastmod | <code>String</code> \| <code>null</code> | The last modification date (eg. "Sun, 13 Mar 2016 04:23:32 GMT") |
 | size | <code>Number</code> | The size of the remote item |
 | type | <code>String</code> | The type of the item (file/directory) |
 | [mime] | <code>String</code> | The file mimetype (not present on directories) |

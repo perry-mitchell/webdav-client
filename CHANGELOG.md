@@ -1,5 +1,13 @@
 # WebDAV-Client changelog
 
+## v3.1.0
+_2020-02-05_
+
+ * Improved parsing logic for more robust handling of various PROPFIND requests
+ * **Bugfix**:
+   * [#194](https://github.com/perry-mitchell/webdav-client/issues/194) Several properties not defined in directory-contents / stats payloads
+   * [#147](https://github.com/perry-mitchell/webdav-client/issues/147) `Content-length` header being attached to stream requests erroneously
+
 ## v3.0.0
 _2020-01-26_
 
