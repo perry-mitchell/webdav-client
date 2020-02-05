@@ -6,6 +6,7 @@ const directoryContents = require("./interface/directoryContents.js");
 const createDir = require("./interface/createDirectory.js");
 const custom = require("./interface/custom.js");
 const deletion = require("./interface/delete.js");
+const pathsExist = require("./interface/exists.js");
 const getFile = require("./interface/getFile.js");
 const quota = require("./interface/quota.js");
 const move = require("./interface/moveFile.js");
@@ -223,6 +224,23 @@ function createClient(remoteURL, opts = {}) {
         deleteFile: function deleteFile(remotePath, options) {
             const deleteOptions = merge(runtimeOptions, options || {});
             return deletion.deleteFile(remotePath, deleteOptions);
+        },
+
+        /**
+         * Check if a remote file or directory exists
+         * @param {String} remotePath The remote path to check
+         * @param {UserOptions=} options The options for the request
+         * @memberof ClientInterface
+         * @returns {Promise.<Boolean>} A promise that resolves with true if the path exists
+         *  or false if it does not
+         * @example
+         *      if (await client.exists("/some-path/file.txt")) {
+         *          // Do something
+         *      }
+         */
+        exists: function exists(remotePath, options) {
+            const existsOptions = merge(runtimeOptions, options || {});
+            return pathsExist.pathExists(remotePath, existsOptions);
         },
 
         /**
