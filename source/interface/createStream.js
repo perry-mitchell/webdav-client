@@ -15,7 +15,7 @@ function createReadStream(filePath, options) {
     return outStream;
 }
 
-function createWriteStream(filePath, options) {
+function createWriteStream(filePath, options, callback) {
     const Stream = require("stream");
     const PassThroughStream = Stream.PassThrough;
     const writeStream = new PassThroughStream();
@@ -30,8 +30,13 @@ function createWriteStream(filePath, options) {
         data: writeStream
     };
     prepareRequestOptions(requestOptions, options);
+
+    if (!callback || typeof callback !== "function") {
+        callback=responseHandlers.handleResponseCode;
+    }
+
     request(requestOptions)
-        .then(responseHandlers.handleResponseCode)
+        .then(callback)
         .catch(err => {
             writeStream.emit("error", err);
         });

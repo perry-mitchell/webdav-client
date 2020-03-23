@@ -174,19 +174,20 @@ function createClient(remoteURL, opts = {}) {
          * Create a writeable stream to a remote file
          * @param {String} remoteFilename The file to write to
          * @param {PutOptions=} options Options for the request
+         * @param {Function} callback Callback when response is received
          * @memberof ClientInterface
          * @returns {Writeable} A writeable stream
          * @example
          *      const remote = client.createWriteStream("/data.zip");
          *      fs.createReadStream("~/myData.zip").pipe(remote);
          */
-        createWriteStream: function createWriteStream(remoteFilename, options) {
+        createWriteStream: function createWriteStream(remoteFilename, options, callback) {
             if (typeof WEB !== "undefined" && WEB === true) {
                 throw new Error("createWriteStream not implemented in web environment");
             } else {
                 const createStream = require("./interface/createStream.js");
                 const createOptions = merge(runtimeOptions, options || {});
-                return createStream.createWriteStream(remoteFilename, createOptions);
+                return createStream.createWriteStream(remoteFilename, createOptions, callback);
             }
         },
 
