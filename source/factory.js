@@ -14,6 +14,8 @@ const copy = require("./interface/copyFile.js");
 const putFile = require("./interface/putFile.js");
 const stats = require("./interface/stat.js");
 
+const NOOP = () => {};
+
 /**
  * Client adapter
  * @typedef {Object} ClientInterface
@@ -174,19 +176,21 @@ function createClient(remoteURL, opts = {}) {
          * Create a writeable stream to a remote file
          * @param {String} remoteFilename The file to write to
          * @param {PutOptions=} options Options for the request
+         * @param {Function=} callback Optional callback to fire
+         *  once the request has finished
          * @memberof ClientInterface
          * @returns {Writeable} A writeable stream
          * @example
          *      const remote = client.createWriteStream("/data.zip");
          *      fs.createReadStream("~/myData.zip").pipe(remote);
          */
-        createWriteStream: function createWriteStream(remoteFilename, options) {
+        createWriteStream: function createWriteStream(remoteFilename, options, callback = NOOP) {
             if (typeof WEB !== "undefined" && WEB === true) {
                 throw new Error("createWriteStream not implemented in web environment");
             } else {
                 const createStream = require("./interface/createStream.js");
                 const createOptions = merge(runtimeOptions, options || {});
-                return createStream.createWriteStream(remoteFilename, createOptions);
+                return createStream.createWriteStream(remoteFilename, createOptions, callback);
             }
         },
 
