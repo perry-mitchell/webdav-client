@@ -1,6 +1,8 @@
 const responseHandlers = require("../response.js");
 const { encodePath, joinURL, prepareRequestOptions, request } = require("../request.js");
 
+const NOOP = () => {};
+
 function createReadStream(filePath, options) {
     const Stream = require("stream");
     const PassThroughStream = Stream.PassThrough;
@@ -15,7 +17,7 @@ function createReadStream(filePath, options) {
     return outStream;
 }
 
-function createWriteStream(filePath, options, callback) {
+function createWriteStream(filePath, options, callback = NOOP) {
     const Stream = require("stream");
     const PassThroughStream = Stream.PassThrough;
     const writeStream = new PassThroughStream();
@@ -30,13 +32,13 @@ function createWriteStream(filePath, options, callback) {
         data: writeStream
     };
     prepareRequestOptions(requestOptions, options);
-
-    if (!callback || typeof callback !== "function") {
-        callback=responseHandlers.handleResponseCode;
-    }
-
     request(requestOptions)
-        .then(callback)
+        .then(response => {
+            // Fire callback asynchronously to avoid errors
+            setTimeout(callback, 0);
+            return response;
+        })
+        .then(responseHandlers.handleResponseCode)
         .catch(err => {
             writeStream.emit("error", err);
         });
