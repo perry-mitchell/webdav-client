@@ -1,5 +1,25 @@
+function isPlainObject(obj) {
+    if (typeof obj !== "object" || obj === null || Object.prototype.toString.call(obj) != "[object Object]") {
+        return false;
+    }
+
+    if (Object.getPrototypeOf(obj) === null) {
+        return true;
+    }
+
+    let proto = obj;
+
+    while (Object.getPrototypeOf(proto) !== null) {
+        proto = Object.getPrototypeOf(proto);
+    }
+
+    return Object.getPrototypeOf(obj) === proto;
+}
+
 function clone(obj) {
-    return Object.setPrototypeOf(Object.assign({}, obj), Object.getPrototypeOf(obj));
+    return isPlainObject(obj)
+        ? Object.assign({}, obj)
+        : Object.setPrototypeOf(Object.assign({}, obj), Object.getPrototypeOf(obj));
 }
 
 function merge(...args) {
