@@ -56,7 +56,7 @@ describe("getDirectoryContents", function() {
 
     it("returns correct file results", function() {
         return this.client.getDirectoryContents("/").then(function(contents) {
-            const sub1 = contents.find(item =>item.basename === "alrighty.jpg");
+            const sub1 = contents.find(item => item.basename === "alrighty.jpg");
             const sub2 = contents.find(item => item.basename === "file&name.txt");
             expect(sub1.filename).to.equal("/alrighty.jpg");
             expect(sub1.size).to.equal(52130);
