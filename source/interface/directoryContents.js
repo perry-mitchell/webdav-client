@@ -2,7 +2,7 @@ const pathPosix = require("path-posix");
 const { merge } = require("../merge.js");
 const { handleResponseCode, processGlobFilter, processResponsePayload } = require("../response.js");
 const { normaliseHREF, normalisePath } = require("../url.js");
-const { parseXML, propsToStat } = require("./dav.js");
+const { parseXML, prepareFileFromProps } = require("./dav.js");
 const { encodePath, joinURL, prepareRequestOptions, request } = require("../request.js");
 
 function getDirectoryContents(remotePath, options) {
@@ -40,7 +40,6 @@ function getDirectoryFiles(result, serverBasePath, requestPath, isDetailed = fal
         responseItems
             // Filter out the item pointing to the current directory (not needed)
             .filter(item => {
-                // let href = getSingleValue(getValueForKey("href", item));
                 let href = item.href;
                 href = pathPosix.join(normalisePath(normaliseHREF(href)), "/");
                 return href !== serverBase && href !== remoteTargetPath;
@@ -48,8 +47,7 @@ function getDirectoryFiles(result, serverBasePath, requestPath, isDetailed = fal
             // Map all items to a consistent output structure (results)
             .map(item => {
                 // HREF is the file path (in full)
-                let href = item.href;
-                href = normaliseHREF(href);
+                const href = normaliseHREF(item.href);
                 // Each item should contain a stat object
                 const {
                     propstat: { prop: props }
@@ -57,7 +55,7 @@ function getDirectoryFiles(result, serverBasePath, requestPath, isDetailed = fal
                 // Process the true full filename (minus the base server path)
                 const filename =
                     serverBase === "/" ? normalisePath(href) : normalisePath(pathPosix.relative(serverBase, href));
-                return propsToStat(props, filename, isDetailed);
+                return prepareFileFromProps(props, filename, isDetailed);
             })
     );
 }
