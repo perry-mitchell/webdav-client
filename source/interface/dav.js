@@ -1,5 +1,6 @@
 const xmlParser = require("fast-xml-parser");
 const nestedProp = require("nested-property");
+const { decodeHTMLEntities } = require("../encode.js");
 
 function getPropertyOfType(obj, prop, type) {
     const val = nestedProp.get(obj, prop);
