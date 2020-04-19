@@ -56,12 +56,12 @@ describe("getDirectoryContents", function() {
 
     it("returns correct file results", function() {
         return this.client.getDirectoryContents("/").then(function(contents) {
-            const sub1 = contents.find(function(item) {
-                return item.basename === "alrighty.jpg";
-            });
+            const sub1 = contents.find(item =>item.basename === "alrighty.jpg");
+            const sub2 = contents.find(item => item.basename === "file&name.txt");
             expect(sub1.filename).to.equal("/alrighty.jpg");
             expect(sub1.size).to.equal(52130);
             expect(sub1.type).to.equal("file");
+            expect(sub2.filename).to.equal("/file&name.txt");
         });
     });
 
@@ -101,7 +101,7 @@ describe("getDirectoryContents", function() {
     });
 
     it("returns correct directory contents when path contains encoded sequences (issue #93)", function() {
-        return this.client.getDirectoryContents("/two%20words").then(function(contents) {
+        return this.client.getDirectoryContents("/two%20words").then(contents => {
             expect(contents).to.have.lengthOf(1);
             expect(contents[0].basename).to.equal("file2.txt");
         });
