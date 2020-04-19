@@ -176,7 +176,7 @@ Client adapter
     * [.copyFile(remotePath, targetRemotePath, [options])](#ClientInterface.copyFile) ⇒ <code>Promise</code>
     * [.createDirectory(dirPath, [options])](#ClientInterface.createDirectory) ⇒ <code>Promise</code>
     * [.createReadStream(remoteFilename, [options])](#ClientInterface.createReadStream) ⇒ <code>Readable</code>
-    * [.createWriteStream(remoteFilename, [options])](#ClientInterface.createWriteStream) ⇒ <code>Writeable</code>
+    * [.createWriteStream(remoteFilename, [options], [callback])](#ClientInterface.createWriteStream) ⇒ <code>Writeable</code>
     * [.customRequest(remotePath, [requestOptions], [options])](#ClientInterface.customRequest) ⇒ <code>Promise.&lt;Any&gt;</code>
     * [.deleteFile(remotePath, [options])](#ClientInterface.deleteFile) ⇒ <code>Promise</code>
     * [.exists(remotePath, [options])](#ClientInterface.exists) ⇒ <code>Promise.&lt;Boolean&gt;</code>
@@ -244,7 +244,7 @@ const remote = client.createReadStream("/data.zip");
 ```
 <a name="ClientInterface.createWriteStream"></a>
 
-### ClientInterface.createWriteStream(remoteFilename, [options]) ⇒ <code>Writeable</code>
+### ClientInterface.createWriteStream(remoteFilename, [options], [callback]) ⇒ <code>Writeable</code>
 Create a writeable stream to a remote file
 
 **Kind**: static method of [<code>ClientInterface</code>](#ClientInterface)  
@@ -254,6 +254,7 @@ Create a writeable stream to a remote file
 | --- | --- | --- |
 | remoteFilename | <code>String</code> | The file to write to |
 | [options] | [<code>PutOptions</code>](#PutOptions) | Options for the request |
+| [callback] | <code>function</code> | Optional callback to fire  once the request has finished |
 
 **Example**  
 ```js

@@ -1,5 +1,15 @@
 # WebDAV-Client changelog
 
+## v3.3.0
+_2020-04-19_
+
+ * Node 10 build configuration
+ * [#201](https://github.com/perry-mitchell/webdav-client/pull/201) Improved object merging for configurations (no merging instances)
+ * [#200](https://github.com/perry-mitchell/webdav-client/pull/200) `createWriteStream` callback support (when request finishes finishes)
+ * Improved filename decoding
+ * **Bugfix**:
+   * [#198](https://github.com/perry-mitchell/webdav-client/issues/198) Encoded characters in directory contents (HTML entities)
+
 ## v3.2.0
 _2020-02-05_
 
