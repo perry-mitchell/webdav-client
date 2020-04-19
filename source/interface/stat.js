@@ -1,6 +1,6 @@
 const { merge } = require("../merge.js");
 const { handleResponseCode, processResponsePayload } = require("../response.js");
-const { parseXML, propsToStat } = require("./dav.js");
+const { parseXML, prepareFileFromProps } = require("./dav.js");
 const urlTools = require("../url.js");
 const { encodePath, joinURL, prepareRequestOptions, request } = require("../request.js");
 
@@ -41,7 +41,7 @@ function parseStat(result, filename, isDetailed = false) {
         propstat: { prop: props }
     } = responseItem;
     const filePath = urlTools.normalisePath(filename);
-    return propsToStat(props, filePath, isDetailed);
+    return prepareFileFromProps(props, filePath, isDetailed);
 }
 
 module.exports = {

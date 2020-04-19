@@ -1,5 +1,6 @@
 const xmlParser = require("fast-xml-parser");
 const nestedProp = require("nested-property");
+const { decodeHTMLEntities } = require("../encode.js");
 
 function getPropertyOfType(obj, prop, type) {
     const val = nestedProp.get(obj, prop);
@@ -39,12 +40,16 @@ function parseXML(xml) {
         const result = xmlParser.parse(xml, {
             arrayMode: false,
             ignoreNameSpace: true
+            // // We don't use the processors here as decoding is done manually
+            // // later on - decoding early would break some path checks.
+            // attrValueProcessor: val => decodeHTMLEntities(decodeURIComponent(val)),
+            // tagValueProcessor: val => decodeHTMLEntities(decodeURIComponent(val))
         });
         resolve(normaliseResult(result));
     });
 }
 
-function propsToStat(props, filename, isDetailed = false) {
+function prepareFileFromProps(props, rawFilename, isDetailed = false) {
     const path = require("path-posix");
     // Last modified time, raw size, item type and mime
     const {
@@ -58,6 +63,7 @@ function propsToStat(props, filename, isDetailed = false) {
         resourceType && typeof resourceType === "object" && typeof resourceType.collection !== "undefined"
             ? "directory"
             : "file";
+    const filename = decodeHTMLEntities(rawFilename);
     const stat = {
         filename: filename,
         basename: path.basename(filename),
@@ -91,6 +97,6 @@ function translateDiskSpace(value) {
 
 module.exports = {
     parseXML,
-    propsToStat,
+    prepareFileFromProps,
     translateDiskSpace
 };
