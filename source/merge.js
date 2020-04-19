@@ -1,10 +1,32 @@
+function clone(obj) {
+    return isPlainObject(obj)
+        ? Object.assign({}, obj)
+        : Object.setPrototypeOf(Object.assign({}, obj), Object.getPrototypeOf(obj));
+}
+
+function isPlainObject(obj) {
+    if (typeof obj !== "object" || obj === null || Object.prototype.toString.call(obj) != "[object Object]") {
+        // Not an object
+        return false;
+    }
+    if (Object.getPrototypeOf(obj) === null) {
+        return true;
+    }
+    let proto = obj;
+    // Find the prototype
+    while (Object.getPrototypeOf(proto) !== null) {
+        proto = Object.getPrototypeOf(proto);
+    }
+    return Object.getPrototypeOf(obj) === proto;
+}
+
 function merge(...args) {
     let output = null,
         items = [...args];
     while (items.length > 0) {
         const nextItem = items.shift();
         if (!output) {
-            output = Object.assign({}, nextItem);
+            output = clone(nextItem);
         } else {
             output = mergeObjects(output, nextItem);
         }
@@ -13,7 +35,7 @@ function merge(...args) {
 }
 
 function mergeObjects(obj1, obj2) {
-    const output = Object.assign({}, obj1);
+    const output = clone(obj1);
     Object.keys(obj2).forEach(key => {
         if (!output.hasOwnProperty(key)) {
             output[key] = obj2[key];
@@ -25,7 +47,7 @@ function mergeObjects(obj1, obj2) {
             output[key] =
                 typeof output[key] === "object" && !!output[key]
                     ? mergeObjects(output[key], obj2[key])
-                    : Object.assign({}, obj2[key]);
+                    : clone(obj2[key]);
         } else {
             output[key] = obj2[key];
         }
