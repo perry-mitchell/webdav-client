@@ -30,7 +30,6 @@ function getDirectoryContents(remotePath, options) {
 }
 
 function getDirectoryFiles(result, serverBasePath, requestPath, isDetailed = false) {
-    const remoteTargetPath = pathPosix.join(serverBasePath, requestPath, "/");
     const serverBase = pathPosix.join(serverBasePath, "/");
     // Extract the response items (directory contents)
     const {
@@ -38,12 +37,6 @@ function getDirectoryFiles(result, serverBasePath, requestPath, isDetailed = fal
     } = result;
     return (
         responseItems
-            // Filter out the item pointing to the current directory (not needed)
-            .filter(item => {
-                let href = item.href;
-                href = pathPosix.join(normalisePath(normaliseHREF(href)), "/");
-                return href !== serverBase && href !== remoteTargetPath;
-            })
             // Map all items to a consistent output structure (results)
             .map(item => {
                 // HREF is the file path (in full)
@@ -57,6 +50,14 @@ function getDirectoryFiles(result, serverBasePath, requestPath, isDetailed = fal
                     serverBase === "/" ? normalisePath(href) : normalisePath(pathPosix.relative(serverBase, href));
                 return prepareFileFromProps(props, filename, isDetailed);
             })
+            // Filter out the item pointing to the current directory (not needed)
+            .filter(item =>
+                item.basename &&
+                (
+                    item.type === "file" ||
+                    item.filename !== requestPath.replace(/\/$/, "")
+                )
+            )
     );
 }
 
