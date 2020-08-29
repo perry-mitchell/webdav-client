@@ -25,6 +25,7 @@ const NOOP = () => {};
  * Options for creating a resource
  * @typedef {UserOptions} PutOptions
  * @property {Boolean=} overwrite - Whether or not to overwrite existing files (default: true)
+ * @property {Number=} maxContentLength - The maximum amount of bytes to upload (default: 10 MiB)
  */
 
 /**
