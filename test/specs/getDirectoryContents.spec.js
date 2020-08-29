@@ -100,6 +100,13 @@ describe("getDirectoryContents", function() {
         });
     });
 
+    it('returns only the directory contents for directory with & in name', function() {
+        return this.client.getDirectoryContents("/with & in path").then(function(contents) {
+            expect(contents).to.have.lengthOf(1);
+            expect(contents[0].basename).to.equal("file.txt");
+        });
+    });
+
     it("returns correct directory contents when path contains encoded sequences (issue #93)", function() {
         return this.client.getDirectoryContents("/two%20words").then(contents => {
             expect(contents).to.have.lengthOf(1);
