@@ -462,6 +462,7 @@ Options for creating a resource
 | Name | Type | Description |
 | --- | --- | --- |
 | [overwrite] | <code>Boolean</code> | Whether or not to overwrite existing files (default: true) |
+| [maxContentLength] | <code>Number</code> | The maximum amount of bytes to upload (default: 10 MiB) |
 
 <a name="OptionsWithFormat"></a>
 
