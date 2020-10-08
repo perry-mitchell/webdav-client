@@ -1,5 +1,11 @@
 # WebDAV-Client changelog
 
+## v3.5.0
+_2020-10-08_
+
+ * Upgrade dependencies (major versions)
+   * [axios upgrade -> 0.20](https://github.com/axios/axios/blob/master/CHANGELOG.md#0200-august-20-2020)
+
 ## v3.4.0
 _2020-10-08_
 
