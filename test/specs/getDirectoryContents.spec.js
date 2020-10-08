@@ -100,7 +100,7 @@ describe("getDirectoryContents", function() {
         });
     });
 
-    it('returns only the directory contents for directory with & in name', function() {
+    it("returns only the directory contents for directory with & in name", function() {
         return this.client.getDirectoryContents("/with & in path").then(function(contents) {
             expect(contents).to.have.lengthOf(1);
             expect(contents[0].basename).to.equal("file.txt");

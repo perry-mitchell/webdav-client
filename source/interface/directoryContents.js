@@ -51,13 +51,7 @@ function getDirectoryFiles(result, serverBasePath, requestPath, isDetailed = fal
                 return prepareFileFromProps(props, filename, isDetailed);
             })
             // Filter out the item pointing to the current directory (not needed)
-            .filter(item =>
-                item.basename &&
-                (
-                    item.type === "file" ||
-                    item.filename !== requestPath.replace(/\/$/, "")
-                )
-            )
+            .filter(item => item.basename && (item.type === "file" || item.filename !== requestPath.replace(/\/$/, "")))
     );
 }
 
