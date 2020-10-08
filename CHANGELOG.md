@@ -1,5 +1,12 @@
 # WebDAV-Client changelog
 
+## v3.4.0
+_2020-10-08_
+
+ * **Bugfixes**:
+   * [#215](https://github.com/perry-mitchell/webdav-client/pull/215) Excessive memory usage when uploading big files (axios max-redirects)
+   * [#213](https://github.com/perry-mitchell/webdav-client/pull/213) `getDirectoryContents` fails for directories with `&` in the name
+
 ## v3.3.0
 _2020-04-19_
 
