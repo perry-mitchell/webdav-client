@@ -25,7 +25,6 @@ const NOOP = () => {};
  * Options for creating a resource
  * @typedef {UserOptions} PutOptions
  * @property {Boolean=} overwrite - Whether or not to overwrite existing files (default: true)
- * @property {Number=} maxContentLength - The maximum amount of bytes to download (default: 10 MiB)
  * @property {Number=} maxBodyLength - The maximum amount of bytes to upload (default: 10 MiB) (only in nodejs-environments)
  */
 
@@ -35,6 +34,7 @@ const NOOP = () => {};
  * @property {String} format - The format to use (text/binary)
  * @property {Boolean=} details - Provided detailed response information, such as response
  *  headers (defaults to false). Only available on requests that return result data.
+ * @property {Number=} maxContentLength - The maximum amount of bytes to download (default: 10 MiB)
  */
 
 /**
