@@ -207,6 +207,8 @@ Text files can also be fetched:
 const str = await client.getFileContents("/config.json", { format: "text" });
 ```
 
+Specify the `maxContentLength` option to alter the maximum number of bytes the client can receive in the request. **NodeJS only**.
+
 #### getFileDownloadLink
 
 Return a public link where a file can be downloaded. **This exposes authentication details in the URL**.
@@ -257,6 +259,8 @@ await client.putFileContents("/my/file.jpg", imageBuffer, { overwrite: false });
 // Write a text file:
 await client.putFileContents("/my/file.txt", str);
 ```
+
+Specify the `maxBodyLength` option to alter the maximum number of bytes the client can send in the request. **NodeJS only**.
 
 Handling Upload Progress (browsers only):  
 *This uses the axios onUploadProgress callback which uses the native XMLHttpRequest [progress event](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequestEventTarget/onprogress).*
