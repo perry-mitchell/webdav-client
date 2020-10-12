@@ -25,6 +25,18 @@ describe("stat", function() {
         });
     });
 
+    it("correctly stats files with % character", function() {
+        return this.client.stat("/file % name.txt").then(function(stat) {
+            expect(stat).to.be.an("object");
+            expect(stat).to.have.property("filename", "/file % name.txt");
+            expect(stat).to.have.property("basename", "file % name.txt");
+            expect(stat).to.have.property("lastmod").that.is.a.string;
+            expect(stat).to.have.property("type", "file");
+            expect(stat).to.have.property("size", 10);
+            expect(stat).to.have.property("mime", "text/plain");
+        });
+    });
+
     it("correctly stats directories", function() {
         return this.client.stat("/webdav/server").then(function(stat) {
             expect(stat).to.be.an("object");
