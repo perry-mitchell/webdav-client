@@ -462,7 +462,7 @@ Options for creating a resource
 | Name | Type | Description |
 | --- | --- | --- |
 | [overwrite] | <code>Boolean</code> | Whether or not to overwrite existing files (default: true) |
-| [maxContentLength] | <code>Number</code> | The maximum amount of bytes to upload (default: 10 MiB) |
+| [maxBodyLength] | <code>Number</code> | The maximum amount of bytes to upload (default: 10 MiB) (only in nodejs-environments) |
 
 <a name="OptionsWithFormat"></a>
 
@@ -476,6 +476,7 @@ Options with headers and format
 | --- | --- | --- |
 | format | <code>String</code> | The format to use (text/binary) |
 | [details] | <code>Boolean</code> | Provided detailed response information, such as response  headers (defaults to false). Only available on requests that return result data. |
+| [maxContentLength] | <code>Number</code> | The maximum amount of bytes to download (default: 10 MiB) |
 
 <a name="OptionsForAdvancedResponses"></a>
 

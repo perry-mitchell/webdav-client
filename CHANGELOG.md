@@ -1,5 +1,12 @@
 # WebDAV-Client changelog
 
+## v3.6.0
+_2020-10-12_
+
+ * [#220](https://github.com/perry-mitchell/webdav-client/pull/220) `maxBodyLength` option for changing written files max size
+ * **Bugfixes**:
+   * [#218](https://github.com/perry-mitchell/webdav-client/issues/218) Invalid response error - No root multistatus
+
 ## v3.5.0
 _2020-10-08_
 
