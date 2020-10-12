@@ -71,6 +71,9 @@ function prepareRequestOptions(requestOptions, methodOptions) {
     if (methodOptions.maxContentLength) {
         requestOptions.maxContentLength = methodOptions.maxContentLength;
     }
+    if (methodOptions.maxBodyLength) {
+        requestOptions.maxBodyLength = methodOptions.maxBodyLength;
+    }
     if (methodOptions.onUploadProgress && typeof methodOptions.onUploadProgress === "function") {
         requestOptions.onUploadProgress = methodOptions.onUploadProgress;
     }
