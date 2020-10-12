@@ -145,7 +145,7 @@ describe("getDirectoryContents", function() {
                 username: createWebDAVServer.test.username,
                 password: createWebDAVServer.test.password
             });
-            useCustomXmlResponse('seafile-propfind');
+            useCustomXmlResponse("seafile-propfind");
         });
 
         afterEach(function() {
@@ -175,7 +175,7 @@ describe("getDirectoryContents", function() {
                 username: createWebDAVServer.test.username,
                 password: createWebDAVServer.test.password
             });
-            useCustomXmlResponse('empty-multistatus');
+            useCustomXmlResponse("empty-multistatus");
         });
 
         afterEach(function() {

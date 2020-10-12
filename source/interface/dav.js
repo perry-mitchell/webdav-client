@@ -21,12 +21,12 @@ function normaliseResponse(response) {
 
 function normaliseResult(result) {
     const { multistatus } = result;
-    if (multistatus === '') {
+    if (multistatus === "") {
         return {
             multistatus: {
                 response: []
             }
-        }
+        };
     }
     if (!multistatus) {
         throw new Error("Invalid response: No root multistatus found");
