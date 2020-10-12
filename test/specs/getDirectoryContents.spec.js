@@ -1,8 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 
-function useSeafileResponse() {
-    returnFakeResponse(fs.readFileSync(path.resolve(__dirname, "../responses/seafile-propfind.xml"), "utf8"));
+function useCustomXmlResponse(xmlFile) {
+    returnFakeResponse(fs.readFileSync(path.resolve(__dirname, `../responses/${xmlFile}.xml`), "utf8"));
 }
 
 describe("getDirectoryContents", function() {
@@ -145,7 +145,7 @@ describe("getDirectoryContents", function() {
                 username: createWebDAVServer.test.username,
                 password: createWebDAVServer.test.password
             });
-            useSeafileResponse();
+            useCustomXmlResponse('seafile-propfind');
         });
 
         afterEach(function() {
@@ -165,6 +165,27 @@ describe("getDirectoryContents", function() {
                         type: "directory"
                     }
                 ]);
+            });
+        });
+    });
+
+    describe("when fetching an empty multistatus", function() {
+        beforeEach(function() {
+            this.client = createWebDAVClient("http://localhost:9988/webdav/server", {
+                username: createWebDAVServer.test.username,
+                password: createWebDAVServer.test.password
+            });
+            useCustomXmlResponse('empty-multistatus');
+        });
+
+        afterEach(function() {
+            restoreFetch();
+        });
+
+        it("returns the correct response", function() {
+            return this.client.getDirectoryContents("/").then(function(contents) {
+                expect(contents).to.be.an("array");
+                expect(contents).to.deep.equal([]);
             });
         });
     });
