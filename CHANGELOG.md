@@ -1,5 +1,11 @@
 # WebDAV-Client changelog
 
+## v3.6.1
+_2020-10-15_
+
+ * **Bugfixes**:
+   * [#221](https://github.com/perry-mitchell/webdav-client/issues/221) Stat function erroneously decodes paths with `%` in them
+
 ## v3.6.0
 _2020-10-12_
 
