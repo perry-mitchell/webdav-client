@@ -47,7 +47,7 @@ function getDirectoryFiles(result, serverBasePath, requestPath, isDetailed = fal
                 } = item;
                 // Process the true full filename (minus the base server path)
                 const filename =
-                    serverBase === "/" ? normalisePath(href) : normalisePath(pathPosix.relative(serverBase, href));
+                    serverBase === "/" ? decodeURIComponent(normalisePath(href)) : decodeURIComponent(normalisePath(pathPosix.relative(serverBase, href)));
                 return prepareFileFromProps(props, filename, isDetailed);
             })
             // Filter out the item pointing to the current directory (not needed)
