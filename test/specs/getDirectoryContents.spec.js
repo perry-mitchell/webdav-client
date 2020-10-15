@@ -114,6 +114,15 @@ describe("getDirectoryContents", function() {
         });
     });
 
+    it("returns correct names for directories that contain % in the name", function() {
+        return this.client.getDirectoryContents("/").then(function(contents) {
+            const noPercent = contents.find(item => item.basename === "two words");
+            const percent = contents.find(item => item.basename === "two%20words");
+            expect(noPercent).to.have.property("type", "directory");
+            expect(percent).to.have.property("type", "directory");
+        });
+    });
+
     describe("when using details: true", function() {
         it("returns data and headers properties", function() {
             return this.client.getDirectoryContents("/", { details: true }).then(function(details) {

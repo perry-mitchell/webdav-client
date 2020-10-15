@@ -47,6 +47,14 @@ describe("stat", function() {
         });
     });
 
+    it("sets names correctly when source contains '%' in the path (#221)", function() {
+        return this.client.stat("/two%20words").then(function(stat) {
+            expect(stat).to.be.an("object");
+            expect(stat).to.have.property("filename", "/two%20words");
+            expect(stat).to.have.property("basename", "two%20words");
+        });
+    });
+
     describe("with details: true", function() {
         it("returns data property", function() {
             return this.client.stat("/", { details: true }).then(function(result) {
