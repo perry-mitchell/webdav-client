@@ -25,15 +25,19 @@ describe("stat", function() {
         });
     });
 
-    it("correctly stats files with % character", function() {
+    it("correctly stats files with '%' in the path (#221)", function() {
         return this.client.stat("/file % name.txt").then(function(stat) {
             expect(stat).to.be.an("object");
             expect(stat).to.have.property("filename", "/file % name.txt");
             expect(stat).to.have.property("basename", "file % name.txt");
-            expect(stat).to.have.property("lastmod").that.is.a.string;
-            expect(stat).to.have.property("type", "file");
-            expect(stat).to.have.property("size", 10);
-            expect(stat).to.have.property("mime", "text/plain");
+        });
+    });
+
+    it("correctly stats files with '%' in the path (#221)", function() {
+        return this.client.stat("/two%20words").then(function(stat) {
+            expect(stat).to.be.an("object");
+            expect(stat).to.have.property("filename", "/two%20words");
+            expect(stat).to.have.property("basename", "two%20words");
         });
     });
 
@@ -56,14 +60,6 @@ describe("stat", function() {
             expect(stat).to.have.property("lastmod").that.is.a.string;
             expect(stat).to.have.property("type", "directory");
             expect(stat).to.have.property("size", 0);
-        });
-    });
-
-    it("sets names correctly when source contains '%' in the path (#221)", function() {
-        return this.client.stat("/two%20words").then(function(stat) {
-            expect(stat).to.be.an("object");
-            expect(stat).to.have.property("filename", "/two%20words");
-            expect(stat).to.have.property("basename", "two%20words");
         });
     });
 
