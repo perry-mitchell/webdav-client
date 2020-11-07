@@ -24,18 +24,6 @@ module.exports = {
         ]
     },
 
-    node: {
-        buffer: "empty",
-        crypto: "empty",
-        dns: "empty",
-        fs: "empty",
-        http: "empty",
-        https: "empty",
-        net: "empty",
-        path: "empty",
-        stream: "empty"
-    },
-
     output: {
         filename: "webdav.js",
         path: DIST,
@@ -47,5 +35,15 @@ module.exports = {
         new DefinePlugin({
             WEB: "true"
         })
-    ]
+    ],
+
+    resolve: {
+        fallback: {
+            "buffer": require.resolve("buffer/"),
+            "crypto": require.resolve("crypto-browserify"),
+            "path": require.resolve("path-browserify"),
+            "stream": require.resolve("stream-browserify"),
+            "util": require.resolve("util/"),
+        }
+    }
 };
