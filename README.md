@@ -147,6 +147,16 @@ client
     .pipe(fs.createWriteStream("~/video.np4"));
 ```
 
+If you want to request only partial data, you can specify the range in the options argument of the method:
+
+```javascript
+client
+    .createReadStream(
+        "/video.mp4", 
+        { range: { start: start, end: end } }
+    ).pipe(fs.createWriteStream("~/video.np4"));
+```
+
 #### createWriteStream
 
 Create a write stream targeted at a remote file:
