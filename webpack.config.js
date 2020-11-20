@@ -33,7 +33,8 @@ module.exports = {
 
     plugins: [
         new DefinePlugin({
-            WEB: "true"
+            WEB: "true",
+            process: "process/browser"
         })
     ],
 
