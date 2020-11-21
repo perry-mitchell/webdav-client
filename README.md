@@ -144,17 +144,17 @@ Create a read stream targeted at a remote file:
 ```javascript
 client
     .createReadStream("/video.mp4")
-    .pipe(fs.createWriteStream("~/video.np4"));
+    .pipe(fs.createWriteStream("~/video.mp4"));
 ```
 
-If you want to request only partial data, you can specify the range in the options argument of the method:
+If you want to stream only part of the file, you can specify the `range` in the options argument:
 
 ```javascript
 client
     .createReadStream(
         "/video.mp4", 
         { range: { start: start, end: end } }
-    ).pipe(fs.createWriteStream("~/video.np4"));
+    ).pipe(fs.createWriteStream("~/video.mp4"));
 ```
 
 #### createWriteStream
