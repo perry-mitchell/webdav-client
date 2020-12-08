@@ -3,7 +3,7 @@ const { encodePath, joinURL, prepareRequestOptions, request } = require("../requ
 
 function customRequest(remotePath, requestOptions, options) {
     if (!requestOptions.url) {
-        requestOptions.url = joinURL(options.remoteURL, encodePath(remotePath), "/");
+        requestOptions.url = joinURL(options.remoteURL, encodePath(remotePath));
     }
     prepareRequestOptions(requestOptions, options);
     return request(requestOptions).then(handleResponseCode);
