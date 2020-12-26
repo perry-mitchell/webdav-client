@@ -56,6 +56,7 @@
     "fast-xml-parser": "^3.17.4",
     "he": "^1.2.0",
     "hot-patcher": "^0.5.0",
+    "md5": "^2.3.0",
     "minimatch": "^3.0.4",
     "nested-property": "^4.0.0",
     "path-posix": "^1.0.0",
