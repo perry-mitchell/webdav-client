@@ -1,22 +1,32 @@
 import { extractURLPath } from "./tools/url";
-import { Headers, WebDAVClient, WebDAVClientOptions } from "./types";
-
-interface WebDAVClientContext {
-    headers: Headers;
-    httpAgent?: any;
-    httpsAgent?: any;
-    remotePath: string;
-    remoteURL: string;
-}
+import { AuthType, WebDAVClient, WebDAVClientContext, WebDAVClientOptions } from "./types";
 
 export function createClient(remoteURL: string, options: WebDAVClientOptions = {}): WebDAVClient {
     const {
-        headers = {}
+        authType = AuthType.Password,
+        headers = {},
+        httpAgent,
+        httpsAgent,
+        maxBodyLength,
+        maxContentLength,
+        password,
+        token,
+        username,
+        withCredentials
     } = options;
     const context: WebDAVClientContext = {
+        authType,
         headers: Object.assign({}, headers),
+        httpAgent,
+        httpsAgent,
+        maxBodyLength,
+        maxContentLength,
         remotePath: extractURLPath(remoteURL),
         remoteURL,
+        password,
+        token,
+        username,
+        withCredentials
     };
     return {};
 }
