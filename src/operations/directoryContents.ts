@@ -4,9 +4,13 @@ import { encodePath } from "../tools/path";
 import { parseXML, prepareFileFromProps } from "../tools/dav";
 import { request, prepareRequestOptions } from "../request";
 import { handleResponseCode, processGlobFilter, processResponsePayload } from "../response";
-import { DAVResult, FileStat, GetDirectoryContentsOptions, WebDAVClientContext } from "../types";
+import { DAVResult, FileStat, GetDirectoryContentsOptions, ResponseDataDetailed, WebDAVClientContext } from "../types";
 
-export async function getDirectoryContents(remotePath: string, context: WebDAVClientContext, options: GetDirectoryContentsOptions = {}) {
+export async function getDirectoryContents(
+    remotePath: string,
+    context: WebDAVClientContext,
+    options: GetDirectoryContentsOptions = {}
+): Promise<Array<FileStat> | ResponseDataDetailed<Array<FileStat>>> {
     const requestOptions = prepareRequestOptions({
         url: joinURL(context.remoteURL, encodePath(remotePath), "/"),
         method: "PROPFIND",
