@@ -7,7 +7,7 @@ const {
     createWebDAVServer,
     restoreRequests,
     useCustomXmlResponse
-} = require("../helpers.node.js");
+} = require("../../helpers.node.js");
 
 describe("getDirectoryContents", function() {
     beforeEach(async function() {
