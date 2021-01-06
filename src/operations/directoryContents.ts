@@ -7,8 +7,8 @@ import { handleResponseCode, processGlobFilter, processResponsePayload } from ".
 import { DAVResult, FileStat, GetDirectoryContentsOptions, ResponseDataDetailed, WebDAVClientContext } from "../types";
 
 export async function getDirectoryContents(
-    remotePath: string,
     context: WebDAVClientContext,
+    remotePath: string,
     options: GetDirectoryContentsOptions = {}
 ): Promise<Array<FileStat> | ResponseDataDetailed<Array<FileStat>>> {
     const requestOptions = prepareRequestOptions({
