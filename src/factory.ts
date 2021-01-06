@@ -3,6 +3,7 @@ import { setupAuth } from "./auth/index";
 import { copyFile } from "./operations/copyFile";
 import { createDirectory } from "./operations/createDirectory";
 import { createReadStream, createWriteStream } from "./operations/createStream";
+import { customRequest } from "./operations/customRequest";
 import { getDirectoryContents } from "./operations/directoryContents";
 import {
     AuthType,
@@ -10,6 +11,7 @@ import {
     CreateWriteStreamCallback,
     CreateWriteStreamOptions,
     GetDirectoryContentsOptions,
+    RequestOptionsCustom,
     WebDAVClient,
     WebDAVClientContext,
     WebDAVClientOptions
@@ -48,6 +50,7 @@ export function createClient(remoteURL: string, options: WebDAVClientOptions = {
         createDirectory: (path: string) => createDirectory(context, path),
         createReadStream: (filename: string, options?: CreateReadStreamOptions) => createReadStream(context, filename, options),
         createWriteStream: (filename: string, options?: CreateWriteStreamOptions, callback?: CreateWriteStreamCallback) => createWriteStream(context, filename, options, callback),
+        customRequest: (path: string, requestOptions: RequestOptionsCustom) => customRequest(context, path, requestOptions),
         getDirectoryContents: (path: string, options?: GetDirectoryContentsOptions) => getDirectoryContents(context, path, options)
     };
 }

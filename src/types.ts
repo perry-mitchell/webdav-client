@@ -102,11 +102,7 @@ export interface OAuthToken {
 
 export type RequestDataPayload = string | Buffer | ArrayBuffer | { [key: string]: any; };
 
-export interface RequestOptions extends RequestOptionsInternal {
-    _digest?: DigestContext;
-}
-
-export interface RequestOptionsInternal {
+interface RequestOptionsBase {
     data?: RequestDataPayload;
     headers?: Headers;
     httpAgent?: any;
@@ -117,9 +113,19 @@ export interface RequestOptionsInternal {
     method: string;
     onUploadProgress?: UploadProgressCallback;
     responseType?: string;
-    url: string;
+    url?: string;
     validateStatus?: (status: number) => boolean;
     withCredentials?: boolean;
+}
+
+export interface RequestOptionsCustom extends RequestOptionsBase {}
+
+export interface RequestOptions extends RequestOptionsBase {
+    url: string;
+}
+
+export interface RequestOptionsWithState extends RequestOptions {
+    _digest?: DigestContext;
 }
 
 export interface Response {
@@ -154,6 +160,7 @@ export interface WebDAVClient {
     createDirectory: (path: string) => Promise<void>;
     createReadStream: (filename: string, options?: CreateReadStreamOptions) => Stream.Readable;
     createWriteStream: (filename: string, options?: CreateWriteStreamOptions, callback?: CreateWriteStreamCallback) => Stream.Writable;
+    customRequest: (path: string, requestOptions: RequestOptionsCustom) => Promise<Response>;
     getDirectoryContents: (path: string, options?: GetDirectoryContentsOptions) => Promise<Array<FileStat> | ResponseDataDetailed<Array<FileStat>>>;
 }
 
