@@ -1,5 +1,6 @@
 import { extractURLPath } from "./tools/url";
 import { getDirectoryContents } from "./operations/directoryContents";
+import { setupAuth } from "./auth/index";
 import { AuthType, GetDirectoryContentsOptions, WebDAVClient, WebDAVClientContext, WebDAVClientOptions } from "./types";
 
 export function createClient(remoteURL: string, options: WebDAVClientOptions = {}): WebDAVClient {
@@ -29,6 +30,7 @@ export function createClient(remoteURL: string, options: WebDAVClientOptions = {
         username,
         withCredentials
     };
+    setupAuth(context, username, password, token);
     return {
         getDirectoryContents: (path: string, options?: GetDirectoryContentsOptions) => getDirectoryContents(path, context, options)
     };

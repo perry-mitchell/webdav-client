@@ -46,9 +46,17 @@ export interface DigestContext {
     algorithm: string;
     hasDigestAuth: boolean;
     cnonce?: string;
+    nonce?: string;
+    realm?: string;
+    qop?: string;
+    opaque?: string;
 }
 
 export type DiskQuota = "unknown" | "unlimited" | number;
+
+export enum ErrorCode {
+    InvalidAuthType = "invalid-auth-type"
+}
 
 export interface FileStat {
     filename: string;

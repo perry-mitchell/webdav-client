@@ -15,12 +15,12 @@
     "prepublishOnly": "run-s build prepare:publish:web",
     "test": "run-s test:node test:web test:format",
     "test:format": "prettier-check '{source,test}/**/*.js'",
-    "test:node": "npm run build:node && nyc mocha -r test/specs/index.js test/specs/**/*.spec.js",
+    "test:node": "npm run build:node && nyc mocha -r test/index.node.js test/node/**/*.spec.js",
     "test:node:watch": "nodemon --exec 'npm run test:node' --ignore 'dist/'",
     "test:web": "npm run test:web:pack && concurrently --success 'first' --kill-others 'npm run test:web:karma' 'npm run test:web:server'",
-    "test:web:karma": "sleep 2 && karma start test/web/karma.conf.js",
+    "test:web:karma": "sleep 2 && karma start test/karma.conf.js",
     "test:web:pack": "webpack --mode development --config webpack.config.js",
-    "test:web:server": "node test/web/server.js"
+    "test:web:server": "node test/server.web.js"
   },
   "files": [
     "dist/",
@@ -56,6 +56,7 @@
     "fast-xml-parser": "^3.17.4",
     "he": "^1.2.0",
     "hot-patcher": "^0.5.0",
+    "layerr": "^0.1.2",
     "md5": "^2.3.0",
     "minimatch": "^3.0.4",
     "nested-property": "^4.0.0",

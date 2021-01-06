@@ -5,13 +5,16 @@ import { DigestContext, Response } from "../types";
 const NONCE_CHARS = "abcdef0123456789";
 const NONCE_SIZE = 32;
 
-export function generateDigestAuthHeader(options, digest): string {
+export function createDigestContext(username: string, password: string): DigestContext {
+    return { username, password, nc: 0, algorithm: "md5", hasDigestAuth: false };
+}
+
+export function generateDigestAuthHeader(options, digest: DigestContext): string {
     const url = options.url.replace("//", "");
     const uri = url.indexOf("/") == -1 ? "/" : url.slice(url.indexOf("/"));
     const method = options.method ? options.method.toUpperCase() : "GET";
     const qop = /(^|,)\s*auth\s*($|,)/.test(digest.qop) ? "auth" : false;
     const ncString = `00000000${digest.nc}`.slice(-8);
-    // const cnonce = digest.cnonce;
     const ha1 = ha1Compute(
         digest.algorithm,
         digest.username,
