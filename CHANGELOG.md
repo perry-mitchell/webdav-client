@@ -1,5 +1,11 @@
 # WebDAV-Client changelog
 
+## v3.6.2
+_2021-01-06_
+
+ * **Security Patches**:
+   * [#232](https://github.com/perry-mitchell/webdav-client/issues/232) Axios server-side request forgery vulerability ([CVE-2020-28168](https://github.com/advisories/GHSA-4w2v-q235-vp99))
+
 ## v3.6.1
 _2020-10-15_
 
