@@ -14,7 +14,7 @@ Please read the [contribution guide](CONTRIBUTING.md) if you plan on making an i
 
 ### Node support
 
-This library is compatibale with **NodeJS version 10** and above (For version 6/8 support, use versions in the range of `2.*`. For version 4 support, use versions in the range of `1.*`). Version 2.x is now in maintenance mode and will receive no further feature additions. It will receive the odd bug fix when necessary. Version 1.x is no longer supported.
+This library is compatibale with **NodeJS version 10** and above (For version 6/8 support, use versions in the range of `2.*`. For version 4 support, use versions in the range of `1.*`). Versions 2.x and 1.x are no longer supported, so use at your own risk.
 
 ### Usage in the Browser
 
