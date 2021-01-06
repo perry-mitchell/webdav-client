@@ -3,6 +3,8 @@
 ## v3.6.2
 _2021-01-06_
 
+ * **Bugfixes**:
+   * [#231](https://github.com/perry-mitchell/webdav-client/pull/231) Unable to target files using custom request
  * **Security Patches**:
    * [#232](https://github.com/perry-mitchell/webdav-client/issues/232) Axios server-side request forgery vulerability ([CVE-2020-28168](https://github.com/advisories/GHSA-4w2v-q235-vp99))
 
