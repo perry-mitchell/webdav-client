@@ -7,9 +7,7 @@ const {
     SERVER_USERNAME,
     clean,
     createWebDAVClient,
-    createWebDAVServer,
-    restoreRequests,
-    useCustomXmlResponse
+    createWebDAVServer
 } = require("../../helpers.node.js");
 
 const TEST_CONTENTS = path.resolve(__dirname, "../../testContents");

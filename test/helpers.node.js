@@ -22,6 +22,12 @@ function returnFakeResponse(xml) {
     });
 }
 
+function sleep(ms) {
+    return new Promise(resolve => {
+        setTimeout(resolve, ms);
+    });
+}
+
 function useCustomXmlResponse(xmlFile) {
     returnFakeResponse(fs.readFileSync(path.resolve(__dirname, `./responses/${xmlFile}.xml`), "utf8"));
 }
@@ -35,5 +41,6 @@ module.exports = {
     createWebDAVServer,
     restoreRequests,
     returnFakeResponse,
+    sleep,
     useCustomXmlResponse
 };

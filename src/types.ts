@@ -135,6 +135,7 @@ export interface UploadProgressCallback {
 
 export interface WebDAVClient {
     copyFile: (filename: string, destination: string) => Promise<void>;
+    createDirectory: (path: string) => Promise<void>;
     getDirectoryContents: (path: string, options?: GetDirectoryContentsOptions) => Promise<Array<FileStat> | ResponseDataDetailed<Array<FileStat>>>;
 }
 
