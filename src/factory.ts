@@ -2,8 +2,18 @@ import { extractURLPath } from "./tools/url";
 import { setupAuth } from "./auth/index";
 import { copyFile } from "./operations/copyFile";
 import { createDirectory } from "./operations/createDirectory";
+import { createReadStream, createWriteStream } from "./operations/createStream";
 import { getDirectoryContents } from "./operations/directoryContents";
-import { AuthType, GetDirectoryContentsOptions, WebDAVClient, WebDAVClientContext, WebDAVClientOptions } from "./types";
+import {
+    AuthType,
+    CreateReadStreamOptions,
+    CreateWriteStreamCallback,
+    CreateWriteStreamOptions,
+    GetDirectoryContentsOptions,
+    WebDAVClient,
+    WebDAVClientContext,
+    WebDAVClientOptions
+} from "./types";
 
 export function createClient(remoteURL: string, options: WebDAVClientOptions = {}): WebDAVClient {
     const {
@@ -36,6 +46,8 @@ export function createClient(remoteURL: string, options: WebDAVClientOptions = {
     return {
         copyFile: (filename: string, destination: string) => copyFile(context, filename, destination),
         createDirectory: (path: string) => createDirectory(context, path),
+        createReadStream: (filename: string, options?: CreateReadStreamOptions) => createReadStream(context, filename, options),
+        createWriteStream: (filename: string, options?: CreateWriteStreamOptions, callback?: CreateWriteStreamCallback) => createWriteStream(context, filename, options, callback),
         getDirectoryContents: (path: string, options?: GetDirectoryContentsOptions) => getDirectoryContents(context, path, options)
     };
 }

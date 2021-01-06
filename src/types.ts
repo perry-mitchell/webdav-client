@@ -1,3 +1,5 @@
+import Stream from "stream";
+
 export type AuthHeader = string;
 
 export enum AuthType {
@@ -5,6 +7,19 @@ export enum AuthType {
     None = "none",
     Password = "password",
     Token = "token"
+}
+
+export interface CreateReadStreamOptions {
+    range?: {
+        start: number;
+        end?: number;
+    }
+}
+
+export type CreateWriteStreamCallback = () => any;
+
+export interface CreateWriteStreamOptions {
+    overwrite?: boolean;
 }
 
 export interface DAVResultResponse {
@@ -98,6 +113,7 @@ export interface RequestOptionsInternal {
     httpsAgent?: any;
     maxBodyLength?: number;
     maxContentLength?: number;
+    maxRedirects?: number;
     method: string;
     onUploadProgress?: UploadProgressCallback;
     responseType?: string;
@@ -136,6 +152,8 @@ export interface UploadProgressCallback {
 export interface WebDAVClient {
     copyFile: (filename: string, destination: string) => Promise<void>;
     createDirectory: (path: string) => Promise<void>;
+    createReadStream: (filename: string, options?: CreateReadStreamOptions) => Stream.Readable;
+    createWriteStream: (filename: string, options?: CreateWriteStreamOptions, callback?: CreateWriteStreamCallback) => Stream.Writable;
     getDirectoryContents: (path: string, options?: GetDirectoryContentsOptions) => Promise<Array<FileStat> | ResponseDataDetailed<Array<FileStat>>>;
 }
 
