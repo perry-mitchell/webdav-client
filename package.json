@@ -5,7 +5,7 @@
   "main": "dist/node/index.js",
   "scripts": {
     "build": "npm run clean && run-p build:node build:web",
-    "build:node": "babel --out-dir dist/node source",
+    "build:node": "tsc",
     "build:web": "webpack --mode production --config webpack.config.js",
     "clean": "rimraf dist web",
     "docs": "jsdoc2md 'source/**/*.js' > API.md",
@@ -64,12 +64,13 @@
     "url-parse": "^1.4.7"
   },
   "devDependencies": {
-    "@babel/cli": "^7.11.6",
-    "@babel/core": "^7.11.6",
-    "@babel/preset-env": "^7.11.5",
+    "@babel/core": "^7.7.7",
+    "@babel/preset-env": "^7.7.7",
+    "@babel/preset-typescript": "^7.7.7",
     "@types/node": "^14.14.19",
     "@types/url-parse": "^1.4.3",
     "babel-loader": "^8.1.0",
+    "babel-plugin-transform-async-to-promises": "^0.8.15",
     "buffer-equals": "^2.0.0",
     "chai": "^4.2.0",
     "concurrently": "^5.3.0",
