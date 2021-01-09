@@ -7,6 +7,7 @@ import { customRequest } from "./operations/customRequest";
 import { deleteFile } from "./operations/deleteFile";
 import { exists } from "./operations/exists";
 import { getDirectoryContents } from "./operations/directoryContents";
+import { getFileContents, getFileLink } from "./operations/getFile";
 import { getStat } from "./operations/stat";
 import {
     AuthType,
@@ -14,6 +15,7 @@ import {
     CreateWriteStreamCallback,
     CreateWriteStreamOptions,
     GetDirectoryContentsOptions,
+    GetFileContentsOptions,
     RequestOptionsCustom,
     StatOptions,
     WebDAVClient,
@@ -58,6 +60,8 @@ export function createClient(remoteURL: string, options: WebDAVClientOptions = {
         deleteFile: (filename: string) => deleteFile(context, filename),
         exists: (path: string) => exists(context, path),
         getDirectoryContents: (path: string, options?: GetDirectoryContentsOptions) => getDirectoryContents(context, path, options),
+        getFileContents: (filename: string, options?: GetFileContentsOptions) => getFileContents(context, filename, options),
+        getFileDownloadLink: (filename: string) => getFileLink(context, filename),
         stat: (path: string, options?: StatOptions) => getStat(context, path, options)
     };
 }

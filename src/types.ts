@@ -9,6 +9,8 @@ export enum AuthType {
     Token = "token"
 }
 
+export type BufferLike = Buffer | ArrayBuffer;
+
 export interface CreateReadStreamOptions {
     range?: {
         start: number;
@@ -70,7 +72,9 @@ export interface DigestContext {
 export type DiskQuota = "unknown" | "unlimited" | number;
 
 export enum ErrorCode {
-    InvalidAuthType = "invalid-auth-type"
+    InvalidAuthType = "invalid-auth-type",
+    InvalidOutputFormat = "invalid-output-format",
+    LinkUnsupportedAuthType = "link-unsupported-auth"
 }
 
 export interface FileStat {
@@ -88,6 +92,11 @@ export interface GetDirectoryContentsOptions {
     deep?: boolean;
     details?: boolean;
     glob?: string;
+}
+
+export interface GetFileContentsOptions {
+    details?: boolean;
+    format?: "binary" | "text";
 }
 
 export interface Headers {
@@ -168,6 +177,8 @@ export interface WebDAVClient {
     deleteFile: (filename: string) => Promise<void>;
     exists: (path: string) => Promise<boolean>;
     getDirectoryContents: (path: string, options?: GetDirectoryContentsOptions) => Promise<Array<FileStat> | ResponseDataDetailed<Array<FileStat>>>;
+    getFileContents: (filename: string, options?: GetFileContentsOptions) => Promise<BufferLike | string | ResponseDataDetailed<BufferLike | string>>;
+    getFileDownloadLink: (filename: string) => Promise<string>;
     stat: (path: string, options?: StatOptions) => Promise<FileStat | ResponseDataDetailed<FileStat>>;
 }
 
