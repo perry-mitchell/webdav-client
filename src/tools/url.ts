@@ -1,5 +1,6 @@
 import URL from "url-parse";
 import _joinURL from "url-join";
+import { normalisePath } from "./path";
 
 export function extractURLPath(fullURL: string): string {
     const url = new URL(fullURL);
@@ -24,15 +25,4 @@ export function joinURL(...parts: Array<string>): string {
 export function normaliseHREF(href: string): string {
     const normalisedHref = href.replace(/^https?:\/\/[^\/]+/, "");
     return normalisedHref;
-}
-
-export function normalisePath(pathStr: string): string {
-    let normalisedPath = pathStr;
-    if (normalisedPath[0] !== "/") {
-        normalisedPath = "/" + normalisedPath;
-    }
-    if (/^.+\/$/.test(normalisedPath)) {
-        normalisedPath = normalisedPath.substr(0, normalisedPath.length - 1);
-    }
-    return normalisedPath;
 }

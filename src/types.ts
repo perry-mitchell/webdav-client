@@ -146,6 +146,10 @@ export interface ResponseStatusValidator {
     (status: number): boolean;
 }
 
+export interface StatOptions {
+    details?: boolean;
+}
+
 export interface UploadProgress {
     loaded: number;
     total: number;
@@ -162,6 +166,7 @@ export interface WebDAVClient {
     createWriteStream: (filename: string, options?: CreateWriteStreamOptions, callback?: CreateWriteStreamCallback) => Stream.Writable;
     customRequest: (path: string, requestOptions: RequestOptionsCustom) => Promise<Response>;
     getDirectoryContents: (path: string, options?: GetDirectoryContentsOptions) => Promise<Array<FileStat> | ResponseDataDetailed<Array<FileStat>>>;
+    stat: (path: string, options?: StatOptions) => Promise<FileStat | ResponseDataDetailed<FileStat>>;
 }
 
 export interface WebDAVClientContext {

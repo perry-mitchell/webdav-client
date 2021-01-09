@@ -1,6 +1,6 @@
 import pathPosix from "path-posix";
-import { joinURL, normaliseHREF, normalisePath } from "../tools/url";
-import { encodePath } from "../tools/path";
+import { joinURL, normaliseHREF } from "../tools/url";
+import { encodePath, normalisePath } from "../tools/path";
 import { parseXML, prepareFileFromProps } from "../tools/dav";
 import { request, prepareRequestOptions } from "../request";
 import { handleResponseCode, processGlobFilter, processResponsePayload } from "../response";

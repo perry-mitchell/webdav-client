@@ -6,15 +6,13 @@ const {
     createWebDAVClient,
     createWebDAVServer
 } = require("../../helpers.node.js");
-// const { parseXML } = require("../../source/interface/dav.js");
-// const { parseStat } = require("../../source/interface/stat.js");
-// const { processResponsePayload } = require("../../source/response.js");
+const { parseStat, parseXML } = require("../../../dist/node/index.js");
 
-xdescribe("custom", function() {
+describe("custom", function() {
     beforeEach(function() {
-        this.client = createWebDAVClient("http://localhost:9988/webdav/server", {
-            username: createWebDAVServer.test.username,
-            password: createWebDAVServer.test.password
+        this.client = createWebDAVClient(`http://localhost:${SERVER_PORT}/webdav/server`, {
+            username: SERVER_USERNAME,
+            password: SERVER_PASSWORD
         });
         clean();
         this.server = createWebDAVServer();
@@ -25,32 +23,24 @@ xdescribe("custom", function() {
         return this.server.stop();
     });
 
-    it("send and parse stat custom request", function() {
+    it("send and parse stat custom request", async function() {
         let response = null;
-        return this.client
-            .customRequest("/alrighty.jpg", {
-                method: "PROPFIND",
-                headers: {
-                    Accept: "text/plain",
-                    Depth: 0
-                },
-                responseType: "text"
-            })
-            .then(res => {
-                response = res;
-                return res.data;
-            })
-            .then(parseXML)
-            .then(xml => parseStat(xml, "alrighty.jpg"))
-            // .then(result => processResponsePayload(response, result))
-            .then(function(stat) {
-                expect(stat).to.be.an("object");
-                expect(stat).to.have.property("filename", "/alrighty.jpg");
-                expect(stat).to.have.property("basename", "alrighty.jpg");
-                expect(stat).to.have.property("lastmod").that.is.a.string;
-                expect(stat).to.have.property("type", "file");
-                expect(stat).to.have.property("size", 52130);
-                expect(stat).to.have.property("mime", "image/jpeg");
-            });
+        const resp = await this.client.customRequest("/alrighty.jpg", {
+            method: "PROPFIND",
+            headers: {
+                Accept: "text/plain",
+                Depth: "0"
+            },
+            responseType: "text"
+        });
+        const result = await parseXML(resp.data);
+        const stat = parseStat(result, "/alrighty.jpg", false);
+        expect(stat).to.be.an("object");
+        expect(stat).to.have.property("filename", "/alrighty.jpg");
+        expect(stat).to.have.property("basename", "alrighty.jpg");
+        expect(stat).to.have.property("lastmod").that.is.a.string;
+        expect(stat).to.have.property("type", "file");
+        expect(stat).to.have.property("size", 52130);
+        expect(stat).to.have.property("mime", "image/jpeg");
     });
 });

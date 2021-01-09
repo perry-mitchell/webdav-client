@@ -10,3 +10,14 @@ export function encodePath(path) {
         .split(SEP_PATH_POSIX)
         .join("/");
 }
+
+export function normalisePath(pathStr: string): string {
+    let normalisedPath = pathStr;
+    if (normalisedPath[0] !== "/") {
+        normalisedPath = "/" + normalisedPath;
+    }
+    if (/^.+\/$/.test(normalisedPath)) {
+        normalisedPath = normalisedPath.substr(0, normalisedPath.length - 1);
+    }
+    return normalisedPath;
+}

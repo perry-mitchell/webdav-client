@@ -2,6 +2,7 @@ import path from "path-posix";
 import xmlParser from "fast-xml-parser";
 import nestedProp from "nested-property";
 import { decodeHTMLEntities } from "./encode";
+import { normalisePath } from "./path";
 import { DAVResult, DAVResultRaw, DAVResultResponse, DAVResultResponseProps, DiskQuota, FileStat } from "../types";
 
 enum PropertyType {
@@ -94,6 +95,23 @@ export function prepareFileFromProps(props: DAVResultResponseProps, rawFilename:
         stat.props = props;
     }
     return stat;
+}
+
+export function parseStat(result: DAVResult, filename: string, isDetailed: boolean = false): FileStat {
+    let responseItem = null;
+    try {
+        responseItem = result.multistatus.response[0];
+    } catch (e) {
+        /* ignore */
+    }
+    if (!responseItem) {
+        throw new Error("Failed getting item stat: bad response");
+    }
+    const {
+        propstat: { prop: props }
+    } = responseItem;
+    const filePath = normalisePath(filename);
+    return prepareFileFromProps(props, filePath, isDetailed);
 }
 
 export function translateDiskSpace(value: string | number): DiskQuota {
