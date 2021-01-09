@@ -4,6 +4,7 @@ import { copyFile } from "./operations/copyFile";
 import { createDirectory } from "./operations/createDirectory";
 import { createReadStream, createWriteStream } from "./operations/createStream";
 import { customRequest } from "./operations/customRequest";
+import { deleteFile } from "./operations/deleteFile";
 import { getDirectoryContents } from "./operations/directoryContents";
 import { getStat } from "./operations/stat";
 import {
@@ -53,6 +54,7 @@ export function createClient(remoteURL: string, options: WebDAVClientOptions = {
         createReadStream: (filename: string, options?: CreateReadStreamOptions) => createReadStream(context, filename, options),
         createWriteStream: (filename: string, options?: CreateWriteStreamOptions, callback?: CreateWriteStreamCallback) => createWriteStream(context, filename, options, callback),
         customRequest: (path: string, requestOptions: RequestOptionsCustom) => customRequest(context, path, requestOptions),
+        deleteFile: (filename: string) => deleteFile(context, filename),
         getDirectoryContents: (path: string, options?: GetDirectoryContentsOptions) => getDirectoryContents(context, path, options),
         stat: (path: string, options?: StatOptions) => getStat(context, path, options)
     };

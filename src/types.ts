@@ -165,6 +165,7 @@ export interface WebDAVClient {
     createReadStream: (filename: string, options?: CreateReadStreamOptions) => Stream.Readable;
     createWriteStream: (filename: string, options?: CreateWriteStreamOptions, callback?: CreateWriteStreamCallback) => Stream.Writable;
     customRequest: (path: string, requestOptions: RequestOptionsCustom) => Promise<Response>;
+    deleteFile: (filename: string) => Promise<void>;
     getDirectoryContents: (path: string, options?: GetDirectoryContentsOptions) => Promise<Array<FileStat> | ResponseDataDetailed<Array<FileStat>>>;
     stat: (path: string, options?: StatOptions) => Promise<FileStat | ResponseDataDetailed<FileStat>>;
 }
