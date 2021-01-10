@@ -227,7 +227,7 @@ describe("getDirectoryContents", function() {
             this.server = createWebDAVServer("digest");
             await this.server.start();
         });
-    
+
         afterEach(async function() {
             await this.server.stop();
             clean();

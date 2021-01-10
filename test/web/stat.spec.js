@@ -1,9 +1,5 @@
 const { createClient } = require("../../source/index.ts");
-const {
-    PASSWORD,
-    PORT,
-    USERNAME
-} = require("../server/credentials.js");
+const { PASSWORD, PORT, USERNAME } = require("../server/credentials.js");
 
 describe("stat", function() {
     beforeEach(function() {

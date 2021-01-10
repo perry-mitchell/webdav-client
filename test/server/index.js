@@ -52,7 +52,7 @@ function createServer(dir, authType) {
 
 function createWebDAVServer(authType) {
     return createServer(path.resolve(__dirname, "../testContents"), authType);
-};
+}
 
 module.exports = {
     createWebDAVServer
