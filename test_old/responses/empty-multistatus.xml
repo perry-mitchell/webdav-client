@@ -1,5 +1,0 @@
-<?xml version="1.0"?>
-<d:multistatus xmlns:d="DAV:"
-    xmlns:s="http://sabredav.org/ns"
-    xmlns:oc="http://owncloud.org/ns"
-    xmlns:nc="http://nextcloud.org/ns" />
