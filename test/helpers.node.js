@@ -3,7 +3,8 @@ const fs = require("fs");
 const rimraf = require("rimraf").sync;
 const copyDir = require("copy-dir").sync;
 const { createClient: createWebDAVClient, getPatcher } = require("../dist/node/index.js");
-const { PASSWORD, PORT, USERNAME, createWebDAVServer } = require("./server/index.js");
+const { createWebDAVServer } = require("./server/index.js");
+const { PASSWORD, PORT, USERNAME } = require("./server/credentials.js");
 
 function clean() {
     rimraf(path.resolve(__dirname, "./testContents"));

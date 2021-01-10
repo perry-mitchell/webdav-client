@@ -1,11 +1,29 @@
+const webpackConfig = require("../webpack.config.js");
+
+delete webpackConfig.entry;
+delete webpackConfig.output;
+webpackConfig.mode = "development";
+
 module.exports = function(config) {
     config.set({
-        basePath: "../../",
-        frameworks: ["mocha", "chai"],
-        files: ["dist/web/webdav.js", "test/web/specs/index.js", "test/web/specs/*.spec.js"],
+        basePath: "../",
+        frameworks: ["mocha", "chai", "sinon"],
+        plugins: [
+            require("karma-webpack"),
+            require("karma-chrome-launcher"),
+            require("karma-firefox-launcher"),
+            require("karma-mocha"),
+            require("karma-chai"),
+            require("karma-sinon"),
+            require("karma-spec-reporter")
+        ],
+        files: ["test/web/*.spec.js"],
         exclude: [],
-        preprocessors: {},
-        reporters: ["dots"],
+        preprocessors: {
+            "src/**/*.ts": ["webpack"],
+            "test/web/**/*.spec.js": ["webpack"]
+        },
+        reporters: ["spec", "progress"],
         port: 9876,
         colors: true,
         logLevel: config.LOG_INFO,
@@ -17,7 +35,8 @@ module.exports = function(config) {
                 debug: true
             }
         },
-        browsers: ["CustomChrome"],
+        browsers: ["FirefoxHeadless"],
+        webpack: webpackConfig,
         singleRun: true
     });
 };

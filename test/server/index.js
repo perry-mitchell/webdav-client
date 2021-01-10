@@ -1,9 +1,6 @@
 const path = require("path");
 const ws = require("webdav-server").v2;
-
-const PASSWORD = "pa$$w0rd!";
-const PORT = 9988;
-const USERNAME = "webdav-user";
+const { PASSWORD, PORT, USERNAME } = require("./credentials.js");
 
 function createServer(dir, authType) {
     if (!dir) {
@@ -28,7 +25,12 @@ function createServer(dir, authType) {
         port: PORT,
         httpAuthentication: auth,
         privilegeManager: privilegeManager,
-        maxRequestDepth: Infinity
+        maxRequestDepth: Infinity,
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, PUT, PROPFIND, DELETE, OPTIONS, MKCOL, MOVE, COPY",
+            "Access-Control-Allow-Headers": "Authorization, Content-Type, Content-Length"
+        }
     });
     // console.log(`Created server on localhost with port: 9988, and authType: ${authType}`);
     return {
@@ -53,8 +55,5 @@ function createWebDAVServer(authType) {
 };
 
 module.exports = {
-    PASSWORD,
-    PORT,
-    USERNAME,
     createWebDAVServer
 };

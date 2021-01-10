@@ -7,7 +7,9 @@ rimraf(path.resolve(__dirname, "./testContents"));
 copyDir(path.resolve(__dirname, "./serverContents"), path.resolve(__dirname, "./testContents"));
 
 const server = createWebDAVServer("basic");
-server.start();
+server.start().then(() => {
+    console.log("Server started");
+});
 
 process.on("SIGTERM", function() {
     server.stop();
