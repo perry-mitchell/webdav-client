@@ -7,7 +7,7 @@ import { customRequest } from "./operations/customRequest";
 import { deleteFile } from "./operations/deleteFile";
 import { exists } from "./operations/exists";
 import { getDirectoryContents } from "./operations/directoryContents";
-import { getFileContents, getFileLink } from "./operations/getFile";
+import { getFileContents, getFileLink } from "./operations/getFileContents";
 import { getQuota } from "./operations/getQuota";
 import { getStat } from "./operations/stat";
 import { moveFile } from "./operations/moveFile";
