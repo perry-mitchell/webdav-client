@@ -28,8 +28,8 @@ function createServer(dir, authType) {
         maxRequestDepth: Infinity,
         headers: {
             "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "GET, PUT, PROPFIND, DELETE, OPTIONS, MKCOL, MOVE, COPY",
-            "Access-Control-Allow-Headers": "Authorization, Content-Type, Content-Length"
+            "Access-Control-Allow-Methods": "HEAD, GET, PUT, PROPFIND, DELETE, OPTIONS, MKCOL, MOVE, COPY",
+            "Access-Control-Allow-Headers": "Accept, Authorization, Content-Type, Content-Length, Depth"
         }
     });
     // console.log(`Created server on localhost with port: 9988, and authType: ${authType}`);
