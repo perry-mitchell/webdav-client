@@ -4,7 +4,7 @@ const { DefinePlugin } = require("webpack");
 const DIST = path.resolve(__dirname, "./dist/web");
 
 module.exports = {
-    entry: path.resolve(__dirname, "./src/index.ts"),
+    entry: path.resolve(__dirname, "./source/index.ts"),
 
     module: {
         rules: [

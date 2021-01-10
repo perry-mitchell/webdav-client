@@ -19,12 +19,7 @@
     "test:node:watch": "nodemon --exec 'npm run test:node' --ignore 'dist/'",
     "test:web": "concurrently --success 'first' --kill-others 'npm run test:web:karma' 'npm run test:web:server'",
     "test:web:karma": "karma start test/karma.conf.js",
-    "test:web:server": "node test/server.web.js",
-
-    "xtest:web": "npm run test:web:pack && concurrently --success 'first' --kill-others 'npm run test:web:karma' 'npm run test:web:server'",
-    "xtest:web:karma": "sleep 2 && karma start test/karma.conf.js",
-    "xtest:web:pack": "webpack --mode development --config webpack.config.js",
-    "xtest:web:server": "node test/server.web.js"
+    "test:web:server": "node test/server.web.js"
   },
   "files": [
     "dist/",

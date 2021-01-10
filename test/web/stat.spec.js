@@ -1,4 +1,4 @@
-const { createClient } = require("../../src/index.ts");
+const { createClient } = require("../../source/index.ts");
 const {
     PASSWORD,
     PORT,
