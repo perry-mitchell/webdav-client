@@ -8,7 +8,6 @@
     "build:node": "tsc",
     "build:web": "webpack --mode production --config webpack.config.js",
     "clean": "rimraf dist web",
-    "docs": "jsdoc2md 'source/**/*.js' > API.md",
     "format": "prettier --write '{source,test}/**/*.js'",
     "precommit": "lint-staged",
     "prepare:publish:web": "mkdirp ./web && mv ./dist/web/webdav.js ./web/index.js",
@@ -21,6 +20,7 @@
     "test:web:karma": "karma start test/karma.conf.js",
     "test:web:server": "node test/server.web.js"
   },
+  "types": "dist/node/index.d.ts",
   "files": [
     "dist/",
     "web/",
