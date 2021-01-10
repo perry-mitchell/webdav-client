@@ -40,6 +40,8 @@ export interface DAVResultResponseProps {
     getetag?: string;
     getcontentlength?: string;
     getcontenttype?: string;
+    "quota-available-bytes"?: any;
+    "quota-used-bytes"?: string;
 }
 
 export interface DAVResult {
@@ -69,7 +71,12 @@ export interface DigestContext {
     opaque?: string;
 }
 
-export type DiskQuota = "unknown" | "unlimited" | number;
+export interface DiskQuota {
+    used: number;
+    available: DiskQuotaAvailable;
+}
+
+export type DiskQuotaAvailable = "unknown" | "unlimited" | number;
 
 export enum ErrorCode {
     InvalidAuthType = "invalid-auth-type",
@@ -97,6 +104,10 @@ export interface GetDirectoryContentsOptions {
 export interface GetFileContentsOptions {
     details?: boolean;
     format?: "binary" | "text";
+}
+
+export interface GetQuotaOptions {
+    details?: boolean;
 }
 
 export interface Headers {
@@ -179,6 +190,7 @@ export interface WebDAVClient {
     getDirectoryContents: (path: string, options?: GetDirectoryContentsOptions) => Promise<Array<FileStat> | ResponseDataDetailed<Array<FileStat>>>;
     getFileContents: (filename: string, options?: GetFileContentsOptions) => Promise<BufferLike | string | ResponseDataDetailed<BufferLike | string>>;
     getFileDownloadLink: (filename: string) => string;
+    getQuota: (options?: GetQuotaOptions) => Promise<DiskQuota | null | ResponseDataDetailed<DiskQuota | null>>;
     moveFile: (filename: string, destinationFilename: string) => Promise<void>;
     stat: (path: string, options?: StatOptions) => Promise<FileStat | ResponseDataDetailed<FileStat>>;
 }

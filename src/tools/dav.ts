@@ -3,7 +3,7 @@ import xmlParser from "fast-xml-parser";
 import nestedProp from "nested-property";
 import { decodeHTMLEntities } from "./encode";
 import { normalisePath } from "./path";
-import { DAVResult, DAVResultRaw, DAVResultResponse, DAVResultResponseProps, DiskQuota, FileStat } from "../types";
+import { DAVResult, DAVResultRaw, DAVResultResponse, DAVResultResponseProps, DiskQuotaAvailable, FileStat } from "../types";
 
 enum PropertyType {
     Array = "array",
@@ -114,7 +114,7 @@ export function parseStat(result: DAVResult, filename: string, isDetailed: boole
     return prepareFileFromProps(props, filePath, isDetailed);
 }
 
-export function translateDiskSpace(value: string | number): DiskQuota {
+export function translateDiskSpace(value: string | number): DiskQuotaAvailable {
     switch (value.toString()) {
         case "-3":
             return "unlimited";
