@@ -4,6 +4,11 @@ delete webpackConfig.entry;
 delete webpackConfig.output;
 webpackConfig.mode = "development";
 
+const browsers = ["FirefoxHeadless"];
+if (process.env.CI) {
+    browsers.push("CustomChrome");
+}
+
 module.exports = function(config) {
     config.set({
         basePath: "../",
@@ -35,7 +40,7 @@ module.exports = function(config) {
                 debug: true
             }
         },
-        browsers: ["FirefoxHeadless"],
+        browsers,
         webpack: webpackConfig,
         singleRun: true
     });
