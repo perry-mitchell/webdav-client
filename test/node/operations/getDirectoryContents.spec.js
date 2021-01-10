@@ -1,3 +1,4 @@
+const { AuthType } = require("../../../dist/node/index.js");
 const {
     SERVER_PASSWORD,
     SERVER_PORT,
@@ -212,6 +213,31 @@ describe("getDirectoryContents", function() {
         return this.client.getDirectoryContents("/", options).then(function(contents) {
             expect(contents).to.have.lengthOf(1);
             expect(contents[0].filename).to.equal("/webdav/server/notreal.txt");
+        });
+    });
+
+    describe("using Digest authentication", function() {
+        beforeEach(async function() {
+            await this.server.stop();
+            this.client = createWebDAVClient(`http://localhost:${SERVER_PORT}/webdav/server`, {
+                username: SERVER_USERNAME,
+                password: SERVER_PASSWORD,
+                authType: AuthType.Digest
+            });
+            this.server = createWebDAVServer("digest");
+            await this.server.start();
+        });
+    
+        afterEach(async function() {
+            await this.server.stop();
+            clean();
+        });
+
+        it("returns an array of results", function() {
+            return this.client.getDirectoryContents("/").then(function(contents) {
+                expect(contents).to.be.an("array");
+                expect(contents[0]).to.be.an("object");
+            });
         });
     });
 });
