@@ -9,6 +9,7 @@ import { exists } from "./operations/exists";
 import { getDirectoryContents } from "./operations/directoryContents";
 import { getFileContents, getFileLink } from "./operations/getFile";
 import { getStat } from "./operations/stat";
+import { moveFile } from "./operations/moveFile";
 import {
     AuthType,
     CreateReadStreamOptions,
@@ -66,6 +67,7 @@ export function createClient(remoteURL: string, options: WebDAVClientOptions = {
         getDirectoryContents: (path: string, options?: GetDirectoryContentsOptions) => getDirectoryContents(context, path, options),
         getFileContents: (filename: string, options?: GetFileContentsOptions) => getFileContents(context, filename, options),
         getFileDownloadLink: (filename: string) => getFileLink(context, filename),
+        moveFile: (filename: string, destinationFilename: string) => moveFile(context, filename, destinationFilename),
         stat: (path: string, options?: StatOptions) => getStat(context, path, options)
     };
 }
