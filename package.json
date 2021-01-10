@@ -1,6 +1,6 @@
 {
   "name": "webdav",
-  "version": "3.6.1",
+  "version": "3.6.2",
   "description": "WebDAV client for NodeJS",
   "main": "dist/node/index.js",
   "scripts": {
@@ -50,7 +50,7 @@
   },
   "homepage": "https://github.com/perry-mitchell/webdav-client#readme",
   "dependencies": {
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "base-64": "^0.1.0",
     "fast-xml-parser": "^3.17.4",
     "he": "^1.2.0",
