@@ -1,3 +1,4 @@
+import Stream from "stream";
 import { extractURLPath } from "./tools/url";
 import { setupAuth } from "./auth/index";
 import { copyFile } from "./operations/copyFile";
@@ -11,14 +12,17 @@ import { getFileContents, getFileLink } from "./operations/getFileContents";
 import { getQuota } from "./operations/getQuota";
 import { getStat } from "./operations/stat";
 import { moveFile } from "./operations/moveFile";
+import { putFileContents } from "./operations/putFileContents";
 import {
     AuthType,
+    BufferLike,
     CreateReadStreamOptions,
     CreateWriteStreamCallback,
     CreateWriteStreamOptions,
     GetDirectoryContentsOptions,
     GetFileContentsOptions,
     GetQuotaOptions,
+    PutFileContentsOptions,
     RequestOptionsCustom,
     StatOptions,
     WebDAVClient,
@@ -71,6 +75,7 @@ export function createClient(remoteURL: string, options: WebDAVClientOptions = {
         getFileDownloadLink: (filename: string) => getFileLink(context, filename),
         getQuota: (options?: GetQuotaOptions) => getQuota(context, options),
         moveFile: (filename: string, destinationFilename: string) => moveFile(context, filename, destinationFilename),
+        putFileContents: (filename: string, data: string | BufferLike | Stream.Readable, options?: PutFileContentsOptions) => putFileContents(context, filename, data, options),
         stat: (path: string, options?: StatOptions) => getStat(context, path, options)
     };
 }

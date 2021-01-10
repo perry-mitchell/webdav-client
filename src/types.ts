@@ -79,6 +79,7 @@ export interface DiskQuota {
 export type DiskQuotaAvailable = "unknown" | "unlimited" | number;
 
 export enum ErrorCode {
+    DataTypeNoLength = "data-type-no-length",
     InvalidAuthType = "invalid-auth-type",
     InvalidOutputFormat = "invalid-output-format",
     LinkUnsupportedAuthType = "link-unsupported-auth"
@@ -118,6 +119,11 @@ export interface OAuthToken {
     access_token: string;
     token_type: string;
     refresh_token?: string
+}
+
+export interface PutFileContentsOptions {
+    contentLength?: boolean | number;
+    overwrite?: boolean;
 }
 
 export type RequestDataPayload = string | Buffer | ArrayBuffer | { [key: string]: any; };
@@ -192,6 +198,7 @@ export interface WebDAVClient {
     getFileDownloadLink: (filename: string) => string;
     getQuota: (options?: GetQuotaOptions) => Promise<DiskQuota | null | ResponseDataDetailed<DiskQuota | null>>;
     moveFile: (filename: string, destinationFilename: string) => Promise<void>;
+    putFileContents: (filename: string, data: string | BufferLike | Stream.Readable, options?: PutFileContentsOptions) => Promise<void>;
     stat: (path: string, options?: StatOptions) => Promise<FileStat | ResponseDataDetailed<FileStat>>;
 }
 
