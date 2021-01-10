@@ -14,7 +14,7 @@ This library's motivation is **not** to follow an RFC or to strictly adhere to s
 
 ### Node support
 
-This library is compatibale with **NodeJS version 10** and above (For version 6/8 support, use versions in the range of `2.*`. For version 4 support, use versions in the range of `1.*`). Versions 2.x and 1.x are no longer supported, so use them at your own risk. Version 3.x is deprecated and may receive the odd bugfix.
+This library is compatible with **NodeJS version 10** and above (For version 6/8 support, use versions in the range of `2.*`. For version 4 support, use versions in the range of `1.*`). Versions 2.x and 1.x are no longer supported, so use them at your own risk. Version 3.x is deprecated and may receive the odd bugfix.
 
 ### Browser support
 
