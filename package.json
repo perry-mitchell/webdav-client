@@ -52,7 +52,7 @@
   "dependencies": {
     "axios": "^0.20.0",
     "base-64": "^0.1.0",
-    "fast-xml-parser": "^3.17.4",
+    "fast-xml-parser": "^3.17.5",
     "he": "^1.2.0",
     "hot-patcher": "^0.5.0",
     "layerr": "^0.1.2",
