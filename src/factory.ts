@@ -8,11 +8,11 @@ import { customRequest } from "./operations/customRequest";
 import { deleteFile } from "./operations/deleteFile";
 import { exists } from "./operations/exists";
 import { getDirectoryContents } from "./operations/directoryContents";
-import { getFileContents, getFileLink } from "./operations/getFileContents";
+import { getFileContents, getFileDownloadLink } from "./operations/getFileContents";
 import { getQuota } from "./operations/getQuota";
 import { getStat } from "./operations/stat";
 import { moveFile } from "./operations/moveFile";
-import { putFileContents } from "./operations/putFileContents";
+import { getFileUploadLink, putFileContents } from "./operations/putFileContents";
 import {
     AuthType,
     BufferLike,
@@ -72,7 +72,8 @@ export function createClient(remoteURL: string, options: WebDAVClientOptions = {
         exists: (path: string) => exists(context, path),
         getDirectoryContents: (path: string, options?: GetDirectoryContentsOptions) => getDirectoryContents(context, path, options),
         getFileContents: (filename: string, options?: GetFileContentsOptions) => getFileContents(context, filename, options),
-        getFileDownloadLink: (filename: string) => getFileLink(context, filename),
+        getFileDownloadLink: (filename: string) => getFileDownloadLink(context, filename),
+        getFileUploadLink: (filename: string) => getFileUploadLink(context, filename),
         getQuota: (options?: GetQuotaOptions) => getQuota(context, options),
         moveFile: (filename: string, destinationFilename: string) => moveFile(context, filename, destinationFilename),
         putFileContents: (filename: string, data: string | BufferLike | Stream.Readable, options?: PutFileContentsOptions) => putFileContents(context, filename, data, options),

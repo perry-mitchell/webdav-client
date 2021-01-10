@@ -46,7 +46,7 @@ async function getFileContentsString(context: WebDAVClientContext, filePath: str
     return processResponsePayload(response, response.data as string, options.details);
 }
 
-export function getFileLink(context: WebDAVClientContext, filePath: string): string {
+export function getFileDownloadLink(context: WebDAVClientContext, filePath: string): string {
     let url = joinURL(context.remoteURL, encodePath(filePath));
     const protocol = /^https:/i.test(url) ? "https" : "http";
     switch (context.authType) {

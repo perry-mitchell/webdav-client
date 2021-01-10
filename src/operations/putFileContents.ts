@@ -2,8 +2,9 @@
 // const responseHandlers = require("../response.js");
 // const { encodePath, joinURL, prepareRequestOptions, request } = require("../request.js");
 // const { fromBase64 } = require("../encode.js");
-// import { Layerr } from "layerr";
+import { Layerr } from "layerr";
 import Stream from "stream";
+import { fromBase64 } from "../tools/encode";
 import { joinURL } from "../tools/url";
 import { encodePath } from "../tools/path";
 import { request, prepareRequestOptions } from "../request";
@@ -48,17 +49,25 @@ export async function putFileContents(
     handleResponseCode(response);
 }
 
-// export function getFileUploadLink(filePath, options) {
-//     let url = joinURL(options.remoteURL, encodePath(filePath));
-//     url += "?Content-Type=application/octet-stream";
-//     const protocol = /^https:/i.test(url) ? "https" : "http";
-//     if (options.headers && options.headers.Authorization) {
-//         if (/^Basic /i.test(options.headers.Authorization) === false) {
-//             throw new Error("Failed retrieving download link: Invalid authorisation method");
-//         }
-//         const authPart = options.headers.Authorization.replace(/^Basic /i, "").trim();
-//         const authContents = fromBase64(authPart);
-//         url = url.replace(/^https?:\/\//, `${protocol}://${authContents}@`);
-//     }
-//     return url;
-// }
+export function getFileUploadLink(context: WebDAVClientContext, filePath: string): string {
+    let url: string = `${joinURL(context.remoteURL, encodePath(filePath))}?Content-Type=application/octet-stream`;
+    const protocol = /^https:/i.test(url) ? "https" : "http";
+    switch (context.authType) {
+        case AuthType.None:
+            // Do nothing
+            break;
+        case AuthType.Password: {
+            const authPart = context.headers.Authorization.replace(/^Basic /i, "").trim();
+            const authContents = fromBase64(authPart);
+            url = url.replace(/^https?:\/\//, `${protocol}://${authContents}@`);
+            break;
+        }
+        default:
+            throw new Layerr({
+                info: {
+                    code: ErrorCode.LinkUnsupportedAuthType
+                }
+            }, `Unsupported auth type for file link: ${context.authType}`);
+    }
+    return url;
+}
