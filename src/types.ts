@@ -178,7 +178,7 @@ export interface WebDAVClient {
     exists: (path: string) => Promise<boolean>;
     getDirectoryContents: (path: string, options?: GetDirectoryContentsOptions) => Promise<Array<FileStat> | ResponseDataDetailed<Array<FileStat>>>;
     getFileContents: (filename: string, options?: GetFileContentsOptions) => Promise<BufferLike | string | ResponseDataDetailed<BufferLike | string>>;
-    getFileDownloadLink: (filename: string) => Promise<string>;
+    getFileDownloadLink: (filename: string) => string;
     stat: (path: string, options?: StatOptions) => Promise<FileStat | ResponseDataDetailed<FileStat>>;
 }
 

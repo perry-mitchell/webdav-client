@@ -25,7 +25,7 @@ import {
 
 export function createClient(remoteURL: string, options: WebDAVClientOptions = {}): WebDAVClient {
     const {
-        authType = AuthType.Password,
+        authType: authTypeRaw = null,
         headers = {},
         httpAgent,
         httpsAgent,
@@ -36,6 +36,10 @@ export function createClient(remoteURL: string, options: WebDAVClientOptions = {
         username,
         withCredentials
     } = options;
+    let authType = authTypeRaw;
+    if (!authType) {
+        authType = username || password ? AuthType.Password : AuthType.None;
+    }
     const context: WebDAVClientContext = {
         authType,
         headers: Object.assign({}, headers),
