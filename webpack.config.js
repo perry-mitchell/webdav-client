@@ -4,12 +4,12 @@ const { DefinePlugin } = require("webpack");
 const DIST = path.resolve(__dirname, "./dist/web");
 
 module.exports = {
-    entry: path.resolve(__dirname, "./source/index.js"),
+    entry: path.resolve(__dirname, "./source/index.ts"),
 
     module: {
         rules: [
             {
-                test: /\.js$/,
+                test: /\.[jt]s$/,
                 loader: "babel-loader",
                 options: {
                     presets: [
@@ -17,7 +17,11 @@ module.exports = {
                             targets: {
                                 "ie": 11
                             }
-                        }]
+                        }],
+                        "@babel/preset-typescript"
+                    ],
+                    plugins: [
+                        "babel-plugin-transform-async-to-promises"
                     ]
                 }
             }
@@ -47,5 +51,9 @@ module.exports = {
         new DefinePlugin({
             WEB: "true"
         })
-    ]
+    ],
+
+    resolve: {
+        extensions: [".ts", ".js", ".json"]
+    }
 };

@@ -1,14 +1,13 @@
-"use strict";
-
 const path = require("path");
 const ws = require("webdav-server").v2;
+const { PASSWORD, PORT, USERNAME } = require("./credentials.js");
 
 function createServer(dir, authType) {
     if (!dir) {
         throw new Error("Expected target directory");
     }
     const userManager = new ws.SimpleUserManager();
-    const user = userManager.addUser("webdav-user", "pa$$w0rd!");
+    const user = userManager.addUser(USERNAME, PASSWORD);
     let auth;
     switch (authType) {
         case "digest":
@@ -23,16 +22,20 @@ function createServer(dir, authType) {
     const privilegeManager = new ws.SimplePathPrivilegeManager();
     privilegeManager.setRights(user, "/", ["all"]);
     const server = new ws.WebDAVServer({
-        port: 9988,
+        port: PORT,
         httpAuthentication: auth,
         privilegeManager: privilegeManager,
-        maxRequestDepth: Infinity
+        maxRequestDepth: Infinity,
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "HEAD, GET, PUT, PROPFIND, DELETE, OPTIONS, MKCOL, MOVE, COPY",
+            "Access-Control-Allow-Headers": "Accept, Authorization, Content-Type, Content-Length, Depth"
+        }
     });
     // console.log(`Created server on localhost with port: 9988, and authType: ${authType}`);
     return {
         start: function start() {
             return new Promise(function(resolve) {
-                // console.log("Starting WebDAV server at directory:", dir);
                 server.setFileSystem("/webdav/server", new ws.PhysicalFileSystem(dir), function() {
                     server.start(resolve);
                 });
@@ -41,21 +44,16 @@ function createServer(dir, authType) {
 
         stop: function stop() {
             return new Promise(function(resolve) {
-                // console.log("Stopping WebDAV server");
                 server.stop(resolve);
             });
         }
     };
 }
 
-createServer.test = {
-    username: "webdav-user",
-    password: "pa$$w0rd!",
-    port: 9988
-};
-
-createServer.webdavServer = function(authType) {
+function createWebDAVServer(authType) {
     return createServer(path.resolve(__dirname, "../testContents"), authType);
-};
+}
 
-module.exports = createServer;
+module.exports = {
+    createWebDAVServer
+};

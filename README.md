@@ -1,30 +1,30 @@
 ![WebDAV](https://raw.githubusercontent.com/perry-mitchell/webdav-client/master/webdav.jpg)
 
-> A WebDAV client written in JavaScript for NodeJS and the browser.
+> A WebDAV client, written in Typescript, for NodeJS and the browser
 
 [![Build Status](https://travis-ci.org/perry-mitchell/webdav-client.svg?branch=master)](https://travis-ci.org/perry-mitchell/webdav-client) [![npm version](https://badge.fury.io/js/webdav.svg)](https://www.npmjs.com/package/webdav) [![monthly downloads](https://img.shields.io/npm/dm/webdav.svg)](https://www.npmjs.com/package/webdav) [![total downloads](https://img.shields.io/npm/dt/webdav.svg?label=total%20downloads)](https://www.npmjs.com/package/webdav)
 
 ## About
 
-WebDAV is a well-known, stable and highly flexible protocol for interacting with remote filesystems via an API. Being that it is so widespread, many file hosting services such as **Box**, **ownCloud**/**Nextcloud** and **Yandex** use it as a fallback to their other interfaces.
+WebDAV is a well-known, stable and highly flexible protocol for interacting with remote filesystems via an API. Being that it is so widespread, many file hosting services such as **Box**, **Nextcloud**/**ownCloud** and **Yandex** use it as a fallback to their primary interfaces.
 
 This library provides a **WebDAV client** interface that makes interacting with WebDAV enabled services easy. The API returns promises and resolve with the results. It parses and prepares directory-contents requests for easy consumption, as well as providing methods for fetching things like file stats and quotas.
 
-Please read the [contribution guide](CONTRIBUTING.md) if you plan on making an issue or PR.
+This library's motivation is **not** to follow an RFC or to strictly adhere to standard WebDAV interfaces, but to provide an easy-to-consume client API for working with most WebDAV services from Node or the browser.
 
 ### Node support
 
-This library is compatibale with **NodeJS version 10** and above (For version 6/8 support, use versions in the range of `2.*`. For version 4 support, use versions in the range of `1.*`). Versions 2.x and 1.x are no longer supported, so use at your own risk.
+This library is compatible with **NodeJS version 10** and above (For version 6/8 support, use versions in the range of `2.*`. For version 4 support, use versions in the range of `1.*`). Versions 2.x and 1.x are no longer supported, so use them at your own risk. Version 3.x is deprecated and may receive the odd bugfix.
 
-### Usage in the Browser
+### Browser support
 
-As of version 3, WebDAV client is now supported in the browser. The compilation settings specify a minimum supported browser version of Internet Explorer 11, however testing in this browser is not performed regularly.
+This WebDAV client is supported in the browser is of version 3. The compilation settings specify a minimum supported browser version of Internet Explorer 11, however testing in this browser is not performed regularly.
 
 _Although you may choose to transpile this library's default entry point (NodeJS) yourself, it is not advised - use the dedicated web version instead._
 
 You can use the web version via a different entry point:
 
-```javascript
+```typescript
 import { createClient } from "webdav/web";
 ```
 
@@ -35,6 +35,20 @@ const client = window.WebDAV.createClient(/* ... */);
 ```
 
 **NB:** Streams are not available within the browser, so `createReadStream` and `createWriteStream` are just stubbed. Calling them will throw an exception.
+
+### Types
+
+Typescript types are exported with this library for the Node build. All of the types can also be directly imported from the module:
+
+```typescript
+import { AuthType, createClient } from "webdav";
+
+const client = createClient("https://some-server.org", {
+    authType: AuthType.Digest,
+    username: "user",
+    password: "pass"
+});
+```
 
 ## Installation
 
@@ -48,7 +62,7 @@ npm install webdav --save
 
 Usage entails creating a client adapter instance by calling the factory function `createClient`:
 
-```javascript
+```typescript
 const { createClient } = require("webdav");
 
 const client = createClient(
@@ -71,34 +85,35 @@ const directoryItems = await client.getDirectoryContents("/");
 // }]
 ```
 
-Make sure to read the [API documentation](API.md) for more information on the [available adapter methods](API.md#ClientInterface).
-
 ### Authentication & Connection
 
-`webdav` uses `Basic` authentication by default, if `username` and `password` are provided (if none are provided, no `Authorization` header is specified). It also supports OAuth tokens and Digest auth.
+The WebDAV client automatically detects which authentication to use, between `AuthType.None` and `AuthType.Password`, if no `authType` configuration parameter is provided. For `AuthType.Token` or `AuthType.Digest`, you must specify it explicitly.
 
-#### Basic or no authentication
+Setting the `authType` will automatically manage the `Authorization` header when connecting.
 
-You can use the client without authentication if the server doesn't require it - simply avoid passing any values to `username`, `password`, `token` or `digest` in the config.
+#### Basic/no authentication
+
+You can use the client without authentication if the server doesn't require it - simply avoid passing any values to `username`, `password` in the config.
 
 To use basic authentication, simply pass a `username` and `password` in the config.
 
-`webdav` also allows for overriding the built in HTTP and HTTPS agents by setting the properties `httpAgent` & `httpsAgent` accordingly. These should be instances of node's [http.Agent](https://nodejs.org/api/http.html#http_class_http_agent) and [https.Agent](https://nodejs.org/api/https.html#https_class_https_agent) respectively.
+This library also allows for overriding the built in HTTP and HTTPS agents by setting the properties `httpAgent` & `httpsAgent` accordingly. These should be instances of node's [http.Agent](https://nodejs.org/api/http.html#http_class_http_agent) and [https.Agent](https://nodejs.org/api/https.html#https_class_https_agent) respectively.
 
 #### OAuth tokens
 
-To use a token to authenticate, simply pass the token data to the `token` field:
+To use a token to authenticate, pass the token data to the `token` field and specify the `authType`:
 
-```javascript
+```typescript
 createClient(
     "https://address.com",
     {
+        authType: AuthType.Token,
         token: {
-            "access_token": "2YotnFZFEjr1zCsicMWpAA",
-            "token_type": "example",
-            "expires_in": 3600,
-            "refresh_token": "tGzv3JOkF0XG5Qx2TlKWIA",
-            "example_parameter": "example_value"
+            access_token: "2YotnFZFEjr1zCsicMWpAA",
+            token_type: "example",
+            expires_in: 3600,
+            refresh_token: "tGzv3JOkF0XG5Qx2TlKWIA",
+            example_parameter: "example_value"
         }
     }
 );
@@ -106,42 +121,85 @@ createClient(
 
 #### Digest authentication
 
-If a server requires digest-based authentication, you can enable this functionality by setting `digest` to true:
+If a server requires digest-based authentication, you can enable this functionality by the `authType` configuration parameter, as well as providing a `username` and `password`:
 
-```javascript
+```typescript
 createClient(
     "https://address.com",
     {
+        authType: AuthType.Digest,
         username: "someUser",
-        password: "myS3curePa$$w0rd",
-        digest: true
+        password: "myS3curePa$$w0rd"
     }
 );
 ```
 
-### Methods
+### Client configuration
+
+The `createClient` method takes a WebDAV service URL, and a configuration options parameter.
+
+The available configuration options are as follows:
+
+| Option        | Default       | Description                                       |
+|---------------|---------------|---------------------------------------------------|
+| `authType`    | `null`        | The authentication type to use. If not provided, defaults to trying to detect based upon whether `username` and `password` were provided. |
+| `headers`     | `{}`          | Additional headers provided to all requests. Headers provided here are overridden by method-specific headers, including `Authorization`. |
+| `httpAgent`   | _None_        | HTTP agent instance. Available only in Node. See [http.Agent](https://nodejs.org/api/http.html#http_class_http_agent). |
+| `httpsAgent`  | _None_        | HTTPS agent instance. Available only in Node. See [https.Agent](https://nodejs.org/api/https.html#https_class_https_agent). |
+| `maxBodyLength` | _None_      | Maximum body length allowed for sending, in bytes. |
+| `maxContentLength` | _None_   | Maximum content length allowed for receiving, in bytes. |
+| `password`    | _None_        | Password for authentication.                      |
+| `token`       | _None_        | Token object for authentication.                  |
+| `username`    | _None_        | Username for authentication.                      |
+| `withCredentials` | _None_    | Credentials inclusion setting for Axios.          |
+
+### Client methods
+
+The `WebDAVClient` interface type contains all the methods and signatures for the WebDAV client instance.
 
 #### copyFile
 
-Copy a file from one remote location to another:
+Copy a file from one location to another.
 
-```javascript
-await client.copyFile("/sub/item.txt", "/destination/item.txt");
+```typescript
+await client.copyFile(
+    "/images/test.jpg",
+    "/public/img/test.jpg"
+);
 ```
+
+```typescript
+(filename: string, destination: string) => Promise<void>
+```
+
+| Argument          | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `filename`        | Yes       | The source filename.                          |
+| `destination`     | Yes       | The destination filename.                     |
 
 #### createDirectory
 
-Create a new directory:
+Create a new directory.
 
-```javascript
-await client.createDirectory("/completely/new/path");
+```typescript
+await client.createDirectory("/data/system/storage");
 ```
+
+```typescript
+(path: string) => Promise<void>
+```
+
+| Argument          | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `path`            | Yes       | The path to create.                           |
 
 #### createReadStream
 
-Create a read stream targeted at a remote file:
+Synchronously create a readable stream for a remote file.
 
-```javascript
+_Note that although a stream is returned instantly, the connection and fetching of the file is still performed asynchronously in the background. There will be some delay before the stream begins receiving data._
+
+```typescript
 client
     .createReadStream("/video.mp4")
     .pipe(fs.createWriteStream("~/video.mp4"));
@@ -149,46 +207,115 @@ client
 
 If you want to stream only part of the file, you can specify the `range` in the options argument:
 
-```javascript
+```typescript
 client
     .createReadStream(
         "/video.mp4", 
-        { range: { start: start, end: end } }
+        { range: { start: 0, end: 1024 } }
     ).pipe(fs.createWriteStream("~/video.mp4"));
 ```
 
+```typescript
+(filename: string, options?: CreateReadStreamOptions) => Stream.Readable
+```
+
+| Argument          | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `filename`        | Yes       | The remote file to stream.                    |
+| `options`         | No        | Read stream options.                          |
+| `options.range`   | No        | Stream range configuration.                   |
+| `options.range.start` | Yes   | Byte-position for the start of the stream.    |
+| `options.range.end` | No      | Byte-position for the end of the stream.      |
+
 #### createWriteStream
 
-Create a write stream targeted at a remote file:
+Create a write stream targeted at a remote file.
 
-```javascript
-fs.createReadStream("~/Music/song.mp3")
+_Note that although a stream is returned instantly, the connection and writing to the remote file is still performed asynchronously in the background. There will be some delay before the stream begins piping data._
+
+```typescript
+fs
+    .createReadStream("~/Music/song.mp3")
     .pipe(client.createWriteStream("/music/song.mp3"));
 ```
 
+```typescript
+(filename: string, options?: CreateWriteStreamOptions, callback?: CreateWriteStreamCallback) => Stream.Writable
+```
+
+| Argument          | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `filename`        | Yes       | The remote file to stream.                    |
+| `options`         | No        | Write stream options.                         |
+| `options.overwrite` | No      | Whether or not to overwrite the remote file if it already exists. Defaults to `true`. |
+| `callback`        | No        | Callback to fire once the connection has been made and streaming has started. |
+
+#### customRequest
+
+Custom requests can be made to the attached host by calling `customRequest`. Custom requests provide the boilerplate authentication and other request options used internally within the client.
+
+```typescript
+const resp: Response = await this.client.customRequest("/alrighty.jpg", {
+    method: "PROPFIND",
+    headers: {
+        Accept: "text/plain",
+        Depth: "0"
+    },
+    responseType: "text"
+});
+const result: DAVResult = await parseXML(resp.data);
+const stat: FileStat = parseStat(result, "/alrighty.jpg", false);
+```
+
+```typescript
+(path: string, requestOptions: RequestOptionsCustom) => Promise<Response>
+```
+
+| Argument          | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `path`            | Yes       | The path to make a custom request against.    |
+| `requestOptions`  | Yes       | Request options - required parameters such as `url`, `method` etc. - Refer to the `RequestOptionsCustom` type definition. |
+
 #### deleteFile
 
-Delete a remote file:
+Delete a remote file.
 
-```javascript
+```typescript
 await client.deleteFile("/tmp.dat");
 ```
 
-### exists
+```typescript
+(filename: string) => Promise<void>
+```
 
-Check if a file or directory exists:
+| Argument          | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `filename`        | Yes       | The file to delete.                           |
 
-```javascript
+
+#### exists
+
+Check if a file or directory exists.
+
+```typescript
 if (await client.exists("/some/path") === false) {
     await client.createDirectory("/some/path");
 }
 ```
 
+```typescript
+(path: string) => Promise<boolean>
+```
+
+| Argument          | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `path`            | Yes       | The remote path to check.                     |
+
 #### getDirectoryContents
 
-Get the contents of a remote directory. Returns an array of [item stats](#item-stat).
+Get the contents of a remote directory. Returns an array of [item stats](#item-stats).
 
-```javascript
+```typescript
 // Get current directory contents:
 const contents = await client.getDirectoryContents("/");
 // Get all contents:
@@ -197,73 +324,128 @@ const contents = await client.getDirectoryContents("/", { deep: true });
 
 Files can be globbed using the `glob` option (processed using [`minimatch`](https://github.com/isaacs/minimatch)). When using a glob pattern it is recommended to fetch `deep` contents:
 
-```javascript
+```typescript
 const images = await client.getDirectoryContents("/", { deep: true, glob: "/**/*.{png,jpg,gif}" });
 ```
 
-#### getFileContents
-
-Fetch the contents of a remote file. Binary contents are returned by default (Buffer):
-
-```javascript
-const buff = await client.getFileContents("/package.zip");
+```typescript
+(path: string, options?: GetDirectoryContentsOptions) => Promise<Array<FileStat> | ResponseDataDetailed<Array<FileStat>>>
 ```
 
-It is recommended to use streams if the files being transferred are large.
+| Argument          | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `path`            | Yes       | The path to fetch the contents of.            |
+| `options`         | No        | Configuration options.                        |
+| `options.deep`    | No        | Fetch deep results (recursive). Defaults to `false`. |
+| `options.details` | No        | Fetch detailed results (item stats, headers). Defaults to `false`. |
+| `options.glob`    | No        | Glob string for matching filenames. Not set by default. |
+
+#### getFileContents
+
+Fetch the contents of a remote file. Binary contents are returned by default (`Buffer`):
+
+```typescript
+const buff: Buffer = await client.getFileContents("/package.zip");
+```
+
+_It is recommended to use streams if the files being transferred are large._
 
 Text files can also be fetched:
 
-```javascript
-const str = await client.getFileContents("/config.json", { format: "text" });
+```typescript
+const str: string = await client.getFileContents("/config.json", { format: "text" });
 ```
 
-Specify the `maxContentLength` option to alter the maximum number of bytes the client can receive in the request. **NodeJS only**.
+Specify the `maxContentLength` option to alter the maximum number of bytes the client can receive in the request (**NodeJS only**).
+
+```typescript
+(filename: string, options?: GetFileContentsOptions) => Promise<BufferLike | string | ResponseDataDetailed<BufferLike | string>>
+```
+
+| Argument          | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `filename`        | Yes       | The file to fetch the contents of.            |
+| `options`         | No        | Configuration options.                        |
+| `options.details` | No        | Fetch detailed results (additional headers). Defaults to `false`. |
+| `options.format`  | No        | Whether to fetch binary ("binary") data or textual ("text"). Defaults to "binary". |
 
 #### getFileDownloadLink
 
-Return a public link where a file can be downloaded. **This exposes authentication details in the URL**.
-
-```javascript
-const downloadLink = client.getFileDownloadLink("/image.png");
-```
+Generate a public link where a file can be downloaded. This method is synchronous. **Exposes authentication details in the URL**.
 
 _Not all servers may support this feature. Only Basic authentication and unauthenticated connections support this method._
 
-#### getFileUploadLink
-
-Return a URL for a file upload:
-
-```javascript
-const uploadLink = client.getFileUploadLink("/image.png");
+```typescript
+const downloadLink: string = client.getFileDownloadLink("/image.png");
 ```
 
-_See `getFileDownloadLink` for support details._
+```typescript
+(filename: string) => string
+```
+
+| Argument          | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `filename`        | Yes       | The remote file to generate a download link for. |
+
+#### getFileUploadLink
+
+Generate a URL for a file upload. This method is synchronous. **Exposes authentication details in the URL**.
+
+```typescript
+const uploadLink: string = client.getFileUploadLink("/image.png");
+```
+
+```typescript
+(filename: string) => string
+```
+
+| Argument          | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `filename`        | Yes       | The remote file to generate an upload link for. |
 
 #### getQuota
 
 Get the quota information for the current account:
 
-```javascript
-const quota = await client.getQuota();
+```typescript
+const quota: DiskQuota = await client.getQuota();
 // {
 //     "used": 1938743,
 //     "available": "unlimited"
 // }
 ```
 
+```typescript
+(options?: GetQuotaOptions) => Promise<DiskQuota | null | ResponseDataDetailed<DiskQuota | null>>
+```
+
+| Argument          | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `options`         | No        | Configuration options.                        |
+| `options.details` | No        | Return detailed results (headers etc.). Defaults to `false`. |
+
 #### moveFile
 
-Move a remote file to another remote location:
+Move a file to another location.
 
-```javascript
+```typescript
 await client.moveFile("/file1.png", "/file2.png");
 ```
 
+```typescript
+(filename: string, destinationFilename: string) => Promise<void>
+```
+
+| Argument          | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `filename`        | Yes       | File to move.                                 |
+| `destinationFilename` | Yes   | Destination filename.                         |
+
 #### putFileContents
 
-Write data to a remote file:
+Write data to a remote file.
 
-```javascript
+```typescript
 // Write a buffer:
 await client.putFileContents("/my/file.jpg", imageBuffer, { overwrite: false });
 // Write a text file:
@@ -275,56 +457,46 @@ Specify the `maxBodyLength` option to alter the maximum number of bytes the clie
 Handling Upload Progress (browsers only):  
 *This uses the axios onUploadProgress callback which uses the native XMLHttpRequest [progress event](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequestEventTarget/onprogress).*
 
-```javascript
+```typescript
 // Upload a file and log the progress to the console:
 await client.putFileContents("/my/file.jpg", imageFile, { onUploadProgress: progress => {
     console.log(`Uploaded ${progress.loaded} bytes of ${progress.total}`);
 } });
 ```
 
+```typescript
+(filename: string, data: string | BufferLike | Stream.Readable, options?: PutFileContentsOptions) => Promise<void>
+```
+
+| Argument          | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `filename`        | Yes       | File to write to.                             |
+| `data`            | Yes       | The data to write. Can be a string, buffer or a readable stream. |
+| `options`         | No        | Configuration options.                        |
+| `options.contentLength` | No  | Data content length override. Either a boolean (`true` (**default**) = calculate, `false` = don't set) or a number indicating the exact byte length of the file. |
+| `options.overwrite` | No      | Whether or not to override the remote file if it exists. Defaults to `true`. |
+
 #### stat
 
-Get a file or directory stat object:
+Get a file or directory stat object. Returns an [item stat](#item-stats).
 
-```javascript
-const stat = await client.stat("/some/file.tar.gz");
+```typescript
+const stat: FileStat = await client.stat("/some/file.tar.gz");
 ```
 
-Returns an [item stat](#item-stat).
-
-### Custom requests
-
-Custom requests can be made to the attached host:
-
-```javascript
-const contents = await client.customRequest("/alrighty.jpg", {
-    method: "PROPFIND",
-    headers: {
-        Accept: "text/plain",
-        Depth: 0
-    },
-    responseType: "text"
-});
+```typescript
+(path: string, options?: StatOptions) => Promise<FileStat | ResponseDataDetailed<FileStat>>
 ```
 
-### Returned data structures
+| Argument          | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `path`            | Yes       | Remote path to stat.                          |
+| `options`         | No        | Configuration options.                        |
+| `options.details` | No        | Return detailed results (headers etc.). Defaults to `false`. |
 
-#### Directory contents items
+### Common data structures
 
-Each item returned by `getDirectoryContents` is basically an [item stat](#item-stat). If the `details: true` option is set, each item stat (as mentioned in the stat documentation) will also include the `props` property containing extra properties returned by the server. No particular property in `props`, not its format or value, is guaranteed.
-
-You can request all files in the file-tree (infinite depth) by calling `getDirectoryContents` with the option `deep: true`. All items will be returned in a flat array, where the `filename` will hold the absolute path.
-
-#### Detailed responses
-
-Requests that return results, such as `getDirectoryContents`, `getFileContents`, `getQuota` and `stat`, can be configured to return more detailed information, such as response headers. Pass `{ details: true }` to their options argument to receive an object like the following:
-
-| Property     | Type            | Description                            |
-|--------------|-----------------|----------------------------------------|
-| data         | *               | The data returned by the procedure. Will be whatever type is returned by calling without `{ details: true }` |
-| headers      | Object          | The response headers.                  |        
-
-#### Item stat
+#### Item stats
 
 Item stats are objects with properties that descibe a file or directory. They resemble the following:
 
@@ -366,16 +538,15 @@ Properties:
 | etag          | String / null | When supported | [ETag](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag) of the file |
 | props         | Object  | `details: true` | Props object containing all item properties returned by the server |
 
-## Compatibility
-This library has been tested to work with the following WebDAV servers or applications:
 
- * [ownCloud](https://owncloud.org/) ¹
- * [Nextcloud](https://nextcloud.com/) ¹
- * [Yandex.ru](https://yandex.ru/)
- * [jsDAV](https://github.com/mikedeboer/jsDAV)
- * [webdav-server](https://github.com/OpenMarshal/npm-WebDAV-Server)
- 
- ¹ These services will work if CORS is correctly configured to return the proper headers. This may not work by default.
+#### Detailed responses
+
+Requests that return results, such as `getDirectoryContents`, `getFileContents`, `getQuota` and `stat`, can be configured to return more detailed information, such as response headers. Pass `{ details: true }` to their options argument to receive an object like the following:
+
+| Property     | Type            | Description                            |
+|--------------|-----------------|----------------------------------------|
+| data         | *               | The data returned by the procedure. Will be whatever type is returned by calling without `{ details: true }` |
+| headers      | Object          | The response headers.                  |        
 
 ### CORS
 CORS is a security enforcement technique employed by browsers to ensure requests are executed to and from expected contexts. It can conflict with this library if the target server doesn't return CORS headers when making requests from a browser. It is your responsibility to handle this.
