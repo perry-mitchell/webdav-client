@@ -1,5 +1,16 @@
 # WebDAV-Client changelog
 
+## v4.0.0
+_2021-02-01_
+
+ * **Major release**
+   * Project re-written in **Typescript**
+
+Breaking changes:
+
+ * Authentication is **explicit** in v4, when not using basic/no authentication. [Specify the authentication type](https://github.com/perry-mitchell/webdav-client#authentication--connection) when creating the client.
+ * `headers` can be specified when creating a client. These are overridden by method-specific headers when making requests.
+
 ## v3.6.2
 _2021-01-06_
 
