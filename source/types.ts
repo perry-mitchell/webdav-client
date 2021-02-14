@@ -11,7 +11,7 @@ export enum AuthType {
 
 export type BufferLike = Buffer | ArrayBuffer;
 
-export interface CreateReadStreamOptions {
+export interface CreateReadStreamOptions extends WebDAVMethodOptions {
     range?: {
         start: number;
         end?: number;
@@ -20,7 +20,7 @@ export interface CreateReadStreamOptions {
 
 export type CreateWriteStreamCallback = () => any;
 
-export interface CreateWriteStreamOptions {
+export interface CreateWriteStreamOptions extends WebDAVMethodOptions {
     overwrite?: boolean;
 }
 
@@ -96,18 +96,18 @@ export interface FileStat {
     props?: DAVResultResponseProps;
 }
 
-export interface GetDirectoryContentsOptions {
+export interface GetDirectoryContentsOptions extends WebDAVMethodOptions {
     deep?: boolean;
     details?: boolean;
     glob?: string;
 }
 
-export interface GetFileContentsOptions {
+export interface GetFileContentsOptions extends WebDAVMethodOptions {
     details?: boolean;
     format?: "binary" | "text";
 }
 
-export interface GetQuotaOptions {
+export interface GetQuotaOptions extends WebDAVMethodOptions {
     details?: boolean;
 }
 
@@ -121,7 +121,7 @@ export interface OAuthToken {
     refresh_token?: string
 }
 
-export interface PutFileContentsOptions {
+export interface PutFileContentsOptions extends WebDAVMethodOptions {
     contentLength?: boolean | number;
     overwrite?: boolean;
 }
@@ -172,7 +172,7 @@ export interface ResponseStatusValidator {
     (status: number): boolean;
 }
 
-export interface StatOptions {
+export interface StatOptions extends WebDAVMethodOptions {
     details?: boolean;
 }
 
@@ -234,4 +234,8 @@ export interface WebDAVClientOptions {
     token?: OAuthToken;
     username?: string;
     withCredentials?: boolean;
+}
+
+export interface WebDAVMethodOptions {
+    headers?: Headers;
 }
