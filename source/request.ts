@@ -2,6 +2,7 @@ import axios from "axios";
 import { getPatcher } from "./compat/patcher";
 import { generateDigestAuthHeader, parseDigestAuth } from "./auth/digest";
 import { cloneShallow, merge } from "./tools/merge";
+import { mergeHeaders } from "./tools/headers";
 import {
     RequestOptionsCustom,
     RequestOptionsWithState,
@@ -21,11 +22,11 @@ export function prepareRequestOptions(
     userOptions: WebDAVMethodOptions
 ): RequestOptionsWithState {
     const finalOptions = cloneShallow(requestOptions) as RequestOptionsWithState;
-    finalOptions.headers = {
-        ...context.headers,
-        ...(finalOptions.headers || {}),
-        ...(userOptions.headers || {})
-    };
+    finalOptions.headers = mergeHeaders(
+        context.headers,
+        (finalOptions.headers || {}),
+        (userOptions.headers || {})
+    );
     if (context.httpAgent) {
         finalOptions.httpAgent = context.httpAgent;
     }
