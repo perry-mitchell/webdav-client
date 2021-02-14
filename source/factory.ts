@@ -79,11 +79,10 @@ export function createClient(remoteURL: string, options: WebDAVClientOptions = {
         moveFile: (filename: string, destinationFilename: string) => moveFile(context, filename, destinationFilename),
         putFileContents: (filename: string, data: string | BufferLike | Stream.Readable, options?: PutFileContentsOptions) => putFileContents(context, filename, data, options),
         setHeaders: (headers: Headers) => {
-            Object.assign(context.headers, headers);
+            context.headers = headers;
         },
-        getHeader: () => {
+        getHeaders: () => {
             return context.headers;
-        },
-        stat: (path: string, options?: StatOptions) => getStat(context, path, options)
+        }
     };
 }
