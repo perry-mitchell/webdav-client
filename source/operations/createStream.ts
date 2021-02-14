@@ -3,11 +3,21 @@ import { joinURL } from "../tools/url";
 import { encodePath } from "../tools/path";
 import { request, prepareRequestOptions } from "../request";
 import { handleResponseCode } from "../response";
-import { CreateReadStreamOptions, CreateWriteStreamCallback, CreateWriteStreamOptions, Headers, WebDAVClientContext } from "../types";
+import {
+    CreateReadStreamOptions,
+    CreateWriteStreamCallback,
+    CreateWriteStreamOptions,
+    Headers,
+    WebDAVClientContext
+} from "../types";
 
 const NOOP = () => {};
 
-export function createReadStream(context: WebDAVClientContext, filePath: string, options: CreateReadStreamOptions = {}): Stream.Readable {
+export function createReadStream(
+    context: WebDAVClientContext,
+    filePath: string,
+    options: CreateReadStreamOptions = {}
+): Stream.Readable {
     const PassThroughStream = Stream.PassThrough;
     const outStream = new PassThroughStream();
     getFileStream(context, filePath, options)
@@ -20,7 +30,12 @@ export function createReadStream(context: WebDAVClientContext, filePath: string,
     return outStream;
 }
 
-export function createWriteStream(context: WebDAVClientContext, filePath: string, options: CreateWriteStreamOptions = {}, callback: CreateWriteStreamCallback = NOOP): Stream.Writable {
+export function createWriteStream(
+    context: WebDAVClientContext,
+    filePath: string,
+    options: CreateWriteStreamOptions = {},
+    callback: CreateWriteStreamCallback = NOOP
+): Stream.Writable {
     const PassThroughStream = Stream.PassThrough;
     const writeStream = new PassThroughStream();
     const headers = {};
@@ -33,7 +48,7 @@ export function createWriteStream(context: WebDAVClientContext, filePath: string
         headers,
         data: writeStream,
         maxRedirects: 0
-    }, context);
+    }, context, options);
     request(requestOptions)
         .then(response => {
             // Fire callback asynchronously to avoid errors
@@ -47,7 +62,11 @@ export function createWriteStream(context: WebDAVClientContext, filePath: string
     return writeStream;
 }
 
-async function getFileStream(context: WebDAVClientContext, filePath: string, options: CreateReadStreamOptions = {}): Promise<Stream.Readable> {
+async function getFileStream(
+    context: WebDAVClientContext,
+    filePath: string,
+    options: CreateReadStreamOptions = {}
+): Promise<Stream.Readable> {
     const headers: Headers = {};
     if (typeof options.range === "object" && typeof options.range.start === "number") {
         let rangeHeader = `bytes=${options.range.start}-`;
@@ -61,7 +80,7 @@ async function getFileStream(context: WebDAVClientContext, filePath: string, opt
         method: "GET",
         headers,
         responseType: "stream"
-    }, context);
+    }, context, options);
     const response = await request(requestOptions);
     handleResponseCode(response);
     return response.data as Stream.Readable;
