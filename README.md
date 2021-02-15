@@ -187,12 +187,13 @@ await client.createDirectory("/data/system/storage");
 ```
 
 ```typescript
-(path: string) => Promise<void>
+(path: string, options?: WebDAVMethodOptions) => Promise<void>
 ```
 
 | Argument          | Required  | Description                                   |
 |-------------------|-----------|-----------------------------------------------|
 | `path`            | Yes       | The path to create.                           |
+| `options`         | No        | [Method options](#method-options).            |
 
 #### createReadStream
 
@@ -228,6 +229,8 @@ client
 | `options.range.start` | Yes   | Byte-position for the start of the stream.    |
 | `options.range.end` | No      | Byte-position for the end of the stream.      |
 
+_`options` extends [method options](#method-options)._
+
 #### createWriteStream
 
 Create a write stream targeted at a remote file.
@@ -250,6 +253,8 @@ fs
 | `options`         | No        | Write stream options.                         |
 | `options.overwrite` | No      | Whether or not to overwrite the remote file if it already exists. Defaults to `true`. |
 | `callback`        | No        | Callback to fire once the connection has been made and streaming has started. |
+
+_`options` extends [method options](#method-options)._
 
 #### customRequest
 
@@ -277,6 +282,8 @@ const stat: FileStat = parseStat(result, "/alrighty.jpg", false);
 | `path`            | Yes       | The path to make a custom request against.    |
 | `requestOptions`  | Yes       | Request options - required parameters such as `url`, `method` etc. - Refer to the `RequestOptionsCustom` type definition. |
 
+_The request options parameter **does not** extend [method options](#method-options) as things like `headers` can already be specified._
+
 #### deleteFile
 
 Delete a remote file.
@@ -286,13 +293,13 @@ await client.deleteFile("/tmp.dat");
 ```
 
 ```typescript
-(filename: string) => Promise<void>
+(filename: string, options?: WebDAVMethodOptions) => Promise<void>
 ```
 
 | Argument          | Required  | Description                                   |
 |-------------------|-----------|-----------------------------------------------|
 | `filename`        | Yes       | The file to delete.                           |
-
+| `options`         | No        | [Method options](#method-options).            |
 
 #### exists
 
@@ -305,12 +312,13 @@ if (await client.exists("/some/path") === false) {
 ```
 
 ```typescript
-(path: string) => Promise<boolean>
+(path: string, options?: WebDAVMethodOptions) => Promise<boolean>
 ```
 
 | Argument          | Required  | Description                                   |
 |-------------------|-----------|-----------------------------------------------|
 | `path`            | Yes       | The remote path to check.                     |
+| `options`         | No        | [Method options](#method-options).            |
 
 #### getDirectoryContents
 
@@ -341,6 +349,8 @@ const images = await client.getDirectoryContents("/", { deep: true, glob: "/**/*
 | `options.details` | No        | Fetch detailed results (item stats, headers). Defaults to `false`. |
 | `options.glob`    | No        | Glob string for matching filenames. Not set by default. |
 
+_`options` extends [method options](#method-options)._
+
 #### getFileContents
 
 Fetch the contents of a remote file. Binary contents are returned by default (`Buffer`):
@@ -369,6 +379,8 @@ Specify the `maxContentLength` option to alter the maximum number of bytes the c
 | `options`         | No        | Configuration options.                        |
 | `options.details` | No        | Fetch detailed results (additional headers). Defaults to `false`. |
 | `options.format`  | No        | Whether to fetch binary ("binary") data or textual ("text"). Defaults to "binary". |
+
+_`options` extends [method options](#method-options)._
 
 #### getFileDownloadLink
 
@@ -425,6 +437,8 @@ const quota: DiskQuota = await client.getQuota();
 | `options`         | No        | Configuration options.                        |
 | `options.details` | No        | Return detailed results (headers etc.). Defaults to `false`. |
 
+_`options` extends [method options](#method-options)._
+
 #### moveFile
 
 Move a file to another location.
@@ -434,13 +448,14 @@ await client.moveFile("/file1.png", "/file2.png");
 ```
 
 ```typescript
-(filename: string, destinationFilename: string) => Promise<void>
+(filename: string, destinationFilename: string, options?: WebDAVMethodOptions) => Promise<void>
 ```
 
 | Argument          | Required  | Description                                   |
 |-------------------|-----------|-----------------------------------------------|
 | `filename`        | Yes       | File to move.                                 |
 | `destinationFilename` | Yes   | Destination filename.                         |
+| `options`         | No        | [Method options](#method-options).            |
 
 #### putFileContents
 
@@ -477,6 +492,8 @@ await client.putFileContents("/my/file.jpg", imageFile, { onUploadProgress: prog
 | `options.contentLength` | No  | Data content length override. Either a boolean (`true` (**default**) = calculate, `false` = don't set) or a number indicating the exact byte length of the file. |
 | `options.overwrite` | No      | Whether or not to override the remote file if it exists. Defaults to `true`. |
 
+_`options` extends [method options](#method-options)._
+
 #### stat
 
 Get a file or directory stat object. Returns an [item stat](#item-stats).
@@ -494,6 +511,8 @@ const stat: FileStat = await client.stat("/some/file.tar.gz");
 | `path`            | Yes       | Remote path to stat.                          |
 | `options`         | No        | Configuration options.                        |
 | `options.details` | No        | Return detailed results (headers etc.). Defaults to `false`. |
+
+_`options` extends [method options](#method-options)._
 
 ### Method options
 
