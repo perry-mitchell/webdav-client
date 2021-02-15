@@ -197,9 +197,11 @@ export interface WebDAVClient {
     getFileContents: (filename: string, options?: GetFileContentsOptions) => Promise<BufferLike | string | ResponseDataDetailed<BufferLike | string>>;
     getFileDownloadLink: (filename: string) => string;
     getFileUploadLink: (filename: string) => string;
+    getHeaders: () => Headers;
     getQuota: (options?: GetQuotaOptions) => Promise<DiskQuota | null | ResponseDataDetailed<DiskQuota | null>>;
     moveFile: (filename: string, destinationFilename: string) => Promise<void>;
     putFileContents: (filename: string, data: string | BufferLike | Stream.Readable, options?: PutFileContentsOptions) => Promise<void>;
+    setHeaders: (headers: Headers) => void;
     stat: (path: string, options?: StatOptions) => Promise<FileStat | ResponseDataDetailed<FileStat>>;
 }
 
