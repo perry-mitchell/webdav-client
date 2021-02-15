@@ -169,13 +169,14 @@ await client.copyFile(
 ```
 
 ```typescript
-(filename: string, destination: string) => Promise<void>
+(filename: string, destination: string, options?: WebDAVMethodOptions) => Promise<void>
 ```
 
 | Argument          | Required  | Description                                   |
 |-------------------|-----------|-----------------------------------------------|
 | `filename`        | Yes       | The source filename.                          |
 | `destination`     | Yes       | The destination filename.                     |
+| `options`         | No        | [Method options](#method-options).            |
 
 #### createDirectory
 
@@ -493,6 +494,14 @@ const stat: FileStat = await client.stat("/some/file.tar.gz");
 | `path`            | Yes       | Remote path to stat.                          |
 | `options`         | No        | Configuration options.                        |
 | `options.details` | No        | Return detailed results (headers etc.). Defaults to `false`. |
+
+### Method options
+
+Most WebDAV methods extend `WebDAVMethodOptions`, which allow setting things like custom headers.
+
+| Option            | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `headers`         | No        | Optional headers object to apply to the request. These headers override all others, so be careful. |
 
 ### Common data structures
 
