@@ -60,6 +60,8 @@ describe("deleteFile", function() {
             }
         });
         const [requestOptions] = this.requestSpy.firstCall.args;
-        expect(requestOptions).to.have.property("headers").that.has.property("X-test", "test");
+        expect(requestOptions)
+            .to.have.property("headers")
+            .that.has.property("X-test", "test");
     });
 });
