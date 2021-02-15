@@ -8,7 +8,9 @@ const {
     SERVER_USERNAME,
     clean,
     createWebDAVClient,
-    createWebDAVServer
+    createWebDAVServer,
+    restoreRequests,
+    useRequestSpy
 } = require("../../helpers.node.js");
 
 const TEST_CONTENTS = path.resolve(__dirname, "../../testContents");
@@ -41,10 +43,12 @@ describe("createWriteStream", function() {
         });
         clean();
         this.server = createWebDAVServer();
+        this.requestSpy = useRequestSpy();
         return this.server.start();
     });
 
     afterEach(function() {
+        restoreRequests();
         return this.server.stop();
     });
 
@@ -61,5 +65,15 @@ describe("createWriteStream", function() {
             writeStream.on("error", reject);
             readStream.pipe(writeStream);
         });
+    });
+
+    it("allows specifying custom headers", async function() {
+        this.client.createWriteStream("/alrighty2.jpg", {
+            headers: {
+                "X-test": "test"
+            }
+        });
+        const [requestOptions] = this.requestSpy.firstCall.args;
+        expect(requestOptions).to.have.property("headers").that.has.property("X-test", "test");
     });
 });

@@ -7,7 +7,9 @@ const {
     SERVER_USERNAME,
     clean,
     createWebDAVClient,
-    createWebDAVServer
+    createWebDAVServer,
+    restoreRequests,
+    useRequestSpy
 } = require("../../helpers.node.js");
 
 const TEST_CONTENTS = path.resolve(__dirname, "../../testContents");
@@ -20,10 +22,12 @@ describe("copyFile", function() {
         });
         clean();
         this.server = createWebDAVServer();
+        this.requestSpy = useRequestSpy();
         return this.server.start();
     });
 
     afterEach(function() {
+        restoreRequests();
         return this.server.stop();
     });
 
@@ -45,5 +49,15 @@ describe("copyFile", function() {
         return this.client.copyFile("/sub1/ยากจน #1.txt", "/sub1/ยากจน #2.txt").then(function() {
             expect(fileExists(path.join(TEST_CONTENTS, "./sub1/ยากจน #2.txt"))).to.be.true;
         });
+    });
+
+    it("allows specifying custom headers", async function() {
+        await this.client.copyFile("/alrighty.jpg", "/sub1/alrighty.jpg", {
+            headers: {
+                "X-test": "test"
+            }
+        });
+        const [requestOptions] = this.requestSpy.firstCall.args;
+        expect(requestOptions).to.have.property("headers").that.has.property("X-test", "test");
     });
 });

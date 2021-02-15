@@ -7,7 +7,8 @@ const {
     createWebDAVClient,
     createWebDAVServer,
     restoreRequests,
-    useCustomXmlResponse
+    useCustomXmlResponse,
+    useRequestSpy
 } = require("../../helpers.node.js");
 
 describe("getDirectoryContents", function() {
@@ -18,11 +19,13 @@ describe("getDirectoryContents", function() {
             password: SERVER_PASSWORD
         });
         this.server = createWebDAVServer();
+        this.requestSpy = useRequestSpy();
         await this.server.start();
     });
 
     afterEach(async function() {
         await this.server.stop();
+        restoreRequests();
         clean();
     });
 
@@ -127,6 +130,16 @@ describe("getDirectoryContents", function() {
             expect(noPercent).to.have.property("type", "directory");
             expect(percent).to.have.property("type", "directory");
         });
+    });
+
+    it("allows specifying custom headers", async function() {
+        await this.client.getDirectoryContents("/", {
+            headers: {
+                "X-test": "test"
+            }
+        });
+        const [requestOptions] = this.requestSpy.firstCall.args;
+        expect(requestOptions).to.have.property("headers").that.has.property("X-test", "test");
     });
 
     describe("when using details: true", function() {

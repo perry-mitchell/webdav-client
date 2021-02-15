@@ -1,5 +1,6 @@
 const path = require("path");
 const fs = require("fs");
+const axios = require("axios");
 const rimraf = require("rimraf").sync;
 const copyDir = require("copy-dir").sync;
 const { createClient: createWebDAVClient, getPatcher } = require("../dist/node/index.js");
@@ -33,6 +34,12 @@ function useCustomXmlResponse(xmlFile) {
     returnFakeResponse(fs.readFileSync(path.resolve(__dirname, `./responses/${xmlFile}.xml`), "utf8"));
 }
 
+function useRequestSpy() {
+    const spy = sinon.spy(axios);
+    getPatcher().patch("request", spy);
+    return spy;
+}
+
 module.exports = {
     SERVER_PASSWORD: PASSWORD,
     SERVER_PORT: PORT,
@@ -43,5 +50,6 @@ module.exports = {
     restoreRequests,
     returnFakeResponse,
     sleep,
-    useCustomXmlResponse
+    useCustomXmlResponse,
+    useRequestSpy
 };

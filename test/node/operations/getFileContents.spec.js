@@ -7,7 +7,9 @@ const {
     SERVER_USERNAME,
     clean,
     createWebDAVClient,
-    createWebDAVServer
+    createWebDAVServer,
+    restoreRequests,
+    useRequestSpy
 } = require("../../helpers.node.js");
 
 const SOURCE_BIN = path.resolve(__dirname, "../../testContents/alrighty.jpg");
@@ -21,10 +23,12 @@ describe("getFileContents", function() {
         });
         clean();
         this.server = createWebDAVServer();
+        this.requestSpy = useRequestSpy();
         return this.server.start();
     });
 
     afterEach(function() {
+        restoreRequests();
         return this.server.stop();
     });
 
@@ -59,5 +63,16 @@ describe("getFileContents", function() {
         expect(details)
             .to.have.property("headers")
             .that.is.an("object");
+    });
+
+    it("allows specifying custom headers", async function() {
+        await this.client.getFileContents("/text document.txt", {
+            format: "text",
+            headers: {
+                "X-test": "test"
+            }
+        });
+        const [requestOptions] = this.requestSpy.firstCall.args;
+        expect(requestOptions).to.have.property("headers").that.has.property("X-test", "test");
     });
 });
