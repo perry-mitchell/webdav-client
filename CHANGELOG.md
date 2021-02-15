@@ -1,5 +1,11 @@
 # WebDAV-Client changelog
 
+## v4.1.0
+_2021-02-15_
+
+ * Overridable `headers` option for most methods
+ * Set and get base client headers via `setHeaders` and `getHeaders`
+
 ## v4.0.0
 _2021-02-01_
 
