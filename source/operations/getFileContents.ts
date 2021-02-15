@@ -4,7 +4,14 @@ import { encodePath } from "../tools/path";
 import { fromBase64 } from "../tools/encode";
 import { request, prepareRequestOptions } from "../request";
 import { handleResponseCode, processResponsePayload } from "../response";
-import { AuthType, BufferLike, ErrorCode, GetFileContentsOptions, ResponseDataDetailed, WebDAVClientContext } from "../types";
+import {
+    AuthType,
+    BufferLike,
+    ErrorCode,
+    GetFileContentsOptions,
+    ResponseDataDetailed,
+    WebDAVClientContext
+} from "../types";
 
 export async function getFileContents(
     context: WebDAVClientContext,
@@ -24,23 +31,31 @@ export async function getFileContents(
         : getFileContentsBuffer(context, filePath, options);
 }
 
-async function getFileContentsBuffer(context: WebDAVClientContext, filePath: string, options: GetFileContentsOptions = {}): Promise<BufferLike | ResponseDataDetailed<BufferLike>> {
+async function getFileContentsBuffer(
+    context: WebDAVClientContext,
+    filePath: string,
+    options: GetFileContentsOptions = {}
+): Promise<BufferLike | ResponseDataDetailed<BufferLike>> {
     const requestOptions = prepareRequestOptions({
         url: joinURL(context.remoteURL, encodePath(filePath)),
         method: "GET",
         responseType: "arraybuffer"
-    }, context);
+    }, context, options);
     const response = await request(requestOptions);
     handleResponseCode(response);
     return processResponsePayload(response, response.data as BufferLike, options.details);
 }
 
-async function getFileContentsString(context: WebDAVClientContext, filePath: string, options: GetFileContentsOptions = {}): Promise<string | ResponseDataDetailed<string>> {
+async function getFileContentsString(
+    context: WebDAVClientContext,
+    filePath: string,
+    options: GetFileContentsOptions = {}
+): Promise<string | ResponseDataDetailed<string>> {
     const requestOptions = prepareRequestOptions({
         url: joinURL(context.remoteURL, encodePath(filePath)),
         method: "GET",
         responseType: "text"
-    }, context);
+    }, context, options);
     const response = await request(requestOptions);
     handleResponseCode(response);
     return processResponsePayload(response, response.data as string, options.details);

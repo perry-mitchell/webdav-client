@@ -1,9 +1,13 @@
 import { getStat } from "./stat";
-import { WebDAVClientContext } from "../types";
+import { WebDAVClientContext, WebDAVMethodOptions } from "../types";
 
-export async function exists(context: WebDAVClientContext, remotePath: string): Promise<boolean> {
+export async function exists(
+    context: WebDAVClientContext,
+    remotePath: string,
+    options: WebDAVMethodOptions = {}
+): Promise<boolean> {
     try {
-        await getStat(context, remotePath);
+        await getStat(context, remotePath, options);
         return true;
     } catch (err) {
         if (err.response && err.response.status === 404) {
