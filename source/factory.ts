@@ -27,7 +27,8 @@ import {
     StatOptions,
     WebDAVClient,
     WebDAVClientContext,
-    WebDAVClientOptions
+    WebDAVClientOptions,
+    WebDAVMethodOptions
 } from "./types";
 
 export function createClient(remoteURL: string, options: WebDAVClientOptions = {}): WebDAVClient {
@@ -63,19 +64,19 @@ export function createClient(remoteURL: string, options: WebDAVClientOptions = {
     };
     setupAuth(context, username, password, token);
     return {
-        copyFile: (filename: string, destination: string) => copyFile(context, filename, destination),
-        createDirectory: (path: string) => createDirectory(context, path),
+        copyFile: (filename: string, destination: string, options?: WebDAVMethodOptions) => copyFile(context, filename, destination, options),
+        createDirectory: (path: string, options?: WebDAVMethodOptions) => createDirectory(context, path, options),
         createReadStream: (filename: string, options?: CreateReadStreamOptions) => createReadStream(context, filename, options),
         createWriteStream: (filename: string, options?: CreateWriteStreamOptions, callback?: CreateWriteStreamCallback) => createWriteStream(context, filename, options, callback),
         customRequest: (path: string, requestOptions: RequestOptionsCustom) => customRequest(context, path, requestOptions),
-        deleteFile: (filename: string) => deleteFile(context, filename),
-        exists: (path: string) => exists(context, path),
+        deleteFile: (filename: string, options?: WebDAVMethodOptions) => deleteFile(context, filename, options),
+        exists: (path: string, options?: WebDAVMethodOptions) => exists(context, path, options),
         getDirectoryContents: (path: string, options?: GetDirectoryContentsOptions) => getDirectoryContents(context, path, options),
         getFileContents: (filename: string, options?: GetFileContentsOptions) => getFileContents(context, filename, options),
         getFileDownloadLink: (filename: string) => getFileDownloadLink(context, filename),
         getFileUploadLink: (filename: string) => getFileUploadLink(context, filename),
         getQuota: (options?: GetQuotaOptions) => getQuota(context, options),
-        moveFile: (filename: string, destinationFilename: string) => moveFile(context, filename, destinationFilename),
+        moveFile: (filename: string, destinationFilename: string, options?: WebDAVMethodOptions) => moveFile(context, filename, destinationFilename, options),
         putFileContents: (filename: string, data: string | BufferLike | Stream.Readable, options?: PutFileContentsOptions) => putFileContents(context, filename, data, options),
         stat: (path: string, options?: StatOptions) => getStat(context, path, options)
     };

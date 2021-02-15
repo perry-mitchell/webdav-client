@@ -4,7 +4,13 @@ import { encodePath, normalisePath } from "../tools/path";
 import { parseXML, prepareFileFromProps } from "../tools/dav";
 import { request, prepareRequestOptions } from "../request";
 import { handleResponseCode, processGlobFilter, processResponsePayload } from "../response";
-import { DAVResult, FileStat, GetDirectoryContentsOptions, ResponseDataDetailed, WebDAVClientContext } from "../types";
+import {
+    DAVResult,
+    FileStat,
+    GetDirectoryContentsOptions,
+    ResponseDataDetailed,
+    WebDAVClientContext
+} from "../types";
 
 export async function getDirectoryContents(
     context: WebDAVClientContext,
@@ -19,7 +25,7 @@ export async function getDirectoryContents(
             Depth: options.deep ? "infinity" : "1"
         },
         responseType: "text"
-    }, context);
+    }, context, options);
     const response = await request(requestOptions);
     handleResponseCode(response);
     const davResp = await parseXML(response.data as string);

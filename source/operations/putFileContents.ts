@@ -1,16 +1,12 @@
-// const { merge } = require("../merge.js");
-// const responseHandlers = require("../response.js");
-// const { encodePath, joinURL, prepareRequestOptions, request } = require("../request.js");
-// const { fromBase64 } = require("../encode.js");
 import { Layerr } from "layerr";
 import Stream from "stream";
 import { fromBase64 } from "../tools/encode";
 import { joinURL } from "../tools/url";
 import { encodePath } from "../tools/path";
 import { request, prepareRequestOptions } from "../request";
-import { handleResponseCode, processResponsePayload } from "../response";
+import { handleResponseCode } from "../response";
 import { calculateDataLength } from "../tools/size";
-import { AuthType, BufferLike, ErrorCode, GetFileContentsOptions, Headers, PutFileContentsOptions, ResponseDataDetailed, WebDAVClientContext } from "../types";
+import { AuthType, BufferLike, ErrorCode, Headers, PutFileContentsOptions, WebDAVClientContext } from "../types";
 
 declare var WEB: boolean;
 
@@ -44,7 +40,7 @@ export async function putFileContents(
         method: "PUT",
         headers,
         data
-    }, context);
+    }, context, options);
     const response = await request(requestOptions);
     handleResponseCode(response);
 }

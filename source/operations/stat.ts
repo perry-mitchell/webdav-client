@@ -19,7 +19,7 @@ export async function getStat(
             Depth: "0"
         },
         responseType: "text"
-    }, context);
+    }, context, options);
     const response = await request(requestOptions);
     handleResponseCode(response);
     const result = await parseXML(response.data as string);

@@ -2,18 +2,31 @@ import axios from "axios";
 import { getPatcher } from "./compat/patcher";
 import { generateDigestAuthHeader, parseDigestAuth } from "./auth/digest";
 import { cloneShallow, merge } from "./tools/merge";
-import { RequestOptionsCustom, RequestOptionsWithState, RequestOptions, Response, WebDAVClientContext } from "./types";
+import { mergeHeaders } from "./tools/headers";
+import {
+    RequestOptionsCustom,
+    RequestOptionsWithState,
+    RequestOptions,
+    Response,
+    WebDAVClientContext,
+    WebDAVMethodOptions
+} from "./types";
 
 function _request(requestOptions: RequestOptions) {
     return getPatcher().patchInline("request", (options: RequestOptions) => axios(options as any), requestOptions);
 }
 
-export function prepareRequestOptions(requestOptions: RequestOptionsCustom | RequestOptionsWithState, context: WebDAVClientContext): RequestOptionsWithState {
+export function prepareRequestOptions(
+    requestOptions: RequestOptionsCustom | RequestOptionsWithState,
+    context: WebDAVClientContext,
+    userOptions: WebDAVMethodOptions
+): RequestOptionsWithState {
     const finalOptions = cloneShallow(requestOptions) as RequestOptionsWithState;
-    finalOptions.headers = {
-        ...context.headers,
-        ...(finalOptions.headers || {})
-    };
+    finalOptions.headers = mergeHeaders(
+        context.headers,
+        (finalOptions.headers || {}),
+        (userOptions.headers || {})
+    );
     if (context.httpAgent) {
         finalOptions.httpAgent = context.httpAgent;
     }
