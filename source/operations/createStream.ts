@@ -8,7 +8,8 @@ import {
     CreateWriteStreamCallback,
     CreateWriteStreamOptions,
     Headers,
-    WebDAVClientContext
+    WebDAVClientContext,
+    WebDAVClientError
 } from "../types";
 
 const NOOP = () => {};
@@ -84,6 +85,11 @@ async function getFileStream(
     }, context, options);
     const response = await request(requestOptions);
     handleResponseCode(context, response);
+    if (headers.Range && response.status !== 206) {
+        const responseError: WebDAVClientError = new Error(`Invalid response code for partial request: ${response.status}`);
+        responseError.status = response.status;
+        throw responseError;
+    }
     if (options.callback) {
         setTimeout(() => {
             options.callback(response);
