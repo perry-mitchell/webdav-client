@@ -35,7 +35,7 @@ export function prepareRequestOptions(
     }
     if (context.digest) {
         finalOptions._digest = context.digest;
-        finalOptions.validateStatus = status => (status >= 200 && status < 300) || status == 401;
+        // finalOptions.validateStatus = status => (status >= 200 && status < 300) || status == 401;
     }
     if (typeof context.withCredentials === "boolean") {
         finalOptions.withCredentials = context.withCredentials;
@@ -46,6 +46,8 @@ export function prepareRequestOptions(
     if (context.maxBodyLength) {
         finalOptions.maxBodyLength = context.maxBodyLength;
     }
+    // Take full control of all response status codes
+    finalOptions.validateStatus = () => true;
     return finalOptions;
 }
 
