@@ -77,4 +77,14 @@ describe("createReadStream", function() {
             .to.have.property("headers")
             .that.has.property("X-test", "test");
     });
+
+    it("calls callback with response", function(done) {
+        const stream = this.client.createReadStream("/notes.txt", {
+            callback: response => {
+                expect(response).to.have.property("status", 200);
+                done();
+            }
+        });
+        streamToBuffer(stream);
+    });
 });
