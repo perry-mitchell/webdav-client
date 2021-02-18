@@ -12,13 +12,14 @@ export enum AuthType {
 export type BufferLike = Buffer | ArrayBuffer;
 
 export interface CreateReadStreamOptions extends WebDAVMethodOptions {
+    callback?: (response: Response) => void;
     range?: {
         start: number;
         end?: number;
     }
 }
 
-export type CreateWriteStreamCallback = () => any;
+export type CreateWriteStreamCallback = (response: Response) => void;
 
 export interface CreateWriteStreamOptions extends WebDAVMethodOptions {
     overwrite?: boolean;

@@ -50,12 +50,13 @@ export function createWriteStream(
         maxRedirects: 0
     }, context, options);
     request(requestOptions)
+        .then(response => handleResponseCode(context, response))
         .then(response => {
             // Fire callback asynchronously to avoid errors
-            setTimeout(callback, 0);
-            return response;
+            setTimeout(() => {
+                callback(response)
+            }, 0);
         })
-        .then(response => handleResponseCode(context, response))
         .catch(err => {
             writeStream.emit("error", err);
         });
@@ -83,5 +84,10 @@ async function getFileStream(
     }, context, options);
     const response = await request(requestOptions);
     handleResponseCode(context, response);
+    if (options.callback) {
+        setTimeout(() => {
+            options.callback(response);
+        }, 0);
+    }
     return response.data as Stream.Readable;
 }
