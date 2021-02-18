@@ -42,7 +42,7 @@ async function getFileContentsBuffer(
         responseType: "arraybuffer"
     }, context, options);
     const response = await request(requestOptions);
-    handleResponseCode(response);
+    handleResponseCode(context, response);
     return processResponsePayload(response, response.data as BufferLike, options.details);
 }
 
@@ -57,7 +57,7 @@ async function getFileContentsString(
         responseType: "text"
     }, context, options);
     const response = await request(requestOptions);
-    handleResponseCode(response);
+    handleResponseCode(context, response);
     return processResponsePayload(response, response.data as string, options.details);
 }
 

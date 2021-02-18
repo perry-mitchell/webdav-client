@@ -21,7 +21,7 @@ export async function getStat(
         responseType: "text"
     }, context, options);
     const response = await request(requestOptions);
-    handleResponseCode(response);
+    handleResponseCode(context, response);
     const result = await parseXML(response.data as string);
     const stat = parseStat(result, filename, isDetailed);
     return processResponsePayload(response, stat, isDetailed);

@@ -14,6 +14,6 @@ export async function customRequest(
     }
     const finalOptions = prepareRequestOptions(requestOptions, context, {});
     const response = await request(finalOptions);
-    handleResponseCode(response);
+    handleResponseCode(context, response);
     return response;
 }

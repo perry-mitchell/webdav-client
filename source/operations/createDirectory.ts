@@ -14,5 +14,5 @@ export async function createDirectory(
         method: "MKCOL"
     }, context, options);
     const response = await request(requestOptions);
-    handleResponseCode(response);
+    handleResponseCode(context, response);
 }
