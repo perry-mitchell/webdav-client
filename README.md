@@ -460,7 +460,7 @@ await client.moveFile("/file1.png", "/file2.png");
 
 #### putFileContents
 
-Write data to a remote file.
+Write data to a remote file. Returns `false` when file was not written (eg. `{ overwrite: false }` and file exists), and `true` otherwise.
 
 ```typescript
 // Write a buffer:
@@ -469,9 +469,9 @@ await client.putFileContents("/my/file.jpg", imageBuffer, { overwrite: false });
 await client.putFileContents("/my/file.txt", str);
 ```
 
-Specify the `maxBodyLength` option to alter the maximum number of bytes the client can send in the request. **NodeJS only**.
+Specify the `maxBodyLength` option to alter the maximum number of bytes the client can send in the request (**NodeJS only**). When using `{ overwrite: false }`, responses with status `412` are caught and no error is thrown.
 
-Handling Upload Progress (browsers only):  
+Handling Upload Progress (browsers only):
 *This uses the axios onUploadProgress callback which uses the native XMLHttpRequest [progress event](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequestEventTarget/onprogress).*
 
 ```typescript
@@ -482,7 +482,7 @@ await client.putFileContents("/my/file.jpg", imageFile, { onUploadProgress: prog
 ```
 
 ```typescript
-(filename: string, data: string | BufferLike | Stream.Readable, options?: PutFileContentsOptions) => Promise<void>
+(filename: string, data: string | BufferLike | Stream.Readable, options?: PutFileContentsOptions) => Promise<boolean>
 ```
 
 | Argument          | Required  | Description                                   |
