@@ -27,7 +27,7 @@ export async function getDirectoryContents(
         responseType: "text"
     }, context, options);
     const response = await request(requestOptions);
-    handleResponseCode(response);
+    handleResponseCode(context, response);
     const davResp = await parseXML(response.data as string);
     let files = getDirectoryFiles(davResp, context.remotePath, remotePath, options.details);
     if (options.glob) {

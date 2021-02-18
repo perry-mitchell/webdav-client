@@ -14,5 +14,5 @@ export async function deleteFile(
         method: "DELETE"
     }, context, options);
     const response = await request(requestOptions);
-    handleResponseCode(response);
+    handleResponseCode(context, response);
 }

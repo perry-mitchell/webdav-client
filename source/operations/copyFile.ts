@@ -18,5 +18,5 @@ export async function copyFile(
         }
     }, context, options);
     const response = await request(requestOptions);
-    handleResponseCode(response);
+    handleResponseCode(context, response);
 }

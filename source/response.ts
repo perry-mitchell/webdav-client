@@ -1,11 +1,11 @@
 import minimatch from "minimatch";
-import { FileStat, Response, ResponseDataDetailed, WebDAVClientError } from "./types";
+import { FileStat, Response, ResponseDataDetailed, WebDAVClientContext, WebDAVClientError } from "./types";
 
-export function handleResponseCode(response: Response): Response {
+export function handleResponseCode(context: WebDAVClientContext, response: Response): Response {
     const status = response.status;
-    let err: WebDAVClientError;
+    if (status === 401 && context.digest) return response;
     if (status >= 400) {
-        err = new Error(`Invalid response: ${status} ${response.statusText}`) as WebDAVClientError;
+        const err: WebDAVClientError = new Error(`Invalid response: ${status} ${response.statusText}`) as WebDAVClientError;
         err.status = status;
         throw err;
     }

@@ -10,7 +10,7 @@ export async function exists(
         await getStat(context, remotePath, options);
         return true;
     } catch (err) {
-        if (err.response && err.response.status === 404) {
+        if (err.status === 404) {
             return false;
         }
         throw err;

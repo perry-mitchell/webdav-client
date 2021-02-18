@@ -55,7 +55,7 @@ export function createWriteStream(
             setTimeout(callback, 0);
             return response;
         })
-        .then(handleResponseCode)
+        .then(response => handleResponseCode(context, response))
         .catch(err => {
             writeStream.emit("error", err);
         });
@@ -82,6 +82,6 @@ async function getFileStream(
         responseType: "stream"
     }, context, options);
     const response = await request(requestOptions);
-    handleResponseCode(response);
+    handleResponseCode(context, response);
     return response.data as Stream.Readable;
 }

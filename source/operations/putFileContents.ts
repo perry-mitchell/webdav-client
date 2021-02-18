@@ -6,7 +6,7 @@ import { encodePath } from "../tools/path";
 import { request, prepareRequestOptions } from "../request";
 import { handleResponseCode } from "../response";
 import { calculateDataLength } from "../tools/size";
-import { AuthType, BufferLike, ErrorCode, Headers, PutFileContentsOptions, WebDAVClientContext } from "../types";
+import { AuthType, BufferLike, ErrorCode, Headers, PutFileContentsOptions, WebDAVClientContext, WebDAVClientError } from "../types";
 
 declare var WEB: boolean;
 
@@ -15,7 +15,7 @@ export async function putFileContents(
     filePath: string,
     data: string | BufferLike | Stream.Readable,
     options: PutFileContentsOptions = {}
-): Promise<void> {
+): Promise<boolean> {
     const {
         contentLength = true,
         overwrite = true
@@ -42,7 +42,17 @@ export async function putFileContents(
         data
     }, context, options);
     const response = await request(requestOptions);
-    handleResponseCode(response);
+    try {
+        handleResponseCode(context, response);
+    } catch (err) {
+        const error = err as WebDAVClientError;
+        if (error.status === 412 && !overwrite) {
+            return false;
+        } else {
+            throw error;
+        }
+    }
+    return true;
 }
 
 export function getFileUploadLink(context: WebDAVClientContext, filePath: string): string {
