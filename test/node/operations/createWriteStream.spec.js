@@ -14,7 +14,8 @@ const {
 } = require("../../helpers.node.js");
 
 const TEST_CONTENTS = path.resolve(__dirname, "../../testContents");
-const SOURCE_FILENAME = path.join(TEST_CONTENTS, "./alrighty.jpg");
+const IMAGE_SOURCE = path.join(TEST_CONTENTS, "./alrighty.jpg");
+const TEXT_SOURCE = path.join(TEST_CONTENTS, "./notes.txt");
 
 function waitOnFile(filename) {
     return new Promise(function(resolve, reject) {
@@ -55,7 +56,7 @@ describe("createWriteStream", function() {
     it("writes the file to the remote", function() {
         const targetFile = path.join(TEST_CONTENTS, "./alrighty2.jpg");
         const writeStream = this.client.createWriteStream("/alrighty2.jpg");
-        const readStream = fs.createReadStream(SOURCE_FILENAME);
+        const readStream = fs.createReadStream(IMAGE_SOURCE);
         expect(writeStream instanceof PassThrough).to.be.true;
         return new Promise(function(resolve, reject) {
             writeStream.on("end", function() {
@@ -77,5 +78,14 @@ describe("createWriteStream", function() {
         expect(requestOptions)
             .to.have.property("headers")
             .that.has.property("X-test", "test");
+    });
+
+    it("calls the callback function with the response", function(done) {
+        const readStream = fs.createReadStream(TEXT_SOURCE);
+        const writeStream = this.client.createWriteStream("/test.txt", undefined, response => {
+            expect(response).to.have.property("status", 201);
+            done();
+        });
+        readStream.pipe(writeStream);
     });
 });
