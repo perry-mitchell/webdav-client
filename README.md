@@ -223,6 +223,7 @@ client
 
 | Argument          | Required  | Description                                   |
 |-------------------|-----------|-----------------------------------------------|
+| `callback`        | No        | Callback to fire with the response of the request. |
 | `filename`        | Yes       | The remote file to stream.                    |
 | `options`         | No        | Read stream options.                          |
 | `options.range`   | No        | Stream range configuration.                   |
@@ -252,7 +253,7 @@ fs
 | `filename`        | Yes       | The remote file to stream.                    |
 | `options`         | No        | Write stream options.                         |
 | `options.overwrite` | No      | Whether or not to overwrite the remote file if it already exists. Defaults to `true`. |
-| `callback`        | No        | Callback to fire once the connection has been made and streaming has started. |
+| `callback`        | No        | Callback to fire once the connection has been made and streaming has started. Callback is called with the response of the request. |
 
 _`options` extends [method options](#method-options)._
 
