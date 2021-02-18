@@ -1,5 +1,12 @@
 # WebDAV-Client changelog
 
+## v4.2.0
+_2021-02-18_
+
+ * [#203](https://github.com/perry-mitchell/webdav-client/issues/203) `putFileContents` 412 response handling when `{ overwrite: false }`
+ * [#142](https://github.com/perry-mitchell/webdav-client/issues/142) Callbacks with `response`s for `createReadStream` and `createWriteStream`
+ * [#31](https://github.com/perry-mitchell/webdav-client/issues/31) Errors thrown for range requests that don't return `206 Partial Content`
+
 ## v4.1.0
 _2021-02-15_
 
