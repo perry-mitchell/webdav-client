@@ -515,6 +515,10 @@ const stat: FileStat = await client.stat("/some/file.tar.gz");
 
 _`options` extends [method options](#method-options)._
 
+##### Custom properties
+
+For requests like `stat`, which use the `PROPFIND` method under the hood, it is possible to provide a custom request body to the method so that the server may respond with additional/different data. Overriding of the body can be performed by setting the `data` property in the [method options](#method-options).
+
 ### Method options
 
 Most WebDAV methods extend `WebDAVMethodOptions`, which allow setting things like custom headers.
