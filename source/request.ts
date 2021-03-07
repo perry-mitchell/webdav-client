@@ -27,6 +27,9 @@ export function prepareRequestOptions(
         (finalOptions.headers || {}),
         (userOptions.headers || {})
     );
+    if (typeof userOptions.data !== "undefined") {
+        finalOptions.data = userOptions.data;
+    }
     if (context.httpAgent) {
         finalOptions.httpAgent = context.httpAgent;
     }
@@ -35,7 +38,6 @@ export function prepareRequestOptions(
     }
     if (context.digest) {
         finalOptions._digest = context.digest;
-        // finalOptions.validateStatus = status => (status >= 200 && status < 300) || status == 401;
     }
     if (typeof context.withCredentials === "boolean") {
         finalOptions.withCredentials = context.withCredentials;

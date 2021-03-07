@@ -99,5 +99,23 @@ describe("stat", function() {
                     .that.matches(/GMT$/);
             });
         });
+
+        it("allows requesting a custom set of properties", function() {
+            return this.client.stat(
+                "/alrighty.jpg",
+                {
+                    data: `<?xml version="1.0"?>
+                    <d:propfind xmlns:d="DAV:">
+                        <d:prop>
+                            <d:getlastmodified />
+                        </d:prop>
+                    </d:propfind>`,
+                    details: true
+                }
+            ).then(function(result) {
+                expect(result).to.have.nested.property("data.props").that.is.an("object");
+                expect(Object.keys(result.data.props)).to.deep.equal(["getlastmodified"]);
+            });
+        });
     });
 });

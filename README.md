@@ -521,6 +521,7 @@ Most WebDAV methods extend `WebDAVMethodOptions`, which allow setting things lik
 
 | Option            | Required  | Description                                   |
 |-------------------|-----------|-----------------------------------------------|
+| `data`            | No        | Optional body/data value to send in the request. This overrides the original body of the request, if applicable. |
 | `headers`         | No        | Optional headers object to apply to the request. These headers override all others, so be careful. |
 
 ### Common data structures
