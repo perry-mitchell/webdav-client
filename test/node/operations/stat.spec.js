@@ -101,9 +101,8 @@ describe("stat", function() {
         });
 
         it("allows requesting a custom set of properties", function() {
-            return this.client.stat(
-                "/alrighty.jpg",
-                {
+            return this.client
+                .stat("/alrighty.jpg", {
                     data: `<?xml version="1.0"?>
                     <d:propfind xmlns:d="DAV:">
                         <d:prop>
@@ -111,11 +110,13 @@ describe("stat", function() {
                         </d:prop>
                     </d:propfind>`,
                     details: true
-                }
-            ).then(function(result) {
-                expect(result).to.have.nested.property("data.props").that.is.an("object");
-                expect(Object.keys(result.data.props)).to.deep.equal(["getlastmodified"]);
-            });
+                })
+                .then(function(result) {
+                    expect(result)
+                        .to.have.nested.property("data.props")
+                        .that.is.an("object");
+                    expect(Object.keys(result.data.props)).to.deep.equal(["getlastmodified"]);
+                });
         });
     });
 });
