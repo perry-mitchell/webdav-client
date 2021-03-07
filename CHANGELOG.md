@@ -1,5 +1,13 @@
 # WebDAV-Client changelog
 
+## v4.2.1
+_2021-03-07_
+
+_Includes a new feature for v4: `data` override option in method options. This missing feature is actually a regression when compared to the v3 code-base, but is now a first-party citizen in v4._
+
+ * **Bugfix**:
+   * [#238](https://github.com/perry-mitchell/webdav-client/issues/238) Regression: Not possible to request custom properties in v4
+
 ## v4.2.0
 _2021-02-18_
 
