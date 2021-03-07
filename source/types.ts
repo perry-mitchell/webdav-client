@@ -240,5 +240,6 @@ export interface WebDAVClientOptions {
 }
 
 export interface WebDAVMethodOptions {
+    data?: RequestDataPayload;
     headers?: Headers;
 }
