@@ -35,7 +35,7 @@ export async function putFileContents(
     if (!overwrite) {
         headers["If-None-Match"] = "*";
     }
-    const requestOptions = prepareRequestOptions({
+    let requestOptions = prepareRequestOptions({
         url: joinURL(context.remoteURL, encodePath(filePath)),
         method: "PUT",
         headers,

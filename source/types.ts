@@ -125,6 +125,7 @@ export interface OAuthToken {
 export interface PutFileContentsOptions extends WebDAVMethodOptions {
     contentLength?: boolean | number;
     overwrite?: boolean;
+    onUploadProgress?: UploadProgressCallback;
 }
 
 export type RequestDataPayload = string | Buffer | ArrayBuffer | { [key: string]: any; };
