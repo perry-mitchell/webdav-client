@@ -5,7 +5,6 @@ import { joinURL } from "../tools/url";
 import { encodePath } from "../tools/path";
 import { request, prepareRequestOptions } from "../request";
 import { handleResponseCode } from "../response";
-import { calculateDataLength } from "../tools/size";
 import { AuthType, BufferLike, ErrorCode, Headers, PutFileContentsOptions, WebDAVClientContext, WebDAVClientError } from "../types";
 
 declare var WEB: boolean;
@@ -23,15 +22,6 @@ export async function putFileContents(
     const headers: Headers = {
         "Content-Type": "application/octet-stream"
     };
-    if (typeof WEB === "undefined" && data instanceof Stream.Readable) {
-        // Skip, no content-length
-    } else if (contentLength === false) {
-        // Skip, disabled
-    } else if (typeof contentLength === "number") {
-        headers["Content-Length"] = `${contentLength}`;
-    } else {
-        headers["Content-Length"] = `${calculateDataLength(data as string | BufferLike)}`
-    }
     if (!overwrite) {
         headers["If-None-Match"] = "*";
     }
