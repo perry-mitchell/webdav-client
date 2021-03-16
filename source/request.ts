@@ -8,7 +8,6 @@ import {
     RequestOptionsWithState,
     RequestOptions,
     Response,
-    PutFileContentsOptions,
     WebDAVClientContext,
     WebDAVMethodOptions
 } from "./types";
