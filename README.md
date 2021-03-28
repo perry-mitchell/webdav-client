@@ -580,7 +580,9 @@ Requests that return results, such as `getDirectoryContents`, `getFileContents`,
 | Property     | Type            | Description                            |
 |--------------|-----------------|----------------------------------------|
 | data         | *               | The data returned by the procedure. Will be whatever type is returned by calling without `{ details: true }` |
-| headers      | Object          | The response headers.                  |        
+| headers      | Object          | The response headers.                  |
+| status       | Number          | The numeric status code.               |
+| statusText   | String          | The status text.                       |
 
 ### CORS
 CORS is a security enforcement technique employed by browsers to ensure requests are executed to and from expected contexts. It can conflict with this library if the target server doesn't return CORS headers when making requests from a browser. It is your responsibility to handle this.
