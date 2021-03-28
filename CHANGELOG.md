@@ -1,5 +1,10 @@
 # WebDAV-Client changelog
 
+## v4.3.0
+_2021-03-28_
+
+ * [#118](https://github.com/perry-mitchell/webdav-client/issues/118) `createDirectory` `recursive` option
+
 ## v4.2.1
 _2021-03-07_
 
