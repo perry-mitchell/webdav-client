@@ -38,8 +38,7 @@
   ],
   "lint-staged": {
     "{source,test}/**/*.js": [
-      "prettier --write",
-      "git add"
+      "prettier --write"
     ]
   },
   "husky": {
