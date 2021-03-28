@@ -48,8 +48,11 @@ describe("createWriteStream", function() {
         return this.server.start();
     });
 
-    afterEach(function() {
+    afterEach(async function() {
         restoreRequests();
+        await new Promise(resolve => {
+            setTimeout(resolve, 500);
+        });
         return this.server.stop();
     });
 
@@ -69,11 +72,12 @@ describe("createWriteStream", function() {
     });
 
     it("allows specifying custom headers", async function() {
-        this.client.createWriteStream("/alrighty2.jpg", {
+        const writeStream = this.client.createWriteStream("/alrighty2.jpg", {
             headers: {
                 "X-test": "test"
             }
         });
+        fs.createReadStream(TEXT_SOURCE).pipe(writeStream);
         const [requestOptions] = this.requestSpy.firstCall.args;
         expect(requestOptions)
             .to.have.property("headers")
