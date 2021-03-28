@@ -1,3 +1,5 @@
+import { dirname } from "path-posix";
+
 const SEP_PATH_POSIX = "__PATH_SEPARATOR_POSIX__";
 const SEP_PATH_WINDOWS = "__PATH_SEPARATOR_WINDOWS__";
 
@@ -9,6 +11,17 @@ export function encodePath(path) {
         .join("\\\\")
         .split(SEP_PATH_POSIX)
         .join("/");
+}
+
+export function getAllDirectories(path: string): Array<string> {
+    if (!path || path === "/") return [];
+    let currentPath = path;
+    const output: Array<string> = [];
+    do {
+        output.push(currentPath);
+        currentPath = dirname(currentPath);
+    } while (currentPath && currentPath !== "/");
+    return output;
 }
 
 export function normalisePath(pathStr: string): string {

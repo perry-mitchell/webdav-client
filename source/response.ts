@@ -20,7 +20,9 @@ export function processResponsePayload<T>(response: Response, data: T, isDetaile
     return isDetailed
         ? {
               data,
-              headers: response.headers || {}
+              headers: response.headers || {},
+              status: response.status,
+              statusText: response.statusText
           }
         : data;
 }
