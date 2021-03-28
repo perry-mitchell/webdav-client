@@ -11,6 +11,10 @@ export enum AuthType {
 
 export type BufferLike = Buffer | ArrayBuffer;
 
+export interface CreateDirectoryOptions extends WebDAVMethodOptions {
+    recursive?: boolean;
+}
+
 export interface CreateReadStreamOptions extends WebDAVMethodOptions {
     callback?: (response: Response) => void;
     range?: {
@@ -167,6 +171,8 @@ export type ResponseData = string | Buffer | ArrayBuffer | Object | Array<any>;
 export interface ResponseDataDetailed<T> {
     data: T;
     headers: Headers;
+    status: number;
+    statusText: string;
 }
 
 export interface ResponseStatusValidator {
