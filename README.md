@@ -187,13 +187,22 @@ await client.createDirectory("/data/system/storage");
 ```
 
 ```typescript
-(path: string, options?: WebDAVMethodOptions) => Promise<void>
+(path: string, options?: CreateDirectoryOptions) => Promise<void>
 ```
 
-| Argument          | Required  | Description                                   |
-|-------------------|-----------|-----------------------------------------------|
-| `path`            | Yes       | The path to create.                           |
-| `options`         | No        | [Method options](#method-options).            |
+| Argument              | Required  | Description                                   |
+|-----------------------|-----------|-----------------------------------------------|
+| `path`                | Yes       | The path to create.                           |
+| `options`             | No        | Create directory options.                     |
+| `options.recursive`   | No        | Recursively create directories if they do not exist. |
+
+_`options` extends [method options](#method-options)._
+
+##### Recursive creation
+
+Recursive directory creation is expensive request-wise. Multiple `stat` requests are made (totalling the depth of the path that exists, +1) to detect what parts of the path already exist, until finding a segment that doesn't exist - where it then only requests the _creation_ method.
+
+For example, a recursive call to create a path `/a/b/c/d/e`, where `/a/b` already exists, will result in **3** `stat` requests (for `/a`, `/a/b` and `/a/b/c`) and **3** `createDirectory` requests (for `/a/b/c`, `/a/b/c/d` and `/a/b/c/d/e`).
 
 #### createReadStream
 
