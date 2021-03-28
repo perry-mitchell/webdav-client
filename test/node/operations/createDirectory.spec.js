@@ -35,6 +35,13 @@ describe("createDirectory", function() {
         expect(directoryExists(newDir)).to.be.true;
     });
 
+    it("supports creating deep directories", async function() {
+        const newDir = path.resolve(__dirname, "../../testContents/a/b/c/d/e");
+        expect(directoryExists(newDir)).to.be.false;
+        await this.client.createDirectory("/a/b/c/d/e");
+        expect(directoryExists(newDir)).to.be.true;
+    });
+
     it("allows specifying custom headers", async function() {
         await this.client.createDirectory("/sub2", {
             headers: {
