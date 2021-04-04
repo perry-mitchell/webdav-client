@@ -194,7 +194,7 @@ export interface UploadProgressCallback {
 
 export interface WebDAVClient {
     copyFile: (filename: string, destination: string) => Promise<void>;
-    createDirectory: (path: string) => Promise<void>;
+    createDirectory: (path: string, options?: CreateDirectoryOptions) => Promise<void>;
     createReadStream: (filename: string, options?: CreateReadStreamOptions) => Stream.Readable;
     createWriteStream: (filename: string, options?: CreateWriteStreamOptions, callback?: CreateWriteStreamCallback) => Stream.Writable;
     customRequest: (path: string, requestOptions: RequestOptionsCustom) => Promise<Response>;
