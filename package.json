@@ -6,10 +6,10 @@
   "scripts": {
     "build": "npm run clean && run-p build:node build:web",
     "build:node": "tsc",
-    "build:web": "webpack --mode production --config webpack.config.js",
+    "build:web": "webpack --mode production --config webpack.config.js && tsc --emitDeclarationOnly --outDir dist/web/",
     "clean": "rimraf dist web",
     "format": "prettier --write '{source,test}/**/*.js'",
-    "prepare:publish:web": "mkdirp ./web && mv ./dist/web/webdav.js ./web/index.js",
+    "prepare:publish:web": "cp -r ./dist/web ./web && mv ./web/webdav.js ./web/index.js",
     "prepublishOnly": "run-s build prepare:publish:web",
     "test": "run-s test:node test:web test:format",
     "test:format": "prettier-check '{source,test}/**/*.js'",
