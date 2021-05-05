@@ -3,7 +3,15 @@ import xmlParser from "fast-xml-parser";
 import nestedProp from "nested-property";
 import { decodeHTMLEntities } from "./encode";
 import { normalisePath } from "./path";
-import { DAVResult, DAVResultRaw, DAVResultResponse, DAVResultResponseProps, DiskQuotaAvailable, FileStat } from "../types";
+import {
+    DAVResult,
+    DAVResultRaw,
+    DAVResultResponse,
+    DAVResultResponseProps,
+    DiskQuotaAvailable,
+    FileStat,
+    WebDAVClientError
+} from "../types";
 
 enum PropertyType {
     Array = "array",
@@ -98,7 +106,7 @@ export function prepareFileFromProps(props: DAVResultResponseProps, rawFilename:
 }
 
 export function parseStat(result: DAVResult, filename: string, isDetailed: boolean = false): FileStat {
-    let responseItem = null;
+    let responseItem: DAVResultResponse = null;
     try {
         responseItem = result.multistatus.response[0];
     } catch (e) {
@@ -108,8 +116,18 @@ export function parseStat(result: DAVResult, filename: string, isDetailed: boole
         throw new Error("Failed getting item stat: bad response");
     }
     const {
-        propstat: { prop: props }
+        propstat: { prop: props, status: statusLine }
     } = responseItem;
+
+    // As defined in https://tools.ietf.org/html/rfc2068#section-6.1
+    const [_, statusCodeStr, statusText] = statusLine.split(' ', 3);
+    const statusCode = parseInt(statusCodeStr, 10);
+    if (statusCode >= 400) {
+        const err: WebDAVClientError = new Error(`Invalid response: ${statusCode} ${statusText}`) as WebDAVClientError;
+        err.status = statusCode;
+        throw err;
+    }
+
     const filePath = normalisePath(filename);
     return prepareFileFromProps(props, filePath, isDetailed);
 }
