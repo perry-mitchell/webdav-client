@@ -1,5 +1,11 @@
 # WebDAV-Client changelog
 
+## v4.4.0
+_2021-05-09_
+
+ * [#259](https://github.com/perry-mitchell/webdav-client/pull/259) Ensure correct collection path when creating directory
+ * [#258](https://github.com/perry-mitchell/webdav-client/pull/258) Handle prop status code in response when using `stat`
+
 ## v4.3.0
 _2021-03-28_
 
