@@ -47,6 +47,12 @@ describe("createDirectory", function() {
             .that.has.property("X-test", "test");
     });
 
+    it("adds the trailing slash to the directory name if missing", async function() {
+        await this.client.createDirectory("/subdirectory-1122");
+        const [requestOptions] = this.requestSpy.firstCall.args;
+        expect(requestOptions.url).to.satisfy(url => url.endsWith("/"));
+    });
+
     describe("with recursive option", function() {
         it("supports creating deep directories", async function() {
             const newDir = path.resolve(__dirname, "../../testContents/a/b/c/d/e");

@@ -12,11 +12,25 @@ export async function createDirectory(
 ): Promise<void> {
     if (options.recursive === true) return createDirectoryRecursively(context, dirPath, options);
     const requestOptions = prepareRequestOptions({
-        url: joinURL(context.remoteURL, encodePath(dirPath)),
+        url: joinURL(context.remoteURL, ensureCollectionPath(encodePath(dirPath))),
         method: "MKCOL"
     }, context, options);
     const response = await request(requestOptions);
     handleResponseCode(context, response);
+}
+
+/**
+ * Ensure the path is a proper "collection" path by ensuring it has a trailing "/".
+ * The proper format of collection according to the specification does contain the trailing slash.
+ * http://www.webdav.org/specs/rfc4918.html#rfc.section.5.2
+ * @param path Path of the collection
+ * @return string Path of the collection with appended trailing "/" in case the `path` does not have it.
+ */
+function ensureCollectionPath(path: string): string {
+    if (!path.endsWith("/")) {
+        return path + "/";
+    }
+    return path;
 }
 
 async function createDirectoryRecursively(
