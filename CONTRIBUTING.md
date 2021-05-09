@@ -11,7 +11,7 @@ When making a pull request for an existing issue or feature that is clearly bene
 When making a pull request for an item not listed as an issue or that is controversial (also subject to opinion), be aware that the request may be denied and the PR closed. It is always best to create an issue for a discussion before making a PR, if you are unsure of the feature's worth.
 
 ## Documentation
-PRs to add/update documentation are welcome, but please, ensure that you edit in **Markdown** with as little HTML as possible (none is preferrable). Do not use auto-formatters to generate the documentation files.
+PRs to add/update documentation are welcome, but please, ensure that you edit in **Markdown** with as little HTML as possible (none is preferable). Do not use auto-formatters to generate the documentation files.
 
 `API.md` is generated on release - there is no need to update it yourself.
 

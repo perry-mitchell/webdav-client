@@ -4,7 +4,9 @@ const {
     SERVER_USERNAME,
     clean,
     createWebDAVClient,
-    createWebDAVServer
+    createWebDAVServer,
+    useCustomXmlResponse,
+    restoreRequests
 } = require("../../helpers.node.js");
 
 describe("stat", function() {
@@ -69,6 +71,31 @@ describe("stat", function() {
             expect(stat).to.have.property("lastmod").that.is.a.string;
             expect(stat).to.have.property("type", "directory");
             expect(stat).to.have.property("size", 0);
+        });
+    });
+
+    it("throws 404 on non-existent file", function() {
+        return expect(this.client.stat("/does-not-exist")).to.eventually.be.rejected.and.have.property("status", 404);
+    });
+
+    describe("when requesting stat from NGinx webdav server", function() {
+        beforeEach(function() {
+            this.client = createWebDAVClient(`http://localhost:${SERVER_PORT}/webdav/server`, {
+                username: SERVER_USERNAME,
+                password: SERVER_PASSWORD
+            });
+            useCustomXmlResponse("nginx-not-found");
+        });
+
+        afterEach(function() {
+            restoreRequests();
+        });
+
+        it("throws 404 on non-existent file", function() {
+            return expect(this.client.stat("/does-not-exist")).to.eventually.be.rejected.and.have.property(
+                "status",
+                404
+            );
         });
     });
 

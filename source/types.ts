@@ -33,6 +33,7 @@ export interface DAVResultResponse {
     href: string;
     propstat: {
         prop: DAVResultResponseProps;
+        status: string;
     }
 }
 

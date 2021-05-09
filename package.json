@@ -76,6 +76,7 @@
     "babel-plugin-transform-async-to-promises": "^0.8.15",
     "buffer-equals": "^2.0.0",
     "chai": "^4.3.4",
+    "chai-as-promised": "^7.1.1",
     "concurrently": "^6.0.0",
     "copy-dir": "^1.3.0",
     "directory-exists": "^2.0.1",
