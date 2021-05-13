@@ -1,4 +1,5 @@
 import Stream from "stream";
+import {AxiosResponse} from "axios";
 
 export type AuthHeader = string;
 
@@ -231,6 +232,7 @@ export interface WebDAVClientContext {
 
 export interface WebDAVClientError extends Error {
     status?: number;
+    response?: AxiosResponse;
 }
 
 export interface WebDAVClientOptions {
