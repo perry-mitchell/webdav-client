@@ -50,13 +50,18 @@ describe("getFileContents", function() {
     });
 
     it("reads a remote file into a string", async function() {
-        const stringRemote = await this.client.getFileContents("/text document.txt", { format: "text" });
+        const stringRemote = await this.client.getFileContents("/text document.txt", {
+            format: "text"
+        });
         const stringLocal = fs.readFileSync(SOURCE_TXT, "utf8");
         expect(stringRemote).to.equal(stringLocal);
     });
 
     it("supports returning detailed results (string)", async function() {
-        const details = await this.client.getFileContents("/text document.txt", { format: "text", details: true });
+        const details = await this.client.getFileContents("/text document.txt", {
+            format: "text",
+            details: true
+        });
         expect(details)
             .to.have.property("data")
             .that.is.a("string");

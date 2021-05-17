@@ -1,11 +1,19 @@
 import minimatch from "minimatch";
-import { FileStat, Response, ResponseDataDetailed, WebDAVClientContext, WebDAVClientError } from "./types";
+import {
+    FileStat,
+    Response,
+    ResponseDataDetailed,
+    WebDAVClientContext,
+    WebDAVClientError
+} from "./types";
 
 export function handleResponseCode(context: WebDAVClientContext, response: Response): Response {
     const status = response.status;
     if (status === 401 && context.digest) return response;
     if (status >= 400) {
-        const err: WebDAVClientError = new Error(`Invalid response: ${status} ${response.statusText}`) as WebDAVClientError;
+        const err: WebDAVClientError = new Error(
+            `Invalid response: ${status} ${response.statusText}`
+        ) as WebDAVClientError;
         err.status = status;
         throw err;
     }
@@ -16,7 +24,11 @@ export function processGlobFilter(files: Array<FileStat>, glob: string): Array<F
     return files.filter(file => minimatch(file.filename, glob, { matchBase: true }));
 }
 
-export function processResponsePayload<T>(response: Response, data: T, isDetailed: boolean = false): ResponseDataDetailed<T> | T {
+export function processResponsePayload<T>(
+    response: Response,
+    data: T,
+    isDetailed: boolean = false
+): ResponseDataDetailed<T> | T {
     return isDetailed
         ? {
               data,

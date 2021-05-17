@@ -19,7 +19,11 @@ enum PropertyType {
     Original = "original"
 }
 
-function getPropertyOfType(obj: Object, prop: string, type: PropertyType = PropertyType.Original): any {
+function getPropertyOfType(
+    obj: Object,
+    prop: string,
+    type: PropertyType = PropertyType.Original
+): any {
     const val = nestedProp.get(obj, prop);
     if (type === "array" && Array.isArray(val) === false) {
         return [val];
@@ -32,7 +36,11 @@ function getPropertyOfType(obj: Object, prop: string, type: PropertyType = Prope
 function normaliseResponse(response: any): DAVResultResponse {
     const output = Object.assign({}, response);
     nestedProp.set(output, "propstat", getPropertyOfType(output, "propstat", PropertyType.Object));
-    nestedProp.set(output, "propstat.prop", getPropertyOfType(output, "propstat.prop", PropertyType.Object));
+    nestedProp.set(
+        output,
+        "propstat.prop",
+        getPropertyOfType(output, "propstat.prop", PropertyType.Object)
+    );
     return output;
 }
 
@@ -51,7 +59,11 @@ function normaliseResult(result: DAVResultRaw): DAVResult {
     const output: any = {
         multistatus: Array.isArray(multistatus) ? multistatus[0] : multistatus
     };
-    nestedProp.set(output, "multistatus.response", getPropertyOfType(output, "multistatus.response", PropertyType.Array));
+    nestedProp.set(
+        output,
+        "multistatus.response",
+        getPropertyOfType(output, "multistatus.response", PropertyType.Array)
+    );
     nestedProp.set(
         output,
         "multistatus.response",
@@ -74,7 +86,11 @@ export function parseXML(xml: string): Promise<DAVResult> {
     });
 }
 
-export function prepareFileFromProps(props: DAVResultResponseProps, rawFilename: string, isDetailed: boolean = false): FileStat {
+export function prepareFileFromProps(
+    props: DAVResultResponseProps,
+    rawFilename: string,
+    isDetailed: boolean = false
+): FileStat {
     // Last modified time, raw size, item type and mime
     const {
         getlastmodified: lastMod = null,
@@ -84,7 +100,9 @@ export function prepareFileFromProps(props: DAVResultResponseProps, rawFilename:
         getetag: etag = null
     } = props;
     const type =
-        resourceType && typeof resourceType === "object" && typeof resourceType.collection !== "undefined"
+        resourceType &&
+        typeof resourceType === "object" &&
+        typeof resourceType.collection !== "undefined"
             ? "directory"
             : "file";
     const filename = decodeHTMLEntities(rawFilename);
@@ -105,7 +123,11 @@ export function prepareFileFromProps(props: DAVResultResponseProps, rawFilename:
     return stat;
 }
 
-export function parseStat(result: DAVResult, filename: string, isDetailed: boolean = false): FileStat {
+export function parseStat(
+    result: DAVResult,
+    filename: string,
+    isDetailed: boolean = false
+): FileStat {
     let responseItem: DAVResultResponse = null;
     try {
         responseItem = result.multistatus.response[0];
@@ -120,10 +142,12 @@ export function parseStat(result: DAVResult, filename: string, isDetailed: boole
     } = responseItem;
 
     // As defined in https://tools.ietf.org/html/rfc2068#section-6.1
-    const [_, statusCodeStr, statusText] = statusLine.split(' ', 3);
+    const [_, statusCodeStr, statusText] = statusLine.split(" ", 3);
     const statusCode = parseInt(statusCodeStr, 10);
     if (statusCode >= 400) {
-        const err: WebDAVClientError = new Error(`Invalid response: ${statusCode} ${statusText}`) as WebDAVClientError;
+        const err: WebDAVClientError = new Error(
+            `Invalid response: ${statusCode} ${statusText}`
+        ) as WebDAVClientError;
         err.status = statusCode;
         throw err;
     }

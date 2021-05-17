@@ -8,11 +8,11 @@
     "build:node": "tsc",
     "build:web": "webpack --mode production --config webpack.config.js && tsc --emitDeclarationOnly --outDir dist/web/",
     "clean": "rimraf dist web",
-    "format": "prettier --write '{source,test}/**/*.js'",
+    "format": "prettier --write '{source,test}/**/*.{js,ts}'",
     "prepare:publish:web": "cp -r ./dist/web ./web && mv ./web/webdav.js ./web/index.js",
     "prepublishOnly": "run-s build prepare:publish:web",
     "test": "run-s test:node test:web test:format",
-    "test:format": "prettier-check '{source,test}/**/*.js'",
+    "test:format": "prettier-check '{source,test}/**/*.{js,ts}'",
     "test:node": "npm run build:node && nyc mocha -r test/index.node.js \"test/node/**/*.spec.js\"",
     "test:node:watch": "nodemon --exec 'npm run test:node' --ignore 'dist/'",
     "test:web": "concurrently --success 'first' --kill-others 'npm run test:web:karma' 'npm run test:web:server'",
@@ -37,7 +37,7 @@
     "sync"
   ],
   "lint-staged": {
-    "{source,test}/**/*.js": [
+    "{source,test}/**/*.{js,ts}": [
       "prettier --write"
     ]
   },

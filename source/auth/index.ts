@@ -24,10 +24,13 @@ export function setupAuth(
             context.headers.Authorization = generateTokenAuthHeader(oauthToken);
             break;
         default:
-            throw new Layerr({
-                info: {
-                    code: ErrorCode.InvalidAuthType
-                }
-            }, `Invalid auth type: ${context.authType}`);
+            throw new Layerr(
+                {
+                    info: {
+                        code: ErrorCode.InvalidAuthType
+                    }
+                },
+                `Invalid auth type: ${context.authType}`
+            );
     }
 }

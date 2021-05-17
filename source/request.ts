@@ -13,7 +13,11 @@ import {
 } from "./types";
 
 function _request(requestOptions: RequestOptions) {
-    return getPatcher().patchInline("request", (options: RequestOptions) => axios(options as any), requestOptions);
+    return getPatcher().patchInline(
+        "request",
+        (options: RequestOptions) => axios(options as any),
+        requestOptions
+    );
 }
 
 export function prepareRequestOptions(
@@ -24,8 +28,8 @@ export function prepareRequestOptions(
     const finalOptions = cloneShallow(requestOptions) as RequestOptionsWithState;
     finalOptions.headers = mergeHeaders(
         context.headers,
-        (finalOptions.headers || {}),
-        (userOptions.headers || {})
+        finalOptions.headers || {},
+        userOptions.headers || {}
     );
     if (typeof userOptions.data !== "undefined") {
         finalOptions.data = userOptions.data;
@@ -48,8 +52,8 @@ export function prepareRequestOptions(
     if (context.maxBodyLength) {
         finalOptions.maxBodyLength = context.maxBodyLength;
     }
-    if (userOptions.hasOwnProperty('onUploadProgress')) {
-        finalOptions.onUploadProgress = userOptions['onUploadProgress'];
+    if (userOptions.hasOwnProperty("onUploadProgress")) {
+        finalOptions.onUploadProgress = userOptions["onUploadProgress"];
     }
     // Take full control of all response status codes
     finalOptions.validateStatus = () => true;

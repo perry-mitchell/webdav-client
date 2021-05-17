@@ -31,7 +31,9 @@ function sleep(ms) {
 }
 
 function useCustomXmlResponse(xmlFile) {
-    returnFakeResponse(fs.readFileSync(path.resolve(__dirname, `./responses/${xmlFile}.xml`), "utf8"));
+    returnFakeResponse(
+        fs.readFileSync(path.resolve(__dirname, `./responses/${xmlFile}.xml`), "utf8")
+    );
 }
 
 function useRequestSpy() {

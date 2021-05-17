@@ -28,19 +28,23 @@ describe("getDirectoryContents", function() {
     });
 
     it("reads a remote file into a string", function() {
-        return this.client.getFileContents("/text document.txt", { format: "text" }).then(stringRemote => {
-            expect(stringRemote).to.contain("This is my cool file.");
-        });
+        return this.client
+            .getFileContents("/text document.txt", { format: "text" })
+            .then(stringRemote => {
+                expect(stringRemote).to.contain("This is my cool file.");
+            });
     });
 
     it("supports returning detailed results (string)", function() {
-        return this.client.getFileContents("/text document.txt", { format: "text", details: true }).then(details => {
-            expect(details)
-                .to.have.property("data")
-                .that.is.a("string");
-            expect(details)
-                .to.have.property("headers")
-                .that.is.an("object");
-        });
+        return this.client
+            .getFileContents("/text document.txt", { format: "text", details: true })
+            .then(details => {
+                expect(details)
+                    .to.have.property("data")
+                    .that.is.a("string");
+                expect(details)
+                    .to.have.property("headers")
+                    .that.is.an("object");
+            });
     });
 });
