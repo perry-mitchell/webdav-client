@@ -17,15 +17,19 @@ export async function getDirectoryContents(
     remotePath: string,
     options: GetDirectoryContentsOptions = {}
 ): Promise<Array<FileStat> | ResponseDataDetailed<Array<FileStat>>> {
-    const requestOptions = prepareRequestOptions({
-        url: joinURL(context.remoteURL, encodePath(remotePath), "/"),
-        method: "PROPFIND",
-        headers: {
-            Accept: "text/plain",
-            Depth: options.deep ? "infinity" : "1"
+    const requestOptions = prepareRequestOptions(
+        {
+            url: joinURL(context.remoteURL, encodePath(remotePath), "/"),
+            method: "PROPFIND",
+            headers: {
+                Accept: "text/plain",
+                Depth: options.deep ? "infinity" : "1"
+            },
+            responseType: "text"
         },
-        responseType: "text"
-    }, context, options);
+        context,
+        options
+    );
     const response = await request(requestOptions);
     handleResponseCode(context, response);
     const davResp = await parseXML(response.data as string);
@@ -36,7 +40,12 @@ export async function getDirectoryContents(
     return processResponsePayload(response, files, options.details);
 }
 
-function getDirectoryFiles(result: DAVResult, serverBasePath: string, requestPath: string, isDetailed: boolean = false): Array<FileStat> {
+function getDirectoryFiles(
+    result: DAVResult,
+    serverBasePath: string,
+    requestPath: string,
+    isDetailed: boolean = false
+): Array<FileStat> {
     const serverBase = pathPosix.join(serverBasePath, "/");
     // Extract the response items (directory contents)
     const {
@@ -60,6 +69,10 @@ function getDirectoryFiles(result: DAVResult, serverBasePath: string, requestPat
                 return prepareFileFromProps(props, filename, isDetailed);
             })
             // Filter out the item pointing to the current directory (not needed)
-            .filter(item => item.basename && (item.type === "file" || item.filename !== requestPath.replace(/\/$/, "")))
+            .filter(
+                item =>
+                    item.basename &&
+                    (item.type === "file" || item.filename !== requestPath.replace(/\/$/, ""))
+            )
     );
 }

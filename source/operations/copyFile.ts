@@ -10,13 +10,17 @@ export async function copyFile(
     destination: string,
     options: WebDAVMethodOptions = {}
 ): Promise<void> {
-    const requestOptions = prepareRequestOptions({
-        url: joinURL(context.remoteURL, encodePath(filename)),
-        method: "COPY",
-        headers: {
-            Destination: joinURL(context.remoteURL, encodePath(destination))
-        }
-    }, context, options);
+    const requestOptions = prepareRequestOptions(
+        {
+            url: joinURL(context.remoteURL, encodePath(filename)),
+            method: "COPY",
+            headers: {
+                Destination: joinURL(context.remoteURL, encodePath(destination))
+            }
+        },
+        context,
+        options
+    );
     const response = await request(requestOptions);
     handleResponseCode(context, response);
 }

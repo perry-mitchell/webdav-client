@@ -5,7 +5,11 @@ export function cloneShallow<T extends Object>(obj: T): T {
 }
 
 function isPlainObject(obj: Object | any): boolean {
-    if (typeof obj !== "object" || obj === null || Object.prototype.toString.call(obj) != "[object Object]") {
+    if (
+        typeof obj !== "object" ||
+        obj === null ||
+        Object.prototype.toString.call(obj) != "[object Object]"
+    ) {
         // Not an object
         return false;
     }
@@ -42,7 +46,9 @@ function mergeObjects(obj1: Object, obj2: Object): Object {
             return;
         }
         if (Array.isArray(obj2[key])) {
-            output[key] = Array.isArray(output[key]) ? [...output[key], ...obj2[key]] : [...obj2[key]];
+            output[key] = Array.isArray(output[key])
+                ? [...output[key], ...obj2[key]]
+                : [...obj2[key]];
         } else if (typeof obj2[key] === "object" && !!obj2[key]) {
             output[key] =
                 typeof output[key] === "object" && !!output[key]

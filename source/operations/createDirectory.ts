@@ -11,10 +11,14 @@ export async function createDirectory(
     options: CreateDirectoryOptions = {}
 ): Promise<void> {
     if (options.recursive === true) return createDirectoryRecursively(context, dirPath, options);
-    const requestOptions = prepareRequestOptions({
-        url: joinURL(context.remoteURL, ensureCollectionPath(encodePath(dirPath))),
-        method: "MKCOL"
-    }, context, options);
+    const requestOptions = prepareRequestOptions(
+        {
+            url: joinURL(context.remoteURL, ensureCollectionPath(encodePath(dirPath))),
+            method: "MKCOL"
+        },
+        context,
+        options
+    );
     const response = await request(requestOptions);
     handleResponseCode(context, response);
 }
@@ -57,7 +61,7 @@ async function createDirectoryRecursively(
             continue;
         }
         try {
-            const testStat = await getStat(context, testPath) as FileStat;
+            const testStat = (await getStat(context, testPath)) as FileStat;
             if (testStat.type !== "directory") {
                 throw new Error(`Path includes a file: ${dirPath}`);
             }

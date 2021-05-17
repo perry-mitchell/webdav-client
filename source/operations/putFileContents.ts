@@ -6,7 +6,15 @@ import { encodePath } from "../tools/path";
 import { request, prepareRequestOptions } from "../request";
 import { handleResponseCode } from "../response";
 import { calculateDataLength } from "../tools/size";
-import { AuthType, BufferLike, ErrorCode, Headers, PutFileContentsOptions, WebDAVClientContext, WebDAVClientError } from "../types";
+import {
+    AuthType,
+    BufferLike,
+    ErrorCode,
+    Headers,
+    PutFileContentsOptions,
+    WebDAVClientContext,
+    WebDAVClientError
+} from "../types";
 
 declare var WEB: boolean;
 
@@ -16,10 +24,7 @@ export async function putFileContents(
     data: string | BufferLike | Stream.Readable,
     options: PutFileContentsOptions = {}
 ): Promise<boolean> {
-    const {
-        contentLength = true,
-        overwrite = true
-    } = options;
+    const { contentLength = true, overwrite = true } = options;
     const headers: Headers = {
         "Content-Type": "application/octet-stream"
     };
@@ -30,17 +35,21 @@ export async function putFileContents(
     } else if (typeof contentLength === "number") {
         headers["Content-Length"] = `${contentLength}`;
     } else {
-        headers["Content-Length"] = `${calculateDataLength(data as string | BufferLike)}`
+        headers["Content-Length"] = `${calculateDataLength(data as string | BufferLike)}`;
     }
     if (!overwrite) {
         headers["If-None-Match"] = "*";
     }
-    const requestOptions = prepareRequestOptions({
-        url: joinURL(context.remoteURL, encodePath(filePath)),
-        method: "PUT",
-        headers,
-        data
-    }, context, options);
+    const requestOptions = prepareRequestOptions(
+        {
+            url: joinURL(context.remoteURL, encodePath(filePath)),
+            method: "PUT",
+            headers,
+            data
+        },
+        context,
+        options
+    );
     const response = await request(requestOptions);
     try {
         handleResponseCode(context, response);
@@ -56,7 +65,10 @@ export async function putFileContents(
 }
 
 export function getFileUploadLink(context: WebDAVClientContext, filePath: string): string {
-    let url: string = `${joinURL(context.remoteURL, encodePath(filePath))}?Content-Type=application/octet-stream`;
+    let url: string = `${joinURL(
+        context.remoteURL,
+        encodePath(filePath)
+    )}?Content-Type=application/octet-stream`;
     const protocol = /^https:/i.test(url) ? "https" : "http";
     switch (context.authType) {
         case AuthType.None:
@@ -69,11 +81,14 @@ export function getFileUploadLink(context: WebDAVClientContext, filePath: string
             break;
         }
         default:
-            throw new Layerr({
-                info: {
-                    code: ErrorCode.LinkUnsupportedAuthType
-                }
-            }, `Unsupported auth type for file link: ${context.authType}`);
+            throw new Layerr(
+                {
+                    info: {
+                        code: ErrorCode.LinkUnsupportedAuthType
+                    }
+                },
+                `Unsupported auth type for file link: ${context.authType}`
+            );
     }
     return url;
 }

@@ -20,11 +20,14 @@ export async function getFileContents(
 ): Promise<BufferLike | string | ResponseDataDetailed<BufferLike | string>> {
     const { format = "binary" } = options;
     if (format !== "binary" && format !== "text") {
-        throw new Layerr({
-            info: {
-                code: ErrorCode.InvalidOutputFormat
-            }
-        }, `Invalid output format: ${format}`);
+        throw new Layerr(
+            {
+                info: {
+                    code: ErrorCode.InvalidOutputFormat
+                }
+            },
+            `Invalid output format: ${format}`
+        );
     }
     return format === "text"
         ? getFileContentsString(context, filePath, options)
@@ -36,11 +39,15 @@ async function getFileContentsBuffer(
     filePath: string,
     options: GetFileContentsOptions = {}
 ): Promise<BufferLike | ResponseDataDetailed<BufferLike>> {
-    const requestOptions = prepareRequestOptions({
-        url: joinURL(context.remoteURL, encodePath(filePath)),
-        method: "GET",
-        responseType: "arraybuffer"
-    }, context, options);
+    const requestOptions = prepareRequestOptions(
+        {
+            url: joinURL(context.remoteURL, encodePath(filePath)),
+            method: "GET",
+            responseType: "arraybuffer"
+        },
+        context,
+        options
+    );
     const response = await request(requestOptions);
     handleResponseCode(context, response);
     return processResponsePayload(response, response.data as BufferLike, options.details);
@@ -51,11 +58,15 @@ async function getFileContentsString(
     filePath: string,
     options: GetFileContentsOptions = {}
 ): Promise<string | ResponseDataDetailed<string>> {
-    const requestOptions = prepareRequestOptions({
-        url: joinURL(context.remoteURL, encodePath(filePath)),
-        method: "GET",
-        responseType: "text"
-    }, context, options);
+    const requestOptions = prepareRequestOptions(
+        {
+            url: joinURL(context.remoteURL, encodePath(filePath)),
+            method: "GET",
+            responseType: "text"
+        },
+        context,
+        options
+    );
     const response = await request(requestOptions);
     handleResponseCode(context, response);
     return processResponsePayload(response, response.data as string, options.details);
@@ -75,11 +86,14 @@ export function getFileDownloadLink(context: WebDAVClientContext, filePath: stri
             break;
         }
         default:
-            throw new Layerr({
-                info: {
-                    code: ErrorCode.LinkUnsupportedAuthType
-                }
-            }, `Unsupported auth type for file link: ${context.authType}`);
+            throw new Layerr(
+                {
+                    info: {
+                        code: ErrorCode.LinkUnsupportedAuthType
+                    }
+                },
+                `Unsupported auth type for file link: ${context.authType}`
+            );
     }
     return url;
 }

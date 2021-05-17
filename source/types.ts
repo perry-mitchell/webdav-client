@@ -21,7 +21,7 @@ export interface CreateReadStreamOptions extends WebDAVMethodOptions {
     range?: {
         start: number;
         end?: number;
-    }
+    };
 }
 
 export type CreateWriteStreamCallback = (response: Response) => void;
@@ -35,7 +35,7 @@ export interface DAVResultResponse {
     propstat: {
         prop: DAVResultResponseProps;
         status: string;
-    }
+    };
 }
 
 export interface DAVResultResponseProps {
@@ -54,7 +54,7 @@ export interface DAVResultResponseProps {
 export interface DAVResult {
     multistatus: {
         response: Array<DAVResultResponse>;
-    }
+    };
 }
 
 export interface DAVResultRawMultistatus {
@@ -125,15 +125,16 @@ export interface Headers {
 export interface OAuthToken {
     access_token: string;
     token_type: string;
-    refresh_token?: string
+    refresh_token?: string;
 }
 
 export interface PutFileContentsOptions extends WebDAVMethodOptions {
     contentLength?: boolean | number;
     overwrite?: boolean;
+    onUploadProgress?: UploadProgressCallback;
 }
 
-export type RequestDataPayload = string | Buffer | ArrayBuffer | { [key: string]: any; };
+export type RequestDataPayload = string | Buffer | ArrayBuffer | { [key: string]: any };
 
 interface RequestOptionsBase {
     data?: RequestDataPayload;
@@ -198,20 +199,39 @@ export interface WebDAVClient {
     copyFile: (filename: string, destination: string) => Promise<void>;
     createDirectory: (path: string, options?: CreateDirectoryOptions) => Promise<void>;
     createReadStream: (filename: string, options?: CreateReadStreamOptions) => Stream.Readable;
-    createWriteStream: (filename: string, options?: CreateWriteStreamOptions, callback?: CreateWriteStreamCallback) => Stream.Writable;
+    createWriteStream: (
+        filename: string,
+        options?: CreateWriteStreamOptions,
+        callback?: CreateWriteStreamCallback
+    ) => Stream.Writable;
     customRequest: (path: string, requestOptions: RequestOptionsCustom) => Promise<Response>;
     deleteFile: (filename: string) => Promise<void>;
     exists: (path: string) => Promise<boolean>;
-    getDirectoryContents: (path: string, options?: GetDirectoryContentsOptions) => Promise<Array<FileStat> | ResponseDataDetailed<Array<FileStat>>>;
-    getFileContents: (filename: string, options?: GetFileContentsOptions) => Promise<BufferLike | string | ResponseDataDetailed<BufferLike | string>>;
+    getDirectoryContents: (
+        path: string,
+        options?: GetDirectoryContentsOptions
+    ) => Promise<Array<FileStat> | ResponseDataDetailed<Array<FileStat>>>;
+    getFileContents: (
+        filename: string,
+        options?: GetFileContentsOptions
+    ) => Promise<BufferLike | string | ResponseDataDetailed<BufferLike | string>>;
     getFileDownloadLink: (filename: string) => string;
     getFileUploadLink: (filename: string) => string;
     getHeaders: () => Headers;
-    getQuota: (options?: GetQuotaOptions) => Promise<DiskQuota | null | ResponseDataDetailed<DiskQuota | null>>;
+    getQuota: (
+        options?: GetQuotaOptions
+    ) => Promise<DiskQuota | null | ResponseDataDetailed<DiskQuota | null>>;
     moveFile: (filename: string, destinationFilename: string) => Promise<void>;
-    putFileContents: (filename: string, data: string | BufferLike | Stream.Readable, options?: PutFileContentsOptions) => Promise<boolean>;
+    putFileContents: (
+        filename: string,
+        data: string | BufferLike | Stream.Readable,
+        options?: PutFileContentsOptions
+    ) => Promise<boolean>;
     setHeaders: (headers: Headers) => void;
-    stat: (path: string, options?: StatOptions) => Promise<FileStat | ResponseDataDetailed<FileStat>>;
+    stat: (
+        path: string,
+        options?: StatOptions
+    ) => Promise<FileStat | ResponseDataDetailed<FileStat>>;
 }
 
 export interface WebDAVClientContext {

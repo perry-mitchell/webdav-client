@@ -14,7 +14,11 @@ export function extractURLPath(fullURL: string): string {
 export function joinURL(...parts: Array<string>): string {
     return _joinURL(
         parts.reduce((output, nextPart, partIndex) => {
-            if (partIndex === 0 || nextPart !== "/" || (nextPart === "/" && output[output.length - 1] !== "/")) {
+            if (
+                partIndex === 0 ||
+                nextPart !== "/" ||
+                (nextPart === "/" && output[output.length - 1] !== "/")
+            ) {
                 output.push(nextPart);
             }
             return output;
