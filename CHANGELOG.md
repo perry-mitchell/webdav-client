@@ -1,5 +1,12 @@
 # WebDAV-Client changelog
 
+## v4.5.0
+_2021-05-17_
+
+ * Update dependencies - Webpack v5
+ * **Bugfix**:
+   * [#263](https://github.com/perry-mitchell/webdav-client/pull/263) Fix `putFileContents` `onUploadProgress` callback option
+
 ## v4.4.0
 _2021-05-09_
 
