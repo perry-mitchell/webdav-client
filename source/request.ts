@@ -48,6 +48,9 @@ export function prepareRequestOptions(
     if (context.maxBodyLength) {
         finalOptions.maxBodyLength = context.maxBodyLength;
     }
+    if (userOptions.hasOwnProperty('onUploadProgress')) {
+        finalOptions.onUploadProgress = userOptions['onUploadProgress'];
+    }
     // Take full control of all response status codes
     finalOptions.validateStatus = () => true;
     return finalOptions;
