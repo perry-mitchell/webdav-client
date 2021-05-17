@@ -75,7 +75,9 @@ describe("stat", function() {
     });
 
     it("throws 404 on non-existent file", function() {
-        return expect(this.client.stat("/does-not-exist")).to.eventually.be.rejected.and.have.property("status", 404);
+        return expect(
+            this.client.stat("/does-not-exist")
+        ).to.eventually.be.rejected.and.have.property("status", 404);
     });
 
     describe("when requesting stat from NGinx webdav server", function() {
@@ -92,10 +94,9 @@ describe("stat", function() {
         });
 
         it("throws 404 on non-existent file", function() {
-            return expect(this.client.stat("/does-not-exist")).to.eventually.be.rejected.and.have.property(
-                "status",
-                404
-            );
+            return expect(
+                this.client.stat("/does-not-exist")
+            ).to.eventually.be.rejected.and.have.property("status", 404);
         });
     });
 

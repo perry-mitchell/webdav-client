@@ -43,19 +43,23 @@ export function createWriteStream(
     if (options.overwrite === false) {
         headers["If-None-Match"] = "*";
     }
-    const requestOptions = prepareRequestOptions({
-        url: joinURL(context.remoteURL, encodePath(filePath)),
-        method: "PUT",
-        headers,
-        data: writeStream,
-        maxRedirects: 0
-    }, context, options);
+    const requestOptions = prepareRequestOptions(
+        {
+            url: joinURL(context.remoteURL, encodePath(filePath)),
+            method: "PUT",
+            headers,
+            data: writeStream,
+            maxRedirects: 0
+        },
+        context,
+        options
+    );
     request(requestOptions)
         .then(response => handleResponseCode(context, response))
         .then(response => {
             // Fire callback asynchronously to avoid errors
             setTimeout(() => {
-                callback(response)
+                callback(response);
             }, 0);
         })
         .catch(err => {
@@ -77,16 +81,22 @@ async function getFileStream(
         }
         headers.Range = rangeHeader;
     }
-    const requestOptions = prepareRequestOptions({
-        url: joinURL(context.remoteURL, encodePath(filePath)),
-        method: "GET",
-        headers,
-        responseType: "stream"
-    }, context, options);
+    const requestOptions = prepareRequestOptions(
+        {
+            url: joinURL(context.remoteURL, encodePath(filePath)),
+            method: "GET",
+            headers,
+            responseType: "stream"
+        },
+        context,
+        options
+    );
     const response = await request(requestOptions);
     handleResponseCode(context, response);
     if (headers.Range && response.status !== 206) {
-        const responseError: WebDAVClientError = new Error(`Invalid response code for partial request: ${response.status}`);
+        const responseError: WebDAVClientError = new Error(
+            `Invalid response code for partial request: ${response.status}`
+        );
         responseError.status = response.status;
         throw responseError;
     }
