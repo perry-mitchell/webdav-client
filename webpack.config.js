@@ -28,17 +28,7 @@ module.exports = {
         ]
     },
 
-    node: {
-        buffer: "empty",
-        crypto: "empty",
-        dns: "empty",
-        fs: "empty",
-        http: "empty",
-        https: "empty",
-        net: "empty",
-        path: "empty",
-        stream: "empty"
-    },
+    node: false,
 
     output: {
         filename: "webdav.js",
@@ -54,6 +44,20 @@ module.exports = {
     ],
 
     resolve: {
-        extensions: [".ts", ".js", ".json"]
-    }
+        extensions: [".ts", ".js", ".json"],
+        fallback: {
+            buffer: false,
+            crypto: false,
+            dns: false,
+            fs: false,
+            http: false,
+            https: false,
+            net: false,
+            path: false,
+            stream: false,
+            util: false
+        }
+    },
+
+    target: "web"
 };
