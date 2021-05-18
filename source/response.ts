@@ -1,5 +1,4 @@
 import minimatch from "minimatch";
-import { AxiosResponse } from "axios";
 import {
     FileStat,
     Response,
@@ -16,7 +15,7 @@ export function handleResponseCode(context: WebDAVClientContext, response: Respo
             `Invalid response: ${status} ${response.statusText}`
         ) as WebDAVClientError;
         err.status = status;
-        err.response = response as AxiosResponse;
+        err.response = response;
         throw err;
     }
     return response;
