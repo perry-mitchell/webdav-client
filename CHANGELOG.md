@@ -1,5 +1,10 @@
 # WebDAV-Client changelog
 
+## v4.6.0
+_2021-05-21_
+
+ * `response` property on `WebDAVClientError` instances ([#261](https://github.com/perry-mitchell/webdav-client/issues/261))
+
 ## v4.5.0
 _2021-05-17_
 
