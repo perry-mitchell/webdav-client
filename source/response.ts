@@ -15,6 +15,7 @@ export function handleResponseCode(context: WebDAVClientContext, response: Respo
             `Invalid response: ${status} ${response.statusText}`
         ) as WebDAVClientError;
         err.status = status;
+        err.response = response;
         throw err;
     }
     return response;

@@ -251,6 +251,7 @@ export interface WebDAVClientContext {
 
 export interface WebDAVClientError extends Error {
     status?: number;
+    response?: Response;
 }
 
 export interface WebDAVClientOptions {
