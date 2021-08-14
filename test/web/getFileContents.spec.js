@@ -47,4 +47,11 @@ describe("getDirectoryContents", function() {
                     .that.is.an("object");
             });
     });
+
+    it("can retrieve JSON files as text (#267)", function() {
+        return this.client.getFileContents("/format.json", { format: "text" }).then(contents => {
+            expect(contents).to.be.a("string");
+            expect(contents).to.contain(`{"test":true}`);
+        });
+    });
 });

@@ -82,4 +82,12 @@ describe("getFileContents", function() {
             .to.have.property("headers")
             .that.has.property("X-test", "test");
     });
+
+    it("can retrieve JSON files as text (#267)", async function() {
+        const contents = await this.client.getFileContents("/format.json", {
+            format: "text"
+        });
+        expect(contents).to.be.a("string");
+        expect(contents).to.contain(`{"test":true}`);
+    });
 });
