@@ -1,5 +1,11 @@
 # WebDAV-Client changelog
 
+## v4.6.1
+_2021-08-14_
+
+ * **Bugfix**:
+   * [#267](https://github.com/perry-mitchell/webdav-client/pull/267) Fix `getFileContents` string handling of remote JSON files
+
 ## v4.6.0
 _2021-05-21_
 
