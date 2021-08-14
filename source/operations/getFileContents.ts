@@ -13,6 +13,8 @@ import {
     WebDAVClientContext
 } from "../types";
 
+const TRANSFORM_RETAIN_FORMAT = (v: any) => v;
+
 export async function getFileContents(
     context: WebDAVClientContext,
     filePath: string,
@@ -62,7 +64,8 @@ async function getFileContentsString(
         {
             url: joinURL(context.remoteURL, encodePath(filePath)),
             method: "GET",
-            responseType: "text"
+            responseType: "text",
+            transformResponse: [TRANSFORM_RETAIN_FORMAT]
         },
         context,
         options

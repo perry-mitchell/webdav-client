@@ -146,6 +146,7 @@ interface RequestOptionsBase {
     method: string;
     onUploadProgress?: UploadProgressCallback;
     responseType?: string;
+    transformResponse?: Array<(value: any) => any>;
     url?: string;
     validateStatus?: (status: number) => boolean;
     withCredentials?: boolean;
