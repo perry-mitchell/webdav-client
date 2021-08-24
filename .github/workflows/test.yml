@@ -1,0 +1,36 @@
+name: Node.js CI
+
+on: push
+
+jobs:
+  specs:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x, 14.x, 15.x]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Node.js specs ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npm run test:node
+  web-specs:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Node.js web specs ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+        env:
+          MOZ_HEADLESS: 1
+          CI: travis
+      - run: sudo apt install google-chrome-stable firefox
+      - run: google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
+      - run: npm ci
+      - run: npm run test:web
