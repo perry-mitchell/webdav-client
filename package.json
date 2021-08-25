@@ -8,6 +8,7 @@
     "build:node": "tsc",
     "build:web": "webpack --mode production --config webpack.config.js && tsc --emitDeclarationOnly --outDir dist/web/",
     "clean": "rimraf dist web",
+    "dev": "nodemon -e ts,js --exec 'npm run build' --ignore 'dist/' --ignore 'web/'",
     "format": "prettier --write '{source,test}/**/*.{js,ts}'",
     "prepare:publish:web": "cp -r ./dist/web ./web && mv ./web/webdav.js ./web/index.js",
     "prepublishOnly": "run-s build prepare:publish:web",
