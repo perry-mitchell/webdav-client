@@ -122,6 +122,7 @@ export interface Headers {
 }
 
 export interface LockOptions extends WebDAVMethodOptions {
+    refreshToken?: string;
     timeout?: string;
 }
 
