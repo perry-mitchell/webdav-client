@@ -9,7 +9,7 @@ import {
 
 export function createErrorFromResponse(response: Response, prefix: string = ""): Error {
     const err: WebDAVClientError = new Error(
-        `${prefix}Invalid response: ${status} ${response.statusText}`
+        `${prefix}Invalid response: ${response.status} ${response.statusText}`
     ) as WebDAVClientError;
     err.status = response.status;
     err.response = response;

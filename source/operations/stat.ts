@@ -16,7 +16,7 @@ export async function getStat(
             url: joinURL(context.remoteURL, encodePath(filename)),
             method: "PROPFIND",
             headers: {
-                Accept: "text/plain",
+                Accept: "text/plain,application/xml",
                 Depth: "0"
             },
             responseType: "text"

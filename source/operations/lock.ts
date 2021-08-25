@@ -21,6 +21,7 @@ export async function lock(
 ): Promise<LockResponse> {
     const { refreshToken, timeout = DEFAULT_TIMEOUT } = options;
     const headers: Headers = {
+        Accept: "text/plain,application/xml",
         Timeout: timeout
     };
     if (refreshToken) {
@@ -31,7 +32,8 @@ export async function lock(
             url: joinURL(context.remoteURL, encodePath(path)),
             method: "LOCK",
             headers,
-            data: generateLockXML(context.contactHref)
+            data: generateLockXML(context.contactHref),
+            responseType: "text"
         },
         context,
         options
