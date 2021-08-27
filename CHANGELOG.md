@@ -1,5 +1,10 @@
 # WebDAV-Client changelog
 
+## v4.7.0
+_2021-08-27_
+
+ * [#65](https://github.com/perry-mitchell/webdav-client/issues/65) Lock / Unlock methods
+
 ## v4.6.1
 _2021-08-14_
 
