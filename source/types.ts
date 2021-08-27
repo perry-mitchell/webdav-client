@@ -121,6 +121,16 @@ export interface Headers {
     [key: string]: string;
 }
 
+export interface LockOptions extends WebDAVMethodOptions {
+    refreshToken?: string;
+    timeout?: string;
+}
+
+export interface LockResponse {
+    serverTimeout: string;
+    token: string;
+}
+
 export interface OAuthToken {
     access_token: string;
     token_type: string;
@@ -221,6 +231,7 @@ export interface WebDAVClient {
     getQuota: (
         options?: GetQuotaOptions
     ) => Promise<DiskQuota | null | ResponseDataDetailed<DiskQuota | null>>;
+    lock: (path: string, options?: LockOptions) => Promise<LockResponse>;
     moveFile: (filename: string, destinationFilename: string) => Promise<void>;
     putFileContents: (
         filename: string,
@@ -232,10 +243,12 @@ export interface WebDAVClient {
         path: string,
         options?: StatOptions
     ) => Promise<FileStat | ResponseDataDetailed<FileStat>>;
+    unlock: (path: string, token: string, options?: WebDAVMethodOptions) => Promise<void>;
 }
 
 export interface WebDAVClientContext {
     authType: AuthType;
+    contactHref: string;
     digest?: DigestContext;
     headers: Headers;
     httpAgent?: any;
@@ -257,6 +270,7 @@ export interface WebDAVClientError extends Error {
 
 export interface WebDAVClientOptions {
     authType?: AuthType;
+    contactHref?: string;
     headers?: Headers;
     httpAgent?: any;
     httpsAgent?: any;

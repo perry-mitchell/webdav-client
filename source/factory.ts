@@ -9,6 +9,7 @@ import { deleteFile } from "./operations/deleteFile";
 import { exists } from "./operations/exists";
 import { getDirectoryContents } from "./operations/directoryContents";
 import { getFileContents, getFileDownloadLink } from "./operations/getFileContents";
+import { lock, unlock } from "./operations/lock";
 import { getQuota } from "./operations/getQuota";
 import { getStat } from "./operations/stat";
 import { moveFile } from "./operations/moveFile";
@@ -23,6 +24,7 @@ import {
     GetFileContentsOptions,
     GetQuotaOptions,
     Headers,
+    LockOptions,
     PutFileContentsOptions,
     RequestOptionsCustom,
     StatOptions,
@@ -32,9 +34,13 @@ import {
     WebDAVMethodOptions
 } from "./types";
 
+const DEFAULT_CONTACT_HREF =
+    "https://github.com/perry-mitchell/webdav-client/blob/master/LOCK_CONTACT.md";
+
 export function createClient(remoteURL: string, options: WebDAVClientOptions = {}): WebDAVClient {
     const {
         authType: authTypeRaw = null,
+        contactHref = DEFAULT_CONTACT_HREF,
         headers = {},
         httpAgent,
         httpsAgent,
@@ -51,6 +57,7 @@ export function createClient(remoteURL: string, options: WebDAVClientOptions = {
     }
     const context: WebDAVClientContext = {
         authType,
+        contactHref,
         headers: Object.assign({}, headers),
         httpAgent,
         httpsAgent,
@@ -89,6 +96,7 @@ export function createClient(remoteURL: string, options: WebDAVClientOptions = {
         getFileUploadLink: (filename: string) => getFileUploadLink(context, filename),
         getHeaders: () => Object.assign({}, context.headers),
         getQuota: (options?: GetQuotaOptions) => getQuota(context, options),
+        lock: (path: string, options?: LockOptions) => lock(context, path, options),
         moveFile: (filename: string, destinationFilename: string, options?: WebDAVMethodOptions) =>
             moveFile(context, filename, destinationFilename, options),
         putFileContents: (
@@ -99,6 +107,8 @@ export function createClient(remoteURL: string, options: WebDAVClientOptions = {
         setHeaders: (headers: Headers) => {
             context.headers = Object.assign({}, headers);
         },
-        stat: (path: string, options?: StatOptions) => getStat(context, path, options)
+        stat: (path: string, options?: StatOptions) => getStat(context, path, options),
+        unlock: (path: string, token: string, options?: WebDAVMethodOptions) =>
+            unlock(context, path, token, options)
     };
 }

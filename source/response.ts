@@ -7,15 +7,20 @@ import {
     WebDAVClientError
 } from "./types";
 
+export function createErrorFromResponse(response: Response, prefix: string = ""): Error {
+    const err: WebDAVClientError = new Error(
+        `${prefix}Invalid response: ${response.status} ${response.statusText}`
+    ) as WebDAVClientError;
+    err.status = response.status;
+    err.response = response;
+    return err;
+}
+
 export function handleResponseCode(context: WebDAVClientContext, response: Response): Response {
-    const status = response.status;
+    const { status } = response;
     if (status === 401 && context.digest) return response;
     if (status >= 400) {
-        const err: WebDAVClientError = new Error(
-            `Invalid response: ${status} ${response.statusText}`
-        ) as WebDAVClientError;
-        err.status = status;
-        err.response = response;
+        const err = createErrorFromResponse(response);
         throw err;
     }
     return response;

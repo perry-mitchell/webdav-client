@@ -449,6 +449,30 @@ const quota: DiskQuota = await client.getQuota();
 
 _`options` extends [method options](#method-options)._
 
+#### lock
+
+Lock a remote resource (using a **write** lock).
+
+```typescript
+const lock = await client.lock("/file.doc");
+
+// Later
+await client.unlock("/file.doc", lock.token);
+```
+
+```typescript
+(path: string, options?: LockOptions) => Promise<LockResponse>
+```
+
+| Argument          | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `path`            | Yes       | The path to lock.                             |
+| `options`         | No        | Configuration options.                        |
+| `options.timeout` | No        | WebDAV lock requested timeout. See the [WebDAV `Timeout` header documentation](https://docs.microsoft.com/en-us/previous-versions/office/developer/exchange-server-2003/aa143141(v=exchg.65)). |
+| `options.refreshToken` | No   | Previous valid lock token that should be refreshed. |
+
+_`options` extends [method options](#method-options)._
+
 #### moveFile
 
 Move a file to another location.
@@ -521,6 +545,26 @@ const stat: FileStat = await client.stat("/some/file.tar.gz");
 | `path`            | Yes       | Remote path to stat.                          |
 | `options`         | No        | Configuration options.                        |
 | `options.details` | No        | Return detailed results (headers etc.). Defaults to `false`. |
+
+_`options` extends [method options](#method-options)._
+
+#### unlock
+
+Unlock a locked resource using a token.
+
+```typescript
+await client.unlock("/file.doc", lock.token);
+```
+
+```typescript
+(path: string, token:string, options?: WebDAVMethodOptions) => Promise<void>
+```
+
+| Argument          | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `path`            | Yes       | Remote path to unlock.                        |
+| `token`           | Yes       | Token string from a previous lock request.    |
+| `options`         | No        | Configuration options.                        |
 
 _`options` extends [method options](#method-options)._
 
