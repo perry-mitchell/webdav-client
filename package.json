@@ -1,6 +1,6 @@
 {
   "name": "webdav",
-  "version": "4.6.1",
+  "version": "4.7.0",
   "description": "WebDAV client for NodeJS",
   "main": "dist/node/index.js",
   "scripts": {
