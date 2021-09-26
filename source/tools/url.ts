@@ -27,6 +27,6 @@ export function joinURL(...parts: Array<string>): string {
 }
 
 export function normaliseHREF(href: string): string {
-    const normalisedHref = href.replace(/^https?:\/\/[^\/]+/, "");
+    const normalisedHref = String(href).replace(/^https?:\/\/[^\/]+/, "");
     return normalisedHref;
 }
