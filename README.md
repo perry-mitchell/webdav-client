@@ -641,3 +641,7 @@ Requests that return results, such as `getDirectoryContents`, `getFileContents`,
 CORS is a security enforcement technique employed by browsers to ensure requests are executed to and from expected contexts. It can conflict with this library if the target server doesn't return CORS headers when making requests from a browser. It is your responsibility to handle this.
 
 It is a known issue that ownCloud and Nextcloud servers by default don't return friendly CORS headers, making working with this library within a browser context impossible. You can of course force the addition of CORS headers (Apache or Nginx configs) yourself, but do this at your own risk.
+
+## Projects using this WebDAV client
+
+[Nextcloud Server](https://github.com/nextcloud/server), [Nextcloud Photos](https://github.com/nextcloud/photos), [React OxIDE](https://github.com/bootrino/reactoxide)
