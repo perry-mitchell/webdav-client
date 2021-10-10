@@ -644,4 +644,4 @@ It is a known issue that ownCloud and Nextcloud servers by default don't return 
 
 ## Projects using this WebDAV client
 
-[Nextcloud Server](https://github.com/nextcloud/server), [Nextcloud Photos](https://github.com/nextcloud/photos), [React OxIDE](https://github.com/bootrino/reactoxide)
+[Buttercup Password Manager](https://github.com/buttercup), [Nextcloud Server](https://github.com/nextcloud/server), [Nextcloud Photos](https://github.com/nextcloud/photos), [ownCloud SDK](https://github.com/owncloud/owncloud-sdk), [React OxIDE](https://github.com/bootrino/reactoxide), [BackItUp](https://github.com/simatec/ioBroker.backitup)
