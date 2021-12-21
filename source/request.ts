@@ -25,35 +25,15 @@ export function prepareRequestOptions(
     context: WebDAVClientContext,
     userOptions: WebDAVMethodOptions
 ): RequestOptionsWithState {
-    const finalOptions = cloneShallow(requestOptions) as RequestOptionsWithState;
+    const {digest,...rest} = context
+    const finalOptions = Object.assign(cloneShallow(requestOptions), rest) as RequestOptionsWithState;
     finalOptions.headers = mergeHeaders(
         context.headers,
         finalOptions.headers || {},
         userOptions.headers || {}
     );
-    if (typeof userOptions.data !== "undefined") {
-        finalOptions.data = userOptions.data;
-    }
-    if (context.httpAgent) {
-        finalOptions.httpAgent = context.httpAgent;
-    }
-    if (context.httpsAgent) {
-        finalOptions.httpsAgent = context.httpsAgent;
-    }
     if (context.digest) {
         finalOptions._digest = context.digest;
-    }
-    if (typeof context.withCredentials === "boolean") {
-        finalOptions.withCredentials = context.withCredentials;
-    }
-    if (context.maxContentLength) {
-        finalOptions.maxContentLength = context.maxContentLength;
-    }
-    if (context.maxBodyLength) {
-        finalOptions.maxBodyLength = context.maxBodyLength;
-    }
-    if (userOptions.hasOwnProperty("onUploadProgress")) {
-        finalOptions.onUploadProgress = userOptions["onUploadProgress"];
     }
     // Take full control of all response status codes
     finalOptions.validateStatus = () => true;
