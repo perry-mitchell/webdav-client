@@ -55,6 +55,9 @@ export function prepareRequestOptions(
     if (userOptions.hasOwnProperty("onUploadProgress")) {
         finalOptions.onUploadProgress = userOptions["onUploadProgress"];
     }
+    if (userOptions.hasOwnProperty("onDownloadProgress")) {
+        finalOptions.onDownloadProgress = userOptions["onDownloadProgress"];
+    }
     // Take full control of all response status codes
     finalOptions.validateStatus = () => true;
     return finalOptions;
