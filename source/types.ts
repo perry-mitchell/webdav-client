@@ -160,6 +160,7 @@ interface RequestOptionsBase {
     url?: string;
     validateStatus?: (status: number) => boolean;
     withCredentials?: boolean;
+    signal?: AbortSignal;
 }
 
 export interface RequestOptionsCustom extends RequestOptionsBase {}
@@ -285,4 +286,5 @@ export interface WebDAVClientOptions {
 export interface WebDAVMethodOptions {
     data?: RequestDataPayload;
     headers?: Headers;
+    signal?: AbortSignal;
 }
