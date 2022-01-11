@@ -392,6 +392,23 @@ Specify the `maxContentLength` option to alter the maximum number of bytes the c
 
 _`options` extends [method options](#method-options)._
 
+##### Download progress
+
+You can calculate the progress of the download by using `onDownloadProgress`:
+
+```typescript
+import { ProgressEvent } from "webdav";
+
+await client.getFileContents("/package.zip", {
+    onDownloadProgress: (progressEvent: ProgressEvent) => {
+        // {
+        //     total: 12345600,
+        //     loaded: 54023
+        // }
+    }
+});
+```
+
 #### getFileDownloadLink
 
 Generate a public link where a file can be downloaded. This method is synchronous. **Exposes authentication details in the URL**.
@@ -580,6 +597,7 @@ Most WebDAV methods extend `WebDAVMethodOptions`, which allow setting things lik
 |-------------------|-----------|-----------------------------------------------|
 | `data`            | No        | Optional body/data value to send in the request. This overrides the original body of the request, if applicable. |
 | `headers`         | No        | Optional headers object to apply to the request. These headers override all others, so be careful. |
+| `signal`          | No        | Instance of [`AbortSignal`](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal), for aborting requests. |
 
 ### Common data structures
 

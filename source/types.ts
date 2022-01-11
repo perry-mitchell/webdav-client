@@ -162,8 +162,8 @@ interface RequestOptionsBase {
     maxContentLength?: number;
     maxRedirects?: number;
     method: string;
-    onUploadProgress?: ProgressEventCallback;
     onDownloadProgress?: ProgressEventCallback;
+    onUploadProgress?: ProgressEventCallback;
     responseType?: string;
     transformResponse?: Array<(value: any) => any>;
     url?: string;
