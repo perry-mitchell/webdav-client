@@ -111,6 +111,7 @@ export interface GetDirectoryContentsOptions extends WebDAVMethodOptions {
 export interface GetFileContentsOptions extends WebDAVMethodOptions {
     details?: boolean;
     format?: "binary" | "text";
+    onDownloadProgress?: ProgressEventCallback;
 }
 
 export interface GetQuotaOptions extends WebDAVMethodOptions {
@@ -137,6 +138,13 @@ export interface OAuthToken {
     refresh_token?: string;
 }
 
+export interface ProgressEvent {
+    loaded: number;
+    total: number;
+}
+
+export type ProgressEventCallback = (e: ProgressEvent) => void;
+
 export interface PutFileContentsOptions extends WebDAVMethodOptions {
     contentLength?: boolean | number;
     overwrite?: boolean;
@@ -154,7 +162,8 @@ interface RequestOptionsBase {
     maxContentLength?: number;
     maxRedirects?: number;
     method: string;
-    onUploadProgress?: UploadProgressCallback;
+    onUploadProgress?: ProgressEventCallback;
+    onDownloadProgress?: ProgressEventCallback;
     responseType?: string;
     transformResponse?: Array<(value: any) => any>;
     url?: string;
@@ -197,14 +206,9 @@ export interface StatOptions extends WebDAVMethodOptions {
     details?: boolean;
 }
 
-export interface UploadProgress {
-    loaded: number;
-    total: number;
-}
+export type UploadProgress = ProgressEvent;
 
-export interface UploadProgressCallback {
-    (progress: UploadProgress): void;
-}
+export type UploadProgressCallback = ProgressEventCallback;
 
 export interface WebDAVClient {
     copyFile: (filename: string, destination: string) => Promise<void>;
