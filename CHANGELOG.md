@@ -1,5 +1,12 @@
 # WebDAV-Client changelog
 
+## v4.8.0
+_2022-01-11_
+
+ * [#282](https://github.com/perry-mitchell/webdav-client/issues/282) `onDownloadProgress` option
+ * [#285](https://github.com/perry-mitchell/webdav-client/pull/285) `AbortSignal` option support
+ * Node engine specified at `>=10`
+
 ## v4.7.0
 _2021-08-27_
 
