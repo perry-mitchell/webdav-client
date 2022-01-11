@@ -37,6 +37,9 @@
     "remote",
     "sync"
   ],
+  "engines": {
+    "node": ">=10"
+  },
   "lint-staged": {
     "{source,test}/**/*.{js,ts}": [
       "prettier --write"
