@@ -138,6 +138,13 @@ export interface OAuthToken {
     refresh_token?: string;
 }
 
+export interface ProgressEvent {
+    loaded: number;
+    total: number;
+}
+
+export type ProgressEventCallback = (e: ProgressEvent) => void;
+
 export interface PutFileContentsOptions extends WebDAVMethodOptions {
     contentLength?: boolean | number;
     overwrite?: boolean;
@@ -201,13 +208,6 @@ export interface StatOptions extends WebDAVMethodOptions {
 export type UploadProgress = ProgressEvent;
 
 export type UploadProgressCallback = ProgressEventCallback;
-
-export interface ProgressEvent {
-    loaded: number;
-    total: number;
-}
-
-export type ProgressEventCallback = (e: ProgressEvent) => void;
 
 export interface WebDAVClient {
     copyFile: (filename: string, destination: string) => Promise<void>;
