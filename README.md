@@ -463,6 +463,7 @@ const quota: DiskQuota = await client.getQuota();
 |-------------------|-----------|-----------------------------------------------|
 | `options`         | No        | Configuration options.                        |
 | `options.details` | No        | Return detailed results (headers etc.). Defaults to `false`. |
+| `options.path`    | No        | Path used to make the quota request.          |
 
 _`options` extends [method options](#method-options)._
 

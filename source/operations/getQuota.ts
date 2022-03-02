@@ -9,9 +9,10 @@ export async function getQuota(
     context: WebDAVClientContext,
     options: GetQuotaOptions = {}
 ): Promise<DiskQuota | null | ResponseDataDetailed<DiskQuota | null>> {
+    const path = options.path || "/";
     const requestOptions = prepareRequestOptions(
         {
-            url: joinURL(context.remoteURL, "/"),
+            url: joinURL(context.remoteURL, path),
             method: "PROPFIND",
             headers: {
                 Accept: "text/plain",
