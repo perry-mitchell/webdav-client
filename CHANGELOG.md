@@ -1,5 +1,12 @@
 # WebDAV-Client changelog
 
+## v4.9.0
+_2022-04-20_
+
+ * [#237](https://github.com/perry-mitchell/webdav-client/issues/237) `path` support for quota queries
+ * **Bugfix**:
+   * [#300](https://github.com/perry-mitchell/webdav-client/issues/300) Vulnerable dependency `url-parse`
+
 ## v4.8.0
 _2022-01-11_
 
