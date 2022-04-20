@@ -73,7 +73,7 @@ describe("getQuota", function () {
         });
     });
 
-    it("supports path option", async function() {
+    it("supports path option", async function () {
         await this.client.getQuota({ path: "sub1" });
         const [requestOptions] = this.requestSpy.firstCall.args;
         expect(requestOptions)
