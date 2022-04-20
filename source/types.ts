@@ -116,6 +116,7 @@ export interface GetFileContentsOptions extends WebDAVMethodOptions {
 
 export interface GetQuotaOptions extends WebDAVMethodOptions {
     details?: boolean;
+    path?: string;
 }
 
 export interface Headers {

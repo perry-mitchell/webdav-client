@@ -4,9 +4,12 @@ const {
     SERVER_PASSWORD,
     SERVER_PORT,
     SERVER_USERNAME,
+    clean,
     createWebDAVClient,
+    createWebDAVServer,
     restoreRequests,
-    returnFakeResponse
+    returnFakeResponse,
+    useRequestSpy
 } = require("../../helpers.node.js");
 
 function useInvalidQuota() {
@@ -28,10 +31,15 @@ describe("getQuota", function() {
             username: SERVER_USERNAME,
             password: SERVER_PASSWORD
         });
+        clean();
+        this.server = createWebDAVServer();
+        this.requestSpy = useRequestSpy();
+        return this.server.start();
     });
 
     afterEach(function() {
         restoreRequests();
+        return this.server.stop();
     });
 
     it("returns correct available amount", function() {
@@ -67,5 +75,13 @@ describe("getQuota", function() {
                 .to.have.property("headers")
                 .that.is.an("object");
         });
+    });
+
+    it("supports path option", async function() {
+        await this.client.getQuota({ path: "sub1" });
+        const [requestOptions] = this.requestSpy.firstCall.args;
+        expect(requestOptions)
+            .to.have.property("url")
+            .that.matches(/webdav\/server\/sub1$/);
     });
 });
