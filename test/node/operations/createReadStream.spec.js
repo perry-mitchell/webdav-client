@@ -12,18 +12,18 @@ const {
 
 function streamToBuffer(stream) {
     const buffs = [];
-    return new Promise(function(resolve) {
-        stream.on("data", function(d) {
+    return new Promise(function (resolve) {
+        stream.on("data", function (d) {
             buffs.push(d);
         });
-        stream.on("end", function() {
+        stream.on("end", function () {
             resolve(Buffer.concat(buffs));
         });
     });
 }
 
-describe("createReadStream", function() {
-    beforeEach(function() {
+describe("createReadStream", function () {
+    beforeEach(function () {
         this.client = createWebDAVClient(`http://localhost:${SERVER_PORT}/webdav/server`, {
             username: SERVER_USERNAME,
             password: SERVER_PASSWORD
@@ -34,19 +34,19 @@ describe("createReadStream", function() {
         return this.server.start();
     });
 
-    afterEach(function() {
+    afterEach(function () {
         restoreRequests();
         return this.server.stop();
     });
 
-    it("streams contents of a remote file", async function() {
+    it("streams contents of a remote file", async function () {
         const stream = this.client.createReadStream("/alrighty.jpg");
         expect(stream instanceof ReadableStream).to.be.true;
         const buff = await streamToBuffer(stream);
         expect(buff.length).to.equal(52130);
     });
 
-    it("streams portions (ranges) of a remote file", async function() {
+    it("streams portions (ranges) of a remote file", async function () {
         const stream1 = this.client.createReadStream("/alrighty.jpg", {
             range: { start: 0, end: 24999 }
         });
@@ -61,7 +61,7 @@ describe("createReadStream", function() {
         expect(part2.length).to.equal(27130);
     });
 
-    it("streams a partial file when only the start is provided", async function() {
+    it("streams a partial file when only the start is provided", async function () {
         const stream = this.client.createReadStream("/alrighty.jpg", {
             range: { start: 25000 }
         });
@@ -69,19 +69,17 @@ describe("createReadStream", function() {
         expect(buff.length).to.equal(27130);
     });
 
-    it("streams contents of a remote file", async function() {
+    it("streams contents of a remote file", async function () {
         this.client.createReadStream("/alrighty.jpg", {
             headers: {
                 "X-test": "test"
             }
         });
         const [requestOptions] = this.requestSpy.firstCall.args;
-        expect(requestOptions)
-            .to.have.property("headers")
-            .that.has.property("X-test", "test");
+        expect(requestOptions).to.have.property("headers").that.has.property("X-test", "test");
     });
 
-    it("calls callback with response", function(done) {
+    it("calls callback with response", function (done) {
         const stream = this.client.createReadStream("/notes.txt", {
             callback: response => {
                 expect(response).to.have.property("status", 200);

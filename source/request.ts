@@ -86,7 +86,7 @@ export function request(requestOptions: RequestOptionsWithState): Promise<Respon
     }
 
     // Perform the request and handle digest authentication
-    return _request(requestOptions).then(function(response: Response) {
+    return _request(requestOptions).then(function (response: Response) {
         if (response.status == 401) {
             _digest.hasDigestAuth = parseDigestAuth(response, _digest);
 
@@ -97,7 +97,7 @@ export function request(requestOptions: RequestOptionsWithState): Promise<Respon
                     }
                 });
 
-                return _request(requestOptions).then(function(response2: Response) {
+                return _request(requestOptions).then(function (response2: Response) {
                     if (response2.status == 401) {
                         _digest.hasDigestAuth = false;
                     } else {

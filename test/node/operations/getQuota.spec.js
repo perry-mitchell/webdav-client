@@ -21,8 +21,8 @@ function useValidQuota() {
     );
 }
 
-describe("getQuota", function() {
-    beforeEach(function() {
+describe("getQuota", function () {
+    beforeEach(function () {
         // fake client, not actually used when mocking responses
         this.client = createWebDAVClient(`http://localhost:${SERVER_PORT}/webdav/server`, {
             username: SERVER_USERNAME,
@@ -30,42 +30,38 @@ describe("getQuota", function() {
         });
     });
 
-    afterEach(function() {
+    afterEach(function () {
         restoreRequests();
     });
 
-    it("returns correct available amount", function() {
+    it("returns correct available amount", function () {
         useValidQuota();
-        return this.client.getQuota().then(function(quotaInfo) {
+        return this.client.getQuota().then(function (quotaInfo) {
             expect(quotaInfo).to.be.an("object");
             expect(quotaInfo).to.have.property("available", "unlimited");
         });
     });
 
-    it("returns correct used amount", function() {
+    it("returns correct used amount", function () {
         useValidQuota();
-        return this.client.getQuota().then(function(quotaInfo) {
+        return this.client.getQuota().then(function (quotaInfo) {
             expect(quotaInfo).to.be.an("object");
             expect(quotaInfo).to.have.property("used", 6864755191);
         });
     });
 
-    it("returns null for invalid quotas", function() {
+    it("returns null for invalid quotas", function () {
         useInvalidQuota();
-        return this.client.getQuota().then(function(quotaInfo) {
+        return this.client.getQuota().then(function (quotaInfo) {
             expect(quotaInfo).to.be.null;
         });
     });
 
-    it("supports returning detailed results", function() {
+    it("supports returning detailed results", function () {
         useValidQuota();
-        return this.client.getQuota({ details: true }).then(function(details) {
-            expect(details)
-                .to.have.property("data")
-                .that.is.an("object");
-            expect(details)
-                .to.have.property("headers")
-                .that.is.an("object");
+        return this.client.getQuota({ details: true }).then(function (details) {
+            expect(details).to.have.property("data").that.is.an("object");
+            expect(details).to.have.property("headers").that.is.an("object");
         });
     });
 });

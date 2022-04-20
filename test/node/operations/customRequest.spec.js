@@ -8,8 +8,8 @@ const {
 } = require("../../helpers.node.js");
 const { parseStat, parseXML } = require("../../../dist/node/index.js");
 
-describe("custom", function() {
-    beforeEach(function() {
+describe("custom", function () {
+    beforeEach(function () {
         this.client = createWebDAVClient(`http://localhost:${SERVER_PORT}/webdav/server`, {
             username: SERVER_USERNAME,
             password: SERVER_PASSWORD
@@ -19,11 +19,11 @@ describe("custom", function() {
         return this.server.start();
     });
 
-    afterEach(function() {
+    afterEach(function () {
         return this.server.stop();
     });
 
-    it("send and parse stat custom request", async function() {
+    it("send and parse stat custom request", async function () {
         let response = null;
         const resp = await this.client.customRequest("/alrighty.jpg", {
             method: "PROPFIND",

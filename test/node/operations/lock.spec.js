@@ -7,8 +7,8 @@ const {
     createWebDAVServer
 } = require("../../helpers.node.js");
 
-describe("lock", function() {
-    beforeEach(function() {
+describe("lock", function () {
+    beforeEach(function () {
         this.client = createWebDAVClient(`http://localhost:${SERVER_PORT}/webdav/server`, {
             username: SERVER_USERNAME,
             password: SERVER_PASSWORD
@@ -18,23 +18,23 @@ describe("lock", function() {
         return this.server.start();
     });
 
-    afterEach(function() {
+    afterEach(function () {
         return this.server.stop();
     });
 
-    it("locks files and returns a token", async function() {
+    it("locks files and returns a token", async function () {
         const lock = await this.client.lock("/notes.txt");
         expect(lock)
             .to.have.property("token")
             .that.matches(/^[a-z0-9]+:.+/i);
     });
 
-    it("supports unlocking", async function() {
+    it("supports unlocking", async function () {
         const lock = await this.client.lock("/notes.txt");
         await this.client.unlock("/notes.txt", lock.token);
     });
 
-    it("fails unlocking if token invalid", async function() {
+    it("fails unlocking if token invalid", async function () {
         const lock = await this.client.lock("/notes.txt");
         let err;
         try {

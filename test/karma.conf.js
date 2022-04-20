@@ -9,7 +9,7 @@ if (process.env.CI) {
     browsers.push("CustomChrome");
 }
 
-module.exports = function(config) {
+module.exports = function (config) {
     config.set({
         basePath: "../",
         frameworks: ["mocha", "chai", "sinon"],

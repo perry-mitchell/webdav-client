@@ -1,7 +1,7 @@
 const { mergeHeaders } = require("../../../dist/node/tools/headers.js");
 
-describe("mergeHeaders", function() {
-    it("merges headers with different cases", function() {
+describe("mergeHeaders", function () {
+    it("merges headers with different cases", function () {
         expect(
             mergeHeaders(
                 {

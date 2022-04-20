@@ -11,11 +11,11 @@ server.start().then(() => {
     console.log("Server started");
 });
 
-process.on("SIGTERM", function() {
+process.on("SIGTERM", function () {
     server.stop();
     process.exit(0);
 });
-process.on("SIGINT", function() {
+process.on("SIGINT", function () {
     server.stop();
     process.exit(0);
 });

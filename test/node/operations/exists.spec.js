@@ -9,8 +9,8 @@ const {
     useRequestSpy
 } = require("../../helpers.node.js");
 
-describe("exists", function() {
-    beforeEach(function() {
+describe("exists", function () {
+    beforeEach(function () {
         this.client = createWebDAVClient(`http://localhost:${SERVER_PORT}/webdav/server`, {
             username: SERVER_USERNAME,
             password: SERVER_PASSWORD
@@ -21,38 +21,36 @@ describe("exists", function() {
         return this.server.start();
     });
 
-    afterEach(function() {
+    afterEach(function () {
         restoreRequests();
         return this.server.stop();
     });
 
-    it("correctly detects existing files", function() {
+    it("correctly detects existing files", function () {
         return this.client.exists("/two%20words/file2.txt").then(doesExist => {
             expect(doesExist).to.be.true;
         });
     });
 
-    it("correctly detects existing directories", function() {
+    it("correctly detects existing directories", function () {
         return this.client.exists("/webdav/server").then(doesExist => {
             expect(doesExist).to.be.true;
         });
     });
 
-    it("correctly responds for non-existing paths", function() {
+    it("correctly responds for non-existing paths", function () {
         return this.client.exists("/webdav/this/is/not/here.txt").then(doesExist => {
             expect(doesExist).to.be.false;
         });
     });
 
-    it("allows specifying custom headers", async function() {
+    it("allows specifying custom headers", async function () {
         await this.client.exists("/test.txt", {
             headers: {
                 "X-test": "test"
             }
         });
         const [requestOptions] = this.requestSpy.firstCall.args;
-        expect(requestOptions)
-            .to.have.property("headers")
-            .that.has.property("X-test", "test");
+        expect(requestOptions).to.have.property("headers").that.has.property("X-test", "test");
     });
 });

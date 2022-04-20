@@ -37,15 +37,15 @@ function createServer(dir, authType) {
     // console.log(`Created server on localhost with port: 9988, and authType: ${authType}`);
     return {
         start: function start() {
-            return new Promise(function(resolve) {
-                server.setFileSystem("/webdav/server", new ws.PhysicalFileSystem(dir), function() {
+            return new Promise(function (resolve) {
+                server.setFileSystem("/webdav/server", new ws.PhysicalFileSystem(dir), function () {
                     server.start(resolve);
                 });
             });
         },
 
         stop: function stop() {
-            return new Promise(function(resolve) {
+            return new Promise(function (resolve) {
                 server.stop(resolve);
             });
         }
