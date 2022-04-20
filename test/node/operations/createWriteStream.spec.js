@@ -18,7 +18,7 @@ const IMAGE_SOURCE = path.join(TEST_CONTENTS, "./alrighty.jpg");
 const TEXT_SOURCE = path.join(TEST_CONTENTS, "./notes.txt");
 
 function waitOnFile(filename) {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         waitOn(
             {
                 resources: [filename],
@@ -26,7 +26,7 @@ function waitOnFile(filename) {
                 timeout: 500,
                 window: 0
             },
-            function(err) {
+            function (err) {
                 if (err) {
                     return reject(err);
                 }
@@ -36,8 +36,8 @@ function waitOnFile(filename) {
     });
 }
 
-describe("createWriteStream", function() {
-    beforeEach(function() {
+describe("createWriteStream", function () {
+    beforeEach(function () {
         this.client = createWebDAVClient(`http://localhost:${SERVER_PORT}/webdav/server`, {
             username: SERVER_USERNAME,
             password: SERVER_PASSWORD
@@ -48,7 +48,7 @@ describe("createWriteStream", function() {
         return this.server.start();
     });
 
-    afterEach(async function() {
+    afterEach(async function () {
         restoreRequests();
         await new Promise(resolve => {
             setTimeout(resolve, 500);
@@ -56,13 +56,13 @@ describe("createWriteStream", function() {
         return this.server.stop();
     });
 
-    it("writes the file to the remote", function() {
+    it("writes the file to the remote", function () {
         const targetFile = path.join(TEST_CONTENTS, "./alrighty2.jpg");
         const writeStream = this.client.createWriteStream("/alrighty2.jpg");
         const readStream = fs.createReadStream(IMAGE_SOURCE);
         expect(writeStream instanceof PassThrough).to.be.true;
-        return new Promise(function(resolve, reject) {
-            writeStream.on("end", function() {
+        return new Promise(function (resolve, reject) {
+            writeStream.on("end", function () {
                 // stupid stream needs time to close probably..
                 waitOnFile(targetFile).then(resolve, reject);
             });
@@ -71,7 +71,7 @@ describe("createWriteStream", function() {
         });
     });
 
-    it("allows specifying custom headers", async function() {
+    it("allows specifying custom headers", async function () {
         const writeStream = this.client.createWriteStream("/alrighty2.jpg", {
             headers: {
                 "X-test": "test"
@@ -79,12 +79,10 @@ describe("createWriteStream", function() {
         });
         fs.createReadStream(TEXT_SOURCE).pipe(writeStream);
         const [requestOptions] = this.requestSpy.firstCall.args;
-        expect(requestOptions)
-            .to.have.property("headers")
-            .that.has.property("X-test", "test");
+        expect(requestOptions).to.have.property("headers").that.has.property("X-test", "test");
     });
 
-    it("calls the callback function with the response", function(done) {
+    it("calls the callback function with the response", function (done) {
         const readStream = fs.createReadStream(TEXT_SOURCE);
         const writeStream = this.client.createWriteStream("/test.txt", undefined, response => {
             expect(response).to.have.property("status", 201);

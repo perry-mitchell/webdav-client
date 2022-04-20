@@ -15,8 +15,8 @@ const {
 const SOURCE_BIN = path.resolve(__dirname, "../../testContents/alrighty.jpg");
 const SOURCE_TXT = path.resolve(__dirname, "../../testContents/text document.txt");
 
-describe("getFileContents", function() {
-    beforeEach(function() {
+describe("getFileContents", function () {
+    beforeEach(function () {
         this.client = createWebDAVClient(`http://localhost:${SERVER_PORT}/webdav/server`, {
             username: SERVER_USERNAME,
             password: SERVER_PASSWORD
@@ -27,29 +27,25 @@ describe("getFileContents", function() {
         return this.server.start();
     });
 
-    afterEach(function() {
+    afterEach(function () {
         restoreRequests();
         return this.server.stop();
     });
 
-    it("reads a remote file into a buffer", async function() {
+    it("reads a remote file into a buffer", async function () {
         const bufferRemote = await this.client.getFileContents("/alrighty.jpg");
         expect(bufferRemote).to.be.an.instanceof(Buffer);
         const bufferLocal = fs.readFileSync(SOURCE_BIN);
         expect(bufferEquals(bufferRemote, bufferLocal)).to.be.true;
     });
 
-    it("supports returning detailed results (buffer)", async function() {
+    it("supports returning detailed results (buffer)", async function () {
         const details = await this.client.getFileContents("/alrighty.jpg", { details: true });
-        expect(details)
-            .to.have.property("data")
-            .that.is.an.instanceof(Buffer);
-        expect(details)
-            .to.have.property("headers")
-            .that.is.an("object");
+        expect(details).to.have.property("data").that.is.an.instanceof(Buffer);
+        expect(details).to.have.property("headers").that.is.an("object");
     });
 
-    it("reads a remote file into a string", async function() {
+    it("reads a remote file into a string", async function () {
         const stringRemote = await this.client.getFileContents("/text document.txt", {
             format: "text"
         });
@@ -57,20 +53,16 @@ describe("getFileContents", function() {
         expect(stringRemote).to.equal(stringLocal);
     });
 
-    it("supports returning detailed results (string)", async function() {
+    it("supports returning detailed results (string)", async function () {
         const details = await this.client.getFileContents("/text document.txt", {
             format: "text",
             details: true
         });
-        expect(details)
-            .to.have.property("data")
-            .that.is.a("string");
-        expect(details)
-            .to.have.property("headers")
-            .that.is.an("object");
+        expect(details).to.have.property("data").that.is.a("string");
+        expect(details).to.have.property("headers").that.is.an("object");
     });
 
-    it("allows specifying custom headers", async function() {
+    it("allows specifying custom headers", async function () {
         await this.client.getFileContents("/text document.txt", {
             format: "text",
             headers: {
@@ -78,12 +70,10 @@ describe("getFileContents", function() {
             }
         });
         const [requestOptions] = this.requestSpy.firstCall.args;
-        expect(requestOptions)
-            .to.have.property("headers")
-            .that.has.property("X-test", "test");
+        expect(requestOptions).to.have.property("headers").that.has.property("X-test", "test");
     });
 
-    it("can retrieve JSON files as text (#267)", async function() {
+    it("can retrieve JSON files as text (#267)", async function () {
         const contents = await this.client.getFileContents("/format.json", {
             format: "text"
         });
