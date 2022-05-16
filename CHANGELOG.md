@@ -1,5 +1,12 @@
 # WebDAV-Client changelog
 
+## v4.10.0
+_2022-05-16_
+
+ * [#291](https://github.com/perry-mitchell/webdav-client/pull/291) Correct string byte size calculations for `Content-Length` headers
+ * **Bugfix**:
+   * [#304](https://github.com/perry-mitchell/webdav-client/issues/304) React Native `putFileContents` fails with `TypeError: Right-hand side of 'instanceof' is not an object`
+
 ## v4.9.0
 _2022-04-20_
 
