@@ -28,7 +28,12 @@ export async function putFileContents(
     const headers: Headers = {
         "Content-Type": "application/octet-stream"
     };
-    if (typeof WEB === "undefined" && data instanceof Stream.Readable) {
+    if (
+        typeof WEB === "undefined" &&
+        typeof Stream !== "undefined" &&
+        typeof Stream?.Readable !== "undefined" &&
+        data instanceof Stream.Readable
+    ) {
         // Skip, no content-length
     } else if (contentLength === false) {
         // Skip, disabled
