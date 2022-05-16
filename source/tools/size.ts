@@ -9,7 +9,7 @@ export function calculateDataLength(data: string | BufferLike): number {
     } else if (isBuffer(data)) {
         return (<Buffer>data).length;
     } else if (typeof data === "string") {
-        return (<string>data).length;
+        return Buffer.byteLength(<string>data);
     }
     throw new Layerr(
         {
