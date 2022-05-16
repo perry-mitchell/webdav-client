@@ -22,7 +22,7 @@ module.exports = function (config) {
             require("karma-sinon"),
             require("karma-spec-reporter")
         ],
-        files: ["test/web/*.spec.js"],
+        files: ["test/web/**/*.spec.js"],
         exclude: [],
         preprocessors: {
             "src/**/*.ts": ["webpack"],
