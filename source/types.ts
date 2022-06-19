@@ -255,7 +255,7 @@ export interface WebDAVClient {
 }
 
 export interface WebDAVClientContext {
-    adapter: AxiosAdapter;
+    adapter?: AxiosAdapter;
     authType: AuthType;
     contactHref: string;
     digest?: DigestContext;

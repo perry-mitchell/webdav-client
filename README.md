@@ -141,18 +141,18 @@ The `createClient` method takes a WebDAV service URL, and a configuration option
 The available configuration options are as follows:
 
 | Option             | Default | Description                                                                                                                               |
-|--------------------|--------|-------------------------------------------------------------------------------------------------------------------------------------------|
-| `adapter`          | _None_ | `adapter` allows custom handling of requests. See [AxiosAdapter](https://github.com/axios/axios/blob/v1.x/lib/adapters/README.md)         |
-| `authType`         | `null` | The authentication type to use. If not provided, defaults to trying to detect based upon whether `username` and `password` were provided. |
-| `headers`          | `{}`   | Additional headers provided to all requests. Headers provided here are overridden by method-specific headers, including `Authorization`.  |
-| `httpAgent`        | _None_ | HTTP agent instance. Available only in Node. See [http.Agent](https://nodejs.org/api/http.html#http_class_http_agent).                    |
-| `httpsAgent`       | _None_ | HTTPS agent instance. Available only in Node. See [https.Agent](https://nodejs.org/api/https.html#https_class_https_agent).               |
-| `maxBodyLength`    | _None_ | Maximum body length allowed for sending, in bytes.                                                                                        |
-| `maxContentLength` | _None_ | Maximum content length allowed for receiving, in bytes.                                                                                   |
-| `password`         | _None_ | Password for authentication.                                                                                                              |
-| `token`            | _None_ | Token object for authentication.                                                                                                          |
-| `username`         | _None_ | Username for authentication.                                                                                                              |
-| `withCredentials`  | _None_ | Credentials inclusion setting for Axios.                                                                                                  |
+|--------------------|---------|-------------------------------------------------------------------------------------------------------------------------------------------|
+| `adapter`          | _None_  | `adapter` allows custom handling of requests. See [AxiosAdapter](https://github.com/axios/axios/blob/v1.x/lib/adapters/README.md)         |
+| `authType`         | `null`  | The authentication type to use. If not provided, defaults to trying to detect based upon whether `username` and `password` were provided. |
+| `headers`          | `{}`    | Additional headers provided to all requests. Headers provided here are overridden by method-specific headers, including `Authorization`.  |
+| `httpAgent`        | _None_  | HTTP agent instance. Available only in Node. See [http.Agent](https://nodejs.org/api/http.html#http_class_http_agent).                    |
+| `httpsAgent`       | _None_  | HTTPS agent instance. Available only in Node. See [https.Agent](https://nodejs.org/api/https.html#https_class_https_agent).               |
+| `maxBodyLength`    | _None_  | Maximum body length allowed for sending, in bytes.                                                                                        |
+| `maxContentLength` | _None_  | Maximum content length allowed for receiving, in bytes.                                                                                   |
+| `password`         | _None_  | Password for authentication.                                                                                                              |
+| `token`            | _None_  | Token object for authentication.                                                                                                          |
+| `username`         | _None_  | Username for authentication.                                                                                                              |
+| `withCredentials`  | _None_  | Credentials inclusion setting for Axios.                                                                                                  |
 
 ### Client methods
 
