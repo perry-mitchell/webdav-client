@@ -1,3 +1,4 @@
+import { AxiosAdapter } from "axios";
 import Stream from "stream";
 
 export type AuthHeader = string;
@@ -155,6 +156,7 @@ export interface PutFileContentsOptions extends WebDAVMethodOptions {
 export type RequestDataPayload = string | Buffer | ArrayBuffer | { [key: string]: any };
 
 interface RequestOptionsBase {
+    adapter?: AxiosAdapter;
     data?: RequestDataPayload;
     headers?: Headers;
     httpAgent?: any;
@@ -253,6 +255,7 @@ export interface WebDAVClient {
 }
 
 export interface WebDAVClientContext {
+    adapter: AxiosAdapter;
     authType: AuthType;
     contactHref: string;
     digest?: DigestContext;
@@ -275,6 +278,7 @@ export interface WebDAVClientError extends Error {
 }
 
 export interface WebDAVClientOptions {
+    adapter?: AxiosAdapter;
     authType?: AuthType;
     contactHref?: string;
     headers?: Headers;

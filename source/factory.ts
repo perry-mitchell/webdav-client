@@ -1,6 +1,6 @@
 import Stream from "stream";
 import { extractURLPath } from "./tools/url";
-import { setupAuth } from "./auth/index";
+import { setupAuth } from "./auth";
 import { copyFile } from "./operations/copyFile";
 import { createDirectory } from "./operations/createDirectory";
 import { createReadStream, createWriteStream } from "./operations/createStream";
@@ -39,6 +39,7 @@ const DEFAULT_CONTACT_HREF =
 
 export function createClient(remoteURL: string, options: WebDAVClientOptions = {}): WebDAVClient {
     const {
+        adapter,
         authType: authTypeRaw = null,
         contactHref = DEFAULT_CONTACT_HREF,
         headers = {},
@@ -56,6 +57,7 @@ export function createClient(remoteURL: string, options: WebDAVClientOptions = {
         authType = username || password ? AuthType.Password : AuthType.None;
     }
     const context: WebDAVClientContext = {
+        adapter,
         authType,
         contactHref,
         headers: Object.assign({}, headers),

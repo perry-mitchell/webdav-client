@@ -37,6 +37,9 @@ export function prepareRequestOptions(
     if (userOptions.signal) {
         finalOptions.signal = userOptions.signal;
     }
+    if (context.adapter) {
+        finalOptions.adapter = context.adapter;
+    }
     if (context.httpAgent) {
         finalOptions.httpAgent = context.httpAgent;
     }

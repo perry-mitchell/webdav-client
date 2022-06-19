@@ -1,6 +1,7 @@
 *.log
 .DS_Store
 .history
+.idea
 .vscode
 .nyc_output
 test.js
