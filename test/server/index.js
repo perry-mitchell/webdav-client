@@ -57,5 +57,6 @@ function createWebDAVServer(authType) {
 }
 
 module.exports = {
+    createServer,
     createWebDAVServer
 };
