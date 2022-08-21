@@ -15,30 +15,6 @@ import {
 
 const TRANSFORM_RETAIN_FORMAT = (v: any) => v;
 
-type GetFileContentsBasicOptions = Omit<GetFileContentsOptions, "format" | "details">;
-
-export async function getFileContents(
-    context: WebDAVClientContext,
-    filePath: string,
-    options?: GetFileContentsBasicOptions & { format?: "binary"; details?: false }
-): Promise<BufferLike>;
-export async function getFileContents(
-    context: WebDAVClientContext,
-    filePath: string,
-    options: GetFileContentsBasicOptions & { format: "text"; details?: false }
-): Promise<string>;
-// details
-export async function getFileContents(
-    context: WebDAVClientContext,
-    filePath: string,
-    options: GetFileContentsBasicOptions & { format?: "binary"; details: true }
-): Promise<ResponseDataDetailed<BufferLike>>;
-export async function getFileContents(
-    context: WebDAVClientContext,
-    filePath: string,
-    options: GetFileContentsBasicOptions & { format: "text"; details: true }
-): Promise<ResponseDataDetailed<string>>;
-
 export async function getFileContents(
     context: WebDAVClientContext,
     filePath: string,
