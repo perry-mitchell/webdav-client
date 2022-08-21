@@ -1,5 +1,10 @@
 # WebDAV-Client changelog
 
+## v4.11.0
+_2022-08-21_
+
+ * [#315](https://github.com/perry-mitchell/webdav-client/pull/315) `HotPatcher` intermediate type annotation
+
 ## v4.10.0
 _2022-05-16_
 
