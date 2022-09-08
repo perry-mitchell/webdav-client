@@ -16,7 +16,7 @@
     "test:format": "prettier-check '{source,test}/**/*.{js,ts}'",
     "test:node": "npm run build:node && nyc mocha -r test/index.node.js \"test/node/**/*.spec.js\"",
     "test:node:watch": "nodemon --exec 'npm run test:node' --ignore 'dist/'",
-    "test:web": "concurrently --success 'first' --kill-others 'npm run test:web:karma' 'npm run test:web:server'",
+    "test:web": "TMPDIR=$HOME/Downloads/ concurrently --success 'first' --kill-others 'npm run test:web:karma' 'npm run test:web:server'",
     "test:web:karma": "karma start test/karma.conf.js",
     "test:web:server": "node test/server.web.js"
   },
@@ -87,6 +87,7 @@
     "directory-exists": "^2.0.1",
     "exists-file": "^3.0.2",
     "husky": "^4.3.8",
+    "iso-random-stream": "^2.0.2",
     "karma": "^6.4.0",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^3.1.1",

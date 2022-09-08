@@ -4,7 +4,7 @@ delete webpackConfig.entry;
 delete webpackConfig.output;
 webpackConfig.mode = "development";
 
-const browsers = ["FirefoxHeadless"];
+const browsers = ["CustomFirefox"];
 if (process.env.CI) {
     browsers.push("CustomChrome");
 }
@@ -38,6 +38,13 @@ module.exports = function (config) {
                 base: "ChromeHeadless",
                 flags: ["--disable-web-security"],
                 debug: true
+            },
+            CustomFirefox: {
+                base: "Firefox",
+                flags: ["--headless"],
+                prefs: {
+                    "network.proxy.type": 0
+                }
             }
         },
         browsers,
