@@ -33,7 +33,8 @@ export async function getDirectoryContents(
     const response = await request(requestOptions);
     handleResponseCode(context, response);
     const davResp = await parseXML(response.data as string);
-    let files = getDirectoryFiles(davResp, context.remotePath, remotePath, options.details);
+    const _remotePath = remotePath.startsWith("/") ? remotePath : "/" + remotePath;
+    let files = getDirectoryFiles(davResp, context.remotePath, _remotePath, options.details);
     if (options.glob) {
         files = processGlobFilter(files, options.glob);
     }

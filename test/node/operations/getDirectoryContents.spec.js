@@ -85,6 +85,16 @@ describe("getDirectoryContents", function () {
         });
     });
 
+    it("returns correct results when calling without root slash", function () {
+        return this.client.getDirectoryContents("sub1").then(function (contents) {
+            expect(contents).to.have.lengthOf(2);
+            const sub1 = contents.find(item => item.basename === "irrelephant.jpg");
+            expect(sub1).to.be.ok;
+            const sub2 = contents.find(item => item.basename === "ยากจน #1.txt");
+            expect(sub2).to.be.ok;
+        });
+    });
+
     it("returns correct file results for files with special characters", function () {
         return this.client.getDirectoryContents("/sub1").then(function (contents) {
             const sub1 = contents.find(function (item) {
