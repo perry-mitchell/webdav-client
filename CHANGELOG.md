@@ -1,5 +1,11 @@
 # WebDAV-Client changelog
 
+## v4.11.1
+_2022-11-19_
+
+ * **Bugfix**:
+   * [#324](https://github.com/perry-mitchell/webdav-client/pull/324) Missing leading slash causes extra entries in `getDirectoryContents` call
+
 ## v4.11.0
 _2022-08-21_
 
