@@ -1,16 +1,16 @@
 import pathPosix from "path-posix";
-import { joinURL, normaliseHREF } from "../tools/url";
-import { encodePath, normalisePath } from "../tools/path";
-import { parseXML, prepareFileFromProps } from "../tools/dav";
-import { request, prepareRequestOptions } from "../request";
-import { handleResponseCode, processGlobFilter, processResponsePayload } from "../response";
+import { joinURL, normaliseHREF } from "../tools/url.js";
+import { encodePath, normalisePath } from "../tools/path.js";
+import { parseXML, prepareFileFromProps } from "../tools/dav.js";
+import { request, prepareRequestOptions } from "../request.js";
+import { handleResponseCode, processGlobFilter, processResponsePayload } from "../response.js";
 import {
     DAVResult,
     FileStat,
     GetDirectoryContentsOptions,
     ResponseDataDetailed,
     WebDAVClientContext
-} from "../types";
+} from "../types.js";
 
 export async function getDirectoryContents(
     context: WebDAVClientContext,

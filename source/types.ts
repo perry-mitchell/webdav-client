@@ -1,4 +1,4 @@
-import Stream from "stream";
+import Stream from "node:stream";
 
 export type AuthHeader = string;
 

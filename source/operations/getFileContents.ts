@@ -1,9 +1,9 @@
 import { Layerr } from "layerr";
-import { joinURL } from "../tools/url";
-import { encodePath } from "../tools/path";
-import { fromBase64 } from "../tools/encode";
-import { request, prepareRequestOptions } from "../request";
-import { handleResponseCode, processResponsePayload } from "../response";
+import { joinURL } from "../tools/url.js";
+import { encodePath } from "../tools/path.js";
+import { fromBase64 } from "../tools/encode.js";
+import { request, prepareRequestOptions } from "../request.js";
+import { handleResponseCode, processResponsePayload } from "../response.js";
 import {
     AuthType,
     BufferLike,
@@ -11,7 +11,7 @@ import {
     GetFileContentsOptions,
     ResponseDataDetailed,
     WebDAVClientContext
-} from "../types";
+} from "../types.js";
 
 const TRANSFORM_RETAIN_FORMAT = (v: any) => v;
 

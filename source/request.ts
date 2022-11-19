@@ -1,8 +1,8 @@
 import axios from "axios";
-import { getPatcher } from "./compat/patcher";
-import { generateDigestAuthHeader, parseDigestAuth } from "./auth/digest";
-import { cloneShallow, merge } from "./tools/merge";
-import { mergeHeaders } from "./tools/headers";
+import { getPatcher } from "./compat/patcher.js";
+import { generateDigestAuthHeader, parseDigestAuth } from "./auth/digest.js";
+import { cloneShallow, merge } from "./tools/merge.js";
+import { mergeHeaders } from "./tools/headers.js";
 import {
     RequestOptionsCustom,
     RequestOptionsWithState,
@@ -10,7 +10,7 @@ import {
     Response,
     WebDAVClientContext,
     WebDAVMethodOptions
-} from "./types";
+} from "./types.js";
 
 function _request(requestOptions: RequestOptions) {
     return getPatcher().patchInline(

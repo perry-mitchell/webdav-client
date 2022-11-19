@@ -1,6 +1,6 @@
 import md5 from "md5";
-import { ha1Compute } from "../tools/crypto";
-import { DigestContext, Response } from "../types";
+import { ha1Compute } from "../tools/crypto.js";
+import { DigestContext, Response } from "../types.js";
 
 const NONCE_CHARS = "abcdef0123456789";
 const NONCE_SIZE = 32;

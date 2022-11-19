@@ -1,8 +1,8 @@
 import { Layerr } from "layerr";
 import { byteLength } from "byte-length";
-import { isArrayBuffer } from "../compat/arrayBuffer";
-import { isBuffer } from "../compat/buffer";
-import { BufferLike, ErrorCode } from "../types";
+import { isArrayBuffer } from "../compat/arrayBuffer.js";
+import { isBuffer } from "../compat/buffer.js";
+import { BufferLike, ErrorCode } from "../types.js";
 
 export function calculateDataLength(data: string | BufferLike): number {
     if (isArrayBuffer(data)) {

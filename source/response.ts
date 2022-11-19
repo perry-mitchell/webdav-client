@@ -5,7 +5,7 @@ import {
     ResponseDataDetailed,
     WebDAVClientContext,
     WebDAVClientError
-} from "./types";
+} from "./types.js";
 
 export function createErrorFromResponse(response: Response, prefix: string = ""): Error {
     const err: WebDAVClientError = new Error(

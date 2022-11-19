@@ -1,4 +1,4 @@
-import { Headers } from "../types";
+import { Headers } from "../types.js";
 
 export function mergeHeaders(...headerPayloads: Headers[]): Headers {
     if (headerPayloads.length === 0) return {};

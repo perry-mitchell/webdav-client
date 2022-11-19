@@ -1,9 +1,9 @@
-import { prepareRequestOptions, request } from "../request";
-import { handleResponseCode, processResponsePayload } from "../response";
-import { parseXML } from "../tools/dav";
-import { joinURL } from "../tools/url";
-import { parseQuota } from "../tools/quota";
-import { DiskQuota, GetQuotaOptions, ResponseDataDetailed, WebDAVClientContext } from "../types";
+import { prepareRequestOptions, request } from "../request.js";
+import { handleResponseCode, processResponsePayload } from "../response.js";
+import { parseXML } from "../tools/dav.js";
+import { joinURL } from "../tools/url.js";
+import { parseQuota } from "../tools/quota.js";
+import { DiskQuota, GetQuotaOptions, ResponseDataDetailed, WebDAVClientContext } from "../types.js";
 
 export async function getQuota(
     context: WebDAVClientContext,

@@ -1,16 +1,16 @@
 import nestedProp from "nested-property";
-import { joinURL } from "../tools/url";
-import { encodePath } from "../tools/path";
-import { generateLockXML, parseGenericResponse } from "../tools/xml";
-import { request, prepareRequestOptions } from "../request";
-import { createErrorFromResponse, handleResponseCode } from "../response";
+import { joinURL } from "../tools/url.js";
+import { encodePath } from "../tools/path.js";
+import { generateLockXML, parseGenericResponse } from "../tools/xml.js";
+import { request, prepareRequestOptions } from "../request.js";
+import { createErrorFromResponse, handleResponseCode } from "../response.js";
 import {
     Headers,
     LockOptions,
     LockResponse,
     WebDAVClientContext,
     WebDAVMethodOptions
-} from "../types";
+} from "../types.js";
 
 const DEFAULT_TIMEOUT = "Infinite, Second-4100000000";
 

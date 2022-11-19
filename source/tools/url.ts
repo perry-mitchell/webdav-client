@@ -1,6 +1,6 @@
 import URL from "url-parse";
 import _joinURL from "url-join";
-import { normalisePath } from "./path";
+import { normalisePath } from "./path.js";
 
 export function extractURLPath(fullURL: string): string {
     const url = new URL(fullURL);

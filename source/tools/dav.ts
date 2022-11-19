@@ -1,8 +1,8 @@
 import path from "path-posix";
 import xmlParser from "fast-xml-parser";
 import nestedProp from "nested-property";
-import { decodeHTMLEntities } from "./encode";
-import { normalisePath } from "./path";
+import { decodeHTMLEntities } from "./encode.js";
+import { normalisePath } from "./path.js";
 import {
     DAVResult,
     DAVResultRaw,
@@ -11,7 +11,7 @@ import {
     DiskQuotaAvailable,
     FileStat,
     WebDAVClientError
-} from "../types";
+} from "../types.js";
 
 enum PropertyType {
     Array = "array",

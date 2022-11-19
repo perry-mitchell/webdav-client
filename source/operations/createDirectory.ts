@@ -1,9 +1,14 @@
-import { joinURL } from "../tools/url";
-import { encodePath, getAllDirectories, normalisePath } from "../tools/path";
-import { request, prepareRequestOptions } from "../request";
-import { handleResponseCode } from "../response";
-import { getStat } from "./stat";
-import { CreateDirectoryOptions, FileStat, WebDAVClientContext, WebDAVClientError } from "../types";
+import { joinURL } from "../tools/url.js";
+import { encodePath, getAllDirectories, normalisePath } from "../tools/path.js";
+import { request, prepareRequestOptions } from "../request.js";
+import { handleResponseCode } from "../response.js";
+import { getStat } from "./stat.js";
+import {
+    CreateDirectoryOptions,
+    FileStat,
+    WebDAVClientContext,
+    WebDAVClientError
+} from "../types.js";
 
 export async function createDirectory(
     context: WebDAVClientContext,
