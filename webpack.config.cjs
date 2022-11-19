@@ -1,10 +1,22 @@
-const path = require("path");
+const path = require("node:path");
 const { DefinePlugin } = require("webpack");
+const ResolveTypeScriptPlugin = require("resolve-typescript-plugin");
+const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
 
 const DIST = path.resolve(__dirname, "./dist/web");
 
-module.exports = {
+const smp = new SpeedMeasurePlugin();
+
+module.exports = smp.wrap({
     entry: path.resolve(__dirname, "./source/index.ts"),
+
+    experiments: {
+        outputModule: true
+    },
+
+    externals: [],
+
+    externalsType: "module",
 
     module: {
         rules: [
@@ -14,15 +26,19 @@ module.exports = {
                 options: {
                     presets: [
                         ["@babel/preset-env", {
-                            targets: {
-                                "ie": 11
-                            }
+                            targets: [
+                                "> 0.25%, not dead",
+                                "maintained node versions"
+                            ]
                         }],
                         "@babel/preset-typescript"
                     ],
                     plugins: [
                         "babel-plugin-transform-async-to-promises"
                     ]
+                },
+                resolve: {
+                    fullySpecified: false
                 }
             }
         ]
@@ -31,10 +47,14 @@ module.exports = {
     node: false,
 
     output: {
-        filename: "webdav.js",
+        filename: "index.js",
         path: DIST,
-        library: "WebDAV",
-        libraryTarget: "umd"
+        environment: {
+            module: true
+        },
+        library: {
+            type: "module"
+        }
     },
 
     plugins: [
@@ -44,7 +64,7 @@ module.exports = {
     ],
 
     resolve: {
-        extensions: [".ts", ".js", ".json"],
+        extensions: [".js"],
         fallback: {
             buffer: false,
             crypto: false,
@@ -56,8 +76,12 @@ module.exports = {
             path: false,
             stream: false,
             util: false
-        }
+        },
+        plugins: [
+            // Handle .ts => .js resolution
+            new ResolveTypeScriptPlugin()
+        ]
     },
 
     target: "web"
-};
+});

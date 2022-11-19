@@ -1,9 +1,10 @@
 {
     "compilerOptions": {
         "outDir": "./dist/node",
-        "module": "commonjs",
+        "module": "es2020",
+        "moduleResolution": "node",
         "declaration": true,
-        "target": "es5",
+        "target": "es2020",
         "esModuleInterop": true
     },
     "include": [
