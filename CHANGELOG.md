@@ -1,5 +1,11 @@
 # WebDAV-Client changelog
 
+## v4.11.2
+_2022-11-19_
+
+ * **Bugfix**:
+   * [#323](https://github.com/perry-mitchell/webdav-client/issues/323) Cannot use namespace `HotPatcher` as a type
+
 ## v4.11.1
 _2022-11-19_
 
