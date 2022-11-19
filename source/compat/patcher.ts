@@ -1,4 +1,4 @@
-import HotPatcher from "hot-patcher";
+import { HotPatcher } from "hot-patcher";
 
 let __patcher: HotPatcher = null;
 

@@ -62,7 +62,7 @@
     "byte-length": "^1.0.2",
     "fast-xml-parser": "^3.19.0",
     "he": "^1.2.0",
-    "hot-patcher": "^0.5.0",
+    "hot-patcher": "^1.0.0",
     "layerr": "^0.1.2",
     "md5": "^2.3.0",
     "minimatch": "^5.1.0",
