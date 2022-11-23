@@ -12,27 +12,50 @@ This library provides a **WebDAV client** interface that makes interacting with 
 
 This library's motivation is **not** to follow an RFC or to strictly adhere to standard WebDAV interfaces, but to provide an easy-to-consume client API for working with most WebDAV services from Node or the browser.
 
-### Node support
+### Supported Versions / Environments
 
-This library is compatible with **NodeJS version 10** and above (For version 6/8 support, use versions in the range of `2.*`. For version 4 support, use versions in the range of `1.*`). Versions 2.x and 1.x are no longer supported, so use them at your own risk. Version 3.x is deprecated and may receive the odd bugfix.
+Version 5 is under active development. Version 4 is in support mode, and will receive security and stability related bugfixes. Earlier versions are deprecated and will not receive updates.
 
-### Browser support
+Version 5 upgrades the library to use ESM (ECMAScript Modules), and so your environment must fit one of the following formats to be able to use this library:
 
-This WebDAV client is supported in the browser is of version 3. The compilation settings specify a minimum supported browser version of Internet Explorer 11, however testing in this browser is not performed regularly.
+ * NodeJS project with `"type": "module"` in `package.json` (ESM mode)
+ * Web project bundled with a tool like Webpack that can handle ESM
+
+If you're not ready to upgrade, you may consider using version 4 of this library.
+
+#### Node support
+
+Support table:
+
+| Library Major Version | Node JS Range     |
+|-----------------------|-------------------|
+| v5                    | 14+               |
+| v4                    | 10-18             |
+| v3                    | 10-16             |
+| v2                    | 6-14              |
+| v1                    | 4-12              |
+
+#### Browser support
+
+Browser environments are supported from version 3 onwards of this library.
+
+As mentioned above, v5 introduced ESM and this may require additional configuration when bundling for the browser.
 
 _Although you may choose to transpile this library's default entry point (NodeJS) yourself, it is not advised - use the dedicated web version instead._
 
-You can use the web version via a different entry point:
+In version 4 you had to use a different entry-point for the web version, and while this is still possible to use in version 5, you no longer need to:
 
 ```typescript
 import { createClient } from "webdav/web";
+
+// or
+
+import { createClient } from "webdav";
+
+// will both work fine in supported bundlers
 ```
 
-The browser version uses a UMD-style module definition, meaning you can simply load the library within your browser using a `<script>` tag. When using this method the library is made available on the window object as such: `window.WebDAV`. For example:
-
-```javascript
-const client = window.WebDAV.createClient(/* ... */);
-```
+Versions 3/4 supported a UMD-style module in the browser, but this is no longer supported in version 5. Version 5 provides only an ESM-enabled bundle that can be imported into other ESM-supporting projects.
 
 **NB:** Streams are not available within the browser, so `createReadStream` and `createWriteStream` are just stubbed. Calling them will throw an exception.
 
@@ -663,4 +686,9 @@ It is a known issue that ownCloud and Nextcloud servers by default don't return 
 
 ## Projects using this WebDAV client
 
-[Buttercup Password Manager](https://github.com/buttercup), [Nextcloud Server](https://github.com/nextcloud/server), [Nextcloud Photos](https://github.com/nextcloud/photos), [ownCloud SDK](https://github.com/owncloud/owncloud-sdk), [React OxIDE](https://github.com/bootrino/reactoxide), [BackItUp](https://github.com/simatec/ioBroker.backitup)
+ * [Buttercup Password Manager](https://github.com/buttercup)
+ * [Nextcloud Server](https://github.com/nextcloud/server)
+ * [Nextcloud Photos](https://github.com/nextcloud/photos)
+ * [ownCloud SDK](https://github.com/owncloud/owncloud-sdk)
+ * [React OxIDE](https://github.com/bootrino/reactoxide)
+ * [BackItUp](https://github.com/simatec/ioBroker.backitup)
