@@ -14,7 +14,7 @@ module.exports = smp.wrap({
         outputModule: true
     },
 
-    externals: [],
+    externals: ["he"],
 
     externalsType: "module",
 
