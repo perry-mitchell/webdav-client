@@ -5,7 +5,8 @@ import {
     SERVER_USERNAME,
     clean,
     createWebDAVClient,
-    createWebDAVServer
+    createWebDAVServer,
+    sleep
 } from "../../helpers.node.js";
 
 describe("lock", function () {
@@ -32,11 +33,13 @@ describe("lock", function () {
 
     it("supports unlocking", async function () {
         const lock = await this.client.lock("/notes.txt");
+        await sleep(250);
         await this.client.unlock("/notes.txt", lock.token);
     });
 
     it("fails unlocking if token invalid", async function () {
         const lock = await this.client.lock("/notes.txt");
+        await sleep(250);
         let err;
         try {
             await this.client.unlock("/notes.txt", lock.token + "z");
