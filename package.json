@@ -3,7 +3,10 @@
   "version": "4.11.2",
   "description": "WebDAV client for NodeJS",
   "exports": {
-    ".": "./dist/node/index.js",
+    ".": {
+      "browser": "./dist/web/index.js",
+      "default": "./dist/node/index.js"
+    },
     "./web": "./dist/web/index.js"
   },
   "type": "module",
@@ -41,7 +44,7 @@
     "sync"
   ],
   "engines": {
-    "node": ">=10"
+    "node": ">=14"
   },
   "lint-staged": {
     "{source,test}/**/*.{js,ts}": [
