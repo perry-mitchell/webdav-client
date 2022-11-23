@@ -1,5 +1,5 @@
 const path = require("node:path");
-const { DefinePlugin, IgnorePlugin } = require("webpack");
+const { DefinePlugin } = require("webpack");
 const ResolveTypeScriptPlugin = require("resolve-typescript-plugin");
 const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
 
@@ -14,7 +14,7 @@ module.exports = smp.wrap({
         outputModule: true
     },
 
-    externals: ["he"],
+    externals: [],
 
     externalsType: "module",
 
@@ -60,13 +60,13 @@ module.exports = smp.wrap({
     plugins: [
         new DefinePlugin({
             WEB: "true"
-        }),
-        new IgnorePlugin({
-            resourceRegExp: /^he$/
         })
     ],
 
     resolve: {
+        alias: {
+            "he": path.resolve(__dirname, "./util/he.stub.ts")
+        },
         extensions: [".js"],
         fallback: {
             buffer: false,
