@@ -1,4 +1,4 @@
-const { calculateDataLength } = require("../../../source/tools/size.ts");
+import { calculateDataLength } from "../../../source/tools/size.js";
 
 describe("calculateDataLength", () => {
     it("Correctly calculates length for utf-8 string", () => {

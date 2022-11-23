@@ -1,5 +1,6 @@
-const ReadableStream = require("stream").Readable;
-const {
+import { Readable } from "stream";
+import { expect } from "chai";
+import {
     SERVER_PASSWORD,
     SERVER_PORT,
     SERVER_USERNAME,
@@ -8,10 +9,10 @@ const {
     createWebDAVServer,
     restoreRequests,
     useRequestSpy
-} = require("../../helpers.node.js");
+} from "../../helpers.node.js";
 
-function streamToBuffer(stream) {
-    const buffs = [];
+function streamToBuffer(stream: Readable): Promise<Buffer> {
+    const buffs: Array<Buffer> = [];
     return new Promise(function (resolve) {
         stream.on("data", function (d) {
             buffs.push(d);
@@ -41,7 +42,7 @@ describe("createReadStream", function () {
 
     it("streams contents of a remote file", async function () {
         const stream = this.client.createReadStream("/alrighty.jpg");
-        expect(stream instanceof ReadableStream).to.be.true;
+        expect(stream instanceof Readable).to.be.true;
         const buff = await streamToBuffer(stream);
         expect(buff.length).to.equal(52130);
     });

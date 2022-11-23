@@ -1,4 +1,4 @@
-const webpackConfig = require("../webpack.config.js");
+const webpackConfig = require("../webpack.config.cjs");
 
 delete webpackConfig.entry;
 delete webpackConfig.output;
@@ -12,7 +12,7 @@ if (process.env.CI) {
 module.exports = function (config) {
     config.set({
         basePath: "../",
-        frameworks: ["mocha", "chai", "sinon"],
+        frameworks: ["mocha", "chai", "sinon", "webpack"],
         plugins: [
             require("karma-webpack"),
             require("karma-chrome-launcher"),

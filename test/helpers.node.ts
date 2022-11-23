@@ -1,0 +1,57 @@
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
+import axios from "axios";
+import rimraf from "rimraf";
+import copyDir from "copy-dir";
+import sinon from "sinon";
+import { getPatcher } from "../source/index.js";
+import { PASSWORD, PORT, USERNAME } from "./server/credentials.js";
+
+export { createClient as createWebDAVClient } from "../source/index.js";
+export { createWebDAVServer } from "./server/index.js";
+
+export const SERVER_PASSWORD = PASSWORD;
+export const SERVER_PORT = PORT;
+export const SERVER_USERNAME = USERNAME;
+
+const dirname = path.dirname(fileURLToPath(import.meta.url));
+
+export function clean() {
+    rimraf.sync(path.resolve(dirname, "./testContents"));
+    copyDir.sync(
+        path.resolve(dirname, "./serverContents"),
+        path.resolve(dirname, "./testContents")
+    );
+}
+
+export function restoreRequests() {
+    getPatcher().restore("request");
+}
+
+export function returnFakeResponse(xml) {
+    getPatcher().patch("request", function fakeRequest() {
+        return Promise.resolve({
+            data: xml
+        });
+    });
+}
+
+export function sleep(ms) {
+    return new Promise(resolve => {
+        setTimeout(resolve, ms);
+    });
+}
+
+export function useCustomXmlResponse(xmlFile) {
+    returnFakeResponse(
+        fs.readFileSync(path.resolve(dirname, `./responses/${xmlFile}.xml`), "utf8")
+    );
+}
+
+export function useRequestSpy() {
+    const spy = sinon.spy(axios);
+    // @ts-ignore
+    getPatcher().patch("request", spy);
+    return spy;
+}

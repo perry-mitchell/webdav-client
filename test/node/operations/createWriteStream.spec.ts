@@ -1,8 +1,10 @@
-const path = require("path");
-const fs = require("fs");
-const PassThrough = require("stream").PassThrough;
-const waitOn = require("wait-on");
-const {
+import path from "path";
+import { fileURLToPath } from "url";
+import fs from "fs";
+import { PassThrough } from "stream";
+import waitOn from "wait-on";
+import { expect } from "chai";
+import {
     SERVER_PASSWORD,
     SERVER_PORT,
     SERVER_USERNAME,
@@ -11,14 +13,16 @@ const {
     createWebDAVServer,
     restoreRequests,
     useRequestSpy
-} = require("../../helpers.node.js");
+} from "../../helpers.node.js";
 
-const TEST_CONTENTS = path.resolve(__dirname, "../../testContents");
+const dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const TEST_CONTENTS = path.resolve(dirname, "../../testContents");
 const IMAGE_SOURCE = path.join(TEST_CONTENTS, "./alrighty.jpg");
 const TEXT_SOURCE = path.join(TEST_CONTENTS, "./notes.txt");
 
-function waitOnFile(filename) {
-    return new Promise(function (resolve, reject) {
+function waitOnFile(filename: string) {
+    return new Promise<void>(function (resolve, reject) {
         waitOn(
             {
                 resources: [filename],

@@ -1,13 +1,14 @@
-const nock = require("nock");
-const { AuthType } = require("../../dist/node/index.js");
-const {
+import nock from "nock";
+import { expect } from "chai";
+import { AuthType } from "../../source/index.js";
+import {
     SERVER_PASSWORD,
     SERVER_PORT,
     SERVER_USERNAME,
     clean,
     createWebDAVClient,
     createWebDAVServer
-} = require("../helpers.node.js");
+} from "../helpers.node.js";
 
 const DUMMYSERVER = "https://dummy.webdav.server";
 

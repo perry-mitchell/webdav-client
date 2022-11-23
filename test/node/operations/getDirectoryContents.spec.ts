@@ -1,5 +1,6 @@
-const { AuthType } = require("../../../dist/node/index.js");
-const {
+import { expect } from "chai";
+import { AuthType } from "../../../source/index.js";
+import {
     SERVER_PASSWORD,
     SERVER_PORT,
     SERVER_USERNAME,
@@ -9,7 +10,7 @@ const {
     restoreRequests,
     useCustomXmlResponse,
     useRequestSpy
-} = require("../../helpers.node.js");
+} from "../../helpers.node.js";
 
 describe("getDirectoryContents", function () {
     beforeEach(async function () {

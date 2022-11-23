@@ -1,6 +1,8 @@
-const fs = require("fs");
-const path = require("path");
-const {
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import { expect } from "chai";
+import {
     SERVER_PASSWORD,
     SERVER_PORT,
     SERVER_USERNAME,
@@ -10,17 +12,19 @@ const {
     restoreRequests,
     returnFakeResponse,
     useRequestSpy
-} = require("../../helpers.node.js");
+} from "../../helpers.node.js";
+
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function useInvalidQuota() {
     returnFakeResponse(
-        fs.readFileSync(path.resolve(__dirname, "../../responses/quota-invalid.xml"), "utf8")
+        fs.readFileSync(path.resolve(dirname, "../../responses/quota-invalid.xml"), "utf8")
     );
 }
 
 function useValidQuota() {
     returnFakeResponse(
-        fs.readFileSync(path.resolve(__dirname, "../../responses/quota-valid.xml"), "utf8")
+        fs.readFileSync(path.resolve(dirname, "../../responses/quota-valid.xml"), "utf8")
     );
 }
 

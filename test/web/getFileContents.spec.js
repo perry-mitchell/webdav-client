@@ -1,5 +1,5 @@
-const { createClient } = require("../../source/index.ts");
-const { PASSWORD, PORT, USERNAME } = require("../server/credentials.js");
+import { createClient } from "../../source/index.js";
+import { PASSWORD, PORT, USERNAME } from "../server/credentials.js";
 
 describe("getDirectoryContents", function () {
     function arrayBufferToString(buf) {

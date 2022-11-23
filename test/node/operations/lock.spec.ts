@@ -1,11 +1,12 @@
-const {
+import { expect } from "chai";
+import {
     SERVER_PASSWORD,
     SERVER_PORT,
     SERVER_USERNAME,
     clean,
     createWebDAVClient,
     createWebDAVServer
-} = require("../../helpers.node.js");
+} from "../../helpers.node.js";
 
 describe("lock", function () {
     beforeEach(function () {

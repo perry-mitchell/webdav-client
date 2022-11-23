@@ -1,7 +1,9 @@
-const path = require("path");
-const fileExists = require("exists-file").sync;
-const directoryExists = require("directory-exists").sync;
-const {
+import path from "path";
+import { fileURLToPath } from "url";
+import fileExists from "exists-file";
+import directoryExists from "directory-exists";
+import { expect } from "chai";
+import {
     SERVER_PASSWORD,
     SERVER_PORT,
     SERVER_USERNAME,
@@ -10,10 +12,12 @@ const {
     createWebDAVServer,
     restoreRequests,
     useRequestSpy
-} = require("../../helpers.node.js");
+} from "../../helpers.node.js";
 
-const localFilePath = path.resolve(__dirname, "../../testContents/text document.txt");
-const localDirPath = path.resolve(__dirname, "../../testContents/sub1");
+const dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const localFilePath = path.resolve(dirname, "../../testContents/text document.txt");
+const localDirPath = path.resolve(dirname, "../../testContents/sub1");
 
 describe("deleteFile", function () {
     beforeEach(function () {
@@ -33,23 +37,23 @@ describe("deleteFile", function () {
     });
 
     it("deletes a remote file", function () {
-        expect(fileExists(localFilePath)).to.be.true;
+        expect(fileExists.sync(localFilePath)).to.be.true;
         return this.client.deleteFile("/text document.txt").then(() => {
-            expect(fileExists(localFilePath)).to.be.false;
+            expect(fileExists.sync(localFilePath)).to.be.false;
         });
     });
 
     it("deletes a remote file", function () {
-        expect(fileExists(localFilePath)).to.be.true;
+        expect(fileExists.sync(localFilePath)).to.be.true;
         return this.client.deleteFile("/text document.txt").then(() => {
-            expect(fileExists(localFilePath)).to.be.false;
+            expect(fileExists.sync(localFilePath)).to.be.false;
         });
     });
 
     it("deletes a remote directory", function () {
-        expect(directoryExists(localDirPath)).to.be.true;
+        expect(directoryExists.sync(localDirPath)).to.be.true;
         return this.client.deleteFile("/sub1").then(() => {
-            expect(directoryExists(localDirPath)).to.be.false;
+            expect(directoryExists.sync(localDirPath)).to.be.false;
         });
     });
 

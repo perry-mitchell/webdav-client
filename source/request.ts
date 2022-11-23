@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosPromise } from "axios";
 import { getPatcher } from "./compat/patcher.js";
 import { generateDigestAuthHeader, parseDigestAuth } from "./auth/digest.js";
 import { cloneShallow, merge } from "./tools/merge.js";
