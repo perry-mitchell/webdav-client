@@ -1,4 +1,7 @@
 import Stream from "node:stream";
+import { Response } from "cross-fetch";
+
+export type { Response };
 
 export type AuthHeader = string;
 
@@ -152,23 +155,19 @@ export interface PutFileContentsOptions extends WebDAVMethodOptions {
     onUploadProgress?: UploadProgressCallback;
 }
 
-export type RequestDataPayload = string | Buffer | ArrayBuffer | { [key: string]: any };
+export type RequestDataPayload = string | Buffer | ArrayBuffer | Record<string, any>;
 
 interface RequestOptionsBase {
     data?: RequestDataPayload;
     headers?: Headers;
     httpAgent?: any;
     httpsAgent?: any;
-    maxBodyLength?: number;
-    maxContentLength?: number;
     maxRedirects?: number;
     method: string;
     onDownloadProgress?: ProgressEventCallback;
     onUploadProgress?: ProgressEventCallback;
-    responseType?: string;
     transformResponse?: Array<(value: any) => any>;
     url?: string;
-    validateStatus?: (status: number) => boolean;
     withCredentials?: boolean;
     signal?: AbortSignal;
 }
@@ -181,13 +180,6 @@ export interface RequestOptions extends RequestOptionsBase {
 
 export interface RequestOptionsWithState extends RequestOptions {
     _digest?: DigestContext;
-}
-
-export interface Response {
-    data: ResponseData;
-    status: number;
-    headers: Headers;
-    statusText: string;
 }
 
 export type ResponseData = string | Buffer | ArrayBuffer | Object | Array<any>;
@@ -259,8 +251,6 @@ export interface WebDAVClientContext {
     headers: Headers;
     httpAgent?: any;
     httpsAgent?: any;
-    maxBodyLength?: number;
-    maxContentLength?: number;
     password?: string;
     remotePath: string;
     remoteURL: string;

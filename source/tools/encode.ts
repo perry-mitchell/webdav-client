@@ -1,10 +1,9 @@
 import base64 from "base-64";
 import he from "he";
-
-declare var WEB: boolean;
+import { isWeb } from "../compat/env.js";
 
 export function decodeHTMLEntities(text: string): string {
-    if (typeof WEB === "undefined") {
+    if (!isWeb()) {
         // Node
         return he.decode(text);
     } else {

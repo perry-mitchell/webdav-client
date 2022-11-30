@@ -2,6 +2,7 @@ import { Layerr } from "layerr";
 import { joinURL } from "../tools/url.js";
 import { encodePath } from "../tools/path.js";
 import { fromBase64 } from "../tools/encode.js";
+import { isWeb } from "../compat/env.js";
 import { request, prepareRequestOptions } from "../request.js";
 import { handleResponseCode, processResponsePayload } from "../response.js";
 import {
@@ -44,15 +45,20 @@ async function getFileContentsBuffer(
     const requestOptions = prepareRequestOptions(
         {
             url: joinURL(context.remoteURL, encodePath(filePath)),
-            method: "GET",
-            responseType: "arraybuffer"
+            method: "GET"
         },
         context,
         options
     );
     const response = await request(requestOptions);
     handleResponseCode(context, response);
-    return processResponsePayload(response, response.data as BufferLike, options.details);
+    let body: BufferLike;
+    if (isWeb()) {
+        body = await response.arrayBuffer();
+    } else {
+        body = Buffer.from(await response.arrayBuffer());
+    }
+    return processResponsePayload(response, body, options.details);
 }
 
 async function getFileContentsString(
@@ -64,7 +70,9 @@ async function getFileContentsString(
         {
             url: joinURL(context.remoteURL, encodePath(filePath)),
             method: "GET",
-            responseType: "text",
+            headers: {
+                Accept: "text/plain"
+            },
             transformResponse: [TRANSFORM_RETAIN_FORMAT]
         },
         context,
@@ -72,7 +80,8 @@ async function getFileContentsString(
     );
     const response = await request(requestOptions);
     handleResponseCode(context, response);
-    return processResponsePayload(response, response.data as string, options.details);
+    const body = await response.text();
+    return processResponsePayload(response, body, options.details);
 }
 
 export function getFileDownloadLink(context: WebDAVClientContext, filePath: string): string {

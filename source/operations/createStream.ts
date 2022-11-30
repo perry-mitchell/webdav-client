@@ -85,8 +85,7 @@ async function getFileStream(
         {
             url: joinURL(context.remoteURL, encodePath(filePath)),
             method: "GET",
-            headers,
-            responseType: "stream"
+            headers
         },
         context,
         options
@@ -105,5 +104,6 @@ async function getFileStream(
             options.callback(response);
         }, 0);
     }
-    return response.data as Stream.Readable;
+    // @ts-ignore
+    return response.body;
 }

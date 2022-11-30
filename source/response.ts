@@ -1,11 +1,6 @@
 import minimatch from "minimatch";
-import {
-    FileStat,
-    Response,
-    ResponseDataDetailed,
-    WebDAVClientContext,
-    WebDAVClientError
-} from "./types.js";
+import { convertResponseHeaders } from "./tools/headers.js";
+import { FileStat, ResponseDataDetailed, WebDAVClientContext, WebDAVClientError } from "./types.js";
 
 export function createErrorFromResponse(response: Response, prefix: string = ""): Error {
     const err: WebDAVClientError = new Error(
@@ -38,7 +33,7 @@ export function processResponsePayload<T>(
     return isDetailed
         ? {
               data,
-              headers: response.headers || {},
+              headers: response.headers ? convertResponseHeaders(response.headers) : {},
               status: response.status,
               statusText: response.statusText
           }

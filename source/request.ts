@@ -1,23 +1,71 @@
-import axios, { AxiosPromise } from "axios";
+import { Agent as HTTPAgent } from "http";
+import { Agent as HTTPSAgent } from "https";
+import fetch from "cross-fetch";
+import type { RequestInit as RequestInitNF } from "node-fetch";
 import { getPatcher } from "./compat/patcher.js";
+import { isWeb } from "./compat/env.js";
 import { generateDigestAuthHeader, parseDigestAuth } from "./auth/digest.js";
 import { cloneShallow, merge } from "./tools/merge.js";
 import { mergeHeaders } from "./tools/headers.js";
+import { requestDataToFetchBody } from "./tools/body.js";
 import {
+    Headers,
     RequestOptionsCustom,
     RequestOptionsWithState,
     RequestOptions,
-    Response,
     WebDAVClientContext,
     WebDAVMethodOptions
 } from "./types.js";
 
-function _request(requestOptions: RequestOptions) {
-    return getPatcher().patchInline(
+function _request(requestOptions: RequestOptions): Promise<Response> {
+    const patcher = getPatcher();
+    return patcher.patchInline(
         "request",
-        (options: RequestOptions) => axios(options as any),
+        (options: RequestOptions) =>
+            patcher.patchInline(
+                "fetch",
+                fetch,
+                options.url,
+                getFetchOptions(options) as RequestInit
+            ),
         requestOptions
     );
+}
+
+function getFetchOptions(requestOptions: RequestOptions): RequestInit | RequestInitNF {
+    let headers: Headers = {};
+    // Handle standard options
+    const opts: RequestInit | RequestInitNF = {
+        method: requestOptions.method
+    };
+    if (requestOptions.headers) {
+        headers = mergeHeaders(headers, requestOptions.headers);
+    }
+    if (typeof requestOptions.data !== "undefined") {
+        const [body, newHeaders] = requestDataToFetchBody(requestOptions.data);
+        opts.body = body;
+        headers = mergeHeaders(headers, newHeaders);
+    }
+    if (requestOptions.signal) {
+        opts.signal = requestOptions.signal;
+    }
+    if (requestOptions.withCredentials) {
+        (opts as RequestInit).credentials = "include";
+    }
+    // Check for node-specific options
+    if (!isWeb()) {
+        if (requestOptions.httpAgent || requestOptions.httpsAgent) {
+            (opts as RequestInitNF).agent = (parsedURL: URL) => {
+                if (parsedURL.protocol === "http:") {
+                    return requestOptions.httpAgent || new HTTPAgent();
+                }
+                return requestOptions.httpsAgent || new HTTPSAgent();
+            };
+        }
+    }
+    // Attach headers
+    opts.headers = headers;
+    return opts;
 }
 
 export function prepareRequestOptions(
@@ -49,33 +97,17 @@ export function prepareRequestOptions(
     if (typeof context.withCredentials === "boolean") {
         finalOptions.withCredentials = context.withCredentials;
     }
-    if (context.maxContentLength) {
-        finalOptions.maxContentLength = context.maxContentLength;
-    }
-    if (context.maxBodyLength) {
-        finalOptions.maxBodyLength = context.maxBodyLength;
-    }
-    if (userOptions.hasOwnProperty("onUploadProgress")) {
-        finalOptions.onUploadProgress = userOptions["onUploadProgress"];
-    }
-    if (userOptions.hasOwnProperty("onDownloadProgress")) {
-        finalOptions.onDownloadProgress = userOptions["onDownloadProgress"];
-    }
-    // Take full control of all response status codes
-    finalOptions.validateStatus = () => true;
     return finalOptions;
 }
 
-export function request(requestOptions: RequestOptionsWithState): Promise<Response> {
+export async function request(requestOptions: RequestOptionsWithState): Promise<Response> {
     // Client not configured for digest authentication
     if (!requestOptions._digest) {
         return _request(requestOptions);
     }
-
     // Remove client's digest authentication object from request options
     const _digest = requestOptions._digest;
     delete requestOptions._digest;
-
     // If client is already using digest authentication, include the digest authorization header
     if (_digest.hasDigestAuth) {
         requestOptions = merge(requestOptions, {
@@ -84,31 +116,26 @@ export function request(requestOptions: RequestOptionsWithState): Promise<Respon
             }
         });
     }
-
-    // Perform the request and handle digest authentication
-    return _request(requestOptions).then(function (response: Response) {
-        if (response.status == 401) {
-            _digest.hasDigestAuth = parseDigestAuth(response, _digest);
-
-            if (_digest.hasDigestAuth) {
-                requestOptions = merge(requestOptions, {
-                    headers: {
-                        Authorization: generateDigestAuthHeader(requestOptions, _digest)
-                    }
-                });
-
-                return _request(requestOptions).then(function (response2: Response) {
-                    if (response2.status == 401) {
-                        _digest.hasDigestAuth = false;
-                    } else {
-                        _digest.nc++;
-                    }
-                    return response2;
-                });
+    // Perform digest request + check
+    const response = await _request(requestOptions);
+    if (response.status == 401) {
+        _digest.hasDigestAuth = parseDigestAuth(response, _digest);
+        if (_digest.hasDigestAuth) {
+            requestOptions = merge(requestOptions, {
+                headers: {
+                    Authorization: generateDigestAuthHeader(requestOptions, _digest)
+                }
+            });
+            const response2 = await _request(requestOptions);
+            if (response2.status == 401) {
+                _digest.hasDigestAuth = false;
+            } else {
+                _digest.nc++;
             }
-        } else {
-            _digest.nc++;
+            return response2;
         }
-        return response;
-    });
+    } else {
+        _digest.nc++;
+    }
+    return response;
 }

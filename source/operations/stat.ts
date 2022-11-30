@@ -18,15 +18,15 @@ export async function getStat(
             headers: {
                 Accept: "text/plain,application/xml",
                 Depth: "0"
-            },
-            responseType: "text"
+            }
         },
         context,
         options
     );
     const response = await request(requestOptions);
     handleResponseCode(context, response);
-    const result = await parseXML(response.data as string);
+    const responseData = await response.text();
+    const result = await parseXML(responseData);
     const stat = parseStat(result, filename, isDetailed);
     return processResponsePayload(response, stat, isDetailed);
 }

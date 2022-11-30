@@ -3,9 +3,10 @@ import Stream from "stream";
 import { fromBase64 } from "../tools/encode.js";
 import { joinURL } from "../tools/url.js";
 import { encodePath } from "../tools/path.js";
+import { calculateDataLength } from "../tools/size.js";
+import { isWeb } from "../compat/env.js";
 import { request, prepareRequestOptions } from "../request.js";
 import { handleResponseCode } from "../response.js";
-import { calculateDataLength } from "../tools/size.js";
 import {
     AuthType,
     BufferLike,
@@ -15,8 +16,6 @@ import {
     WebDAVClientContext,
     WebDAVClientError
 } from "../types.js";
-
-declare var WEB: boolean;
 
 export async function putFileContents(
     context: WebDAVClientContext,
@@ -29,7 +28,7 @@ export async function putFileContents(
         "Content-Type": "application/octet-stream"
     };
     if (
-        typeof WEB === "undefined" &&
+        !isWeb() &&
         typeof Stream !== "undefined" &&
         typeof Stream?.Readable !== "undefined" &&
         data instanceof Stream.Readable

@@ -15,17 +15,17 @@ export async function getQuota(
             url: joinURL(context.remoteURL, path),
             method: "PROPFIND",
             headers: {
-                Accept: "text/plain",
+                Accept: "text/plain,application/xml",
                 Depth: "0"
-            },
-            responseType: "text"
+            }
         },
         context,
         options
     );
     const response = await request(requestOptions);
     handleResponseCode(context, response);
-    const result = await parseXML(response.data as string);
+    const responseData = await response.text();
+    const result = await parseXML(responseData);
     const quota = parseQuota(result);
     return processResponsePayload(response, quota, options.details);
 }

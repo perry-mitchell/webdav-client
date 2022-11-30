@@ -32,15 +32,15 @@ export async function lock(
             url: joinURL(context.remoteURL, encodePath(path)),
             method: "LOCK",
             headers,
-            data: generateLockXML(context.contactHref),
-            responseType: "text"
+            data: generateLockXML(context.contactHref)
         },
         context,
         options
     );
     const response = await request(requestOptions);
     handleResponseCode(context, response);
-    const lockPayload = parseGenericResponse(response.data as string);
+    const responseData = await response.text();
+    const lockPayload = parseGenericResponse(responseData);
     const token = nestedProp.get(lockPayload, "prop.lockdiscovery.activelock.locktoken.href");
     const serverTimeout = nestedProp.get(lockPayload, "prop.lockdiscovery.activelock.timeout");
     if (!token) {
