@@ -45,14 +45,14 @@ describe("createDirectory", function () {
                 "X-test": "test"
             }
         });
-        const [requestOptions] = this.requestSpy.firstCall.args;
+        const [, requestOptions] = this.requestSpy.firstCall.args;
         expect(requestOptions).to.have.property("headers").that.has.property("X-test", "test");
     });
 
     it("adds the trailing slash to the directory name if missing", async function () {
         await this.client.createDirectory("/subdirectory-1122");
-        const [requestOptions] = this.requestSpy.firstCall.args;
-        expect(requestOptions.url).to.satisfy(url => url.endsWith("/"));
+        const [url] = this.requestSpy.firstCall.args;
+        expect(url).to.satisfy((url: string) => url.endsWith("/"));
     });
 
     describe("with recursive option", function () {

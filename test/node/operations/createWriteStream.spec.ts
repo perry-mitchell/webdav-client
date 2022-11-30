@@ -30,7 +30,7 @@ function waitOnFile(filename: string) {
                 timeout: 500,
                 window: 0
             },
-            function (err) {
+            function (err: Error) {
                 if (err) {
                     return reject(err);
                 }
@@ -82,16 +82,20 @@ describe("createWriteStream", function () {
             }
         });
         fs.createReadStream(TEXT_SOURCE).pipe(writeStream);
-        const [requestOptions] = this.requestSpy.firstCall.args;
+        const [, requestOptions] = this.requestSpy.firstCall.args;
         expect(requestOptions).to.have.property("headers").that.has.property("X-test", "test");
     });
 
     it("calls the callback function with the response", function (done) {
         const readStream = fs.createReadStream(TEXT_SOURCE);
-        const writeStream = this.client.createWriteStream("/test.txt", undefined, response => {
-            expect(response).to.have.property("status", 201);
-            done();
-        });
+        const writeStream = this.client.createWriteStream(
+            "/test.txt",
+            undefined,
+            (response: Response) => {
+                expect(response).to.have.property("status", 201);
+                done();
+            }
+        );
         readStream.pipe(writeStream);
     });
 });

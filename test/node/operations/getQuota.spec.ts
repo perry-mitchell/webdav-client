@@ -79,9 +79,7 @@ describe("getQuota", function () {
 
     it("supports path option", async function () {
         await this.client.getQuota({ path: "sub1" });
-        const [requestOptions] = this.requestSpy.firstCall.args;
-        expect(requestOptions)
-            .to.have.property("url")
-            .that.matches(/webdav\/server\/sub1$/);
+        const [url] = this.requestSpy.firstCall.args;
+        expect(url).to.match(/webdav\/server\/sub1$/);
     });
 });

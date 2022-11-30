@@ -1,5 +1,5 @@
-import { AxiosError } from "axios";
 import { expect } from "chai";
+import { WebDAVClientError } from "../../../source/types.js";
 import {
     SERVER_PASSWORD,
     SERVER_PORT,
@@ -77,7 +77,7 @@ describe("stat", function () {
     });
 
     it("throws 404 on non-existent file", async function () {
-        let error: AxiosError | null = null;
+        let error: WebDAVClientError | null = null;
         try {
             await this.client.stat("/does-not-exist");
         } catch (err) {
@@ -101,7 +101,7 @@ describe("stat", function () {
         });
 
         it("throws 404 on non-existent file", async function () {
-            let error: AxiosError | null = null;
+            let error: WebDAVClientError | null = null;
             try {
                 await this.client.stat("/does-not-exist");
             } catch (err) {

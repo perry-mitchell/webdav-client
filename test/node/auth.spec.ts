@@ -32,7 +32,7 @@ describe("auth", function () {
         nock(DUMMYSERVER)
             .get("/file")
             .reply(200, function () {
-                expect(this.req.headers.authorization).to.equal("Basic dXNlcjpwYXNz");
+                expect(this.req.headers.authorization).to.deep.equal(["Basic dXNlcjpwYXNz"]);
                 return "";
             });
         const webdav = createWebDAVClient(DUMMYSERVER, {
@@ -46,7 +46,7 @@ describe("auth", function () {
         nock(DUMMYSERVER)
             .get("/file")
             .reply(200, function () {
-                expect(this.req.headers.authorization).to.deep.equal("Bearer ABC123");
+                expect(this.req.headers.authorization).to.deep.equal(["Bearer ABC123"]);
                 return "";
             });
         const webdav = createWebDAVClient(DUMMYSERVER, {

@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
-import axios from "axios";
+import fetch from "cross-fetch";
 import rimraf from "rimraf";
 import copyDir from "copy-dir";
 import sinon from "sinon";
@@ -29,10 +29,10 @@ export function restoreRequests() {
     getPatcher().restore("request");
 }
 
-export function returnFakeResponse(xml) {
+export function returnFakeResponse(xml: string) {
     getPatcher().patch("request", function fakeRequest() {
         return Promise.resolve({
-            data: xml
+            text: () => Promise.resolve(xml)
         });
     });
 }
@@ -50,8 +50,8 @@ export function useCustomXmlResponse(xmlFile) {
 }
 
 export function useRequestSpy() {
-    const spy = sinon.spy(axios);
+    const spy = sinon.spy(fetch);
     // @ts-ignore
-    getPatcher().patch("request", spy);
+    getPatcher().patch("fetch", spy);
     return spy;
 }

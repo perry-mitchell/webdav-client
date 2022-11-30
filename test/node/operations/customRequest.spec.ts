@@ -28,12 +28,12 @@ describe("custom", function () {
         const resp = await this.client.customRequest("/alrighty.jpg", {
             method: "PROPFIND",
             headers: {
-                Accept: "text/plain",
+                Accept: "text/plain,application/xml",
                 Depth: "0"
-            },
-            responseType: "text"
+            }
         });
-        const result = await parseXML(resp.data);
+        const payload = await resp.text();
+        const result = await parseXML(payload);
         const stat = parseStat(result, "/alrighty.jpg", false);
         expect(stat).to.be.an("object");
         expect(stat).to.have.property("filename", "/alrighty.jpg");

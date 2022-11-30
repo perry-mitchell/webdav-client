@@ -4,9 +4,9 @@ delete webpackConfig.entry;
 delete webpackConfig.output;
 webpackConfig.mode = "development";
 
-const browsers = ["FirefoxHeadless"];
+let browsers = ["ChromeCustom"];
 if (process.env.CI) {
-    browsers.push("CustomChrome");
+    browsers = ["ChromeCustom", "FirefoxHeadless"];
 }
 
 module.exports = function (config) {
@@ -34,10 +34,14 @@ module.exports = function (config) {
         logLevel: config.LOG_INFO,
         autoWatch: false,
         customLaunchers: {
-            CustomChrome: {
+            ChromeCustom: {
                 base: "ChromeHeadless",
                 flags: ["--disable-web-security"],
                 debug: true
+            },
+            FirefoxHeadless: {
+                base: "Firefox",
+                flags: ["-headless"]
             }
         },
         browsers,

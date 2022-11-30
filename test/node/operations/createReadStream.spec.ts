@@ -70,19 +70,19 @@ describe("createReadStream", function () {
         expect(buff.length).to.equal(27130);
     });
 
-    it("streams contents of a remote file", async function () {
+    it("allows specifying custom headers", async function () {
         this.client.createReadStream("/alrighty.jpg", {
             headers: {
                 "X-test": "test"
             }
         });
-        const [requestOptions] = this.requestSpy.firstCall.args;
+        const [, requestOptions] = this.requestSpy.firstCall.args;
         expect(requestOptions).to.have.property("headers").that.has.property("X-test", "test");
     });
 
     it("calls callback with response", function (done) {
         const stream = this.client.createReadStream("/notes.txt", {
-            callback: response => {
+            callback: (response: Response) => {
                 expect(response).to.have.property("status", 200);
                 done();
             }
