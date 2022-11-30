@@ -6,7 +6,7 @@
 
 ## About
 
-WebDAV is a well-known, stable and highly flexible protocol for interacting with remote filesystems via an API. Being that it is so widespread, many file hosting services such as **Box**, **Nextcloud**/**ownCloud** and **Yandex** use it as a fallback to their primary interfaces.
+WebDAV is a well-known, stable and highly flexible protocol for interacting with remote filesystems via an API. Being that it is so widespread, many file hosting services such as **Nextcloud**/**ownCloud**, **Box** and **Yandex** use it as a fallback to their primary interfaces.
 
 This library provides a **WebDAV client** interface that makes interacting with WebDAV enabled services easy. The API returns promises and resolve with the results. It parses and prepares directory-contents requests for easy consumption, as well as providing methods for fetching things like file stats and quotas.
 
@@ -22,6 +22,12 @@ Version 5 upgrades the library to use ESM (ECMAScript Modules), and so your envi
  * Web project bundled with a tool like Webpack that can handle ESM
 
 If you're not ready to upgrade, you may consider using version 4 of this library.
+
+#### Requests
+
+This library uses [`cross-fetch`](https://github.com/lquixada/cross-fetch) to make requests in a cross-platform manner. It uses the browser's native `fetch` if present, or a polyfill if not. In Node and other environments it uses [`node-fetch`](https://github.com/node-fetch/node-fetch).
+
+Versions before v5 used Axios for requests.
 
 #### Node support
 
@@ -166,15 +172,14 @@ The available configuration options are as follows:
 | Option        | Default       | Description                                       |
 |---------------|---------------|---------------------------------------------------|
 | `authType`    | `null`        | The authentication type to use. If not provided, defaults to trying to detect based upon whether `username` and `password` were provided. |
+| `contactHref` | _[This URL](https://github.com/perry-mitchell/webdav-client/blob/master/LOCK_CONTACT.md)_ | Contact URL used for LOCKs. |
 | `headers`     | `{}`          | Additional headers provided to all requests. Headers provided here are overridden by method-specific headers, including `Authorization`. |
 | `httpAgent`   | _None_        | HTTP agent instance. Available only in Node. See [http.Agent](https://nodejs.org/api/http.html#http_class_http_agent). |
 | `httpsAgent`  | _None_        | HTTPS agent instance. Available only in Node. See [https.Agent](https://nodejs.org/api/https.html#https_class_https_agent). |
-| `maxBodyLength` | _None_      | Maximum body length allowed for sending, in bytes. |
-| `maxContentLength` | _None_   | Maximum content length allowed for receiving, in bytes. |
 | `password`    | _None_        | Password for authentication.                      |
 | `token`       | _None_        | Token object for authentication.                  |
 | `username`    | _None_        | Username for authentication.                      |
-| `withCredentials` | _None_    | Credentials inclusion setting for Axios.          |
+| `withCredentials` | _None_    | Credentials inclusion setting for the request,    |
 
 ### Client methods
 
@@ -400,8 +405,6 @@ Text files can also be fetched:
 const str: string = await client.getFileContents("/config.json", { format: "text" });
 ```
 
-Specify the `maxContentLength` option to alter the maximum number of bytes the client can receive in the request (**NodeJS only**).
-
 ```typescript
 (filename: string, options?: GetFileContentsOptions) => Promise<BufferLike | string | ResponseDataDetailed<BufferLike | string>>
 ```
@@ -414,23 +417,6 @@ Specify the `maxContentLength` option to alter the maximum number of bytes the c
 | `options.format`  | No        | Whether to fetch binary ("binary") data or textual ("text"). Defaults to "binary". |
 
 _`options` extends [method options](#method-options)._
-
-##### Download progress
-
-You can calculate the progress of the download by using `onDownloadProgress`:
-
-```typescript
-import { ProgressEvent } from "webdav";
-
-await client.getFileContents("/package.zip", {
-    onDownloadProgress: (progressEvent: ProgressEvent) => {
-        // {
-        //     total: 12345600,
-        //     loaded: 54023
-        // }
-    }
-});
-```
 
 #### getFileDownloadLink
 
@@ -541,18 +527,6 @@ Write data to a remote file. Returns `false` when file was not written (eg. `{ o
 await client.putFileContents("/my/file.jpg", imageBuffer, { overwrite: false });
 // Write a text file:
 await client.putFileContents("/my/file.txt", str);
-```
-
-Specify the `maxBodyLength` option to alter the maximum number of bytes the client can send in the request (**NodeJS only**). When using `{ overwrite: false }`, responses with status `412` are caught and no error is thrown.
-
-Handling Upload Progress (browsers only):
-*This uses the axios onUploadProgress callback which uses the native XMLHttpRequest [progress event](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequestEventTarget/onprogress).*
-
-```typescript
-// Upload a file and log the progress to the console:
-await client.putFileContents("/my/file.jpg", imageFile, { onUploadProgress: progress => {
-    console.log(`Uploaded ${progress.loaded} bytes of ${progress.total}`);
-} });
 ```
 
 ```typescript
