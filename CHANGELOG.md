@@ -1,5 +1,21 @@
 # WebDAV-Client changelog
 
+## v5.0.0-r1
+_2022-11-30_
+
+ * **Major release**
+   * [#326](https://github.com/perry-mitchell/webdav-client/issues/326) Build output is now ESM only (read [this](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c))
+   * [#269](https://github.com/perry-mitchell/webdav-client/issues/269) Axios replaced with Fetch
+ * **Bugfix**:
+   * [#204](https://github.com/perry-mitchell/webdav-client/issues/204) Missing engine restriction for Node
+   * [#159](https://github.com/perry-mitchell/webdav-client/issues/159) Missing error status code
+
+Breaking changes:
+
+ * Download progress no longer supported (`onDownloadProgress`): [see discussion](https://github.com/perry-mitchell/webdav-client/issues/319#issuecomment-1328323167) 
+ * Upload progress no longer supported (`onUploadProgress`): [see discussion](https://github.com/perry-mitchell/webdav-client/issues/319#issuecomment-1328323167)
+ * Node request limitations removed: `maxBodyLength` and `maxContentLength` are no longer needed/supported
+
 ## v4.11.2
 _2022-11-19_
 
