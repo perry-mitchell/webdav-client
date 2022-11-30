@@ -1,8 +1,8 @@
 import { Layerr } from "layerr";
-import { createDigestContext } from "./digest";
-import { generateBasicAuthHeader } from "./basic";
-import { generateTokenAuthHeader } from "./oauth";
-import { AuthType, ErrorCode, OAuthToken, WebDAVClientContext } from "../types";
+import { createDigestContext } from "./digest.js";
+import { generateBasicAuthHeader } from "./basic.js";
+import { generateTokenAuthHeader } from "./oauth.js";
+import { AuthType, ErrorCode, OAuthToken, WebDAVClientContext } from "../types.js";
 
 export function setupAuth(
     context: WebDAVClientContext,

@@ -1,9 +1,9 @@
-import { parseStat, parseXML } from "../tools/dav";
-import { joinURL } from "../tools/url";
-import { encodePath } from "../tools/path";
-import { request, prepareRequestOptions } from "../request";
-import { handleResponseCode, processResponsePayload } from "../response";
-import { FileStat, ResponseDataDetailed, StatOptions, WebDAVClientContext } from "../types";
+import { parseStat, parseXML } from "../tools/dav.js";
+import { joinURL } from "../tools/url.js";
+import { encodePath } from "../tools/path.js";
+import { request, prepareRequestOptions } from "../request.js";
+import { handleResponseCode, processResponsePayload } from "../response.js";
+import { FileStat, ResponseDataDetailed, StatOptions, WebDAVClientContext } from "../types.js";
 
 export async function getStat(
     context: WebDAVClientContext,
@@ -18,15 +18,15 @@ export async function getStat(
             headers: {
                 Accept: "text/plain,application/xml",
                 Depth: "0"
-            },
-            responseType: "text"
+            }
         },
         context,
         options
     );
     const response = await request(requestOptions);
     handleResponseCode(context, response);
-    const result = await parseXML(response.data as string);
+    const responseData = await response.text();
+    const result = await parseXML(responseData);
     const stat = parseStat(result, filename, isDetailed);
     return processResponsePayload(response, stat, isDetailed);
 }

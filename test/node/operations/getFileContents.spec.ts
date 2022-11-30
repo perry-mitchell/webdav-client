@@ -1,7 +1,9 @@
-const path = require("path");
-const fs = require("fs");
-const bufferEquals = require("buffer-equals");
-const {
+import path from "path";
+import { fileURLToPath } from "url";
+import fs from "fs";
+import bufferEquals from "buffer-equals";
+import { expect } from "chai";
+import {
     SERVER_PASSWORD,
     SERVER_PORT,
     SERVER_USERNAME,
@@ -10,10 +12,12 @@ const {
     createWebDAVServer,
     restoreRequests,
     useRequestSpy
-} = require("../../helpers.node.js");
+} from "../../helpers.node.js";
 
-const SOURCE_BIN = path.resolve(__dirname, "../../testContents/alrighty.jpg");
-const SOURCE_TXT = path.resolve(__dirname, "../../testContents/text document.txt");
+const dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const SOURCE_BIN = path.resolve(dirname, "../../testContents/alrighty.jpg");
+const SOURCE_TXT = path.resolve(dirname, "../../testContents/text document.txt");
 
 describe("getFileContents", function () {
     beforeEach(function () {
@@ -69,7 +73,7 @@ describe("getFileContents", function () {
                 "X-test": "test"
             }
         });
-        const [requestOptions] = this.requestSpy.firstCall.args;
+        const [, requestOptions] = this.requestSpy.firstCall.args;
         expect(requestOptions).to.have.property("headers").that.has.property("X-test", "test");
     });
 

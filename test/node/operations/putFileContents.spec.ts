@@ -1,19 +1,23 @@
-const path = require("path");
-const fs = require("fs");
-const bufferEquals = require("buffer-equals");
-const {
+import path from "path";
+import { fileURLToPath } from "url";
+import fs from "fs";
+import bufferEquals from "buffer-equals";
+import { expect } from "chai";
+import {
     SERVER_PASSWORD,
     SERVER_PORT,
     SERVER_USERNAME,
     clean,
     createWebDAVClient,
     createWebDAVServer
-} = require("../../helpers.node.js");
+} from "../../helpers.node.js";
 
-const SOURCE_BIN = path.resolve(__dirname, "../../testContents/alrighty.jpg");
-const TARGET_BIN = path.resolve(__dirname, "../../testContents/sub1/alrighty.jpg");
-const TARGET_TXT = path.resolve(__dirname, "../../testContents/newFile.txt");
-const TARGET_TXT_CHARS = path.resolve(__dirname, "../../testContents/จะทำลาย.txt");
+const dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const SOURCE_BIN = path.resolve(dirname, "../../testContents/alrighty.jpg");
+const TARGET_BIN = path.resolve(dirname, "../../testContents/sub1/alrighty.jpg");
+const TARGET_TXT = path.resolve(dirname, "../../testContents/newFile.txt");
+const TARGET_TXT_CHARS = path.resolve(dirname, "../../testContents/จะทำลาย.txt");
 
 describe("putFileContents", function () {
     beforeEach(function () {

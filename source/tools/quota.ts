@@ -1,5 +1,5 @@
-import { translateDiskSpace } from "./dav";
-import { DAVResult, DiskQuota } from "../types";
+import { translateDiskSpace } from "./dav.js";
+import { DAVResult, DiskQuota } from "../types.js";
 
 export function parseQuota(result: DAVResult): DiskQuota | null {
     try {

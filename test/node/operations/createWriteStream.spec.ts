@@ -1,8 +1,10 @@
-const path = require("path");
-const fs = require("fs");
-const PassThrough = require("stream").PassThrough;
-const waitOn = require("wait-on");
-const {
+import path from "path";
+import { fileURLToPath } from "url";
+import fs from "fs";
+import { PassThrough } from "stream";
+import waitOn from "wait-on";
+import { expect } from "chai";
+import {
     SERVER_PASSWORD,
     SERVER_PORT,
     SERVER_USERNAME,
@@ -11,14 +13,16 @@ const {
     createWebDAVServer,
     restoreRequests,
     useRequestSpy
-} = require("../../helpers.node.js");
+} from "../../helpers.node.js";
 
-const TEST_CONTENTS = path.resolve(__dirname, "../../testContents");
+const dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const TEST_CONTENTS = path.resolve(dirname, "../../testContents");
 const IMAGE_SOURCE = path.join(TEST_CONTENTS, "./alrighty.jpg");
 const TEXT_SOURCE = path.join(TEST_CONTENTS, "./notes.txt");
 
-function waitOnFile(filename) {
-    return new Promise(function (resolve, reject) {
+function waitOnFile(filename: string) {
+    return new Promise<void>(function (resolve, reject) {
         waitOn(
             {
                 resources: [filename],
@@ -26,7 +30,7 @@ function waitOnFile(filename) {
                 timeout: 500,
                 window: 0
             },
-            function (err) {
+            function (err: Error) {
                 if (err) {
                     return reject(err);
                 }
@@ -78,16 +82,20 @@ describe("createWriteStream", function () {
             }
         });
         fs.createReadStream(TEXT_SOURCE).pipe(writeStream);
-        const [requestOptions] = this.requestSpy.firstCall.args;
+        const [, requestOptions] = this.requestSpy.firstCall.args;
         expect(requestOptions).to.have.property("headers").that.has.property("X-test", "test");
     });
 
     it("calls the callback function with the response", function (done) {
         const readStream = fs.createReadStream(TEXT_SOURCE);
-        const writeStream = this.client.createWriteStream("/test.txt", undefined, response => {
-            expect(response).to.have.property("status", 201);
-            done();
-        });
+        const writeStream = this.client.createWriteStream(
+            "/test.txt",
+            undefined,
+            (response: Response) => {
+                expect(response).to.have.property("status", 201);
+                done();
+            }
+        );
         readStream.pipe(writeStream);
     });
 });

@@ -1,12 +1,13 @@
-const {
+import { expect } from "chai";
+import {
     SERVER_PASSWORD,
     SERVER_PORT,
     SERVER_USERNAME,
     clean,
     createWebDAVClient,
     createWebDAVServer
-} = require("../../helpers.node.js");
-const { parseStat, parseXML } = require("../../../dist/node/index.js");
+} from "../../helpers.node.js";
+import { parseStat, parseXML } from "../../../source/index.js";
 
 describe("custom", function () {
     beforeEach(function () {
@@ -24,16 +25,15 @@ describe("custom", function () {
     });
 
     it("send and parse stat custom request", async function () {
-        let response = null;
         const resp = await this.client.customRequest("/alrighty.jpg", {
             method: "PROPFIND",
             headers: {
-                Accept: "text/plain",
+                Accept: "text/plain,application/xml",
                 Depth: "0"
-            },
-            responseType: "text"
+            }
         });
-        const result = await parseXML(resp.data);
+        const payload = await resp.text();
+        const result = await parseXML(payload);
         const stat = parseStat(result, "/alrighty.jpg", false);
         expect(stat).to.be.an("object");
         expect(stat).to.have.property("filename", "/alrighty.jpg");

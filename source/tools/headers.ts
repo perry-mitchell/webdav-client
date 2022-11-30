@@ -1,9 +1,17 @@
-import { Headers } from "../types";
+import { Headers as HeadersSimple } from "../types.js";
 
-export function mergeHeaders(...headerPayloads: Headers[]): Headers {
+export function convertResponseHeaders(headers: Headers): HeadersSimple {
+    const output: HeadersSimple = {};
+    for (const key of headers.keys()) {
+        output[key] = headers.get(key);
+    }
+    return output;
+}
+
+export function mergeHeaders(...headerPayloads: HeadersSimple[]): HeadersSimple {
     if (headerPayloads.length === 0) return {};
     const headerKeys = {};
-    return headerPayloads.reduce((output: Headers, headers: Headers) => {
+    return headerPayloads.reduce((output: HeadersSimple, headers: HeadersSimple) => {
         Object.keys(headers).forEach(header => {
             const lowerHeader = header.toLowerCase();
             if (headerKeys.hasOwnProperty(lowerHeader)) {

@@ -1,4 +1,5 @@
-const {
+import { expect } from "chai";
+import {
     SERVER_PASSWORD,
     SERVER_PORT,
     SERVER_USERNAME,
@@ -7,7 +8,7 @@ const {
     createWebDAVServer,
     restoreRequests,
     useRequestSpy
-} = require("../../helpers.node.js");
+} from "../../helpers.node.js";
 
 describe("exists", function () {
     beforeEach(function () {
@@ -50,7 +51,7 @@ describe("exists", function () {
                 "X-test": "test"
             }
         });
-        const [requestOptions] = this.requestSpy.firstCall.args;
+        const [, requestOptions] = this.requestSpy.firstCall.args;
         expect(requestOptions).to.have.property("headers").that.has.property("X-test", "test");
     });
 });

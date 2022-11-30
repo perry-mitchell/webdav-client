@@ -1,19 +1,19 @@
 import Stream from "stream";
-import { extractURLPath } from "./tools/url";
-import { setupAuth } from "./auth/index";
-import { copyFile } from "./operations/copyFile";
-import { createDirectory } from "./operations/createDirectory";
-import { createReadStream, createWriteStream } from "./operations/createStream";
-import { customRequest } from "./operations/customRequest";
-import { deleteFile } from "./operations/deleteFile";
-import { exists } from "./operations/exists";
-import { getDirectoryContents } from "./operations/directoryContents";
-import { getFileContents, getFileDownloadLink } from "./operations/getFileContents";
-import { lock, unlock } from "./operations/lock";
-import { getQuota } from "./operations/getQuota";
-import { getStat } from "./operations/stat";
-import { moveFile } from "./operations/moveFile";
-import { getFileUploadLink, putFileContents } from "./operations/putFileContents";
+import { extractURLPath } from "./tools/url.js";
+import { setupAuth } from "./auth/index.js";
+import { copyFile } from "./operations/copyFile.js";
+import { createDirectory } from "./operations/createDirectory.js";
+import { createReadStream, createWriteStream } from "./operations/createStream.js";
+import { customRequest } from "./operations/customRequest.js";
+import { deleteFile } from "./operations/deleteFile.js";
+import { exists } from "./operations/exists.js";
+import { getDirectoryContents } from "./operations/directoryContents.js";
+import { getFileContents, getFileDownloadLink } from "./operations/getFileContents.js";
+import { lock, unlock } from "./operations/lock.js";
+import { getQuota } from "./operations/getQuota.js";
+import { getStat } from "./operations/stat.js";
+import { moveFile } from "./operations/moveFile.js";
+import { getFileUploadLink, putFileContents } from "./operations/putFileContents.js";
 import {
     AuthType,
     BufferLike,
@@ -32,7 +32,7 @@ import {
     WebDAVClientContext,
     WebDAVClientOptions,
     WebDAVMethodOptions
-} from "./types";
+} from "./types.js";
 
 const DEFAULT_CONTACT_HREF =
     "https://github.com/perry-mitchell/webdav-client/blob/master/LOCK_CONTACT.md";
@@ -44,8 +44,6 @@ export function createClient(remoteURL: string, options: WebDAVClientOptions = {
         headers = {},
         httpAgent,
         httpsAgent,
-        maxBodyLength,
-        maxContentLength,
         password,
         token,
         username,
@@ -61,8 +59,6 @@ export function createClient(remoteURL: string, options: WebDAVClientOptions = {
         headers: Object.assign({}, headers),
         httpAgent,
         httpsAgent,
-        maxBodyLength,
-        maxContentLength,
         remotePath: extractURLPath(remoteURL),
         remoteURL,
         password,

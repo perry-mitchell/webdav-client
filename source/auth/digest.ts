@@ -1,6 +1,6 @@
 import md5 from "md5";
-import { ha1Compute } from "../tools/crypto";
-import { DigestContext, Response } from "../types";
+import { ha1Compute } from "../tools/crypto.js";
+import { DigestContext } from "../types.js";
 
 const NONCE_CHARS = "abcdef0123456789";
 const NONCE_SIZE = 32;
@@ -64,7 +64,7 @@ function makeNonce(): string {
 }
 
 export function parseDigestAuth(response: Response, _digest: DigestContext): boolean {
-    const authHeader = response.headers["www-authenticate"] || "";
+    const authHeader = (response.headers && response.headers.get("www-authenticate")) || "";
     if (authHeader.split(/\s/)[0].toLowerCase() !== "digest") {
         return false;
     }

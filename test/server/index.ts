@@ -1,8 +1,11 @@
-const path = require("path");
-const ws = require("webdav-server").v2;
-const { PASSWORD, PORT, USERNAME } = require("./credentials.js");
+import path from "path";
+import { fileURLToPath } from "url";
+import { v2 as ws } from "webdav-server";
+import { PASSWORD, PORT, USERNAME } from "./credentials.js";
 
-function createServer(dir, authType) {
+const dirname = path.dirname(fileURLToPath(import.meta.url));
+
+export function createServer(dir: string, authType: "basic" | "digest") {
     if (!dir) {
         throw new Error("Expected target directory");
     }
@@ -45,18 +48,13 @@ function createServer(dir, authType) {
         },
 
         stop: function stop() {
-            return new Promise(function (resolve) {
+            return new Promise<void>(function (resolve) {
                 server.stop(resolve);
             });
         }
     };
 }
 
-function createWebDAVServer(authType) {
-    return createServer(path.resolve(__dirname, "../testContents"), authType);
+export function createWebDAVServer(authType: "basic" | "digest" = "basic") {
+    return createServer(path.resolve(dirname, "../testContents"), authType);
 }
-
-module.exports = {
-    createServer,
-    createWebDAVServer
-};

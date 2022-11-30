@@ -1,11 +1,10 @@
-import { decode, encode } from "base-64";
-
-declare var WEB: boolean;
+import base64 from "base-64";
+import he from "he";
+import { isWeb } from "../compat/env.js";
 
 export function decodeHTMLEntities(text: string): string {
-    if (typeof WEB === "undefined") {
+    if (!isWeb()) {
         // Node
-        const he = require("he");
         return he.decode(text);
     } else {
         // Nasty browser way
@@ -16,9 +15,9 @@ export function decodeHTMLEntities(text: string): string {
 }
 
 export function fromBase64(text: string): string {
-    return decode(text);
+    return base64.decode(text);
 }
 
 export function toBase64(text: string): string {
-    return encode(text);
+    return base64.encode(text);
 }

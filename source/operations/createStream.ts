@@ -1,8 +1,8 @@
 import Stream from "stream";
-import { joinURL } from "../tools/url";
-import { encodePath } from "../tools/path";
-import { request, prepareRequestOptions } from "../request";
-import { handleResponseCode } from "../response";
+import { joinURL } from "../tools/url.js";
+import { encodePath } from "../tools/path.js";
+import { request, prepareRequestOptions } from "../request.js";
+import { handleResponseCode } from "../response.js";
 import {
     CreateReadStreamOptions,
     CreateWriteStreamCallback,
@@ -10,7 +10,7 @@ import {
     Headers,
     WebDAVClientContext,
     WebDAVClientError
-} from "../types";
+} from "../types.js";
 
 const NOOP = () => {};
 
@@ -85,8 +85,7 @@ async function getFileStream(
         {
             url: joinURL(context.remoteURL, encodePath(filePath)),
             method: "GET",
-            headers,
-            responseType: "stream"
+            headers
         },
         context,
         options
@@ -105,5 +104,6 @@ async function getFileStream(
             options.callback(response);
         }, 0);
     }
-    return response.data as Stream.Readable;
+    // @ts-ignore
+    return response.body;
 }

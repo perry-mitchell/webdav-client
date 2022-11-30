@@ -1,8 +1,8 @@
-import { joinURL } from "../tools/url";
-import { encodePath } from "../tools/path";
-import { request, prepareRequestOptions } from "../request";
-import { handleResponseCode } from "../response";
-import { RequestOptionsCustom, Response, WebDAVClientContext } from "../types";
+import { joinURL } from "../tools/url.js";
+import { encodePath } from "../tools/path.js";
+import { request, prepareRequestOptions } from "../request.js";
+import { handleResponseCode } from "../response.js";
+import { RequestOptionsCustom, WebDAVClientContext } from "../types.js";
 
 export async function customRequest(
     context: WebDAVClientContext,

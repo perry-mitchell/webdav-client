@@ -1,7 +1,9 @@
-const path = require("path");
-const fileExists = require("exists-file").sync;
-const directoryExists = require("directory-exists").sync;
-const {
+import path from "path";
+import { fileURLToPath } from "url";
+import fileExists from "exists-file";
+import directoryExists from "directory-exists";
+import { expect } from "chai";
+import {
     SERVER_PASSWORD,
     SERVER_PORT,
     SERVER_USERNAME,
@@ -10,9 +12,11 @@ const {
     createWebDAVServer,
     restoreRequests,
     useRequestSpy
-} = require("../../helpers.node.js");
+} from "../../helpers.node.js";
 
-const TEST_CONTENTS = path.resolve(__dirname, "../../testContents");
+const dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const TEST_CONTENTS = path.resolve(dirname, "../../testContents");
 
 describe("copyFile", function () {
     beforeEach(function () {
@@ -33,21 +37,21 @@ describe("copyFile", function () {
 
     it("copies files from one directory to another", function () {
         return this.client.copyFile("/alrighty.jpg", "/sub1/alrighty.jpg").then(function () {
-            expect(fileExists(path.join(TEST_CONTENTS, "./alrighty.jpg"))).to.be.true;
-            expect(fileExists(path.join(TEST_CONTENTS, "./sub1/alrighty.jpg"))).to.be.true;
+            expect(fileExists.sync(path.join(TEST_CONTENTS, "./alrighty.jpg"))).to.be.true;
+            expect(fileExists.sync(path.join(TEST_CONTENTS, "./sub1/alrighty.jpg"))).to.be.true;
         });
     });
 
     it("copies directories from one directory to another", function () {
         return this.client.copyFile("/webdav", "/sub1/webdav").then(function () {
-            expect(directoryExists(path.join(TEST_CONTENTS, "./webdav"))).to.be.true;
-            expect(directoryExists(path.join(TEST_CONTENTS, "./sub1/webdav"))).to.be.true;
+            expect(directoryExists.sync(path.join(TEST_CONTENTS, "./webdav"))).to.be.true;
+            expect(directoryExists.sync(path.join(TEST_CONTENTS, "./sub1/webdav"))).to.be.true;
         });
     });
 
     it("copies files with special characters", function () {
         return this.client.copyFile("/sub1/ยากจน #1.txt", "/sub1/ยากจน #2.txt").then(function () {
-            expect(fileExists(path.join(TEST_CONTENTS, "./sub1/ยากจน #2.txt"))).to.be.true;
+            expect(fileExists.sync(path.join(TEST_CONTENTS, "./sub1/ยากจน #2.txt"))).to.be.true;
         });
     });
 
@@ -57,7 +61,7 @@ describe("copyFile", function () {
                 "X-test": "test"
             }
         });
-        const [requestOptions] = this.requestSpy.firstCall.args;
+        const [, requestOptions] = this.requestSpy.firstCall.args;
         expect(requestOptions).to.have.property("headers").that.has.property("X-test", "test");
     });
 });

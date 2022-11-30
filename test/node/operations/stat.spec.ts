@@ -1,4 +1,6 @@
-const {
+import { expect } from "chai";
+import { WebDAVClientError } from "../../../source/types.js";
+import {
     SERVER_PASSWORD,
     SERVER_PORT,
     SERVER_USERNAME,
@@ -7,7 +9,7 @@ const {
     createWebDAVServer,
     useCustomXmlResponse,
     restoreRequests
-} = require("../../helpers.node.js");
+} from "../../helpers.node.js";
 
 describe("stat", function () {
     beforeEach(function () {
@@ -74,10 +76,15 @@ describe("stat", function () {
         });
     });
 
-    it("throws 404 on non-existent file", function () {
-        return expect(
-            this.client.stat("/does-not-exist")
-        ).to.eventually.be.rejected.and.have.property("status", 404);
+    it("throws 404 on non-existent file", async function () {
+        let error: WebDAVClientError | null = null;
+        try {
+            await this.client.stat("/does-not-exist");
+        } catch (err) {
+            error = err;
+        }
+        expect(error).to.not.be.null;
+        expect(error.status).to.equal(404);
     });
 
     describe("when requesting stat from NGinx webdav server", function () {
@@ -93,10 +100,15 @@ describe("stat", function () {
             restoreRequests();
         });
 
-        it("throws 404 on non-existent file", function () {
-            return expect(
-                this.client.stat("/does-not-exist")
-            ).to.eventually.be.rejected.and.have.property("status", 404);
+        it("throws 404 on non-existent file", async function () {
+            let error: WebDAVClientError | null = null;
+            try {
+                await this.client.stat("/does-not-exist");
+            } catch (err) {
+                error = err;
+            }
+            expect(error).to.not.be.null;
+            expect(error.status).to.equal(404);
         });
     });
 

@@ -1,9 +1,8 @@
-const { AuthType } = require("../../../dist/node/index.js");
-const { createWebDAVClient } = require("../../helpers.node.js");
+import { expect } from "chai";
+import { AuthType } from "../../../source/index.js";
+import { createWebDAVClient } from "../../helpers.node.js";
 
-const CONTENT_TYPE_SUFFIX = "?Content-Type=application/octet-stream";
-
-describe("getFileUploadLink", function () {
+describe("getFileDownloadLink", function () {
     beforeEach(function () {
         this.clientPub = createWebDAVClient("http://test.com");
         this.clientAuth = createWebDAVClient("https://test.com", {
@@ -13,13 +12,13 @@ describe("getFileUploadLink", function () {
     });
 
     it("generates authenticated links", function () {
-        const link = this.clientAuth.getFileUploadLink("/test/file.txt");
-        expect(link).to.equal(`https://user:pass@test.com/test/file.txt${CONTENT_TYPE_SUFFIX}`);
+        const link = this.clientAuth.getFileDownloadLink("/test/file.txt");
+        expect(link).to.equal("https://user:pass@test.com/test/file.txt");
     });
 
     it("generates unauthenticated links", function () {
-        const link = this.clientPub.getFileUploadLink("/test/file.txt");
-        expect(link).to.equal(`http://test.com/test/file.txt${CONTENT_TYPE_SUFFIX}`);
+        const link = this.clientPub.getFileDownloadLink("/test/file.txt");
+        expect(link).to.equal("http://test.com/test/file.txt");
     });
 
     it("throws for digest authentication", function () {
@@ -29,7 +28,7 @@ describe("getFileUploadLink", function () {
             authType: AuthType.Digest
         });
         expect(() => {
-            this.client.getFileUploadLink("/test/file.txt");
+            this.client.getFileDownloadLink("/test/file.txt");
         }).to.throw(/Unsupported auth type.+digest/i);
     });
 });

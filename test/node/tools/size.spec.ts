@@ -1,4 +1,5 @@
-const { calculateDataLength } = require("../../../dist/node/tools/size.js");
+import { expect } from "chai";
+import { calculateDataLength } from "../../../source/tools/size.js";
 
 describe("calculateDataLength", () => {
     it("Correctly calculates length for utf-8 string", () => {

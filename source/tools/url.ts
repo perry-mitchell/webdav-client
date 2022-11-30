@@ -1,6 +1,7 @@
 import URL from "url-parse";
+import { Layerr } from "layerr";
 import _joinURL from "url-join";
-import { normalisePath } from "./path";
+import { normalisePath } from "./path.js";
 
 export function extractURLPath(fullURL: string): string {
     const url = new URL(fullURL);
@@ -27,6 +28,10 @@ export function joinURL(...parts: Array<string>): string {
 }
 
 export function normaliseHREF(href: string): string {
-    const normalisedHref = href.replace(/^https?:\/\/[^\/]+/, "");
-    return normalisedHref;
+    try {
+        const normalisedHref = href.replace(/^https?:\/\/[^\/]+/, "");
+        return normalisedHref;
+    } catch (err) {
+        throw new Layerr(err, "Failed normalising HREF");
+    }
 }

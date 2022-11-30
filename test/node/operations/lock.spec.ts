@@ -1,11 +1,14 @@
-const {
+import { expect } from "chai";
+import {
     SERVER_PASSWORD,
     SERVER_PORT,
     SERVER_USERNAME,
     clean,
     createWebDAVClient,
     createWebDAVServer
-} = require("../../helpers.node.js");
+} from "../../helpers.node.js";
+
+const LOCK_TARGET = "/notes.txt";
 
 describe("lock", function () {
     beforeEach(function () {
@@ -15,30 +18,34 @@ describe("lock", function () {
         });
         clean();
         this.server = createWebDAVServer();
+        this.lock = null;
         return this.server.start();
     });
 
-    afterEach(function () {
+    afterEach(async function () {
+        if (this.lock) {
+            await this.client.unlock(LOCK_TARGET, this.lock.token);
+        }
         return this.server.stop();
     });
 
     it("locks files and returns a token", async function () {
-        const lock = await this.client.lock("/notes.txt");
-        expect(lock)
+        this.lock = await this.client.lock(LOCK_TARGET);
+        expect(this.lock)
             .to.have.property("token")
             .that.matches(/^[a-z0-9]+:.+/i);
     });
 
     it("supports unlocking", async function () {
-        const lock = await this.client.lock("/notes.txt");
-        await this.client.unlock("/notes.txt", lock.token);
+        const lock = await this.client.lock(LOCK_TARGET);
+        await this.client.unlock(LOCK_TARGET, lock.token);
     });
 
     it("fails unlocking if token invalid", async function () {
-        const lock = await this.client.lock("/notes.txt");
+        this.lock = await this.client.lock(LOCK_TARGET);
         let err;
         try {
-            await this.client.unlock("/notes.txt", lock.token + "z");
+            await this.client.unlock(LOCK_TARGET, this.lock.token + "z");
         } catch (error) {
             err = error;
         }

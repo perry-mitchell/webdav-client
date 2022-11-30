@@ -1,9 +1,9 @@
-import { prepareRequestOptions, request } from "../request";
-import { handleResponseCode, processResponsePayload } from "../response";
-import { parseXML } from "../tools/dav";
-import { joinURL } from "../tools/url";
-import { parseQuota } from "../tools/quota";
-import { DiskQuota, GetQuotaOptions, ResponseDataDetailed, WebDAVClientContext } from "../types";
+import { prepareRequestOptions, request } from "../request.js";
+import { handleResponseCode, processResponsePayload } from "../response.js";
+import { parseXML } from "../tools/dav.js";
+import { joinURL } from "../tools/url.js";
+import { parseQuota } from "../tools/quota.js";
+import { DiskQuota, GetQuotaOptions, ResponseDataDetailed, WebDAVClientContext } from "../types.js";
 
 export async function getQuota(
     context: WebDAVClientContext,
@@ -15,17 +15,17 @@ export async function getQuota(
             url: joinURL(context.remoteURL, path),
             method: "PROPFIND",
             headers: {
-                Accept: "text/plain",
+                Accept: "text/plain,application/xml",
                 Depth: "0"
-            },
-            responseType: "text"
+            }
         },
         context,
         options
     );
     const response = await request(requestOptions);
     handleResponseCode(context, response);
-    const result = await parseXML(response.data as string);
+    const responseData = await response.text();
+    const result = await parseXML(responseData);
     const quota = parseQuota(result);
     return processResponsePayload(response, quota, options.details);
 }

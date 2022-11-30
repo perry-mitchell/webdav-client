@@ -1,16 +1,16 @@
 import pathPosix from "path-posix";
-import { joinURL, normaliseHREF } from "../tools/url";
-import { encodePath, normalisePath } from "../tools/path";
-import { parseXML, prepareFileFromProps } from "../tools/dav";
-import { request, prepareRequestOptions } from "../request";
-import { handleResponseCode, processGlobFilter, processResponsePayload } from "../response";
+import { joinURL, normaliseHREF } from "../tools/url.js";
+import { encodePath, normalisePath } from "../tools/path.js";
+import { parseXML, prepareFileFromProps } from "../tools/dav.js";
+import { request, prepareRequestOptions } from "../request.js";
+import { handleResponseCode, processGlobFilter, processResponsePayload } from "../response.js";
 import {
     DAVResult,
     FileStat,
     GetDirectoryContentsOptions,
     ResponseDataDetailed,
     WebDAVClientContext
-} from "../types";
+} from "../types.js";
 
 export async function getDirectoryContents(
     context: WebDAVClientContext,
@@ -22,17 +22,20 @@ export async function getDirectoryContents(
             url: joinURL(context.remoteURL, encodePath(remotePath), "/"),
             method: "PROPFIND",
             headers: {
-                Accept: "text/plain",
+                Accept: "text/plain,,application/xml",
                 Depth: options.deep ? "infinity" : "1"
-            },
-            responseType: "text"
+            }
         },
         context,
         options
     );
     const response = await request(requestOptions);
     handleResponseCode(context, response);
-    const davResp = await parseXML(response.data as string);
+    const responseData = await response.text();
+    if (!responseData) {
+        throw new Error("Failed parsing directory contents: Empty response");
+    }
+    const davResp = await parseXML(responseData);
     const _remotePath = remotePath.startsWith("/") ? remotePath : "/" + remotePath;
     let files = getDirectoryFiles(davResp, context.remotePath, _remotePath, options.details);
     if (options.glob) {

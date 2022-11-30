@@ -1,16 +1,16 @@
 import nestedProp from "nested-property";
-import { joinURL } from "../tools/url";
-import { encodePath } from "../tools/path";
-import { generateLockXML, parseGenericResponse } from "../tools/xml";
-import { request, prepareRequestOptions } from "../request";
-import { createErrorFromResponse, handleResponseCode } from "../response";
+import { joinURL } from "../tools/url.js";
+import { encodePath } from "../tools/path.js";
+import { generateLockXML, parseGenericResponse } from "../tools/xml.js";
+import { request, prepareRequestOptions } from "../request.js";
+import { createErrorFromResponse, handleResponseCode } from "../response.js";
 import {
     Headers,
     LockOptions,
     LockResponse,
     WebDAVClientContext,
     WebDAVMethodOptions
-} from "../types";
+} from "../types.js";
 
 const DEFAULT_TIMEOUT = "Infinite, Second-4100000000";
 
@@ -32,15 +32,15 @@ export async function lock(
             url: joinURL(context.remoteURL, encodePath(path)),
             method: "LOCK",
             headers,
-            data: generateLockXML(context.contactHref),
-            responseType: "text"
+            data: generateLockXML(context.contactHref)
         },
         context,
         options
     );
     const response = await request(requestOptions);
     handleResponseCode(context, response);
-    const lockPayload = parseGenericResponse(response.data as string);
+    const responseData = await response.text();
+    const lockPayload = parseGenericResponse(responseData);
     const token = nestedProp.get(lockPayload, "prop.lockdiscovery.activelock.locktoken.href");
     const serverTimeout = nestedProp.get(lockPayload, "prop.lockdiscovery.activelock.timeout");
     if (!token) {

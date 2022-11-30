@@ -1,4 +1,5 @@
-const { mergeHeaders } = require("../../../dist/node/tools/headers.js");
+import { expect } from "chai";
+import { mergeHeaders } from "../../../source/tools/headers.js";
 
 describe("mergeHeaders", function () {
     it("merges headers with different cases", function () {

@@ -1,11 +1,12 @@
 import { Layerr } from "layerr";
 import Stream from "stream";
-import { fromBase64 } from "../tools/encode";
-import { joinURL } from "../tools/url";
-import { encodePath } from "../tools/path";
-import { request, prepareRequestOptions } from "../request";
-import { handleResponseCode } from "../response";
-import { calculateDataLength } from "../tools/size";
+import { fromBase64 } from "../tools/encode.js";
+import { joinURL } from "../tools/url.js";
+import { encodePath } from "../tools/path.js";
+import { calculateDataLength } from "../tools/size.js";
+import { isWeb } from "../compat/env.js";
+import { request, prepareRequestOptions } from "../request.js";
+import { handleResponseCode } from "../response.js";
 import {
     AuthType,
     BufferLike,
@@ -14,9 +15,7 @@ import {
     PutFileContentsOptions,
     WebDAVClientContext,
     WebDAVClientError
-} from "../types";
-
-declare var WEB: boolean;
+} from "../types.js";
 
 export async function putFileContents(
     context: WebDAVClientContext,
@@ -29,7 +28,7 @@ export async function putFileContents(
         "Content-Type": "application/octet-stream"
     };
     if (
-        typeof WEB === "undefined" &&
+        !isWeb() &&
         typeof Stream !== "undefined" &&
         typeof Stream?.Readable !== "undefined" &&
         data instanceof Stream.Readable
