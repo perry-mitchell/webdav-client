@@ -22,7 +22,7 @@ export async function getDirectoryContents(
             url: joinURL(context.remoteURL, encodePath(remotePath), "/"),
             method: "PROPFIND",
             headers: {
-                Accept: "text/plain,,application/xml",
+                Accept: "text/plain,application/xml",
                 Depth: options.deep ? "infinity" : "1"
             }
         },
