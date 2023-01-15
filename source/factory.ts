@@ -47,7 +47,8 @@ export function createClient(remoteURL: string, options: WebDAVClientOptions = {
         password,
         token,
         username,
-        withCredentials
+        withCredentials,
+        ha1
     } = options;
     let authType = authTypeRaw;
     if (!authType) {
@@ -64,9 +65,10 @@ export function createClient(remoteURL: string, options: WebDAVClientOptions = {
         password,
         token,
         username,
-        withCredentials
+        withCredentials,
+        ha1
     };
-    setupAuth(context, username, password, token);
+    setupAuth(context, username, password, token, ha1);
     return {
         copyFile: (filename: string, destination: string, options?: WebDAVMethodOptions) =>
             copyFile(context, filename, destination, options),

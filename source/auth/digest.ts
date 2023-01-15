@@ -5,8 +5,12 @@ import { DigestContext } from "../types.js";
 const NONCE_CHARS = "abcdef0123456789";
 const NONCE_SIZE = 32;
 
-export function createDigestContext(username: string, password: string): DigestContext {
-    return { username, password, nc: 0, algorithm: "md5", hasDigestAuth: false };
+export function createDigestContext(
+    username: string,
+    password: string,
+    ha1: string
+): DigestContext {
+    return { username, password, ha1, nc: 0, algorithm: "md5", hasDigestAuth: false };
 }
 
 export function generateDigestAuthHeader(options, digest: DigestContext): string {
@@ -21,8 +25,10 @@ export function generateDigestAuthHeader(options, digest: DigestContext): string
         digest.realm,
         digest.password,
         digest.nonce,
-        digest.cnonce
+        digest.cnonce,
+        digest.ha1
     );
+
     const ha2 = md5(`${method}:${uri}`);
     const digestResponse = qop
         ? md5(`${ha1}:${digest.nonce}:${ncString}:${digest.cnonce}:${qop}:${ha2}`)

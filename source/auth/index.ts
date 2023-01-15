@@ -8,11 +8,12 @@ export function setupAuth(
     context: WebDAVClientContext,
     username: string,
     password: string,
-    oauthToken: OAuthToken
+    oauthToken: OAuthToken,
+    ha1: string
 ): void {
     switch (context.authType) {
         case AuthType.Digest:
-            context.digest = createDigestContext(username, password);
+            context.digest = createDigestContext(username, password, ha1);
             break;
         case AuthType.None:
             // Do nothing

@@ -78,6 +78,7 @@ export interface DigestContext {
     realm?: string;
     qop?: string;
     opaque?: string;
+    ha1?: string;
 }
 
 export interface DiskQuota {
@@ -257,6 +258,7 @@ export interface WebDAVClientContext {
     token?: OAuthToken;
     username?: string;
     withCredentials?: boolean;
+    ha1?: string;
 }
 
 export interface WebDAVClientError extends Error {
@@ -276,6 +278,7 @@ export interface WebDAVClientOptions {
     token?: OAuthToken;
     username?: string;
     withCredentials?: boolean;
+    ha1?: string;
 }
 
 export interface WebDAVMethodOptions {
