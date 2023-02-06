@@ -1,6 +1,6 @@
 import { Agent as HTTPAgent } from "http";
 import { Agent as HTTPSAgent } from "https";
-import fetch from "cross-fetch";
+import { fetch } from "@buttercup/fetch";
 import type { RequestInit as RequestInitNF } from "node-fetch";
 import { getPatcher } from "./compat/patcher.js";
 import { isWeb } from "./compat/env.js";
@@ -13,6 +13,7 @@ import {
     RequestOptionsCustom,
     RequestOptionsWithState,
     RequestOptions,
+    Response,
     WebDAVClientContext,
     WebDAVMethodOptions
 } from "./types.js";

@@ -1,7 +1,7 @@
 import Stream from "node:stream";
-import { Response } from "cross-fetch";
+import { Response } from "@buttercup/fetch";
 
-export type { Response };
+export { Request, Response } from "@buttercup/fetch";
 
 export type AuthHeader = string;
 
