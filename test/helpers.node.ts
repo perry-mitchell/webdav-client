@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
-import fetch from "cross-fetch";
+import { fetch } from "@buttercup/fetch";
 import rimraf from "rimraf";
 import copyDir from "copy-dir";
 import sinon from "sinon";
@@ -37,7 +37,7 @@ export function returnFakeResponse(xml: string) {
     });
 }
 
-export function sleep(ms) {
+export function sleep(ms: number) {
     return new Promise(resolve => {
         setTimeout(resolve, ms);
     });
