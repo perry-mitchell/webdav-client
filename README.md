@@ -25,7 +25,7 @@ If you're not ready to upgrade, you may consider using version 4 of this library
 
 #### Requests
 
-This library uses [`cross-fetch`](https://github.com/lquixada/cross-fetch) to make requests in a cross-platform manner. It uses the browser's native `fetch` if present, or a polyfill if not. In Node and other environments it uses [`node-fetch`](https://github.com/node-fetch/node-fetch).
+This library uses [`@buttercup/fetch`](https://github.com/buttercup/fetch) to make requests in a cross-platform manner. It uses the browser's native `fetch` if present, or a polyfill if not. In Node and other environments it uses [`node-fetch`](https://github.com/node-fetch/node-fetch).
 
 Versions before v5 used Axios for requests.
 
