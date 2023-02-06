@@ -43,7 +43,12 @@ jobs:
         env:
           MOZ_HEADLESS: 1
           CI: travis
-      - run: sudo apt install google-chrome-stable firefox
+      - name: Setup Firefox
+        uses: browser-actions/setup-firefox@latest
+        with:
+          firefox-version: latest
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@latest
       - run: google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
       - run: npm ci
       - run: npm run test:web
