@@ -109,6 +109,7 @@ export interface GetDirectoryContentsOptions extends WebDAVMethodOptions {
     deep?: boolean;
     details?: boolean;
     glob?: string;
+    includeSelf?: boolean;
 }
 
 export interface GetFileContentsOptions extends WebDAVMethodOptions {

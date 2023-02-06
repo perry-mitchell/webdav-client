@@ -37,7 +37,13 @@ export async function getDirectoryContents(
     }
     const davResp = await parseXML(responseData);
     const _remotePath = remotePath.startsWith("/") ? remotePath : "/" + remotePath;
-    let files = getDirectoryFiles(davResp, context.remotePath, _remotePath, options.details);
+    let files = getDirectoryFiles(
+        davResp,
+        context.remotePath,
+        _remotePath,
+        options.details,
+        options.includeSelf
+    );
     if (options.glob) {
         files = processGlobFilter(files, options.glob);
     }
@@ -48,35 +54,40 @@ function getDirectoryFiles(
     result: DAVResult,
     serverBasePath: string,
     requestPath: string,
-    isDetailed: boolean = false
+    isDetailed: boolean = false,
+    includeSelf: boolean = false
 ): Array<FileStat> {
     const serverBase = pathPosix.join(serverBasePath, "/");
     // Extract the response items (directory contents)
     const {
         multistatus: { response: responseItems }
     } = result;
-    return (
-        responseItems
-            // Map all items to a consistent output structure (results)
-            .map(item => {
-                // HREF is the file path (in full)
-                const href = normaliseHREF(item.href);
-                // Each item should contain a stat object
-                const {
-                    propstat: { prop: props }
-                } = item;
-                // Process the true full filename (minus the base server path)
-                const filename =
-                    serverBase === "/"
-                        ? decodeURIComponent(normalisePath(href))
-                        : decodeURIComponent(normalisePath(pathPosix.relative(serverBase, href)));
-                return prepareFileFromProps(props, filename, isDetailed);
-            })
-            // Filter out the item pointing to the current directory (not needed)
-            .filter(
-                item =>
-                    item.basename &&
-                    (item.type === "file" || item.filename !== requestPath.replace(/\/$/, ""))
-            )
+
+    // Map all items to a consistent output structure (results)
+    const nodes = responseItems.map(item => {
+        // HREF is the file path (in full)
+        const href = normaliseHREF(item.href);
+        // Each item should contain a stat object
+        const {
+            propstat: { prop: props }
+        } = item;
+        // Process the true full filename (minus the base server path)
+        const filename =
+            serverBase === "/"
+                ? decodeURIComponent(normalisePath(href))
+                : decodeURIComponent(normalisePath(pathPosix.relative(serverBase, href)));
+        return prepareFileFromProps(props, filename, isDetailed);
+    });
+
+    // If specified, also return the current directory
+    if (includeSelf) {
+        return nodes;
+    }
+
+    // Else, filter out the item pointing to the current directory (not needed)
+    return nodes.filter(
+        item =>
+            item.basename &&
+            (item.type === "file" || item.filename !== requestPath.replace(/\/$/, ""))
     );
 }
