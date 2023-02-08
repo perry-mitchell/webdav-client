@@ -1,11 +1,12 @@
 # WebDAV-Client changelog
 
-## v5.0.0-r1
+## v5.0.0
 _2022-11-30_
 
  * **Major release**
    * [#326](https://github.com/perry-mitchell/webdav-client/issues/326) Build output is now ESM only (read [this](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c))
-   * [#269](https://github.com/perry-mitchell/webdav-client/issues/269) Axios replaced with Fetch
+   * ~~[#269](https://github.com/perry-mitchell/webdav-client/issues/269)~~ [#335](https://github.com/perry-mitchell/webdav-client/pull/335) Axios replaced with Fetch
+   * [#178](https://github.com/perry-mitchell/webdav-client/issues/178) Support returning current directory info for `getDirectoryContents`
  * **Bugfix**:
    * [#204](https://github.com/perry-mitchell/webdav-client/issues/204) Missing engine restriction for Node
    * [#159](https://github.com/perry-mitchell/webdav-client/issues/159) Missing error status code
