@@ -250,6 +250,7 @@ export interface WebDAVClientContext {
     authType: AuthType;
     contactHref: string;
     digest?: DigestContext;
+    ha1?: string;
     headers: Headers;
     httpAgent?: any;
     httpsAgent?: any;
@@ -259,7 +260,6 @@ export interface WebDAVClientContext {
     token?: OAuthToken;
     username?: string;
     withCredentials?: boolean;
-    ha1?: string;
 }
 
 export interface WebDAVClientError extends Error {
@@ -270,6 +270,7 @@ export interface WebDAVClientError extends Error {
 export interface WebDAVClientOptions {
     authType?: AuthType;
     contactHref?: string;
+    ha1?: string;
     headers?: Headers;
     httpAgent?: any;
     httpsAgent?: any;
@@ -279,7 +280,6 @@ export interface WebDAVClientOptions {
     token?: OAuthToken;
     username?: string;
     withCredentials?: boolean;
-    ha1?: string;
 }
 
 export interface WebDAVMethodOptions {

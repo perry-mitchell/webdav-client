@@ -41,14 +41,14 @@ export function createClient(remoteURL: string, options: WebDAVClientOptions = {
     const {
         authType: authTypeRaw = null,
         contactHref = DEFAULT_CONTACT_HREF,
+        ha1,
         headers = {},
         httpAgent,
         httpsAgent,
         password,
         token,
         username,
-        withCredentials,
-        ha1
+        withCredentials
     } = options;
     let authType = authTypeRaw;
     if (!authType) {
@@ -57,6 +57,7 @@ export function createClient(remoteURL: string, options: WebDAVClientOptions = {
     const context: WebDAVClientContext = {
         authType,
         contactHref,
+        ha1,
         headers: Object.assign({}, headers),
         httpAgent,
         httpsAgent,
@@ -65,8 +66,7 @@ export function createClient(remoteURL: string, options: WebDAVClientOptions = {
         password,
         token,
         username,
-        withCredentials,
-        ha1
+        withCredentials
     };
     setupAuth(context, username, password, token, ha1);
     return {
