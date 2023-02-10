@@ -78,6 +78,7 @@ export interface DigestContext {
     realm?: string;
     qop?: string;
     opaque?: string;
+    ha1?: string;
 }
 
 export interface DiskQuota {
@@ -249,6 +250,7 @@ export interface WebDAVClientContext {
     authType: AuthType;
     contactHref: string;
     digest?: DigestContext;
+    ha1?: string;
     headers: Headers;
     httpAgent?: any;
     httpsAgent?: any;
@@ -268,6 +270,7 @@ export interface WebDAVClientError extends Error {
 export interface WebDAVClientOptions {
     authType?: AuthType;
     contactHref?: string;
+    ha1?: string;
     headers?: Headers;
     httpAgent?: any;
     httpsAgent?: any;

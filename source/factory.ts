@@ -41,6 +41,7 @@ export function createClient(remoteURL: string, options: WebDAVClientOptions = {
     const {
         authType: authTypeRaw = null,
         contactHref = DEFAULT_CONTACT_HREF,
+        ha1,
         headers = {},
         httpAgent,
         httpsAgent,
@@ -56,6 +57,7 @@ export function createClient(remoteURL: string, options: WebDAVClientOptions = {
     const context: WebDAVClientContext = {
         authType,
         contactHref,
+        ha1,
         headers: Object.assign({}, headers),
         httpAgent,
         httpsAgent,
@@ -66,7 +68,7 @@ export function createClient(remoteURL: string, options: WebDAVClientOptions = {
         username,
         withCredentials
     };
-    setupAuth(context, username, password, token);
+    setupAuth(context, username, password, token, ha1);
     return {
         copyFile: (filename: string, destination: string, options?: WebDAVMethodOptions) =>
             copyFile(context, filename, destination, options),

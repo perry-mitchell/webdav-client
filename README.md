@@ -148,6 +148,17 @@ createClient(
 );
 ```
 
+You can also provide the HA1 ([see here for details](https://en.wikipedia.org/wiki/Digest_access_authentication#Overview)) yourself. This enables you to generate the HA1 at the time the user is logged in and persist it, so you do not have persist the password itself.
+
+```typescript
+createClient("https://address.com", {
+    authType: AuthType.Digest,
+    username: "someUser",
+    password: "",
+    ha1: "your previously generated ha1 here"
+});
+```
+
 #### Digest authentication
 
 If a server requires digest-based authentication, you can enable this functionality by the `authType` configuration parameter, as well as providing a `username` and `password`:
