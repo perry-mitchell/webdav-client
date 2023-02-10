@@ -9,9 +9,9 @@ export function ha1Compute(
     cnonce: string,
     ha1: string
 ): string {
-    ha1 = ha1 || (md5(`${user}:${realm}:${pass}`) as string);
+    const ha1Hash = ha1 || (md5(`${user}:${realm}:${pass}`) as string);
     if (algorithm && algorithm.toLowerCase() === "md5-sess") {
-        return md5(`${ha1}:${nonce}:${cnonce}`) as string;
+        return md5(`${ha1Hash}:${nonce}:${cnonce}`) as string;
     }
-    return ha1;
+    return ha1Hash;
 }
