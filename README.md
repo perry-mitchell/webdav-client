@@ -18,8 +18,8 @@ Version 5 is under active development. Version 4 is in support mode, and will re
 
 Version 5 upgrades the library to use ESM (ECMAScript Modules), and so your environment must fit one of the following formats to be able to use this library:
 
--   NodeJS project with `"type": "module"` in `package.json` (ESM mode)
--   Web project bundled with a tool like Webpack that can handle ESM
+ * NodeJS project with `"type": "module"` in `package.json` (ESM mode)
+ * Web project bundled with a tool like Webpack that can handle ESM
 
 If you're not ready to upgrade, you may consider using version 4 of this library.
 
@@ -33,13 +33,13 @@ Versions before v5 used Axios for requests.
 
 Support table:
 
-| Library Major Version | Node JS Range |
-| --------------------- | ------------- |
-| v5                    | 14+           |
-| v4                    | 10-18         |
-| v3                    | 10-16         |
-| v2                    | 6-14          |
-| v1                    | 4-12          |
+| Library Major Version | Node JS Range     |
+|-----------------------|-------------------|
+| v5                    | 14+               |
+| v4                    | 10-18             |
+| v3                    | 10-16             |
+| v2                    | 6-14              |
+| v1                    | 4-12              |
 
 #### Browser support
 
@@ -94,10 +94,13 @@ Usage entails creating a client adapter instance by calling the factory function
 ```typescript
 const { createClient } = require("webdav");
 
-const client = createClient("https://webdav.example.com/marie123", {
-    username: "marie",
-    password: "myS3curePa$$w0rd"
-});
+const client = createClient(
+    "https://webdav.example.com/marie123",
+    {
+        username: "marie",
+        password: "myS3curePa$$w0rd"
+    }
+);
 
 // Get directory contents
 const directoryItems = await client.getDirectoryContents("/");
@@ -130,28 +133,19 @@ This library also allows for overriding the built in HTTP and HTTPS agents by se
 To use a token to authenticate, pass the token data to the `token` field and specify the `authType`:
 
 ```typescript
-createClient("https://address.com", {
-    authType: AuthType.Token,
-    token: {
-        access_token: "2YotnFZFEjr1zCsicMWpAA",
-        token_type: "example",
-        expires_in: 3600,
-        refresh_token: "tGzv3JOkF0XG5Qx2TlKWIA",
-        example_parameter: "example_value"
+createClient(
+    "https://address.com",
+    {
+        authType: AuthType.Token,
+        token: {
+            access_token: "2YotnFZFEjr1zCsicMWpAA",
+            token_type: "example",
+            expires_in: 3600,
+            refresh_token: "tGzv3JOkF0XG5Qx2TlKWIA",
+            example_parameter: "example_value"
+        }
     }
-});
-```
-
-#### Digest authentication
-
-If a server requires digest-based authentication, you can enable this functionality by the `authType` configuration parameter, as well as providing a `username` and `password`:
-
-```typescript
-createClient("https://address.com", {
-    authType: AuthType.Digest,
-    username: "someUser",
-    password: "myS3curePa$$w0rd"
-});
+);
 ```
 
 You can also provide the HA1 ([see here for details](https://en.wikipedia.org/wiki/Digest_access_authentication#Overview)) yourself. This enables you to generate the HA1 at the time the user is logged in and persist it, so you do not have persist the password itself.
@@ -165,23 +159,38 @@ createClient("https://address.com", {
 });
 ```
 
+#### Digest authentication
+
+If a server requires digest-based authentication, you can enable this functionality by the `authType` configuration parameter, as well as providing a `username` and `password`:
+
+```typescript
+createClient(
+    "https://address.com",
+    {
+        authType: AuthType.Digest,
+        username: "someUser",
+        password: "myS3curePa$$w0rd"
+    }
+);
+```
+
 ### Client configuration
 
 The `createClient` method takes a WebDAV service URL, and a configuration options parameter.
 
 The available configuration options are as follows:
 
-| Option            | Default                                                                                   | Description                                                                                                                               |
-| ----------------- | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| `authType`        | `null`                                                                                    | The authentication type to use. If not provided, defaults to trying to detect based upon whether `username` and `password` were provided. |
-| `contactHref`     | _[This URL](https://github.com/perry-mitchell/webdav-client/blob/master/LOCK_CONTACT.md)_ | Contact URL used for LOCKs.                                                                                                               |
-| `headers`         | `{}`                                                                                      | Additional headers provided to all requests. Headers provided here are overridden by method-specific headers, including `Authorization`.  |
-| `httpAgent`       | _None_                                                                                    | HTTP agent instance. Available only in Node. See [http.Agent](https://nodejs.org/api/http.html#http_class_http_agent).                    |
-| `httpsAgent`      | _None_                                                                                    | HTTPS agent instance. Available only in Node. See [https.Agent](https://nodejs.org/api/https.html#https_class_https_agent).               |
-| `password`        | _None_                                                                                    | Password for authentication.                                                                                                              |
-| `token`           | _None_                                                                                    | Token object for authentication.                                                                                                          |
-| `username`        | _None_                                                                                    | Username for authentication.                                                                                                              |
-| `withCredentials` | _None_                                                                                    | Credentials inclusion setting for the request,                                                                                            |
+| Option        | Default       | Description                                       |
+|---------------|---------------|---------------------------------------------------|
+| `authType`    | `null`        | The authentication type to use. If not provided, defaults to trying to detect based upon whether `username` and `password` were provided. |
+| `contactHref` | _[This URL](https://github.com/perry-mitchell/webdav-client/blob/master/LOCK_CONTACT.md)_ | Contact URL used for LOCKs. |
+| `headers`     | `{}`          | Additional headers provided to all requests. Headers provided here are overridden by method-specific headers, including `Authorization`. |
+| `httpAgent`   | _None_        | HTTP agent instance. Available only in Node. See [http.Agent](https://nodejs.org/api/http.html#http_class_http_agent). |
+| `httpsAgent`  | _None_        | HTTPS agent instance. Available only in Node. See [https.Agent](https://nodejs.org/api/https.html#https_class_https_agent). |
+| `password`    | _None_        | Password for authentication.                      |
+| `token`       | _None_        | Token object for authentication.                  |
+| `username`    | _None_        | Username for authentication.                      |
+| `withCredentials` | _None_    | Credentials inclusion setting for the request,    |
 
 ### Client methods
 
@@ -192,18 +201,21 @@ The `WebDAVClient` interface type contains all the methods and signatures for th
 Copy a file from one location to another.
 
 ```typescript
-await client.copyFile("/images/test.jpg", "/public/img/test.jpg");
+await client.copyFile(
+    "/images/test.jpg",
+    "/public/img/test.jpg"
+);
 ```
 
 ```typescript
-(filename: string, destination: string, options?: WebDAVMethodOptions) => Promise<void>;
+(filename: string, destination: string, options?: WebDAVMethodOptions) => Promise<void>
 ```
 
-| Argument      | Required | Description                        |
-| ------------- | -------- | ---------------------------------- |
-| `filename`    | Yes      | The source filename.               |
-| `destination` | Yes      | The destination filename.          |
-| `options`     | No       | [Method options](#method-options). |
+| Argument          | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `filename`        | Yes       | The source filename.                          |
+| `destination`     | Yes       | The destination filename.                     |
+| `options`         | No        | [Method options](#method-options).            |
 
 #### createDirectory
 
@@ -214,14 +226,14 @@ await client.createDirectory("/data/system/storage");
 ```
 
 ```typescript
-(path: string, options?: CreateDirectoryOptions) => Promise<void>;
+(path: string, options?: CreateDirectoryOptions) => Promise<void>
 ```
 
-| Argument            | Required | Description                                          |
-| ------------------- | -------- | ---------------------------------------------------- |
-| `path`              | Yes      | The path to create.                                  |
-| `options`           | No       | Create directory options.                            |
-| `options.recursive` | No       | Recursively create directories if they do not exist. |
+| Argument              | Required  | Description                                   |
+|-----------------------|-----------|-----------------------------------------------|
+| `path`                | Yes       | The path to create.                           |
+| `options`             | No        | Create directory options.                     |
+| `options.recursive`   | No        | Recursively create directories if they do not exist. |
 
 _`options` extends [method options](#method-options)._
 
@@ -238,29 +250,33 @@ Synchronously create a readable stream for a remote file.
 _Note that although a stream is returned instantly, the connection and fetching of the file is still performed asynchronously in the background. There will be some delay before the stream begins receiving data._
 
 ```typescript
-client.createReadStream("/video.mp4").pipe(fs.createWriteStream("~/video.mp4"));
+client
+    .createReadStream("/video.mp4")
+    .pipe(fs.createWriteStream("~/video.mp4"));
 ```
 
 If you want to stream only part of the file, you can specify the `range` in the options argument:
 
 ```typescript
 client
-    .createReadStream("/video.mp4", { range: { start: 0, end: 1024 } })
-    .pipe(fs.createWriteStream("~/video.mp4"));
+    .createReadStream(
+        "/video.mp4", 
+        { range: { start: 0, end: 1024 } }
+    ).pipe(fs.createWriteStream("~/video.mp4"));
 ```
 
 ```typescript
-(filename: string, options?: CreateReadStreamOptions) => Stream.Readable;
+(filename: string, options?: CreateReadStreamOptions) => Stream.Readable
 ```
 
-| Argument              | Required | Description                                        |
-| --------------------- | -------- | -------------------------------------------------- |
-| `callback`            | No       | Callback to fire with the response of the request. |
-| `filename`            | Yes      | The remote file to stream.                         |
-| `options`             | No       | Read stream options.                               |
-| `options.range`       | No       | Stream range configuration.                        |
-| `options.range.start` | Yes      | Byte-position for the start of the stream.         |
-| `options.range.end`   | No       | Byte-position for the end of the stream.           |
+| Argument          | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `callback`        | No        | Callback to fire with the response of the request. |
+| `filename`        | Yes       | The remote file to stream.                    |
+| `options`         | No        | Read stream options.                          |
+| `options.range`   | No        | Stream range configuration.                   |
+| `options.range.start` | Yes   | Byte-position for the start of the stream.    |
+| `options.range.end` | No      | Byte-position for the end of the stream.      |
 
 _`options` extends [method options](#method-options)._
 
@@ -271,20 +287,21 @@ Create a write stream targeted at a remote file.
 _Note that although a stream is returned instantly, the connection and writing to the remote file is still performed asynchronously in the background. There will be some delay before the stream begins piping data._
 
 ```typescript
-fs.createReadStream("~/Music/song.mp3").pipe(client.createWriteStream("/music/song.mp3"));
+fs
+    .createReadStream("~/Music/song.mp3")
+    .pipe(client.createWriteStream("/music/song.mp3"));
 ```
 
 ```typescript
-(filename: string, options?: CreateWriteStreamOptions, callback?: CreateWriteStreamCallback) =>
-    Stream.Writable;
+(filename: string, options?: CreateWriteStreamOptions, callback?: CreateWriteStreamCallback) => Stream.Writable
 ```
 
-| Argument            | Required | Description                                                                                                                        |
-| ------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `filename`          | Yes      | The remote file to stream.                                                                                                         |
-| `options`           | No       | Write stream options.                                                                                                              |
-| `options.overwrite` | No       | Whether or not to overwrite the remote file if it already exists. Defaults to `true`.                                              |
-| `callback`          | No       | Callback to fire once the connection has been made and streaming has started. Callback is called with the response of the request. |
+| Argument          | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `filename`        | Yes       | The remote file to stream.                    |
+| `options`         | No        | Write stream options.                         |
+| `options.overwrite` | No      | Whether or not to overwrite the remote file if it already exists. Defaults to `true`. |
+| `callback`        | No        | Callback to fire once the connection has been made and streaming has started. Callback is called with the response of the request. |
 
 _`options` extends [method options](#method-options)._
 
@@ -306,13 +323,13 @@ const stat: FileStat = parseStat(result, "/alrighty.jpg", false);
 ```
 
 ```typescript
-(path: string, requestOptions: RequestOptionsCustom) => Promise<Response>;
+(path: string, requestOptions: RequestOptionsCustom) => Promise<Response>
 ```
 
-| Argument         | Required | Description                                                                                                               |
-| ---------------- | -------- | ------------------------------------------------------------------------------------------------------------------------- |
-| `path`           | Yes      | The path to make a custom request against.                                                                                |
-| `requestOptions` | Yes      | Request options - required parameters such as `url`, `method` etc. - Refer to the `RequestOptionsCustom` type definition. |
+| Argument          | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `path`            | Yes       | The path to make a custom request against.    |
+| `requestOptions`  | Yes       | Request options - required parameters such as `url`, `method` etc. - Refer to the `RequestOptionsCustom` type definition. |
 
 _The request options parameter **does not** extend [method options](#method-options) as things like `headers` can already be specified._
 
@@ -325,32 +342,32 @@ await client.deleteFile("/tmp.dat");
 ```
 
 ```typescript
-(filename: string, options?: WebDAVMethodOptions) => Promise<void>;
+(filename: string, options?: WebDAVMethodOptions) => Promise<void>
 ```
 
-| Argument   | Required | Description                        |
-| ---------- | -------- | ---------------------------------- |
-| `filename` | Yes      | The file to delete.                |
-| `options`  | No       | [Method options](#method-options). |
+| Argument          | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `filename`        | Yes       | The file to delete.                           |
+| `options`         | No        | [Method options](#method-options).            |
 
 #### exists
 
 Check if a file or directory exists.
 
 ```typescript
-if ((await client.exists("/some/path")) === false) {
+if (await client.exists("/some/path") === false) {
     await client.createDirectory("/some/path");
 }
 ```
 
 ```typescript
-(path: string, options?: WebDAVMethodOptions) => Promise<boolean>;
+(path: string, options?: WebDAVMethodOptions) => Promise<boolean>
 ```
 
-| Argument  | Required | Description                        |
-| --------- | -------- | ---------------------------------- |
-| `path`    | Yes      | The remote path to check.          |
-| `options` | No       | [Method options](#method-options). |
+| Argument          | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `path`            | Yes       | The remote path to check.                     |
+| `options`         | No        | [Method options](#method-options).            |
 
 #### getDirectoryContents
 
@@ -370,17 +387,16 @@ const images = await client.getDirectoryContents("/", { deep: true, glob: "/**/*
 ```
 
 ```typescript
-(path: string, options?: GetDirectoryContentsOptions) =>
-    Promise<Array<FileStat> | ResponseDataDetailed<Array<FileStat>>>;
+(path: string, options?: GetDirectoryContentsOptions) => Promise<Array<FileStat> | ResponseDataDetailed<Array<FileStat>>>
 ```
 
-| Argument          | Required | Description                                                        |
-| ----------------- | -------- | ------------------------------------------------------------------ |
-| `path`            | Yes      | The path to fetch the contents of.                                 |
-| `options`         | No       | Configuration options.                                             |
-| `options.deep`    | No       | Fetch deep results (recursive). Defaults to `false`.               |
-| `options.details` | No       | Fetch detailed results (item stats, headers). Defaults to `false`. |
-| `options.glob`    | No       | Glob string for matching filenames. Not set by default.            |
+| Argument          | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `path`            | Yes       | The path to fetch the contents of.            |
+| `options`         | No        | Configuration options.                        |
+| `options.deep`    | No        | Fetch deep results (recursive). Defaults to `false`. |
+| `options.details` | No        | Fetch detailed results (item stats, headers). Defaults to `false`. |
+| `options.glob`    | No        | Glob string for matching filenames. Not set by default. |
 
 _`options` extends [method options](#method-options)._
 
@@ -401,16 +417,15 @@ const str: string = await client.getFileContents("/config.json", { format: "text
 ```
 
 ```typescript
-(filename: string, options?: GetFileContentsOptions) =>
-    Promise<BufferLike | string | ResponseDataDetailed<BufferLike | string>>;
+(filename: string, options?: GetFileContentsOptions) => Promise<BufferLike | string | ResponseDataDetailed<BufferLike | string>>
 ```
 
-| Argument          | Required | Description                                                                        |
-| ----------------- | -------- | ---------------------------------------------------------------------------------- |
-| `filename`        | Yes      | The file to fetch the contents of.                                                 |
-| `options`         | No       | Configuration options.                                                             |
-| `options.details` | No       | Fetch detailed results (additional headers). Defaults to `false`.                  |
-| `options.format`  | No       | Whether to fetch binary ("binary") data or textual ("text"). Defaults to "binary". |
+| Argument          | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `filename`        | Yes       | The file to fetch the contents of.            |
+| `options`         | No        | Configuration options.                        |
+| `options.details` | No        | Fetch detailed results (additional headers). Defaults to `false`. |
+| `options.format`  | No        | Whether to fetch binary ("binary") data or textual ("text"). Defaults to "binary". |
 
 _`options` extends [method options](#method-options)._
 
@@ -425,12 +440,12 @@ const downloadLink: string = client.getFileDownloadLink("/image.png");
 ```
 
 ```typescript
-(filename: string) => string;
+(filename: string) => string
 ```
 
-| Argument   | Required | Description                                      |
-| ---------- | -------- | ------------------------------------------------ |
-| `filename` | Yes      | The remote file to generate a download link for. |
+| Argument          | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `filename`        | Yes       | The remote file to generate a download link for. |
 
 #### getFileUploadLink
 
@@ -441,12 +456,12 @@ const uploadLink: string = client.getFileUploadLink("/image.png");
 ```
 
 ```typescript
-(filename: string) => string;
+(filename: string) => string
 ```
 
-| Argument   | Required | Description                                     |
-| ---------- | -------- | ----------------------------------------------- |
-| `filename` | Yes      | The remote file to generate an upload link for. |
+| Argument          | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `filename`        | Yes       | The remote file to generate an upload link for. |
 
 #### getQuota
 
@@ -461,14 +476,14 @@ const quota: DiskQuota = await client.getQuota();
 ```
 
 ```typescript
-(options?: GetQuotaOptions) => Promise<DiskQuota | null | ResponseDataDetailed<DiskQuota | null>>;
+(options?: GetQuotaOptions) => Promise<DiskQuota | null | ResponseDataDetailed<DiskQuota | null>>
 ```
 
-| Argument          | Required | Description                                                  |
-| ----------------- | -------- | ------------------------------------------------------------ |
-| `options`         | No       | Configuration options.                                       |
-| `options.details` | No       | Return detailed results (headers etc.). Defaults to `false`. |
-| `options.path`    | No       | Path used to make the quota request.                         |
+| Argument          | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `options`         | No        | Configuration options.                        |
+| `options.details` | No        | Return detailed results (headers etc.). Defaults to `false`. |
+| `options.path`    | No        | Path used to make the quota request.          |
 
 _`options` extends [method options](#method-options)._
 
@@ -484,15 +499,15 @@ await client.unlock("/file.doc", lock.token);
 ```
 
 ```typescript
-(path: string, options?: LockOptions) => Promise<LockResponse>;
+(path: string, options?: LockOptions) => Promise<LockResponse>
 ```
 
-| Argument               | Required | Description                                                                                                                                                                                      |
-| ---------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `path`                 | Yes      | The path to lock.                                                                                                                                                                                |
-| `options`              | No       | Configuration options.                                                                                                                                                                           |
-| `options.timeout`      | No       | WebDAV lock requested timeout. See the [WebDAV `Timeout` header documentation](<https://docs.microsoft.com/en-us/previous-versions/office/developer/exchange-server-2003/aa143141(v=exchg.65)>). |
-| `options.refreshToken` | No       | Previous valid lock token that should be refreshed.                                                                                                                                              |
+| Argument          | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `path`            | Yes       | The path to lock.                             |
+| `options`         | No        | Configuration options.                        |
+| `options.timeout` | No        | WebDAV lock requested timeout. See the [WebDAV `Timeout` header documentation](https://docs.microsoft.com/en-us/previous-versions/office/developer/exchange-server-2003/aa143141(v=exchg.65)). |
+| `options.refreshToken` | No   | Previous valid lock token that should be refreshed. |
 
 _`options` extends [method options](#method-options)._
 
@@ -505,14 +520,14 @@ await client.moveFile("/file1.png", "/file2.png");
 ```
 
 ```typescript
-(filename: string, destinationFilename: string, options?: WebDAVMethodOptions) => Promise<void>;
+(filename: string, destinationFilename: string, options?: WebDAVMethodOptions) => Promise<void>
 ```
 
-| Argument              | Required | Description                        |
-| --------------------- | -------- | ---------------------------------- |
-| `filename`            | Yes      | File to move.                      |
-| `destinationFilename` | Yes      | Destination filename.              |
-| `options`             | No       | [Method options](#method-options). |
+| Argument          | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `filename`        | Yes       | File to move.                                 |
+| `destinationFilename` | Yes   | Destination filename.                         |
+| `options`         | No        | [Method options](#method-options).            |
 
 #### putFileContents
 
@@ -526,17 +541,16 @@ await client.putFileContents("/my/file.txt", str);
 ```
 
 ```typescript
-(filename: string, data: string | BufferLike | Stream.Readable, options?: PutFileContentsOptions) =>
-    Promise<boolean>;
+(filename: string, data: string | BufferLike | Stream.Readable, options?: PutFileContentsOptions) => Promise<boolean>
 ```
 
-| Argument                | Required | Description                                                                                                                                                      |
-| ----------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `filename`              | Yes      | File to write to.                                                                                                                                                |
-| `data`                  | Yes      | The data to write. Can be a string, buffer or a readable stream.                                                                                                 |
-| `options`               | No       | Configuration options.                                                                                                                                           |
-| `options.contentLength` | No       | Data content length override. Either a boolean (`true` (**default**) = calculate, `false` = don't set) or a number indicating the exact byte length of the file. |
-| `options.overwrite`     | No       | Whether or not to override the remote file if it exists. Defaults to `true`.                                                                                     |
+| Argument          | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `filename`        | Yes       | File to write to.                             |
+| `data`            | Yes       | The data to write. Can be a string, buffer or a readable stream. |
+| `options`         | No        | Configuration options.                        |
+| `options.contentLength` | No  | Data content length override. Either a boolean (`true` (**default**) = calculate, `false` = don't set) or a number indicating the exact byte length of the file. |
+| `options.overwrite` | No      | Whether or not to override the remote file if it exists. Defaults to `true`. |
 
 _`options` extends [method options](#method-options)._
 
@@ -549,14 +563,14 @@ const stat: FileStat = await client.stat("/some/file.tar.gz");
 ```
 
 ```typescript
-(path: string, options?: StatOptions) => Promise<FileStat | ResponseDataDetailed<FileStat>>;
+(path: string, options?: StatOptions) => Promise<FileStat | ResponseDataDetailed<FileStat>>
 ```
 
-| Argument          | Required | Description                                                  |
-| ----------------- | -------- | ------------------------------------------------------------ |
-| `path`            | Yes      | Remote path to stat.                                         |
-| `options`         | No       | Configuration options.                                       |
-| `options.details` | No       | Return detailed results (headers etc.). Defaults to `false`. |
+| Argument          | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `path`            | Yes       | Remote path to stat.                          |
+| `options`         | No        | Configuration options.                        |
+| `options.details` | No        | Return detailed results (headers etc.). Defaults to `false`. |
 
 _`options` extends [method options](#method-options)._
 
@@ -569,14 +583,14 @@ await client.unlock("/file.doc", lock.token);
 ```
 
 ```typescript
-(path: string, token: string, options?: WebDAVMethodOptions) => Promise<void>;
+(path: string, token:string, options?: WebDAVMethodOptions) => Promise<void>
 ```
 
-| Argument  | Required | Description                                |
-| --------- | -------- | ------------------------------------------ |
-| `path`    | Yes      | Remote path to unlock.                     |
-| `token`   | Yes      | Token string from a previous lock request. |
-| `options` | No       | Configuration options.                     |
+| Argument          | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `path`            | Yes       | Remote path to unlock.                        |
+| `token`           | Yes       | Token string from a previous lock request.    |
+| `options`         | No        | Configuration options.                        |
 
 _`options` extends [method options](#method-options)._
 
@@ -588,11 +602,11 @@ For requests like `stat`, which use the `PROPFIND` method under the hood, it is 
 
 Most WebDAV methods extend `WebDAVMethodOptions`, which allow setting things like custom headers.
 
-| Option    | Required | Description                                                                                                       |
-| --------- | -------- | ----------------------------------------------------------------------------------------------------------------- |
-| `data`    | No       | Optional body/data value to send in the request. This overrides the original body of the request, if applicable.  |
-| `headers` | No       | Optional headers object to apply to the request. These headers override all others, so be careful.                |
-| `signal`  | No       | Instance of [`AbortSignal`](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal), for aborting requests. |
+| Option            | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `data`            | No        | Optional body/data value to send in the request. This overrides the original body of the request, if applicable. |
+| `headers`         | No        | Optional headers object to apply to the request. These headers override all others, so be careful. |
+| `signal`          | No        | Instance of [`AbortSignal`](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal), for aborting requests. |
 
 ### Common data structures
 
@@ -627,39 +641,39 @@ or:
 
 Properties:
 
-| Property name | Type          | Present         | Description                                                                        |
-| ------------- | ------------- | --------------- | ---------------------------------------------------------------------------------- |
-| filename      | String        | Always          | File path of the remote item                                                       |
-| basename      | String        | Always          | Base filename of the remote item, no path                                          |
-| lastmod       | String        | Always          | Last modification date of the item                                                 |
-| size          | Number        | Always          | File size - 0 for directories                                                      |
-| type          | String        | Always          | Item type - "file" or "directory"                                                  |
-| mime          | String        | Files only      | Mime type - for file items only                                                    |
-| etag          | String / null | When supported  | [ETag](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag) of the file |
-| props         | Object        | `details: true` | Props object containing all item properties returned by the server                 |
+| Property name | Type    | Present      | Description                                 |
+|---------------|---------|--------------|---------------------------------------------|
+| filename      | String  | Always       | File path of the remote item                |
+| basename      | String  | Always       | Base filename of the remote item, no path   |
+| lastmod       | String  | Always       | Last modification date of the item          |
+| size          | Number  | Always       | File size - 0 for directories               |
+| type          | String  | Always       | Item type - "file" or "directory"           |
+| mime          | String  | Files only   | Mime type - for file items only             |
+| etag          | String / null | When supported | [ETag](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag) of the file |
+| props         | Object  | `details: true` | Props object containing all item properties returned by the server |
+
 
 #### Detailed responses
 
 Requests that return results, such as `getDirectoryContents`, `getFileContents`, `getQuota` and `stat`, can be configured to return more detailed information, such as response headers. Pass `{ details: true }` to their options argument to receive an object like the following:
 
-| Property   | Type   | Description                                                                                                  |
-| ---------- | ------ | ------------------------------------------------------------------------------------------------------------ |
-| data       | \*     | The data returned by the procedure. Will be whatever type is returned by calling without `{ details: true }` |
-| headers    | Object | The response headers.                                                                                        |
-| status     | Number | The numeric status code.                                                                                     |
-| statusText | String | The status text.                                                                                             |
+| Property     | Type            | Description                            |
+|--------------|-----------------|----------------------------------------|
+| data         | *               | The data returned by the procedure. Will be whatever type is returned by calling without `{ details: true }` |
+| headers      | Object          | The response headers.                  |
+| status       | Number          | The numeric status code.               |
+| statusText   | String          | The status text.                       |
 
 ### CORS
-
 CORS is a security enforcement technique employed by browsers to ensure requests are executed to and from expected contexts. It can conflict with this library if the target server doesn't return CORS headers when making requests from a browser. It is your responsibility to handle this.
 
 It is a known issue that Nextcloud servers by default don't return friendly CORS headers, making working with this library within a browser context impossible. You can of course force the addition of CORS headers (Apache or Nginx configs) yourself, but do this at your own risk.
 
 ## Projects using this WebDAV client
 
--   [Buttercup Password Manager](https://github.com/buttercup)
--   [Nextcloud Server](https://github.com/nextcloud/server)
--   [Nextcloud Photos](https://github.com/nextcloud/photos)
--   [ownCloud SDK](https://github.com/owncloud/owncloud-sdk)
--   [React OxIDE](https://github.com/bootrino/reactoxide)
--   [BackItUp](https://github.com/simatec/ioBroker.backitup)
+ * [Buttercup Password Manager](https://github.com/buttercup)
+ * [Nextcloud Server](https://github.com/nextcloud/server)
+ * [Nextcloud Photos](https://github.com/nextcloud/photos)
+ * [ownCloud SDK](https://github.com/owncloud/owncloud-sdk)
+ * [React OxIDE](https://github.com/bootrino/reactoxide)
+ * [BackItUp](https://github.com/simatec/ioBroker.backitup)
