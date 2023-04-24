@@ -62,7 +62,7 @@
   },
   "homepage": "https://github.com/perry-mitchell/webdav-client#readme",
   "dependencies": {
-    "@buttercup/fetch": "^0.1.0",
+    "@buttercup/fetch": "^0.1.1",
     "base-64": "^1.0.0",
     "byte-length": "^1.0.2",
     "fast-xml-parser": "^3.19.0",
