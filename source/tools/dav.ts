@@ -76,7 +76,8 @@ export function parseXML(xml: string): Promise<DAVResult> {
     return new Promise(resolve => {
         const result = xmlParser.parse(xml, {
             arrayMode: false,
-            ignoreNameSpace: true
+            ignoreNameSpace: true,
+            parseTrueNumberOnly: true
             // // We don't use the processors here as decoding is done manually
             // // later on - decoding early would break some path checks.
             // attrValueProcessor: val => decodeHTMLEntities(decodeURIComponent(val)),
