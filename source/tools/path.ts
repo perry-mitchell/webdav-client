@@ -35,3 +35,7 @@ export function normalisePath(pathStr: string): string {
     }
     return normalisedPath;
 }
+
+export function makePathAbsolute(pathStr: string): string {
+    return pathStr.startsWith("/") ? pathStr : "/" + pathStr;
+}

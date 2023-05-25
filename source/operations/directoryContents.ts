@@ -1,6 +1,6 @@
 import pathPosix from "path-posix";
 import { joinURL, normaliseHREF } from "../tools/url.js";
-import { encodePath, normalisePath } from "../tools/path.js";
+import { encodePath, makePathAbsolute, normalisePath } from "../tools/path.js";
 import { parseXML, prepareFileFromProps } from "../tools/dav.js";
 import { request, prepareRequestOptions } from "../request.js";
 import { handleResponseCode, processGlobFilter, processResponsePayload } from "../response.js";
@@ -36,10 +36,11 @@ export async function getDirectoryContents(
         throw new Error("Failed parsing directory contents: Empty response");
     }
     const davResp = await parseXML(responseData);
-    const _remotePath = remotePath.startsWith("/") ? remotePath : "/" + remotePath;
+    const _remotePath = makePathAbsolute(remotePath);
+    const directoryBasePath = makePathAbsolute(context.directoryBasePath || context.remotePath);
     let files = getDirectoryFiles(
         davResp,
-        context.remotePath,
+        directoryBasePath,
         _remotePath,
         options.details,
         options.includeSelf

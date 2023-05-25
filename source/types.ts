@@ -260,6 +260,7 @@ export interface WebDAVClientContext {
     token?: OAuthToken;
     username?: string;
     withCredentials?: boolean;
+    directoryBasePath?: string;
 }
 
 export interface WebDAVClientError extends Error {
@@ -280,6 +281,7 @@ export interface WebDAVClientOptions {
     token?: OAuthToken;
     username?: string;
     withCredentials?: boolean;
+    directoryBasePath?: string;
 }
 
 export interface WebDAVMethodOptions {
