@@ -288,4 +288,21 @@ describe("getDirectoryContents", function () {
                 });
         });
     });
+
+    describe("when using custom dir base path", function () {
+        beforeEach(async function () {
+            this.client = createWebDAVClient(`http://localhost:${SERVER_PORT}/webdav/server`, {
+                username: SERVER_USERNAME,
+                password: SERVER_PASSWORD,
+                directoryBasePath: "/webdav/server/custom"
+            });
+        });
+
+        it("return correct filename with custom path", function () {
+            return this.client.getDirectoryContents("/").then(function (contents: Array<FileStat>) {
+                const file = contents.find(item => item.basename === "notes.txt");
+                expect(file.filename).to.equal("/../notes.txt");
+            });
+        });
+    });
 });
