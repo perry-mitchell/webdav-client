@@ -25,6 +25,10 @@ export function getAllDirectories(directory: string): Array<string> {
     return output;
 }
 
+export function makePathAbsolute(pathStr: string): string {
+    return pathStr.startsWith("/") ? pathStr : "/" + pathStr;
+}
+
 export function normalisePath(pathStr: string): string {
     let normalisedPath = pathStr;
     if (normalisedPath[0] !== "/") {
@@ -34,8 +38,4 @@ export function normalisePath(pathStr: string): string {
         normalisedPath = normalisedPath.substr(0, normalisedPath.length - 1);
     }
     return normalisedPath;
-}
-
-export function makePathAbsolute(pathStr: string): string {
-    return pathStr.startsWith("/") ? pathStr : "/" + pathStr;
 }

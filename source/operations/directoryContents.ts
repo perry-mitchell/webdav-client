@@ -37,10 +37,10 @@ export async function getDirectoryContents(
     }
     const davResp = await parseXML(responseData);
     const _remotePath = makePathAbsolute(remotePath);
-    const directoryBasePath = makePathAbsolute(context.directoryBasePath || context.remotePath);
+    const remoteBasePath = makePathAbsolute(context.remoteBasePath || context.remotePath);
     let files = getDirectoryFiles(
         davResp,
-        directoryBasePath,
+        remoteBasePath,
         _remotePath,
         options.details,
         options.includeSelf
@@ -53,12 +53,12 @@ export async function getDirectoryContents(
 
 function getDirectoryFiles(
     result: DAVResult,
-    serverBasePath: string,
+    serverremoteBasePath: string,
     requestPath: string,
     isDetailed: boolean = false,
     includeSelf: boolean = false
 ): Array<FileStat> {
-    const serverBase = pathPosix.join(serverBasePath, "/");
+    const serverBase = pathPosix.join(serverremoteBasePath, "/");
     // Extract the response items (directory contents)
     const {
         multistatus: { response: responseItems }

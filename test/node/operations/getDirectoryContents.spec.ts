@@ -294,7 +294,7 @@ describe("getDirectoryContents", function () {
             this.client = createWebDAVClient(`http://localhost:${SERVER_PORT}/webdav/server`, {
                 username: SERVER_USERNAME,
                 password: SERVER_PASSWORD,
-                directoryBasePath: "/webdav/server/custom"
+                remoteBasePath: "/webdav/server/custom"
             });
         });
 

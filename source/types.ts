@@ -168,10 +168,10 @@ interface RequestOptionsBase {
     method: string;
     onDownloadProgress?: ProgressEventCallback;
     onUploadProgress?: ProgressEventCallback;
+    signal?: AbortSignal;
     transformResponse?: Array<(value: any) => any>;
     url?: string;
     withCredentials?: boolean;
-    signal?: AbortSignal;
 }
 
 export interface RequestOptionsCustom extends RequestOptionsBase {}
@@ -248,6 +248,7 @@ export interface WebDAVClient {
 
 export interface WebDAVClientContext {
     authType: AuthType;
+    remoteBasePath?: string;
     contactHref: string;
     digest?: DigestContext;
     ha1?: string;
@@ -260,7 +261,6 @@ export interface WebDAVClientContext {
     token?: OAuthToken;
     username?: string;
     withCredentials?: boolean;
-    directoryBasePath?: string;
 }
 
 export interface WebDAVClientError extends Error {
@@ -270,6 +270,7 @@ export interface WebDAVClientError extends Error {
 
 export interface WebDAVClientOptions {
     authType?: AuthType;
+    remoteBasePath?: string;
     contactHref?: string;
     ha1?: string;
     headers?: Headers;
@@ -281,7 +282,6 @@ export interface WebDAVClientOptions {
     token?: OAuthToken;
     username?: string;
     withCredentials?: boolean;
-    directoryBasePath?: string;
 }
 
 export interface WebDAVMethodOptions {
