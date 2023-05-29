@@ -1,5 +1,10 @@
 # WebDAV-Client changelog
 
+## v5.1.0
+_2023-05-29_
+
+ * [#342](https://github.com/perry-mitchell/webdav-client/issues/342) Support custom remote base directory (other than path specified in URL): `remoteBasePath`
+
 ## v5.0.0
 _2022-11-30_
 
