@@ -58,7 +58,7 @@ import { createClient } from "webdav/web";
 
 import { createClient } from "webdav";
 
-// will both work fine in supported bundlers
+// both work fine in supported bundlers
 ```
 
 Versions 3/4 supported a UMD-style module in the browser, but this is no longer supported in version 5. Version 5 provides only an ESM-enabled bundle that can be imported into other ESM-supporting projects.
