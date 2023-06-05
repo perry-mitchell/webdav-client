@@ -2,7 +2,7 @@
 
 > A WebDAV client, written in Typescript, for NodeJS and the browser
 
-![build status](https://github.com/perry-mitchell/webdav-client/actions/workflows/test.yml/badge.svg) [![npm version](https://badge.fury.io/js/webdav.svg)](https://www.npmjs.com/package/webdav) [![monthly downloads](https://img.shields.io/npm/dm/webdav.svg)](https://www.npmjs.com/package/webdav) [![total downloads](https://img.shields.io/npm/dt/webdav.svg?label=total%20downloads)](https://www.npmjs.com/package/webdav)
+![build status](https://github.com/perry-mitchell/webdav-client/actions/workflows/test.yml/badge.svg) [![npm version](https://badge.fury.io/js/webdav.svg)](https://www.npmjs.com/package/webdav) [![monthly downloads](https://img.shields.io/npm/dm/webdav.svg)](https://www.npmjs.com/package/webdav) [![total downloads](https://img.shields.io/npm/dt/webdav.svg?label=total%20downloads)](https://www.npmjs.com/package/webdav) ![Dependents (via libraries.io)](https://img.shields.io/librariesio/dependents/npm/webdav)
 
 ## About
 
