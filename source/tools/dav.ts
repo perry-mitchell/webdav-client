@@ -19,6 +19,20 @@ enum PropertyType {
     Original = "original"
 }
 
+function getParser(): XMLParser {
+    return new XMLParser({
+        removeNSPrefix: true,
+        numberParseOptions: {
+            hex: true,
+            leadingZeros: false
+        }
+        // // We don't use the processors here as decoding is done manually
+        // // later on - decoding early would break some path checks.
+        // attributeValueProcessor: val => decodeHTMLEntities(decodeURIComponent(val)),
+        // tagValueProcessor: val => decodeHTMLEntities(decodeURIComponent(val))
+    });
+}
+
 function getPropertyOfType(
     obj: Object,
     prop: string,
@@ -72,20 +86,12 @@ function normaliseResult(result: DAVResultRaw): DAVResult {
     return output as DAVResult;
 }
 
-function getParser(): XMLParser {
-    return new XMLParser({
-        removeNSPrefix: true,
-        numberParseOptions: {
-            hex: true,
-            leadingZeros: false
-        }
-        // // We don't use the processors here as decoding is done manually
-        // // later on - decoding early would break some path checks.
-        // attributeValueProcessor: val => decodeHTMLEntities(decodeURIComponent(val)),
-        // tagValueProcessor: val => decodeHTMLEntities(decodeURIComponent(val))
-    });
-}
-
+/**
+ * Parse an XML response from a WebDAV service,
+ *  converting it to an internal DAV result
+ * @param xml The raw XML string
+ * @returns A parsed and processed DAV result
+ */
 export function parseXML(xml: string): Promise<DAVResult> {
     return new Promise(resolve => {
         const result = getParser().parse(xml);
@@ -130,6 +136,14 @@ export function prepareFileFromProps(
     return stat;
 }
 
+/**
+ * Parse a DAV result for file stats
+ * @param result The resulting DAV response
+ * @param filename The filename that was stat'd
+ * @param isDetailed Whether or not the raw props of
+ *  the resource should be returned
+ * @returns A file stat result
+ */
 export function parseStat(
     result: DAVResult,
     filename: string,
@@ -163,6 +177,12 @@ export function parseStat(
     return prepareFileFromProps(props, filePath, isDetailed);
 }
 
+/**
+ * Translate a disk quota indicator to a recognised
+ *  value (includes "unlimited" and "unknown")
+ * @param value The quota indicator, eg. "-3"
+ * @returns The value in bytes, or another indicator
+ */
 export function translateDiskSpace(value: string | number): DiskQuotaAvailable {
     switch (value.toString()) {
         case "-3":

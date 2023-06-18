@@ -31,6 +31,17 @@ export function processGlobFilter(files: Array<FileStat>, glob: string): Array<F
     return files.filter(file => minimatch(file.filename, glob, { matchBase: true }));
 }
 
+/**
+ * Process a response payload (eg. from `customRequest`) and
+ *  prepare it for further processing. Exposed for custom
+ *  request handling.
+ * @param response The response for a request
+ * @param data The data returned
+ * @param isDetailed Whether or not a detailed result is
+ *  requested
+ * @returns The response data, or a detailed response object
+ *  if required
+ */
 export function processResponsePayload<T>(
     response: Response,
     data: T,
