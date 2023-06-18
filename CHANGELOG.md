@@ -1,5 +1,11 @@
 # WebDAV-Client changelog
 
+## v5.2.1
+_2023-06-18_
+
+ * **Bugfix**:
+   * [#339](https://github.com/perry-mitchell/webdav-client/issues/339) Regression: `processResponsePayload` and other methods not exposed in exports
+
 ## v5.2.0
 _2023-06-18_
 
