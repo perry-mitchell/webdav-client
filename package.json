@@ -65,7 +65,7 @@
     "@buttercup/fetch": "^0.1.1",
     "base-64": "^1.0.0",
     "byte-length": "^1.0.2",
-    "fast-xml-parser": "^3.19.0",
+    "fast-xml-parser": "^4.2.4",
     "he": "^1.2.0",
     "hot-patcher": "^2.0.0",
     "layerr": "^0.1.2",
