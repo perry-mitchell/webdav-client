@@ -1,5 +1,12 @@
 # WebDAV-Client changelog
 
+## v5.2.0
+_2023-06-18_
+
+ * [#344](https://github.com/perry-mitchell/webdav-client/pull/344) Upgrade `fast-xml-parser` to new major (v4)
+ * **Bugfix**:
+   * [#336](https://github.com/perry-mitchell/webdav-client/issues/336) `fast-xml-parser` vulnerability
+
 ## v5.1.0
 _2023-05-29_
 
