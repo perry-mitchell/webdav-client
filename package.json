@@ -7,7 +7,8 @@
       "browser": "./dist/web/index.js",
       "default": "./dist/node/index.js"
     },
-    "./web": "./dist/web/index.js"
+    "./web": "./dist/web/index.js",
+    "./dist/": "./dist/"
   },
   "type": "module",
   "types": "./dist/node/index.d.ts",
