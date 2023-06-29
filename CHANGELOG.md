@@ -1,5 +1,11 @@
 # WebDAV-Client changelog
 
+## v5.2.2
+_2023-06-26_
+
+ * **Bugfix**:
+   * [#339](https://github.com/perry-mitchell/webdav-client/issues/339) Unable to import files from `dist`
+
 ## v5.2.1
 _2023-06-18_
 
