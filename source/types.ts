@@ -1,4 +1,4 @@
-import Stream from "node:stream";
+import * as Stream from "node:stream";
 import { Response } from "@buttercup/fetch";
 
 export { Request, Response } from "@buttercup/fetch";
