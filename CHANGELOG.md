@@ -1,5 +1,10 @@
 # WebDAV-Client changelog
 
+## v5.2.3
+_2023-07-16_
+
+ * React-Native entry in `package.json`
+
 ## v5.2.2
 _2023-06-29_
 
