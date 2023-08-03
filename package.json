@@ -27,7 +27,7 @@
     "test:node:watch": "nodemon --exec 'npm run test:node' --ignore 'dist/'",
     "test:web": "concurrently --success 'first' --kill-others 'npm run test:web:karma' 'npm run test:web:server'",
     "test:web:karma": "karma start test/karma.conf.cjs",
-    "test:web:server": "ts-node-esm ./test/server.web.ts"
+    "test:web:server": "node --loader ts-node/esm ./test/server.web.ts"
   },
   "files": [
     "dist/",
