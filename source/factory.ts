@@ -12,6 +12,7 @@ import { getFileContents, getFileDownloadLink } from "./operations/getFileConten
 import { lock, unlock } from "./operations/lock.js";
 import { getQuota } from "./operations/getQuota.js";
 import { getStat } from "./operations/stat.js";
+import { getSearch } from "./operations/search.js";
 import { moveFile } from "./operations/moveFile.js";
 import { getFileUploadLink, putFileContents } from "./operations/putFileContents.js";
 import {
@@ -27,6 +28,7 @@ import {
     LockOptions,
     PutFileContentsOptions,
     RequestOptionsCustom,
+    SearchOptions,
     StatOptions,
     WebDAVClient,
     WebDAVClientContext,
@@ -104,6 +106,7 @@ export function createClient(remoteURL: string, options: WebDAVClientOptions = {
             data: string | BufferLike | Stream.Readable,
             options?: PutFileContentsOptions
         ) => putFileContents(context, filename, data, options),
+        search: (path: string, options?: SearchOptions) => getSearch(context, path, options),
         setHeaders: (headers: Headers) => {
             context.headers = Object.assign({}, headers);
         },
