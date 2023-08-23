@@ -8,7 +8,7 @@
       "default": "./dist/node/index.js"
     },
     "./web": "./dist/web/index.js",
-    "./dist/": "./dist/"
+    "./dist/*": "./dist/*"
   },
   "react-native": "./dist/web/index.js",
   "type": "module",
