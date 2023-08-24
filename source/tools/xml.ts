@@ -1,9 +1,9 @@
-import xmlParser, { j2xParser as XMLParser } from "fast-xml-parser";
+import { XMLParser, XMLBuilder } from "fast-xml-parser";
 
 type NamespaceObject = { [key: string]: any };
 
 export function generateLockXML(ownerHREF: string): string {
-    return getParser().parse(
+    return getBuilder().build(
         namespace(
             {
                 lockinfo: {
@@ -24,12 +24,20 @@ export function generateLockXML(ownerHREF: string): string {
     );
 }
 
-function getParser(): XMLParser {
-    return new XMLParser({
+function getBuilder(): XMLBuilder {
+    return new XMLBuilder({
         attributeNamePrefix: "@_",
         format: true,
         ignoreAttributes: false,
-        supressEmptyNode: true
+        suppressEmptyNode: true
+    });
+}
+
+function getParser(): XMLParser {
+    return new XMLParser({
+        removeNSPrefix: true,
+        parseAttributeValue: true,
+        parseTagValue: true
     });
 }
 
@@ -51,10 +59,5 @@ function namespace<T extends NamespaceObject>(obj: T, ns: string): T {
 }
 
 export function parseGenericResponse(xml: string): Object {
-    return xmlParser.parse(xml, {
-        arrayMode: false,
-        ignoreNameSpace: true,
-        parseAttributeValue: true,
-        parseNodeValue: true
-    });
+    return getParser().parse(xml);
 }

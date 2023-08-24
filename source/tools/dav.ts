@@ -1,5 +1,5 @@
 import path from "path-posix";
-import xmlParser from "fast-xml-parser";
+import { XMLParser } from "fast-xml-parser";
 import nestedProp from "nested-property";
 import { decodeHTMLEntities } from "./encode";
 import { normalisePath } from "./path";
@@ -72,16 +72,23 @@ function normaliseResult(result: DAVResultRaw): DAVResult {
     return output as DAVResult;
 }
 
+function getParser(): XMLParser {
+    return new XMLParser({
+        removeNSPrefix: true,
+        numberParseOptions: {
+            hex: true,
+            leadingZeros: false
+        }
+        // // We don't use the processors here as decoding is done manually
+        // // later on - decoding early would break some path checks.
+        // attributeValueProcessor: val => decodeHTMLEntities(decodeURIComponent(val)),
+        // tagValueProcessor: val => decodeHTMLEntities(decodeURIComponent(val))
+    });
+}
+
 export function parseXML(xml: string): Promise<DAVResult> {
     return new Promise(resolve => {
-        const result = xmlParser.parse(xml, {
-            arrayMode: false,
-            ignoreNameSpace: true
-            // // We don't use the processors here as decoding is done manually
-            // // later on - decoding early would break some path checks.
-            // attrValueProcessor: val => decodeHTMLEntities(decodeURIComponent(val)),
-            // tagValueProcessor: val => decodeHTMLEntities(decodeURIComponent(val))
-        });
+        const result = getParser().parse(xml);
         resolve(normaliseResult(result));
     });
 }
