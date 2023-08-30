@@ -1,5 +1,11 @@
 # WebDAV-Client changelog
 
+## v4.11.3
+_2023-08-30_
+
+ * **Bugfix**:
+   * [#336](https://github.com/perry-mitchell/webdav-client/issues/336) Vulnerability in fast-xml-parser
+
 ## v4.11.2
 _2022-11-19_
 
