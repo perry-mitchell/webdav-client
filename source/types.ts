@@ -32,13 +32,33 @@ export interface CreateWriteStreamOptions extends WebDAVMethodOptions {
     overwrite?: boolean;
 }
 
-export interface DAVResultResponse {
-    href: string;
-    propstat: {
-        prop: DAVResultResponseProps;
-        status: string;
-    };
+/** <propstat> as per http://www.webdav.org/specs/rfc2518.html#rfc.section.12.9.1.1 */
+interface DAVPropStat {
+    prop: DAVResultResponseProps;
+    status: string;
+    responsedescription?: string;
 }
+
+/**
+ * DAV response can either be (href, propstat, responsedescription?) or (href, status, responsedescription?)
+ * @see http://www.webdav.org/specs/rfc2518.html#rfc.section.12.9.1
+ */
+interface DAVResultBaseResponse {
+    href: string;
+    responsedescription?: string;
+}
+
+export interface DAVResultPropstatResponse extends DAVResultBaseResponse {
+    propstat: DAVPropStat;
+}
+
+export interface DAVResultStatusResponse extends DAVResultBaseResponse {
+    status: string;
+}
+
+export type DAVResultResponse = DAVResultBaseResponse &
+    Partial<DAVResultPropstatResponse> &
+    Partial<DAVResultStatusResponse>;
 
 export interface DAVResultResponseProps {
     displayname: string;
@@ -51,6 +71,8 @@ export interface DAVResultResponseProps {
     getcontenttype?: string;
     "quota-available-bytes"?: any;
     "quota-used-bytes"?: string;
+
+    [additionalProp: string]: unknown;
 }
 
 export interface DAVResult {
@@ -104,6 +126,11 @@ export interface FileStat {
     etag: string | null;
     mime?: string;
     props?: DAVResultResponseProps;
+}
+
+export interface SearchResult {
+    truncated: boolean;
+    results: FileStat[];
 }
 
 export interface GetDirectoryContentsOptions extends WebDAVMethodOptions {
@@ -201,6 +228,10 @@ export interface StatOptions extends WebDAVMethodOptions {
     details?: boolean;
 }
 
+export interface SearchOptions extends WebDAVMethodOptions {
+    details?: boolean;
+}
+
 export type UploadProgress = ProgressEvent;
 
 export type UploadProgressCallback = ProgressEventCallback;
@@ -238,6 +269,10 @@ export interface WebDAVClient {
         data: string | BufferLike | Stream.Readable,
         options?: PutFileContentsOptions
     ) => Promise<boolean>;
+    search: (
+        path: string,
+        options?: SearchOptions
+    ) => Promise<SearchResult | ResponseDataDetailed<SearchResult>>;
     setHeaders: (headers: Headers) => void;
     stat: (
         path: string,

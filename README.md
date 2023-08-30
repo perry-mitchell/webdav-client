@@ -554,6 +554,34 @@ await client.putFileContents("/my/file.txt", str);
 
 _`options` extends [method options](#method-options)._
 
+#### search
+
+Perform a WebDAV search as per [rfc5323](https://www.ietf.org/rfc/rfc5323.html).
+
+```typescript
+const searchRequest = `
+<?xml version="1.0" encoding="UTF-8"?>
+<d:searchrequest xmlns:d="DAV:" xmlns:f="http://example.com/foo">
+    <f:natural-language-query>
+    Find files changed last week
+    </f:natural-language-query>
+</d:searchrequest>
+`
+const result: SearchResult = await client.search("/some-collection", { data: searchRequest });
+```
+
+```typescript
+(path: string, options?: SearchOptions) => Promise<SearchResult | ResponseDataDetailed<SearchResult>>
+```
+
+| Argument          | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `path`            | Yes       | Remote path to which executes the search.     |
+| `options`         | No        | Configuration options.                        |
+| `options.details` | No        | Return detailed results (headers etc.). Defaults to `false`. |
+
+_`options` extends [method options](#method-options)._
+
 #### stat
 
 Get a file or directory stat object. Returns an [item stat](#item-stats).
@@ -655,7 +683,7 @@ Properties:
 
 #### Detailed responses
 
-Requests that return results, such as `getDirectoryContents`, `getFileContents`, `getQuota` and `stat`, can be configured to return more detailed information, such as response headers. Pass `{ details: true }` to their options argument to receive an object like the following:
+Requests that return results, such as `getDirectoryContents`, `getFileContents`, `getQuota`, `search` and `stat`, can be configured to return more detailed information, such as response headers. Pass `{ details: true }` to their options argument to receive an object like the following:
 
 | Property     | Type            | Description                            |
 |--------------|-----------------|----------------------------------------|

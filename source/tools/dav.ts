@@ -2,14 +2,16 @@ import path from "path-posix";
 import { XMLParser } from "fast-xml-parser";
 import nestedProp from "nested-property";
 import { decodeHTMLEntities } from "./encode.js";
-import { normalisePath } from "./path.js";
+import { encodePath, normalisePath } from "./path.js";
 import {
     DAVResult,
+    DAVResultPropstatResponse,
     DAVResultRaw,
     DAVResultResponse,
     DAVResultResponseProps,
     DiskQuotaAvailable,
     FileStat,
+    SearchResult,
     WebDAVClientError
 } from "../types.js";
 
@@ -49,12 +51,21 @@ function getPropertyOfType(
 
 function normaliseResponse(response: any): DAVResultResponse {
     const output = Object.assign({}, response);
-    nestedProp.set(output, "propstat", getPropertyOfType(output, "propstat", PropertyType.Object));
-    nestedProp.set(
-        output,
-        "propstat.prop",
-        getPropertyOfType(output, "propstat.prop", PropertyType.Object)
-    );
+    // Only either status OR propstat is allowed
+    if (output.status) {
+        nestedProp.set(output, "status", getPropertyOfType(output, "status", PropertyType.Object));
+    } else {
+        nestedProp.set(
+            output,
+            "propstat",
+            getPropertyOfType(output, "propstat", PropertyType.Object)
+        );
+        nestedProp.set(
+            output,
+            "propstat.prop",
+            getPropertyOfType(output, "propstat.prop", PropertyType.Object)
+        );
+    }
     return output;
 }
 
@@ -149,9 +160,12 @@ export function parseStat(
     filename: string,
     isDetailed: boolean = false
 ): FileStat {
-    let responseItem: DAVResultResponse = null;
+    let responseItem: DAVResultPropstatResponse = null;
     try {
-        responseItem = result.multistatus.response[0];
+        // should be a propstat response, if not the if below will throw an error
+        if ((result.multistatus.response[0] as DAVResultPropstatResponse).propstat) {
+            responseItem = result.multistatus.response[0] as DAVResultPropstatResponse;
+        }
     } catch (e) {
         /* ignore */
     }
@@ -175,6 +189,37 @@ export function parseStat(
 
     const filePath = normalisePath(filename);
     return prepareFileFromProps(props, filePath, isDetailed);
+}
+
+/**
+ * Parse a DAV result for a search request
+ *
+ * @param result The resulting DAV response
+ * @param searchArbiter The collection path that was searched
+ * @param isDetailed Whether or not the raw props of the resource should be returned
+ */
+export function parseSearch(result: DAVResult, searchArbiter: string, isDetailed: boolean) {
+    const response: SearchResult = {
+        truncated: false,
+        results: []
+    };
+
+    response.truncated = result.multistatus.response.some(v => {
+        return (
+            (v.status || v.propstat?.status).split(" ", 3)?.[1] === "507" &&
+            v.href.replace(/\/$/, "").endsWith(encodePath(searchArbiter).replace(/\/$/, ""))
+        );
+    });
+
+    result.multistatus.response.forEach(result => {
+        if (result.propstat === undefined) {
+            return;
+        }
+        const filename = result.href.split("/").map(decodeURIComponent).join("/");
+        response.results.push(prepareFileFromProps(result.propstat.prop, filename, isDetailed));
+    });
+
+    return response;
 }
 
 /**

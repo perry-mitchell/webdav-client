@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<d:multistatus
+	xmlns:d="DAV:">
+	<d:response>
+		<d:href>/first-file.md</d:href>
+		<d:propstat>
+			<d:prop>
+				<d:getcontentlength>0</d:getcontentlength>
+				<d:getcontenttype>text/markdown</d:getcontenttype>
+				<d:getetag>&quot;54d5b8eac2d78c7824925f2fa008bc8d&quot;</d:getetag>
+				<d:getlastmodified>Thu, 03 Aug 2023 21:19:11 GMT</d:getlastmodified>
+				<d:resourcetype/>
+			</d:prop>
+			<d:status>HTTP/1.1 200 OK</d:status>
+		</d:propstat>
+		<d:propstat>
+			<d:prop>
+				<d:quota-available-bytes/>
+				<nc:is-encrypted/>
+				<oc:owner-display-name/>
+				<oc:owner-id/>
+			</d:prop>
+			<d:status>HTTP/1.1 404 Not Found</d:status>
+		</d:propstat>
+	</d:response>
+	<d:response>
+		<d:href>/</d:href>
+		<d:status>HTTP/1.1 507 Insufficient Storage</d:status>
+	</d:response>
+</d:multistatus>
