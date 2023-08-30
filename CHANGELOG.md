@@ -1,5 +1,13 @@
 # WebDAV-Client changelog
 
+## v5.3.0
+_2023-08-30_
+
+ * [#205](https://github.com/perry-mitchell/webdav-client/issues/205) Search method
+ * **Bugfix**:
+   * [#355](https://github.com/perry-mitchell/webdav-client/issues/355) Can not be imported with newer node versions
+   * [#346](https://github.com/perry-mitchell/webdav-client/pull/346) Node import forces use of `esModuleInterop` flag
+
 ## v5.2.3
 _2023-07-16_
 
