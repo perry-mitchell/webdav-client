@@ -4,19 +4,35 @@
   "description": "WebDAV client for NodeJS",
   "exports": {
     ".": {
-      "browser": "./dist/web/index.js",
-      "default": "./dist/node/index.js"
+      "types": "./dist/index.d.ts",
+      "node": {
+        "import": "./dist/node/index.js",
+        "require": "./dist/node/index.cjs"
+      },
+      "browser": {
+        "import": "./dist/web/index.js",
+        "require": "./dist/web/index.cjs"
+      }
     },
     "./web": "./dist/web/index.js",
     "./dist/*": "./dist/*"
   },
   "react-native": "./dist/web/index.js",
+  "main": "dist/node/index.cjs",
+  "module": "./dist/node/index.js",
+  "browser": {
+    "./dist/node/index.cjs": "./dist/web/index.cjs",
+    "./dist/node/index.js": "./dist/web/index.js"
+  },
   "type": "module",
-  "types": "./dist/node/index.d.ts",
+  "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "npm run clean && run-p build:node build:web",
-    "build:node": "tsc",
-    "build:web": "webpack --mode production --config webpack.config.cjs",
+    "build": "run-s clean build:node:cjs build:node:esm build:web:cjs build:web:esm build:types",
+    "build:node:cjs": "FMT=cjs ENV=node rollup -c",
+    "build:node:esm": "FMT=esm ENV=node rollup -c",
+    "build:types": "tsc -p tsconfig.dec.json --emitDeclarationOnly",
+    "build:web:cjs": "FMT=cjs ENV=web rollup -c --name webdav",
+    "build:web:esm": "FMT=esm ENV=web rollup -c --name webdav",
     "clean": "rimraf dist web",
     "dev": "nodemon -e ts,js --exec 'npm run build' --ignore 'dist/' --ignore 'web/'",
     "format": "prettier --write '{source,test}/**/*.{js,ts}'",
@@ -45,7 +61,7 @@
     "sync"
   ],
   "engines": {
-    "node": ">=14"
+    "node": ">=16"
   },
   "lint-staged": {
     "{source,test}/**/*.{js,ts}": [
@@ -64,7 +80,7 @@
   },
   "homepage": "https://github.com/perry-mitchell/webdav-client#readme",
   "dependencies": {
-    "@buttercup/fetch": "^0.1.1",
+    "@buttercup/fetch": "^0.2.1",
     "base-64": "^1.0.0",
     "byte-length": "^1.0.2",
     "fast-xml-parser": "^4.2.4",
@@ -75,15 +91,19 @@
     "minimatch": "^7.4.6",
     "nested-property": "^4.0.0",
     "path-posix": "^1.0.0",
-    "url-join": "^5.0.0",
-    "url-parse": "^1.5.10"
+    "url-join": "^5.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.18.10",
     "@babel/preset-env": "^7.18.10",
     "@babel/preset-typescript": "^7.18.6",
+    "@rollup/plugin-alias": "^5.0.1",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-typescript": "^11.1.5",
     "@types/chai": "^4.3.4",
     "@types/he": "^1.1.2",
+    "@types/md5": "^2.3.4",
     "@types/mocha": "^10.0.0",
     "@types/node": "^18.11.9",
     "@types/sinon": "^10.0.13",
@@ -117,6 +137,7 @@
     "prettier-check": "^2.0.0",
     "resolve-typescript-plugin": "^2.0.0",
     "rimraf": "^3.0.2",
+    "rollup": "^4.0.2",
     "sinon": "^14.0.2",
     "speed-measure-webpack-plugin": "^1.5.0",
     "ts-node": "^10.9.1",
