@@ -1,4 +1,4 @@
-import md5 from "md5";
+import { default as md5 } from "md5";
 
 export function ha1Compute(
     algorithm: string,

@@ -1,4 +1,3 @@
-import URL from "url-parse";
 import { Layerr } from "layerr";
 import _joinURL from "url-join";
 import { normalisePath } from "./path.js";

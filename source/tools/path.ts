@@ -1,5 +1,5 @@
 import { Layerr } from "layerr";
-import path from "path-posix";
+import { default as path } from "path-posix";
 
 const SEP_PATH_POSIX = "__PATH_SEPARATOR_POSIX__";
 const SEP_PATH_WINDOWS = "__PATH_SEPARATOR_WINDOWS__";
