@@ -76,7 +76,9 @@ function getDirectoryFiles(
         const filename =
             serverBase === "/"
                 ? decodeURIComponent(normalisePath(href))
-                : decodeURIComponent(normalisePath(pathPosix.relative(serverBase, href)));
+                : normalisePath(
+                      pathPosix.relative(decodeURIComponent(serverBase), decodeURIComponent(href))
+                  );
         return prepareFileFromProps(props, filename, isDetailed);
     });
 
