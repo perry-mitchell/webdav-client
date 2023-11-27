@@ -1,5 +1,11 @@
 # WebDAV-Client changelog
 
+## v5.3.1
+_2023-11-27_
+
+ * **Bugfix**:
+   * [#360](https://github.com/perry-mitchell/webdav-client/pull/360) Incorrect filename due to mishandling of XML-encoded href
+
 ## v5.3.0
 _2023-08-30_
 
