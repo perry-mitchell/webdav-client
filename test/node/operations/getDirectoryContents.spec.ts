@@ -8,9 +8,11 @@ import {
     createWebDAVClient,
     createWebDAVServer,
     restoreRequests,
+    returnFakeResponse,
     useCustomXmlResponse,
     useRequestSpy
 } from "../../helpers.node.js";
+import { readFileSync } from "fs";
 
 describe("getDirectoryContents", function () {
     beforeEach(async function () {
@@ -102,6 +104,35 @@ describe("getDirectoryContents", function () {
                 return item.basename === "ยากจน #1.txt";
             });
             expect(sub1.filename).to.equal("/sub1/ยากจน #1.txt");
+        });
+    });
+
+    it("returns correct file results for files with HTML entities in their names", function () {
+        returnFakeResponse(
+            readFileSync(
+                new URL("../../responses/propfind-href-html-entities.xml", import.meta.url)
+            ).toString()
+        );
+
+        return this.client.getDirectoryContents("/files").then(function (contents) {
+            const file = contents.find(function (item) {
+                return item.basename === "&amp;.md";
+            });
+            expect(file).not.to.equal(undefined, "Expected file does not exist");
+            expect(file.filename).to.match(/\/files\/&amp;\.md$/);
+        });
+    });
+
+    it("returns correct file results for files with query in href", function () {
+        returnFakeResponse(
+            readFileSync(
+                new URL("../../responses/propfind-href-with-query.xml", import.meta.url)
+            ).toString()
+        );
+
+        return this.client.getDirectoryContents("/files").then(function (contents) {
+            expect(contents).to.have.length(1);
+            expect(contents[0].filename).to.match(/\/files\/some file\?foo=1&bar=2$/);
         });
     });
 

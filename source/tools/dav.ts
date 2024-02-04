@@ -112,7 +112,7 @@ export function parseXML(xml: string): Promise<DAVResult> {
 
 export function prepareFileFromProps(
     props: DAVResultResponseProps,
-    rawFilename: string,
+    filename: string,
     isDetailed: boolean = false
 ): FileStat {
     // Last modified time, raw size, item type and mime
@@ -129,7 +129,6 @@ export function prepareFileFromProps(
         typeof resourceType.collection !== "undefined"
             ? "directory"
             : "file";
-    const filename = decodeHTMLEntities(rawFilename);
     const stat: FileStat = {
         filename,
         basename: path.basename(filename),
