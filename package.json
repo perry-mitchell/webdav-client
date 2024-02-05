@@ -1,6 +1,6 @@
 {
   "name": "webdav",
-  "version": "5.3.1",
+  "version": "5.3.2",
   "description": "WebDAV client for NodeJS",
   "exports": {
     ".": {
