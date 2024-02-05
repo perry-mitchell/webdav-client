@@ -66,7 +66,7 @@ function getDirectoryFiles(
 
     // Map all items to a consistent output structure (results)
     const nodes = responseItems.map(item => {
-        // HREF is the file path (in full)
+        // HREF is the file path (in full) - The href is already XML entities decoded (e.g. foo&amp;bar is reverted to foo&bar)
         const href = normaliseHREF(item.href);
         // Each item should contain a stat object
         const {

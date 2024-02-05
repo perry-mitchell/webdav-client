@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<d:multistatus xmlns:d="DAV:">
+	<d:response>
+		<d:href>http://example.com/files/%26amp%3b.md</d:href>
+		<d:propstat>
+			<d:prop>
+				<d:getcontentlength>0</d:getcontentlength>
+				<d:getcontenttype>text/markdown</d:getcontenttype>
+				<d:getetag>&quot;e9fb0c7d776a0607e2277aad4cc74a08&quot;</d:getetag>
+				<d:getlastmodified>Sun, 04 Feb 2024 14:09:50 GMT</d:getlastmodified>
+				<d:resourcetype/>
+			</d:prop>
+			<d:status>HTTP/1.1 200 OK</d:status>
+		</d:propstat>
+		<d:propstat>
+			<d:prop>
+				<d:quota-available-bytes/>
+			</d:prop>
+			<d:status>HTTP/1.1 404 Not Found</d:status>
+		</d:propstat>
+	</d:response>
+</d:multistatus>
