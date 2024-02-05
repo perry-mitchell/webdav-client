@@ -1,5 +1,11 @@
 # WebDAV-Client changelog
 
+## v5.3.2
+_2024-02-05_
+
+ * **Bugfix**:
+   * [#364](https://github.com/perry-mitchell/webdav-client/pull/364) XML entities double decoded
+
 ## v5.3.1
 _2023-11-27_
 
