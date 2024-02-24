@@ -3,7 +3,7 @@ import { Agent as HTTPSAgent } from "https";
 import { fetch } from "@buttercup/fetch";
 import type { RequestInit as RequestInitNF } from "node-fetch";
 import { getPatcher } from "./compat/patcher.js";
-import { isWeb } from "./compat/env.js";
+import { isReactNative, isWeb } from "./compat/env.js";
 import { generateDigestAuthHeader, parseDigestAuth } from "./auth/digest.js";
 import { cloneShallow, merge } from "./tools/merge.js";
 import { mergeHeaders } from "./tools/headers.js";
@@ -54,7 +54,7 @@ function getFetchOptions(requestOptions: RequestOptions): RequestInit | RequestI
         (opts as RequestInit).credentials = "include";
     }
     // Check for node-specific options
-    if (!isWeb()) {
+    if (!isWeb() && !isReactNative()) {
         if (requestOptions.httpAgent || requestOptions.httpsAgent) {
             (opts as RequestInitNF).agent = (parsedURL: URL) => {
                 if (parsedURL.protocol === "http:") {

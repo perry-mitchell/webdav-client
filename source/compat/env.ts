@@ -1,8 +1,9 @@
-declare var WEB: boolean;
+declare var TARGET: "web" | "react-native" | undefined;
+
+export function isReactNative(): boolean {
+    return typeof TARGET === "string" && TARGET === "react-native";
+}
 
 export function isWeb(): boolean {
-    if (typeof WEB === "boolean" && WEB === true) {
-        return true;
-    }
-    return false;
+    return typeof TARGET === "string" && TARGET === "web";
 }

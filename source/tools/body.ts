@@ -1,11 +1,11 @@
 import Stream from "stream";
 import { isArrayBuffer } from "../compat/arrayBuffer.js";
 import { isBuffer } from "../compat/buffer.js";
-import { isWeb } from "../compat/env.js";
+import { isReactNative, isWeb } from "../compat/env.js";
 import { Headers, RequestDataPayload } from "../types.js";
 
 export function requestDataToFetchBody(data: RequestDataPayload): [BodyInit, Headers] {
-    if (!isWeb() && data instanceof Stream.Readable) {
+    if (!isWeb() && !isReactNative() && data instanceof Stream.Readable) {
         // @ts-ignore
         return [data, {}];
     }

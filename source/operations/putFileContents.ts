@@ -4,7 +4,7 @@ import { fromBase64 } from "../tools/encode.js";
 import { joinURL } from "../tools/url.js";
 import { encodePath } from "../tools/path.js";
 import { calculateDataLength } from "../tools/size.js";
-import { isWeb } from "../compat/env.js";
+import { isReactNative, isWeb } from "../compat/env.js";
 import { request, prepareRequestOptions } from "../request.js";
 import { handleResponseCode } from "../response.js";
 import {
@@ -29,6 +29,7 @@ export async function putFileContents(
     };
     if (
         !isWeb() &&
+        !isReactNative() &&
         typeof Stream !== "undefined" &&
         typeof Stream?.Readable !== "undefined" &&
         data instanceof Stream.Readable
