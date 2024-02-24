@@ -52,7 +52,6 @@ function getBasicConfig() {
 
         resolve: {
             alias: {
-                "he": path.resolve(__dirname, "./util/he.stub.ts"),
                 "http": path.resolve(__dirname, "./util/http.stub.ts"),
                 "node-fetch": path.resolve(__dirname, "./util/node-fetch.stub.ts")
             },
@@ -89,6 +88,9 @@ module.exports = [
         ],
 
         resolve: {
+            alias: {
+                "he": path.resolve(__dirname, "./util/he.stub.ts")
+            },
             plugins: [
                 // Handle .ts => .js resolution
                 new ResolveTypeScriptPlugin()
