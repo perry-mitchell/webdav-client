@@ -1,6 +1,6 @@
 import path from "path";
 import { fileURLToPath } from "url";
-import rimraf from "rimraf";
+import { rimraf } from "rimraf";
 import copyDir from "copy-dir";
 import { createWebDAVServer } from "./server/index.js";
 

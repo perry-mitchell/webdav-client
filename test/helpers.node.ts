@@ -2,7 +2,7 @@ import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
 import { fetch } from "@buttercup/fetch";
-import rimraf from "rimraf";
+import { rimraf } from "rimraf";
 import copyDir from "copy-dir";
 import sinon from "sinon";
 import { getPatcher } from "../source/index.js";

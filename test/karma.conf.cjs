@@ -1,4 +1,4 @@
-const webpackConfig = require("../webpack.config.cjs");
+const webpackConfig = require("../webpack.config.cjs")[0];
 
 delete webpackConfig.entry;
 delete webpackConfig.output;

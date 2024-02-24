@@ -2,7 +2,7 @@ import { Layerr } from "layerr";
 import { joinURL } from "../tools/url.js";
 import { encodePath } from "../tools/path.js";
 import { fromBase64 } from "../tools/encode.js";
-import { isWeb } from "../compat/env.js";
+import { isReactNative, isWeb } from "../compat/env.js";
 import { request, prepareRequestOptions } from "../request.js";
 import { handleResponseCode, processResponsePayload } from "../response.js";
 import {
@@ -53,7 +53,7 @@ async function getFileContentsBuffer(
     const response = await request(requestOptions);
     handleResponseCode(context, response);
     let body: BufferLike;
-    if (isWeb()) {
+    if (isWeb() || isReactNative()) {
         body = await response.arrayBuffer();
     } else {
         body = Buffer.from(await response.arrayBuffer());
