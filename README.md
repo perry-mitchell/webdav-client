@@ -20,6 +20,7 @@ Version 5 upgrades the library to use ESM (ECMAScript Modules), and so your envi
 
  * NodeJS project with `"type": "module"` in `package.json` (ESM mode)
  * Web project bundled with a tool like Webpack that can handle ESM
+ * React-native projects (via direct import or using automatic react-native entry)
 
 If you're not ready to upgrade, you may consider using version 4 of this library.
 
@@ -64,6 +65,14 @@ import { createClient } from "webdav";
 Versions 3/4 supported a UMD-style module in the browser, but this is no longer supported in version 5. Version 5 provides only an ESM-enabled bundle that can be imported into other ESM-supporting projects.
 
 **NB:** Streams are not available within the browser, so `createReadStream` and `createWriteStream` are just stubbed. Calling them will throw an exception.
+
+#### React-Native support
+
+React-Native is better supported as of version `5.4.0`, using a specific build for the platform. The import should be automatic, but can be forced by importing from `/react-native` directly:
+
+```typescript
+import { createClient } from "webdav/react-native";
+```
 
 ### Types
 
