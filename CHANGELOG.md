@@ -1,5 +1,11 @@
 # WebDAV-Client changelog
 
+## v5.4.0
+_2024-02-24_
+
+ * [#359](https://github.com/perry-mitchell/webdav-client/issues/359) React-Native specific build
+ * Updated dependencies
+
 ## v5.3.2
 _2024-02-05_
 
