@@ -83,7 +83,7 @@ module.exports = [
 
         plugins: [
             new DefinePlugin({
-                TARGET: "web"
+                TARGET: JSON.stringify("web")
             })
         ],
 
@@ -109,7 +109,7 @@ module.exports = [
 
         plugins: [
             new DefinePlugin({
-                TARGET: "react-native"
+                TARGET: JSON.stringify("react-native")
             })
         ],
 
