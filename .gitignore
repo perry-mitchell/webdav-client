@@ -6,5 +6,6 @@
 test.js
 node_modules
 test/testContents
+/coverage
 /dist
 /web

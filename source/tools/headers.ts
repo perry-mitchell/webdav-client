@@ -1,3 +1,4 @@
+import { Headers } from "@buttercup/fetch";
 import { Headers as HeadersSimple } from "../types.js";
 
 export function convertResponseHeaders(headers: Headers): HeadersSimple {
