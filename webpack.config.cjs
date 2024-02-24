@@ -68,12 +68,8 @@ function getBasicConfig() {
                 path: false,
                 stream: false,
                 util: false
-            },
-            plugins: [
-                // Handle .ts => .js resolution
-                new ResolveTypeScriptPlugin()
-            ]
-        },
+            }
+        }
     };
 }
 
@@ -92,6 +88,13 @@ module.exports = [
             })
         ],
 
+        resolve: {
+            plugins: [
+                // Handle .ts => .js resolution
+                new ResolveTypeScriptPlugin()
+            ]
+        },
+
         target: "web"
     }),
     merge(getBasicConfig(), {
@@ -107,6 +110,13 @@ module.exports = [
                 TARGET: "react-native"
             })
         ],
+
+        resolve: {
+            plugins: [
+                // Handle .ts => .js resolution
+                new ResolveTypeScriptPlugin()
+            ]
+        },
 
         target: "web"
     }),
