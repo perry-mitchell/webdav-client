@@ -135,7 +135,7 @@ export interface SearchResult {
     results: FileStat[];
 }
 
-export interface DavCompliance {
+export interface DAVCompliance {
     compliance: string[];
     server: string;
 }
@@ -255,7 +255,7 @@ export interface WebDAVClient {
     customRequest: (path: string, requestOptions: RequestOptionsCustom) => Promise<Response>;
     deleteFile: (filename: string) => Promise<void>;
     exists: (path: string) => Promise<boolean>;
-    getDavCompliance: (path: string) => Promise<DavCompliance>;
+    getDAVCompliance: (path: string) => Promise<DAVCompliance>;
     getDirectoryContents: (
         path: string,
         options?: GetDirectoryContentsOptions

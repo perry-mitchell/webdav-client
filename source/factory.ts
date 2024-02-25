@@ -16,7 +16,7 @@ import { getSearch } from "./operations/search.js";
 import { moveFile } from "./operations/moveFile.js";
 import { getFileUploadLink, putFileContents } from "./operations/putFileContents.js";
 import { partialUpdateFileContents } from "./operations/partialUpdateFileContents.js";
-import { getDavCompliance } from "./operations/getDavCompliance.js";
+import { getDAVCompliance } from "./operations/getDAVCompliance.js";
 import {
     AuthType,
     BufferLike,
@@ -115,7 +115,7 @@ export function createClient(remoteURL: string, options: WebDAVClientOptions = {
             data: string | BufferLike | Stream.Readable,
             options?: WebDAVMethodOptions
         ) => partialUpdateFileContents(context, filePath, start, end, data, options),
-        getDavCompliance: (path: string) => getDavCompliance(context, path),
+        getDAVCompliance: (path: string) => getDAVCompliance(context, path),
         search: (path: string, options?: SearchOptions) => getSearch(context, path, options),
         setHeaders: (headers: Headers) => {
             context.headers = Object.assign({}, headers);

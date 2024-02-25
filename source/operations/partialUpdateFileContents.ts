@@ -1,10 +1,10 @@
+import { Readable } from "node:stream";
 import { Layerr } from "layerr";
-import Stream from "stream";
 import { joinURL } from "../tools/url.js";
 import { encodePath } from "../tools/path.js";
 import { request, prepareRequestOptions } from "../request.js";
 import { handleResponseCode } from "../response.js";
-import { getDavCompliance } from "./getDavCompliance.js";
+import { getDAVCompliance } from "./getDAVCompliance.js";
 import {
     BufferLike,
     ErrorCode,
@@ -19,10 +19,10 @@ export async function partialUpdateFileContents(
     filePath: string,
     start: number | null,
     end: number | null,
-    data: string | BufferLike | Stream.Readable,
+    data: string | BufferLike | Readable,
     options: WebDAVMethodOptions = {}
 ): Promise<void> {
-    const compliance = await getDavCompliance(context, filePath, options);
+    const compliance = await getDAVCompliance(context, filePath, options);
     if (compliance.compliance.includes("sabredav-partialupdate")) {
         return await partialUpdateFileContentsSabredav(
             context,
@@ -54,7 +54,7 @@ async function partialUpdateFileContentsSabredav(
     filePath: string,
     start: number,
     end: number,
-    data: string | BufferLike | Stream.Readable,
+    data: string | BufferLike | Readable,
     options: WebDAVMethodOptions = {}
 ): Promise<void> {
     if (start > end || start < 0) {
@@ -85,12 +85,7 @@ async function partialUpdateFileContentsSabredav(
         options
     );
     const response = await request(requestOptions);
-    try {
-        handleResponseCode(context, response);
-    } catch (err) {
-        const error = err as WebDAVClientError;
-        throw error;
-    }
+    handleResponseCode(context, response);
 }
 
 async function partialUpdateFileContentsApache(
@@ -98,7 +93,7 @@ async function partialUpdateFileContentsApache(
     filePath: string,
     start: number,
     end: number,
-    data: string | BufferLike | Stream.Readable,
+    data: string | BufferLike | Readable,
     options: WebDAVMethodOptions = {}
 ): Promise<void> {
     if (start > end || start < 0) {
@@ -127,10 +122,5 @@ async function partialUpdateFileContentsApache(
         options
     );
     const response = await request(requestOptions);
-    try {
-        handleResponseCode(context, response);
-    } catch (err) {
-        const error = err as WebDAVClientError;
-        throw error;
-    }
+    handleResponseCode(context, response);
 }

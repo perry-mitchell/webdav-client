@@ -3,17 +3,17 @@ import { encodePath } from "../tools/path.js";
 import { request, prepareRequestOptions } from "../request.js";
 import { handleResponseCode } from "../response.js";
 import {
-    WebDAVMethodOptions,
+    DAVCompliance,
     WebDAVClientContext,
     WebDAVClientError,
-    DavCompliance
+    WebDAVMethodOptions
 } from "../types.js";
 
-export async function getDavCompliance(
+export async function getDAVCompliance(
     context: WebDAVClientContext,
     filePath: string,
     options: WebDAVMethodOptions = {}
-): Promise<DavCompliance> {
+): Promise<DAVCompliance> {
     const requestOptions = prepareRequestOptions(
         {
             url: joinURL(context.remoteURL, encodePath(filePath)),
