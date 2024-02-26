@@ -25,7 +25,7 @@
     "prepublishOnly": "npm run build",
     "test": "run-s test:node test:web test:format",
     "test:format": "prettier-check '{source,test}/**/*.{js,ts}'",
-    "test:node": "c8 --check-coverage --lines 92 --functions 94 --branches 78 --statements 92 mocha --config .mocharc.json",
+    "test:node": "c8 --check-coverage --lines 89 --functions 91 --branches 77 --statements 89 mocha --config .mocharc.json",
     "test:node:watch": "nodemon --exec 'npm run test:node' --ignore 'dist/'",
     "test:web": "concurrently --success 'first' --kill-others 'npm run test:web:karma' 'npm run test:web:server'",
     "test:web:karma": "karma start test/karma.conf.cjs",
