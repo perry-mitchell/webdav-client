@@ -563,6 +563,26 @@ await client.putFileContents("/my/file.txt", str);
 
 _`options` extends [method options](#method-options)._
 
+#### partialUpdateFileContents
+
+Update a remote file with a partial update. This method is useful for updating a file without having to download and re-upload the entire file.
+
+**_Note that this method is not standardised and may not be supported by all servers._** To use this feature, one of the following must be met:
+ * WebDav is served by Apache with the [mod_dav](https://httpd.apache.org/docs/2.4/mod/mod_dav.html) module
+ * The server supports Sabredav PartialUpdate Extension (https://sabre.io/dav/http-patch/)
+
+```typescript
+(filePath: string, start: number, end: number, data: string | BufferLike | Stream.Readable, options?: WebDAVMethodOptions)=> Promise<void>
+```
+
+| Argument          | Required  | Description                                   |
+|-------------------|-----------|-----------------------------------------------|
+| `filePath`        | Yes       | File to update.                               |
+| `start`           | Yes       | Start byte position. (inclusive)              |
+| `end`             | Yes       | End byte position.   (inclusive)              |
+| `data`            | Yes       | The data to write. Can be a string, buffer or a readable stream. |
+| `options`         | No        | Configuration options.                        |
+
 #### search
 
 Perform a WebDAV search as per [rfc5323](https://www.ietf.org/rfc/rfc5323.html).

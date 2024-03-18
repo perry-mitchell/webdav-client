@@ -114,7 +114,9 @@ export enum ErrorCode {
     DataTypeNoLength = "data-type-no-length",
     InvalidAuthType = "invalid-auth-type",
     InvalidOutputFormat = "invalid-output-format",
-    LinkUnsupportedAuthType = "link-unsupported-auth"
+    LinkUnsupportedAuthType = "link-unsupported-auth",
+    InvalidUpdateRange = "invalid-update-range",
+    NotSupported = "not-supported"
 }
 
 export interface FileStat {
@@ -131,6 +133,11 @@ export interface FileStat {
 export interface SearchResult {
     truncated: boolean;
     results: FileStat[];
+}
+
+export interface DAVCompliance {
+    compliance: string[];
+    server: string;
 }
 
 export interface GetDirectoryContentsOptions extends WebDAVMethodOptions {
@@ -265,6 +272,7 @@ export interface WebDAVClient {
     customRequest: (path: string, requestOptions: RequestOptionsCustom) => Promise<Response>;
     deleteFile: (filename: string) => Promise<void>;
     exists: (path: string) => Promise<boolean>;
+    getDAVCompliance: (path: string) => Promise<DAVCompliance>;
     getDirectoryContents: (
         path: string,
         options?: GetDirectoryContentsOptions
@@ -290,6 +298,13 @@ export interface WebDAVClient {
         data: string | BufferLike | Stream.Readable,
         options?: PutFileContentsOptions
     ) => Promise<boolean>;
+    partialUpdateFileContents: (
+        filePath: string,
+        start: number,
+        end: number,
+        data: string | BufferLike | Stream.Readable,
+        options?: WebDAVMethodOptions
+    ) => Promise<void>;
     search: (
         path: string,
         options?: SearchOptions
