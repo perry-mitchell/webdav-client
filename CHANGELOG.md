@@ -1,5 +1,12 @@
 # WebDAV-Client changelog
 
+## v5.5.0
+_2024-03-18_
+
+ * [#303](https://github.com/perry-mitchell/webdav-client/issues/303) Partially update file contents
+ * [#329](https://github.com/perry-mitchell/webdav-client/issues/329) Overwrite option for copy/move file
+ * [#369](https://github.com/perry-mitchell/webdav-client/issues/369) Automatic auth mode
+
 ## v5.4.0
 _2024-02-24_
 
