@@ -151,6 +151,23 @@ export interface GetQuotaOptions extends WebDAVMethodOptions {
     path?: string;
 }
 
+export interface MoveFileOptions extends WebDAVMethodOptions {
+    /**
+     * Set to false to disable overwriting an existing resource during MOVE or COPY.
+     * @default true
+     */
+    overwrite?: boolean;
+}
+
+export interface CopyFileOptions extends MoveFileOptions {
+    /**
+     * Set to true to create a shallow copy only by only copying the resource with its properties but without its children.
+     * By default the collection itself with all children is copied (WebDAV Depth header of 'infinity')
+     * @default false
+     */
+    shallow?: boolean;
+}
+
 export interface Headers {
     [key: string]: string;
 }
@@ -237,7 +254,7 @@ export type UploadProgress = ProgressEvent;
 export type UploadProgressCallback = ProgressEventCallback;
 
 export interface WebDAVClient {
-    copyFile: (filename: string, destination: string) => Promise<void>;
+    copyFile: (filename: string, destination: string, options?: CopyFileOptions) => Promise<void>;
     createDirectory: (path: string, options?: CreateDirectoryOptions) => Promise<void>;
     createReadStream: (filename: string, options?: CreateReadStreamOptions) => Stream.Readable;
     createWriteStream: (
@@ -263,7 +280,11 @@ export interface WebDAVClient {
         options?: GetQuotaOptions
     ) => Promise<DiskQuota | null | ResponseDataDetailed<DiskQuota | null>>;
     lock: (path: string, options?: LockOptions) => Promise<LockResponse>;
-    moveFile: (filename: string, destinationFilename: string) => Promise<void>;
+    moveFile: (
+        filename: string,
+        destinationFilename: string,
+        options?: MoveFileOptions
+    ) => Promise<void>;
     putFileContents: (
         filename: string,
         data: string | BufferLike | Stream.Readable,

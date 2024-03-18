@@ -18,6 +18,7 @@ import { getFileUploadLink, putFileContents } from "./operations/putFileContents
 import {
     AuthType,
     BufferLike,
+    CopyFileOptions,
     CreateReadStreamOptions,
     CreateWriteStreamCallback,
     CreateWriteStreamOptions,
@@ -26,6 +27,7 @@ import {
     GetQuotaOptions,
     Headers,
     LockOptions,
+    MoveFileOptions,
     PutFileContentsOptions,
     RequestOptionsCustom,
     SearchOptions,
@@ -74,7 +76,7 @@ export function createClient(remoteURL: string, options: WebDAVClientOptions = {
     };
     setupAuth(context, username, password, token, ha1);
     return {
-        copyFile: (filename: string, destination: string, options?: WebDAVMethodOptions) =>
+        copyFile: (filename: string, destination: string, options?: CopyFileOptions) =>
             copyFile(context, filename, destination, options),
         createDirectory: (path: string, options?: WebDAVMethodOptions) =>
             createDirectory(context, path, options),
@@ -99,7 +101,7 @@ export function createClient(remoteURL: string, options: WebDAVClientOptions = {
         getHeaders: () => Object.assign({}, context.headers),
         getQuota: (options?: GetQuotaOptions) => getQuota(context, options),
         lock: (path: string, options?: LockOptions) => lock(context, path, options),
-        moveFile: (filename: string, destinationFilename: string, options?: WebDAVMethodOptions) =>
+        moveFile: (filename: string, destinationFilename: string, options?: MoveFileOptions) =>
             moveFile(context, filename, destinationFilename, options),
         putFileContents: (
             filename: string,

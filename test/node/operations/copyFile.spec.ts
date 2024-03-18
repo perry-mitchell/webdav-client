@@ -64,4 +64,22 @@ describe("copyFile", function () {
         const [, requestOptions] = this.requestSpy.firstCall.args;
         expect(requestOptions).to.have.property("headers").that.has.property("X-test", "test");
     });
+
+    it("creates deep copy by default", async function () {
+        await this.client.copyFile("/alrighty.jpg", "/sub1/alrighty.jpg");
+        const [, requestOptions] = this.requestSpy.firstCall.args;
+        expect(requestOptions).to.have.property("headers").that.has.property("Depth", "infinity");
+    });
+
+    it("creates deep copy if shallow copy is disabled", async function () {
+        await this.client.copyFile("/alrighty.jpg", "/sub1/alrighty.jpg", { shallow: false });
+        const [, requestOptions] = this.requestSpy.firstCall.args;
+        expect(requestOptions).to.have.property("headers").that.has.property("Depth", "infinity");
+    });
+
+    it("creates shallow copy if enabled", async function () {
+        await this.client.copyFile("/alrighty.jpg", "/sub1/alrighty.jpg", { shallow: true });
+        const [, requestOptions] = this.requestSpy.firstCall.args;
+        expect(requestOptions).to.have.property("headers").that.has.property("Depth", "0");
+    });
 });
