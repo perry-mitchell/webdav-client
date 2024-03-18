@@ -54,7 +54,7 @@ export function createWriteStream(
         context,
         options
     );
-    request(requestOptions)
+    request(requestOptions, context)
         .then(response => handleResponseCode(context, response))
         .then(response => {
             // Fire callback asynchronously to avoid errors
@@ -90,7 +90,7 @@ async function getFileStream(
         context,
         options
     );
-    const response = await request(requestOptions);
+    const response = await request(requestOptions, context);
     handleResponseCode(context, response);
     if (headers.Range && response.status !== 206) {
         const responseError: WebDAVClientError = new Error(

@@ -34,6 +34,6 @@ export async function copyFile(
         context,
         options
     );
-    const response = await request(requestOptions);
+    const response = await request(requestOptions, context);
     handleResponseCode(context, response);
 }

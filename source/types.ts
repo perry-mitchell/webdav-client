@@ -6,6 +6,7 @@ export { Request, Response } from "@buttercup/fetch";
 export type AuthHeader = string;
 
 export enum AuthType {
+    Auto = "auto",
     Digest = "digest",
     None = "none",
     Password = "password",

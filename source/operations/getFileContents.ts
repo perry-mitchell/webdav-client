@@ -50,7 +50,7 @@ async function getFileContentsBuffer(
         context,
         options
     );
-    const response = await request(requestOptions);
+    const response = await request(requestOptions, context);
     handleResponseCode(context, response);
     let body: BufferLike;
     if (isWeb() || isReactNative()) {
@@ -78,7 +78,7 @@ async function getFileContentsString(
         context,
         options
     );
-    const response = await request(requestOptions);
+    const response = await request(requestOptions, context);
     handleResponseCode(context, response);
     const body = await response.text();
     return processResponsePayload(response, body, options.details);

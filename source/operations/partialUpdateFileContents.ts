@@ -84,7 +84,7 @@ async function partialUpdateFileContentsSabredav(
         context,
         options
     );
-    const response = await request(requestOptions);
+    const response = await request(requestOptions, context);
     handleResponseCode(context, response);
 }
 
@@ -121,6 +121,6 @@ async function partialUpdateFileContentsApache(
         context,
         options
     );
-    const response = await request(requestOptions);
+    const response = await request(requestOptions, context);
     handleResponseCode(context, response);
 }
