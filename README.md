@@ -129,6 +129,8 @@ The WebDAV client automatically detects which authentication to use, between `Au
 
 Setting the `authType` will automatically manage the `Authorization` header when connecting.
 
+You can set the `authType` to `AuthType.Auto` if you're unsure whether the remote server requires **digest** or **password** based authentication.
+
 #### Basic/no authentication
 
 You can use the client without authentication if the server doesn't require it - simply avoid passing any values to `username`, `password` in the config.
