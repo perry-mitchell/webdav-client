@@ -70,12 +70,13 @@ function makeNonce(): string {
 }
 
 export function parseDigestAuth(response: Response, _digest: DigestContext): boolean {
-    const authHeader = (response.headers && response.headers.get("www-authenticate")) || "";
-    if (authHeader.split(/\s/)[0].toLowerCase() !== "digest") {
+    const isDigest = responseIndicatesDigestAuth(response);
+    if (!isDigest) {
         return false;
     }
     const re = /([a-z0-9_-]+)=(?:"([^"]+)"|([a-z0-9_-]+))/gi;
     for (;;) {
+        const authHeader = (response.headers && response.headers.get("www-authenticate")) || "";
         const match = re.exec(authHeader);
         if (!match) {
             break;
@@ -85,4 +86,9 @@ export function parseDigestAuth(response: Response, _digest: DigestContext): boo
     _digest.nc += 1;
     _digest.cnonce = makeNonce();
     return true;
+}
+
+export function responseIndicatesDigestAuth(response: Response): boolean {
+    const authHeader = (response.headers && response.headers.get("www-authenticate")) || "";
+    return authHeader.split(/\s/)[0].toLowerCase() === "digest";
 }

@@ -12,6 +12,11 @@ export function setupAuth(
     ha1: string
 ): void {
     switch (context.authType) {
+        case AuthType.Auto:
+            if (username && password) {
+                context.headers.Authorization = generateBasicAuthHeader(username, password);
+            }
+            break;
         case AuthType.Digest:
             context.digest = createDigestContext(username, password, ha1);
             break;

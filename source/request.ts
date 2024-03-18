@@ -4,7 +4,11 @@ import { fetch } from "@buttercup/fetch";
 import type { RequestInit as RequestInitNF } from "node-fetch";
 import { getPatcher } from "./compat/patcher.js";
 import { isReactNative, isWeb } from "./compat/env.js";
-import { generateDigestAuthHeader, parseDigestAuth } from "./auth/digest.js";
+import {
+    generateDigestAuthHeader,
+    parseDigestAuth,
+    responseIndicatesDigestAuth
+} from "./auth/digest.js";
 import { cloneShallow, merge } from "./tools/merge.js";
 import { mergeHeaders } from "./tools/headers.js";
 import { requestDataToFetchBody } from "./tools/body.js";
@@ -15,23 +19,10 @@ import {
     RequestOptions,
     Response,
     WebDAVClientContext,
-    WebDAVMethodOptions
+    WebDAVMethodOptions,
+    AuthType
 } from "./types.js";
-
-function _request(requestOptions: RequestOptions): Promise<Response> {
-    const patcher = getPatcher();
-    return patcher.patchInline(
-        "request",
-        (options: RequestOptions) =>
-            patcher.patchInline(
-                "fetch",
-                fetch,
-                options.url,
-                getFetchOptions(options) as RequestInit
-            ),
-        requestOptions
-    );
-}
+import { setupAuth } from "./auth/index.js";
 
 function getFetchOptions(requestOptions: RequestOptions): RequestInit | RequestInitNF {
     let headers: Headers = {};
@@ -101,11 +92,38 @@ export function prepareRequestOptions(
     return finalOptions;
 }
 
-export async function request(requestOptions: RequestOptionsWithState): Promise<Response> {
-    // Client not configured for digest authentication
-    if (!requestOptions._digest) {
-        return _request(requestOptions);
+export async function request(
+    requestOptions: RequestOptionsWithState,
+    context: WebDAVClientContext
+): Promise<Response> {
+    if (context.authType === AuthType.Auto) {
+        return requestAuto(requestOptions, context);
     }
+    if (requestOptions._digest) {
+        return requestDigest(requestOptions);
+    }
+    return requestStandard(requestOptions);
+}
+
+async function requestAuto(
+    requestOptions: RequestOptionsWithState,
+    context: WebDAVClientContext
+): Promise<Response> {
+    const response = await requestStandard(requestOptions);
+    if (response.ok) {
+        context.authType = AuthType.Password;
+        return response;
+    }
+    if (response.status == 401 && responseIndicatesDigestAuth(response)) {
+        context.authType = AuthType.Digest;
+        setupAuth(context, context.username, context.password, undefined, undefined);
+        requestOptions._digest = context.digest;
+        return requestDigest(requestOptions);
+    }
+    return response;
+}
+
+async function requestDigest(requestOptions: RequestOptionsWithState): Promise<Response> {
     // Remove client's digest authentication object from request options
     const _digest = requestOptions._digest;
     delete requestOptions._digest;
@@ -118,7 +136,7 @@ export async function request(requestOptions: RequestOptionsWithState): Promise<
         });
     }
     // Perform digest request + check
-    const response = await _request(requestOptions);
+    const response = await requestStandard(requestOptions);
     if (response.status == 401) {
         _digest.hasDigestAuth = parseDigestAuth(response, _digest);
         if (_digest.hasDigestAuth) {
@@ -127,7 +145,7 @@ export async function request(requestOptions: RequestOptionsWithState): Promise<
                     Authorization: generateDigestAuthHeader(requestOptions, _digest)
                 }
             });
-            const response2 = await _request(requestOptions);
+            const response2 = await requestStandard(requestOptions);
             if (response2.status == 401) {
                 _digest.hasDigestAuth = false;
             } else {
@@ -139,4 +157,19 @@ export async function request(requestOptions: RequestOptionsWithState): Promise<
         _digest.nc++;
     }
     return response;
+}
+
+function requestStandard(requestOptions: RequestOptions): Promise<Response> {
+    const patcher = getPatcher();
+    return patcher.patchInline(
+        "request",
+        (options: RequestOptions) =>
+            patcher.patchInline(
+                "fetch",
+                fetch,
+                options.url,
+                getFetchOptions(options) as RequestInit
+            ),
+        requestOptions
+    );
 }

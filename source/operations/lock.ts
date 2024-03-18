@@ -37,7 +37,7 @@ export async function lock(
         context,
         options
     );
-    const response = await request(requestOptions);
+    const response = await request(requestOptions, context);
     handleResponseCode(context, response);
     const responseData = await response.text();
     const lockPayload = parseGenericResponse(responseData);
@@ -70,7 +70,7 @@ export async function unlock(
         context,
         options
     );
-    const response = await request(requestOptions);
+    const response = await request(requestOptions, context);
     handleResponseCode(context, response);
     if (response.status !== 204 && response.status !== 200) {
         const err = createErrorFromResponse(response);

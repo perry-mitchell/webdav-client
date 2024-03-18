@@ -29,7 +29,7 @@ export async function getDirectoryContents(
         context,
         options
     );
-    const response = await request(requestOptions);
+    const response = await request(requestOptions, context);
     handleResponseCode(context, response);
     const responseData = await response.text();
     if (!responseData) {

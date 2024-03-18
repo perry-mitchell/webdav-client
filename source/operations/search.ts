@@ -29,7 +29,7 @@ export async function getSearch(
         context,
         options
     );
-    const response = await request(requestOptions);
+    const response = await request(requestOptions, context);
     handleResponseCode(context, response);
     const responseText = await response.text();
     const responseData = await parseXML(responseText);

@@ -13,7 +13,7 @@ export async function customRequest(
         requestOptions.url = joinURL(context.remoteURL, encodePath(remotePath));
     }
     const finalOptions = prepareRequestOptions(requestOptions, context, {});
-    const response = await request(finalOptions);
+    const response = await request(finalOptions, context);
     handleResponseCode(context, response);
     return response;
 }

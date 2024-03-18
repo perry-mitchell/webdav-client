@@ -55,7 +55,7 @@ export async function putFileContents(
         context,
         options
     );
-    const response = await request(requestOptions);
+    const response = await request(requestOptions, context);
     try {
         handleResponseCode(context, response);
     } catch (err) {

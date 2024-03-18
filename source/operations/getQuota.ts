@@ -22,7 +22,7 @@ export async function getQuota(
         context,
         options
     );
-    const response = await request(requestOptions);
+    const response = await request(requestOptions, context);
     handleResponseCode(context, response);
     const responseData = await response.text();
     const result = await parseXML(responseData);
