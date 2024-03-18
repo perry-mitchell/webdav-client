@@ -296,27 +296,27 @@ describe("getDirectoryContents", function () {
 
     describe("when using includeSelf: true", function () {
         it("returns correct directory results with directory itself", function () {
-            return this.client
-                .getDirectoryContents("/", { includeSelf: true })
-                .then(function (contents: Array<FileStat>) {
-                    const root = contents.find(item => item.basename === "");
-                    expect(root.filename).to.equal("/");
-                    expect(root.size).to.equal(0);
-                    expect(root.type).to.equal("directory");
-                    expect(contents.length).to.equal(12);
-                });
+            return this.client.getDirectoryContents("/", { includeSelf: true }).then(function (
+                contents: Array<FileStat>
+            ) {
+                const root = contents.find(item => item.basename === "");
+                expect(root.filename).to.equal("/");
+                expect(root.size).to.equal(0);
+                expect(root.type).to.equal("directory");
+                expect(contents.length).to.equal(12);
+            });
         });
 
         it("returns correct file results in sub-directory", function () {
-            return this.client
-                .getDirectoryContents("/sub1", { includeSelf: true })
-                .then(function (contents: Array<FileStat>) {
-                    const sub1 = contents.find(item => item.basename === "sub1");
-                    expect(sub1.filename).to.equal("/sub1");
-                    expect(sub1.size).to.equal(0);
-                    expect(sub1.type).to.equal("directory");
-                    expect(contents.length).to.equal(3);
-                });
+            return this.client.getDirectoryContents("/sub1", { includeSelf: true }).then(function (
+                contents: Array<FileStat>
+            ) {
+                const sub1 = contents.find(item => item.basename === "sub1");
+                expect(sub1.filename).to.equal("/sub1");
+                expect(sub1.size).to.equal(0);
+                expect(sub1.type).to.equal("directory");
+                expect(contents.length).to.equal(3);
+            });
         });
     });
 
