@@ -59,12 +59,27 @@ describe("auth", function () {
         return webdav.getFileContents("/file");
     });
 
+    it("should support auto-detection of password/digest auth", function () {
+        nock(DUMMYSERVER)
+            .get("/file")
+            .reply(200, function () {
+                expect(this.req.headers.authorization).to.equal("Basic dXNlcjpwYXNz");
+                return "";
+            });
+        const webdav = createWebDAVClient(DUMMYSERVER, {
+            authType: AuthType.Auto,
+            username: "user",
+            password: "pass"
+        });
+        return webdav.getFileContents("/file");
+    });
+
     describe("using Digest-enabled server", function () {
         beforeEach(function () {
             this.client = createWebDAVClient(`http://localhost:${SERVER_PORT}/webdav/server`, {
                 username: SERVER_USERNAME,
                 password: SERVER_PASSWORD,
-                authType: AuthType.Digest
+                authType: AuthType.Auto
             });
             clean();
             this.server = createWebDAVServer("digest");
@@ -76,6 +91,17 @@ describe("auth", function () {
         });
 
         it("should connect using Digest authentication if digest enabled", function () {
+            return this.client.exists("/alrighty.jpg").then(function (exists) {
+                expect(exists).to.be.true;
+            });
+        });
+
+        it("should support auto-detection of password/digest auth", function () {
+            this.client = createWebDAVClient(`http://localhost:${SERVER_PORT}/webdav/server`, {
+                username: SERVER_USERNAME,
+                password: SERVER_PASSWORD,
+                authType: AuthType.Auto
+            });
             return this.client.exists("/alrighty.jpg").then(function (exists) {
                 expect(exists).to.be.true;
             });
