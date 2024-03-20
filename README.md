@@ -326,10 +326,9 @@ const resp: Response = await this.client.customRequest("/alrighty.jpg", {
     headers: {
         Accept: "text/plain",
         Depth: "0"
-    },
-    responseType: "text"
+    }
 });
-const result: DAVResult = await parseXML(resp.data);
+const result: DAVResult = await parseXML(await resp.text());
 const stat: FileStat = parseStat(result, "/alrighty.jpg", false);
 ```
 
