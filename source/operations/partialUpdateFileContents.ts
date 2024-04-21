@@ -1,4 +1,4 @@
-import { Readable } from "node:stream";
+import { Readable } from "stream";
 import { Layerr } from "layerr";
 import { joinURL } from "../tools/url.js";
 import { encodePath } from "../tools/path.js";
@@ -10,8 +10,7 @@ import {
     ErrorCode,
     Headers,
     WebDAVMethodOptions,
-    WebDAVClientContext,
-    WebDAVClientError
+    WebDAVClientContext
 } from "../types.js";
 
 export async function partialUpdateFileContents(

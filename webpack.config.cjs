@@ -20,17 +20,15 @@ function getBasicConfig() {
                     loader: "babel-loader",
                     options: {
                         presets: [
-                            ["@babel/preset-env", {
-                                targets: [
-                                    "> 0.25%, not dead",
-                                    "maintained node versions"
-                                ]
-                            }],
+                            [
+                                "@babel/preset-env",
+                                {
+                                    targets: ["> 0.25%, not dead", "maintained node versions"]
+                                }
+                            ],
                             "@babel/preset-typescript"
                         ],
-                        plugins: [
-                            "babel-plugin-transform-async-to-promises"
-                        ]
+                        plugins: ["babel-plugin-transform-async-to-promises"]
                     },
                     resolve: {
                         fullySpecified: false
@@ -52,8 +50,8 @@ function getBasicConfig() {
 
         resolve: {
             alias: {
-                "http": path.resolve(__dirname, "./util/http.stub.ts"),
-                "node-fetch": path.resolve(__dirname, "./util/node-fetch.stub.ts")
+                http: path.resolve(__dirname, "./util/http.stub.ts"),
+                https: path.resolve(__dirname, "./util/http.stub.ts")
             },
             extensions: [".js"],
             fallback: {
@@ -89,7 +87,7 @@ module.exports = [
 
         resolve: {
             alias: {
-                "he": path.resolve(__dirname, "./util/he.stub.ts")
+                he: path.resolve(__dirname, "./util/he.stub.ts")
             },
             plugins: [
                 // Handle .ts => .js resolution
@@ -104,7 +102,8 @@ module.exports = [
 
         output: {
             filename: "index.js",
-            path: path.resolve(__dirname, "./dist/react-native")
+            path: path.resolve(__dirname, "./dist/react-native"),
+            chunkFormat: "commonjs"
         },
 
         plugins: [
@@ -120,6 +119,6 @@ module.exports = [
             ]
         },
 
-        target: "web"
-    }),
+        target: "node"
+    })
 ];

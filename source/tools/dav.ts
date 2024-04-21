@@ -28,10 +28,8 @@ function getParser(): XMLParser {
             hex: true,
             leadingZeros: false
         }
-        // // We don't use the processors here as decoding is done manually
-        // // later on - decoding early would break some path checks.
-        // attributeValueProcessor: val => decodeHTMLEntities(decodeURIComponent(val)),
-        // tagValueProcessor: val => decodeHTMLEntities(decodeURIComponent(val))
+        // We don't use the processors here as decoding is done manually
+        // later on - decoding early would break some path checks.
     });
 }
 

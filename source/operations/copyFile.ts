@@ -2,7 +2,7 @@ import { joinURL } from "../tools/url.js";
 import { encodePath } from "../tools/path.js";
 import { request, prepareRequestOptions } from "../request.js";
 import { handleResponseCode } from "../response.js";
-import { CopyFileOptions, WebDAVClientContext, WebDAVMethodOptions } from "../types.js";
+import { CopyFileOptions, WebDAVClientContext } from "../types.js";
 
 export async function copyFile(
     context: WebDAVClientContext,
