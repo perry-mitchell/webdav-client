@@ -50,8 +50,9 @@ function getBasicConfig() {
 
         resolve: {
             alias: {
-                http: path.resolve(__dirname, "./util/http.stub.ts"),
-                https: path.resolve(__dirname, "./util/http.stub.ts")
+                // http: path.resolve(__dirname, "./util/http.stub.ts"),
+                // https: path.resolve(__dirname, "./util/http.stub.ts")
+                "node-fetch": path.resolve(__dirname, "./util/node-fetch.stub.ts")
             },
             extensions: [".js"],
             fallback: {
@@ -99,6 +100,8 @@ module.exports = [
     }),
     merge(getBasicConfig(), {
         entry: path.resolve(__dirname, "./source/index.ts"),
+
+        externals: ["he"],
 
         output: {
             filename: "index.js",
