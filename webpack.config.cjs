@@ -103,7 +103,7 @@ module.exports = [
     merge(getBasicConfig(), {
         entry: path.resolve(__dirname, "./source/index.ts"),
 
-        externals: ["entities", "node-fetch"],
+        externals: ["entities"],
 
         output: {
             filename: "index.js",
@@ -118,6 +118,9 @@ module.exports = [
         ],
 
         resolve: {
+            alias: {
+                "node-fetch": path.resolve(__dirname, "./util/node-fetch.stub.ts")
+            },
             plugins: [
                 // Handle .ts => .js resolution
                 new ResolveTypeScriptPlugin()
