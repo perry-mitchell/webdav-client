@@ -101,8 +101,6 @@ module.exports = [
     merge(getBasicConfig(), {
         entry: path.resolve(__dirname, "./source/index.ts"),
 
-        externals: ["he"],
-
         output: {
             filename: "index.js",
             path: path.resolve(__dirname, "./dist/react-native"),
