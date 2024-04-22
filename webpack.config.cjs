@@ -127,6 +127,6 @@ module.exports = [
             ]
         },
 
-        target: false
+        target: "web"
     })
 ];
