@@ -47,7 +47,7 @@
     "sync"
   ],
   "engines": {
-    "node": ">=14"
+    "node": ">=16"
   },
   "lint-staged": {
     "{source,test}/**/*.{js,ts}": [
@@ -69,8 +69,8 @@
     "@buttercup/fetch": "^0.2.1",
     "base-64": "^1.0.0",
     "byte-length": "^1.0.2",
+    "entities": "^4.5.0",
     "fast-xml-parser": "^4.2.4",
-    "he": "^1.2.0",
     "hot-patcher": "^2.0.0",
     "layerr": "^2.0.1",
     "md5": "^2.3.0",

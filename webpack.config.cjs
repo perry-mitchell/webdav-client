@@ -88,7 +88,7 @@ module.exports = [
 
         resolve: {
             alias: {
-                he: path.resolve(__dirname, "./util/he.stub.ts")
+                entities: path.resolve(__dirname, "./util/entities.stub.ts")
             },
             plugins: [
                 // Handle .ts => .js resolution

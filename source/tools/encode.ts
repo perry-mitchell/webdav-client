@@ -1,5 +1,5 @@
 import base64 from "base-64";
-import he from "he";
+import { decodeHTML } from "entities";
 import { isWeb } from "../compat/env.js";
 
 export function decodeHTMLEntities(text: string): string {
@@ -8,7 +8,7 @@ export function decodeHTMLEntities(text: string): string {
         txt.innerHTML = text;
         return txt.value;
     }
-    return he.decode(text);
+    return decodeHTML(text);
 }
 
 export function fromBase64(text: string): string {
