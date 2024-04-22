@@ -52,7 +52,7 @@ function getBasicConfig() {
             alias: {
                 // http: path.resolve(__dirname, "./util/http.stub.ts"),
                 // https: path.resolve(__dirname, "./util/http.stub.ts")
-                "node-fetch": path.resolve(__dirname, "./util/node-fetch.stub.ts")
+                // "node-fetch": path.resolve(__dirname, "./util/node-fetch.stub.ts")
             },
             extensions: [".js"],
             fallback: {
@@ -89,7 +89,8 @@ module.exports = [
 
         resolve: {
             alias: {
-                entities: path.resolve(__dirname, "./util/entities.stub.ts")
+                entities: path.resolve(__dirname, "./util/entities.stub.ts"),
+                "node-fetch": path.resolve(__dirname, "./util/node-fetch.stub.ts")
             },
             plugins: [
                 // Handle .ts => .js resolution
@@ -101,6 +102,8 @@ module.exports = [
     }),
     merge(getBasicConfig(), {
         entry: path.resolve(__dirname, "./source/index.ts"),
+
+        externals: ["entities", "node-fetch"],
 
         output: {
             filename: "index.js",
