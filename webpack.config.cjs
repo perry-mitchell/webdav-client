@@ -62,6 +62,7 @@ function getBasicConfig() {
                 fs: false,
                 http: false,
                 https: false,
+                module: false,
                 net: false,
                 path: false,
                 stream: false,
@@ -120,6 +121,6 @@ module.exports = [
             ]
         },
 
-        target: "node"
+        target: false
     })
 ];
