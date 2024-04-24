@@ -108,6 +108,13 @@ export function parseXML(xml: string): Promise<DAVResult> {
     });
 }
 
+/**
+ * Get a file stat result from given DAV properties
+ * @param props DAV properties
+ * @param filename The filename for the file stat
+ * @param isDetailed Whether or not the raw props of the resource should be returned
+ * @returns A file stat result
+ */
 export function prepareFileFromProps(
     props: DAVResultResponseProps,
     filename: string,
