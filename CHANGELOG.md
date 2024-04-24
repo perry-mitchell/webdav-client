@@ -1,5 +1,12 @@
 # WebDAV-Client changelog
 
+## v5.6.0
+_2024-04-24_
+
+ * Switch to `entities` over `he`
+ * **Bugfixes**
+   * [#366](https://github.com/perry-mitchell/webdav-client/issues/366) React-native import not working
+
 ## v5.5.0
 _2024-03-18_
 
