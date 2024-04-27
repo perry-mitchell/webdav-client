@@ -68,11 +68,33 @@ Versions 3/4 supported a UMD-style module in the browser, but this is no longer 
 
 #### React-Native support
 
-React-Native is better supported as of version `5.4.0`, using a specific build for the platform. The import should be automatic, but can be forced by importing from `/react-native` directly:
+React-Native is better supported as of version `5.6.0`, using a specific build for the platform. The import should be automatic, but can be forced by importing from `/react-native` directly:
 
 ```typescript
 import { createClient } from "webdav/react-native";
 ```
+
+**NB:** Note that for some reason, the Metro build system doesn't properly resolve using these entries, and you may need to customise your babel config for React Native to correctly import this library:
+
+```javascript
+module.exports = {
+    presets: ["module:metro-react-native-babel-preset"],
+    plugins: [
+        [
+            "module-resolver",
+            {
+                alias: {
+                    // Point the webdav client entry to the react native build:
+                    webdav: "webdav/dist/react-native"
+                },
+                extensions: [".tsx", ".ts", ".js", ".jsx", ".json"]
+            }
+        ]
+    ]
+};
+```
+
+When using this override, you can simply import from `webdav`.
 
 ### Types
 
