@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<d:multistatus
+	xmlns:d="DAV:">
+	<d:response>
+		<d:href>/remote.php/dav/files/admin/1/</d:href>
+		<d:propstat>
+			<d:prop>
+				<d:getetag>&quot;66a15a0171527&quot;</d:getetag>
+				<d:getlastmodified>Wed, 24 Jul 2024 19:46:09 GMT</d:getlastmodified>
+				<d:creationdate>1970-01-01T00:00:00+00:00</d:creationdate>
+				<d:displayname>1</d:displayname>
+				<d:quota-available-bytes>-3</d:quota-available-bytes>
+				<d:resourcetype>
+					<d:collection/>
+				</d:resourcetype>
+			</d:prop>
+			<d:status>HTTP/1.1 200 OK</d:status>
+		</d:propstat>
+		<d:propstat>
+			<d:prop>
+				<d:getcontentlength/>
+				<d:getcontenttype/>
+			</d:prop>
+			<d:status>HTTP/1.1 404 Not Found</d:status>
+		</d:propstat>
+	</d:response>
+</d:multistatus>

@@ -136,6 +136,22 @@ describe("getDirectoryContents", function () {
         });
     });
 
+    it("correctly parses the displayname property", function () {
+        returnFakeResponse(
+            readFileSync(
+                new URL("../../responses/propfind-numeric-displayname.xml", import.meta.url)
+            ).toString()
+        );
+        return this.client.getDirectoryContents("/1", { details: true }).then(function (result) {
+            expect(result.data).to.have.length(1);
+            expect(result.data[0]).to.have.property("props").that.is.an("object");
+            expect(result.data[0].props)
+                .to.have.property("displayname")
+                .that.is.a("string")
+                .and.equal("1");
+        });
+    });
+
     it("returns the contents of a directory with repetitive naming", function () {
         return this.client.getDirectoryContents("/webdav/server").then(function (contents) {
             expect(contents).to.be.an("array");
