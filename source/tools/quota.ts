@@ -11,7 +11,8 @@ export function parseQuota(result: DAVResult): DiskQuota | null {
         } = responseItem;
         return typeof quotaUsed !== "undefined" && typeof quotaAvail !== "undefined"
             ? {
-                  used: parseInt(quotaUsed, 10),
+                  // As it could be both a string or a number ensure we are working with a number
+                  used: parseInt(String(quotaUsed), 10),
                   available: translateDiskSpace(quotaAvail)
               }
             : null;
