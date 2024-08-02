@@ -6,6 +6,7 @@
     ".": {
       "browser": "./dist/web/index.js",
       "react-native": "./dist/react-native/index.js",
+      "types": "./dist/node/index.d.ts",
       "default": "./dist/node/index.js"
     },
     "./react-native": "./dist/react-native/index.js",
