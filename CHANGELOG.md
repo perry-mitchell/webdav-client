@@ -1,5 +1,14 @@
 # WebDAV-Client changelog
 
+## v5.7.0
+_2024-08-02_
+
+ * [#381](https://github.com/perry-mitchell/webdav-client/pull/381) Upgraded dependencies (major version changes)
+ * **Bugfixes**:
+   * [#380](https://github.com/perry-mitchell/webdav-client/pull/380) `displayname` string fix
+   * [#378](https://github.com/perry-mitchell/webdav-client/pull/378) Types for quota bytes
+   * [#379](https://github.com/perry-mitchell/webdav-client/pull/379) DAV result types
+
 ## v5.6.0
 _2024-04-24_
 
