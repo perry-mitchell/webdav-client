@@ -146,6 +146,10 @@ export function prepareFileFromProps(
         stat.mime = mimeType && typeof mimeType === "string" ? mimeType.split(";")[0] : "";
     }
     if (isDetailed) {
+        // The XML parser tries to interpret values, but the display name is required to be a string
+        if (typeof props.displayname !== "undefined") {
+            props.displayname = String(props.displayname);
+        }
         stat.props = props;
     }
     return stat;

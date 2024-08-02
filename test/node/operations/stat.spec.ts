@@ -1,4 +1,5 @@
 import { expect } from "chai";
+import { readFileSync } from "fs";
 import { WebDAVClientError } from "../../../source/types.js";
 import {
     SERVER_PASSWORD,
@@ -8,7 +9,8 @@ import {
     createWebDAVClient,
     createWebDAVServer,
     useCustomXmlResponse,
-    restoreRequests
+    restoreRequests,
+    returnFakeResponse
 } from "../../helpers.node.js";
 
 describe("stat", function () {
@@ -109,6 +111,22 @@ describe("stat", function () {
             }
             expect(error).to.not.be.null;
             expect(error.status).to.equal(404);
+        });
+    });
+
+    it("correctly parses the displayname property", function () {
+        returnFakeResponse(
+            readFileSync(
+                new URL("../../responses/propfind-numeric-displayname.xml", import.meta.url)
+            ).toString()
+        );
+
+        this.client.stat("/1/", { details: true }).then(function (result) {
+            expect(result.data).to.have.property("props").that.is.an("object");
+            expect(result.data.props)
+                .to.have.property("displayname")
+                .that.is.a("string")
+                .and.equal("1");
         });
     });
 
