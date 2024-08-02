@@ -70,8 +70,8 @@ export interface DAVResultResponseProps {
     getetag?: string;
     getcontentlength?: string;
     getcontenttype?: string;
-    "quota-available-bytes"?: any;
-    "quota-used-bytes"?: string;
+    "quota-available-bytes"?: string | number;
+    "quota-used-bytes"?: string | number;
 
     [additionalProp: string]: unknown;
 }

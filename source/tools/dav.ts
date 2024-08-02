@@ -237,7 +237,7 @@ export function parseSearch(result: DAVResult, searchArbiter: string, isDetailed
  * @returns The value in bytes, or another indicator
  */
 export function translateDiskSpace(value: string | number): DiskQuotaAvailable {
-    switch (value.toString()) {
+    switch (String(value)) {
         case "-3":
             return "unlimited";
         case "-2":
@@ -246,6 +246,6 @@ export function translateDiskSpace(value: string | number): DiskQuotaAvailable {
             // -1 is non-computed
             return "unknown";
         default:
-            return parseInt(value as string, 10);
+            return parseInt(String(value), 10);
     }
 }
