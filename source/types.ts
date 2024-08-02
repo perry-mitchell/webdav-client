@@ -64,7 +64,7 @@ export type DAVResultResponse = DAVResultBaseResponse &
 export interface DAVResultResponseProps {
     displayname: string;
     resourcetype: {
-        collection?: boolean;
+        collection?: unknown;
     };
     getlastmodified?: string;
     getetag?: string;
