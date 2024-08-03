@@ -1,5 +1,11 @@
 # WebDAV-Client changelog
 
+## v5.7.1
+_2024-08-03_
+
+ * **Bugfixes**:
+   * [#382](https://github.com/perry-mitchell/webdav-client/issues/382) `minimatch` dependency requires engines with Node >= 20
+
 ## v5.7.0
 _2024-08-02_
 
