@@ -75,7 +75,7 @@
     "hot-patcher": "^2.0.1",
     "layerr": "^3.0.0",
     "md5": "^2.3.0",
-    "minimatch": "^10.0.1",
+    "minimatch": "^9.0.5",
     "nested-property": "^4.0.0",
     "node-fetch": "^3.3.2",
     "path-posix": "^1.0.0",
