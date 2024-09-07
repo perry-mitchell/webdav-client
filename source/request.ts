@@ -1,5 +1,6 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { getPatcher } from "./compat/patcher";
+import { mapAxiosResponseToInterface } from "./compat/axios";
 import { generateDigestAuthHeader, parseDigestAuth } from "./auth/digest";
 import { cloneShallow, merge } from "./tools/merge";
 import { mergeHeaders } from "./tools/headers";
@@ -12,7 +13,7 @@ import {
     WebDAVMethodOptions
 } from "./types";
 
-function _request(requestOptions: RequestOptions) {
+function _request(requestOptions: RequestOptions): Promise<AxiosResponse<any, any>> {
     return getPatcher().patchInline(
         "request",
         (options: RequestOptions) => axios(options as any),
@@ -69,7 +70,9 @@ export function prepareRequestOptions(
 export function request(requestOptions: RequestOptionsWithState): Promise<Response> {
     // Client not configured for digest authentication
     if (!requestOptions._digest) {
-        return _request(requestOptions);
+        return _request(requestOptions).then(axiosResponse =>
+            mapAxiosResponseToInterface(axiosResponse)
+        );
     }
 
     // Remove client's digest authentication object from request options
@@ -86,29 +89,33 @@ export function request(requestOptions: RequestOptionsWithState): Promise<Respon
     }
 
     // Perform the request and handle digest authentication
-    return _request(requestOptions).then(function (response: Response) {
-        if (response.status == 401) {
-            _digest.hasDigestAuth = parseDigestAuth(response, _digest);
+    return _request(requestOptions)
+        .then(axiosResponse => mapAxiosResponseToInterface(axiosResponse))
+        .then(function (response: Response) {
+            if (response.status == 401) {
+                _digest.hasDigestAuth = parseDigestAuth(response, _digest);
 
-            if (_digest.hasDigestAuth) {
-                requestOptions = merge(requestOptions, {
-                    headers: {
-                        Authorization: generateDigestAuthHeader(requestOptions, _digest)
-                    }
-                });
+                if (_digest.hasDigestAuth) {
+                    requestOptions = merge(requestOptions, {
+                        headers: {
+                            Authorization: generateDigestAuthHeader(requestOptions, _digest)
+                        }
+                    });
 
-                return _request(requestOptions).then(function (response2: Response) {
-                    if (response2.status == 401) {
-                        _digest.hasDigestAuth = false;
-                    } else {
-                        _digest.nc++;
-                    }
-                    return response2;
-                });
+                    return _request(requestOptions)
+                        .then(axiosResponse => mapAxiosResponseToInterface(axiosResponse))
+                        .then(function (response2: Response) {
+                            if (response2.status == 401) {
+                                _digest.hasDigestAuth = false;
+                            } else {
+                                _digest.nc++;
+                            }
+                            return response2;
+                        });
+                }
+            } else {
+                _digest.nc++;
             }
-        } else {
-            _digest.nc++;
-        }
-        return response;
-    });
+            return response;
+        });
 }
