@@ -1,5 +1,11 @@
 # WebDAV-Client changelog
 
+## v4.11.4
+_2024-09-07_
+
+ * **Bugfix**:
+   * Dependency audit / update
+
 ## v4.11.3
 _2023-08-30_
 
