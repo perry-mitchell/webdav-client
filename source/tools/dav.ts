@@ -27,6 +27,13 @@ function getParser(): XMLParser {
         numberParseOptions: {
             hex: true,
             leadingZeros: false
+        },
+        tagValueProcessor(tagName, tagValue, jPath) {
+            if (jPath.endsWith("propstat.prop.displayname")) {
+                // Do not parse the display name, because this causes e.g. '2024.10' to result in number 2024.1
+                return;
+            }
+            return tagValue;
         }
         // We don't use the processors here as decoding is done manually
         // later on - decoding early would break some path checks.
