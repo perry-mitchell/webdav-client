@@ -16,6 +16,8 @@ This library's motivation is **not** to follow an RFC or to strictly adhere to s
 
 Version 5 is under active development. Version 4 is in support mode, and will receive security and stability related bugfixes. Earlier versions are deprecated and will not receive updates.
 
+**Note:** Version 4 support will be dropped January 2025. Migrate to v5 as soon as possible.
+
 Version 5 upgrades the library to use ESM (ECMAScript Modules), and so your environment must fit one of the following formats to be able to use this library:
 
  * NodeJS project with `"type": "module"` in `package.json` (ESM mode)
