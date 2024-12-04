@@ -130,6 +130,38 @@ describe("stat", function () {
         });
     });
 
+    it("correctly parses the attributes property", async function () {
+        returnFakeResponse(
+            readFileSync(
+                new URL("../../responses/propfind-attributes.xml", import.meta.url)
+            ).toString()
+        );
+
+        await this.client.stat("/foo/", { details: true }).then(function (result) {
+            expect(result.data).to.have.property("props").that.is.an("object");
+            expect(result.data.props).to.have.property("system-tags").that.is.an("object");
+            expect(result.data.props["system-tags"]["system-tag"])
+                .to.be.an("array")
+                .and.have.lengthOf(2);
+            // <z:system-tag z:can-assign="true" z:id="321" z:checked>Tag1</z:system-tag>
+            // <z:system-tag z:can-assign="false" z:id="654" z:prop="">Tag2</z:system-tag>
+            expect(result.data.props["system-tags"]["system-tag"]).to.deep.equal([
+                {
+                    "can-assign": true,
+                    id: "321",
+                    checked: true,
+                    text: "Tag1"
+                },
+                {
+                    "can-assign": false,
+                    id: "654",
+                    prop: "",
+                    text: "Tag2"
+                }
+            ]);
+        });
+    });
+
     describe("with details: true", function () {
         it("returns data property", function () {
             return this.client.stat("/", { details: true }).then(function (result) {
