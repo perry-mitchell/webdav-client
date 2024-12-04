@@ -124,7 +124,7 @@ describe("stat", function () {
         this.client.stat("/1/", { details: true }).then(function (result) {
             expect(result.data).to.have.property("props").that.is.an("object");
             expect(result.data.props)
-                .to.have.property("displayname")
+                .to.have.property("dispvdslayname")
                 .that.is.a("string")
                 .and.equal("1");
         });
