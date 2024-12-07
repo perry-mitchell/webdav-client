@@ -114,14 +114,14 @@ describe("stat", function () {
         });
     });
 
-    it("correctly parses the displayname property", function () {
+    it("correctly parses the displayname property", async function () {
         returnFakeResponse(
             readFileSync(
                 new URL("../../responses/propfind-numeric-displayname.xml", import.meta.url)
             ).toString()
         );
 
-        this.client.stat("/1/", { details: true }).then(function (result) {
+        await this.client.stat("/1/", { details: true }).then(function (result) {
             expect(result.data).to.have.property("props").that.is.an("object");
             expect(result.data.props)
                 .to.have.property("displayname")
