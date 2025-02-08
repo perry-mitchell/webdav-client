@@ -23,10 +23,21 @@ enum PropertyType {
 
 function getParser(): XMLParser {
     return new XMLParser({
+        allowBooleanAttributes: true,
+        attributeNamePrefix: "",
+        textNodeName: "text",
+        ignoreAttributes: false,
         removeNSPrefix: true,
         numberParseOptions: {
             hex: true,
             leadingZeros: false
+        },
+        attributeValueProcessor(attrName, attrValue, jPath) {
+            // handle boolean attributes
+            if (attrValue === "true" || attrValue === "false") {
+                return attrValue === "true";
+            }
+            return attrValue;
         },
         tagValueProcessor(tagName, tagValue, jPath) {
             if (jPath.endsWith("propstat.prop.displayname")) {
