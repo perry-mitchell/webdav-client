@@ -1,5 +1,13 @@
 # WebDAV-Client changelog
 
+## v5.8.0
+_2025-02-12_
+
+ * [#391](https://github.com/perry-mitchell/webdav-client/pull/391) Attribute parsing support
+ * Updated dependencies
+ * **Bugfixes**:
+   * [#387](https://github.com/perry-mitchell/webdav-client/issues/387) Node engine set to minimum of `16` instead of supported `14`
+
 ## v5.7.1
 _2024-08-03_
 
