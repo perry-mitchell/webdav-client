@@ -1,9 +1,8 @@
 import path from "path-posix";
 import { XMLParser } from "fast-xml-parser";
 import nestedProp from "nested-property";
-import { decodeHTMLEntities } from "./encode.js";
 import { encodePath, normalisePath } from "./path.js";
-import {
+import type {
     DAVResult,
     DAVResultPropstatResponse,
     DAVResultRaw,
@@ -12,8 +11,9 @@ import {
     DiskQuotaAvailable,
     FileStat,
     SearchResult,
-    WebDAVClientError
-} from "../types.js";
+    WebDAVClientError,
+    WebDAVParsingContext
+} from "../types.ts";
 
 enum PropertyType {
     Array = "array",
@@ -21,10 +21,14 @@ enum PropertyType {
     Original = "original"
 }
 
-function getParser(): XMLParser {
+function getParser({
+    attributeNamePrefix,
+    attributeParsers,
+    tagParsers
+}: WebDAVParsingContext): XMLParser {
     return new XMLParser({
         allowBooleanAttributes: true,
-        attributeNamePrefix: "",
+        attributeNamePrefix,
         textNodeName: "text",
         ignoreAttributes: false,
         removeNSPrefix: true,
@@ -32,23 +36,47 @@ function getParser(): XMLParser {
             hex: true,
             leadingZeros: false
         },
-        attributeValueProcessor(attrName, attrValue, jPath) {
-            // handle boolean attributes
-            if (attrValue === "true" || attrValue === "false") {
-                return attrValue === "true";
+        attributeValueProcessor(_, attrValue, jPath) {
+            for (const processor of attributeParsers) {
+                try {
+                    const value = processor(jPath, attrValue);
+                    if (value !== attrValue) {
+                        return value;
+                    }
+                } catch (error) {
+                    // skipping this invalid parser
+                }
             }
             return attrValue;
         },
         tagValueProcessor(tagName, tagValue, jPath) {
-            if (jPath.endsWith("propstat.prop.displayname")) {
-                // Do not parse the display name, because this causes e.g. '2024.10' to result in number 2024.1
-                return;
+            for (const processor of tagParsers) {
+                try {
+                    const value = processor(jPath, tagValue);
+                    if (value !== tagValue) {
+                        return value;
+                    }
+                } catch (error) {
+                    // skipping this invalid parser
+                }
             }
             return tagValue;
         }
-        // We don't use the processors here as decoding is done manually
-        // later on - decoding early would break some path checks.
     });
+}
+
+/**
+ * Tag parser for the displayname prop.
+ * Ensure that the displayname is not parsed and always handled as is.
+ * @param path The jPath of the tag
+ * @param value The text value of the tag
+ */
+export function displaynameTagParser(path: string, value: string): string | void {
+    if (path.endsWith("propstat.prop.displayname")) {
+        // Do not parse the displayname, because this causes e.g. '2024.10' to result in number 2024.1
+        return;
+    }
+    return value;
 }
 
 function getPropertyOfType(
@@ -117,11 +145,18 @@ function normaliseResult(result: DAVResultRaw): DAVResult {
  * Parse an XML response from a WebDAV service,
  *  converting it to an internal DAV result
  * @param xml The raw XML string
+ * @param context The current client context
  * @returns A parsed and processed DAV result
  */
-export function parseXML(xml: string): Promise<DAVResult> {
+export function parseXML(xml: string, context?: WebDAVParsingContext): Promise<DAVResult> {
+    // backwards compatibility as this method is exported from the package
+    context = context ?? {
+        attributeNamePrefix: "@",
+        attributeParsers: [],
+        tagParsers: [displaynameTagParser]
+    };
     return new Promise(resolve => {
-        const result = getParser().parse(xml);
+        const result = getParser(context).parse(xml);
         resolve(normaliseResult(result));
     });
 }

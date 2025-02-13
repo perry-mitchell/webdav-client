@@ -17,6 +17,7 @@ import { moveFile } from "./operations/moveFile.js";
 import { getFileUploadLink, putFileContents } from "./operations/putFileContents.js";
 import { partialUpdateFileContents } from "./operations/partialUpdateFileContents.js";
 import { getDAVCompliance } from "./operations/getDAVCompliance.js";
+import { displaynameTagParser } from "./tools/dav.js";
 import {
     AuthType,
     BufferLike,
@@ -34,10 +35,12 @@ import {
     RequestOptionsCustom,
     SearchOptions,
     StatOptions,
+    WebDAVAttributeParser,
     WebDAVClient,
     WebDAVClientContext,
     WebDAVClientOptions,
-    WebDAVMethodOptions
+    WebDAVMethodOptions,
+    WebDAVTagParser
 } from "./types.js";
 
 const DEFAULT_CONTACT_HREF =
@@ -70,6 +73,11 @@ export function createClient(remoteURL: string, options: WebDAVClientOptions = {
         httpAgent,
         httpsAgent,
         password,
+        parsing: {
+            attributeNamePrefix: options.attributeNamePrefix ?? "@",
+            attributeParsers: [],
+            tagParsers: [displaynameTagParser]
+        },
         remotePath: extractURLPath(remoteURL),
         remoteURL,
         token,
@@ -124,6 +132,12 @@ export function createClient(remoteURL: string, options: WebDAVClientOptions = {
         },
         stat: (path: string, options?: StatOptions) => getStat(context, path, options),
         unlock: (path: string, token: string, options?: WebDAVMethodOptions) =>
-            unlock(context, path, token, options)
+            unlock(context, path, token, options),
+        registerAttributeParser: (parser: WebDAVAttributeParser) => {
+            context.parsing.attributeParsers.push(parser);
+        },
+        registerTagParser: (parser: WebDAVTagParser) => {
+            context.parsing.tagParsers.push(parser);
+        }
     };
 }

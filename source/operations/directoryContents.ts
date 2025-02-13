@@ -35,7 +35,7 @@ export async function getDirectoryContents(
     if (!responseData) {
         throw new Error("Failed parsing directory contents: Empty response");
     }
-    const davResp = await parseXML(responseData);
+    const davResp = await parseXML(responseData, context.parsing);
     const _remotePath = makePathAbsolute(remotePath);
     const remoteBasePath = makePathAbsolute(context.remoteBasePath || context.remotePath);
     let files = getDirectoryFiles(
