@@ -70,6 +70,9 @@ export function createClient(remoteURL: string, options: WebDAVClientOptions = {
         httpAgent,
         httpsAgent,
         password,
+        parsing: {
+            attributeNamePrefix: options.attributeNamePrefix ?? "@"
+        },
         remotePath: extractURLPath(remoteURL),
         remoteURL,
         token,

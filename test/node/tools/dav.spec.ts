@@ -12,4 +12,70 @@ describe("parseXML", function () {
         // Ensure trailing zero is not lost
         expect(parsed.multistatus.response[0].propstat.prop.displayname).to.equal("2024.10");
     });
+
+    it("correctly parses property attributes", async function () {
+        const data = await readFile(
+            new URL("../../responses/propfind-attributes.xml", import.meta.url)
+        );
+
+        const parsed = await parseXML(data.toString());
+
+        expect(parsed.multistatus.response).to.have.length(1);
+        expect(
+            parsed.multistatus.response[0].propstat.prop["system-tags"]["system-tag"]
+        ).to.deep.equal([
+            {
+                "@can-assign": "true",
+                "@id": "321",
+                "@checked": true,
+                text: "Tag1"
+            },
+            {
+                "@can-assign": "false",
+                "@id": "654",
+                "@prop": "",
+                text: "Tag2"
+            }
+        ]);
+    });
+
+    it("parses property attributes with different prefix", async function () {
+        const data = await readFile(
+            new URL("../../responses/propfind-attributes.xml", import.meta.url)
+        );
+
+        const parsed = await parseXML(data.toString(), { attributeNamePrefix: "" });
+
+        expect(parsed.multistatus.response).to.have.length(1);
+        expect(
+            parsed.multistatus.response[0].propstat.prop["system-tags"]["system-tag"]
+        ).to.deep.equal([
+            {
+                "can-assign": "true",
+                id: "321",
+                checked: true,
+                text: "Tag1"
+            },
+            {
+                "can-assign": "false",
+                id: "654",
+                prop: "",
+                text: "Tag2"
+            }
+        ]);
+    });
+
+    it("correctly parses property attributes that have the same name as nested prop", async function () {
+        const data = await readFile(
+            new URL("../../responses/propfind-attributes-conflict.xml", import.meta.url)
+        );
+
+        const parsed = await parseXML(data.toString());
+
+        expect(parsed.multistatus.response).to.have.length(1);
+        expect(parsed.multistatus.response[0].propstat.prop.prop).to.deep.equal({
+            "@link": "value",
+            link: "text value"
+        });
+    });
 });

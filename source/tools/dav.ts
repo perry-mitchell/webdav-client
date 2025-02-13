@@ -1,7 +1,6 @@
 import path from "path-posix";
 import { XMLParser } from "fast-xml-parser";
 import nestedProp from "nested-property";
-import { decodeHTMLEntities } from "./encode.js";
 import { encodePath, normalisePath } from "./path.js";
 import {
     DAVResult,
@@ -21,10 +20,10 @@ enum PropertyType {
     Original = "original"
 }
 
-function getParser(): XMLParser {
+function getParser({ attributeNamePrefix }): XMLParser {
     return new XMLParser({
         allowBooleanAttributes: true,
-        attributeNamePrefix: "",
+        attributeNamePrefix,
         textNodeName: "text",
         ignoreAttributes: false,
         removeNSPrefix: true,
@@ -117,11 +116,12 @@ function normaliseResult(result: DAVResultRaw): DAVResult {
  * Parse an XML response from a WebDAV service,
  *  converting it to an internal DAV result
  * @param xml The raw XML string
+ * @param context The current client context
  * @returns A parsed and processed DAV result
  */
-export function parseXML(xml: string): Promise<DAVResult> {
+export function parseXML(xml: string, context: WebDAVParsingContext): Promise<DAVResult> {
     return new Promise(resolve => {
-        const result = getParser().parse(xml);
+        const result = getParser(context).parse(xml);
         resolve(normaliseResult(result));
     });
 }

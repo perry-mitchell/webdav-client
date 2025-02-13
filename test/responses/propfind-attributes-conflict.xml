@@ -9,10 +9,9 @@
 				<d:getetag>&quot;66a15a0171527&quot;</d:getetag>
 				<d:getlastmodified>Wed, 24 Jul 2024 19:46:09 GMT</d:getlastmodified>
 				<d:creationdate>1970-01-01T00:00:00+00:00</d:creationdate>
-				<z:system-tags>
-					<z:system-tag z:can-assign="true" z:id="321" z:checked>Tag1</z:system-tag>
-					<z:system-tag z:can-assign="false" z:id="654" z:prop="">Tag2</z:system-tag>
-				</z:system-tags>
+				<z:prop z:link="value">
+					<z:link>text value</z:link>
+				</z:prop>
 			</d:prop>
 			<d:status>HTTP/1.1 200 OK</d:status>
 		</d:propstat>

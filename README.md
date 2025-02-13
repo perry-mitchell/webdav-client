@@ -218,6 +218,7 @@ The available configuration options are as follows:
 | Option        | Default       | Description                                       |
 |---------------|---------------|---------------------------------------------------|
 | `authType`    | `null`        | The authentication type to use. If not provided, defaults to trying to detect based upon whether `username` and `password` were provided. |
+| `attributeNamePrefix` | `@`   | Prefix used to identify attributes on the property object |
 | `contactHref` | _[This URL](https://github.com/perry-mitchell/webdav-client/blob/master/LOCK_CONTACT.md)_ | Contact URL used for LOCKs. |
 | `headers`     | `{}`          | Additional headers provided to all requests. Headers provided here are overridden by method-specific headers, including `Authorization`. |
 | `httpAgent`   | _None_        | HTTP agent instance. Available only in Node. See [http.Agent](https://nodejs.org/api/http.html#http_class_http_agent). |
@@ -694,7 +695,7 @@ Most WebDAV methods extend `WebDAVMethodOptions`, which allow setting things lik
 
 #### Item stats
 
-Item stats are objects with properties that descibe a file or directory. They resemble the following:
+Item stats are objects with properties that describe a file or directory. They resemble the following:
 
 ```json
 {
@@ -745,6 +746,46 @@ Requests that return results, such as `getDirectoryContents`, `getFileContents`,
 | headers      | Object          | The response headers.                  |
 | status       | Number          | The numeric status code.               |
 | statusText   | String          | The status text.                       |
+
+One example could look like this, in this example the `system-tag` prop contained attributes which you can identifiy by the `attributeNamePrefix` (by default `@`), the value is then contained in the `text` attribute:
+
+```json
+{
+    "headers": {},
+    "status": 200,
+    "statusText": "Ok",
+    "data": {
+        "filename": "/1",
+        "basename": "1",
+        "lastmod": "Wed, 24 Jul 2024 19:46:09 GMT",
+        "size": 0,
+        "type": "file",
+        "etag": "66a15a0171527",
+        "mime": "",
+        "props": {
+            "getetag": "\"66a15a0171527\"",
+            "getlastmodified": "Wed, 24 Jul 2024 19:46:09 GMT",
+            "creationdate": "1970-01-01T00:00:00+00:00",
+            "system-tags": {
+                "system-tag": [
+                    {
+                        "text": "Tag1",
+                        "@can-assign": "true",
+                        "@id": "321",
+                        "@checked": true
+                    },
+                    {
+                        "text": "Tag2",
+                        "@can-assign": "false",
+                        "@id": "654",
+                        "@prop": ""
+                    }
+                ]
+            }
+        }
+    },
+}
+```
 
 ### CORS
 CORS is a security enforcement technique employed by browsers to ensure requests are executed to and from expected contexts. It can conflict with this library if the target server doesn't return CORS headers when making requests from a browser. It is your responsibility to handle this.

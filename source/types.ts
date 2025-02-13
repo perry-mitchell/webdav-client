@@ -327,6 +327,7 @@ export interface WebDAVClientContext {
     headers: Headers;
     httpAgent?: any;
     httpsAgent?: any;
+    parsing: WebDAVParsingContext;
     password?: string;
     remotePath: string;
     remoteURL: string;
@@ -341,6 +342,7 @@ export interface WebDAVClientError extends Error {
 }
 
 export interface WebDAVClientOptions {
+    attributeNamePrefix?: string;
     authType?: AuthType;
     remoteBasePath?: string;
     contactHref?: string;
@@ -360,4 +362,8 @@ export interface WebDAVMethodOptions {
     data?: RequestDataPayload;
     headers?: Headers;
     signal?: AbortSignal;
+}
+
+export interface WebDAVParsingContext {
+    attributeNamePrefix?: string;
 }
