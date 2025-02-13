@@ -44,7 +44,11 @@ describe("parseXML", function () {
             new URL("../../responses/propfind-attributes.xml", import.meta.url)
         );
 
-        const parsed = await parseXML(data.toString(), { attributeNamePrefix: "" });
+        const parsed = await parseXML(data.toString(), {
+            attributeNamePrefix: "",
+            attributeParsers: [],
+            tagParsers: []
+        });
 
         expect(parsed.multistatus.response).to.have.length(1);
         expect(
@@ -65,6 +69,44 @@ describe("parseXML", function () {
         ]);
     });
 
+    it("parses property attributes with custom parser", async function () {
+        // Dummy parser that parses all string "true" or "false" to the boolean value
+        const booleanAttributeParser = (path: string, value: string) => {
+            if (["true", "false"].includes(value)) {
+                return value === "true";
+            }
+            return value;
+        };
+
+        const data = await readFile(
+            new URL("../../responses/propfind-attributes.xml", import.meta.url)
+        );
+
+        const parsed = await parseXML(data.toString(), {
+            attributeNamePrefix: "",
+            attributeParsers: [booleanAttributeParser],
+            tagParsers: []
+        });
+
+        expect(parsed.multistatus.response).to.have.length(1);
+        expect(
+            parsed.multistatus.response[0].propstat.prop["system-tags"]["system-tag"]
+        ).to.deep.equal([
+            {
+                "can-assign": true,
+                id: "321",
+                checked: true,
+                text: "Tag1"
+            },
+            {
+                "can-assign": false,
+                id: "654",
+                prop: "",
+                text: "Tag2"
+            }
+        ]);
+    });
+
     it("correctly parses property attributes that have the same name as nested prop", async function () {
         const data = await readFile(
             new URL("../../responses/propfind-attributes-conflict.xml", import.meta.url)
@@ -77,5 +119,34 @@ describe("parseXML", function () {
             "@link": "value",
             link: "text value"
         });
+    });
+
+    it("parses props with custom parser", async function () {
+        // Dummy parser that parses all string "true" or "false" to the boolean value
+        const shareAttributesParser = (path: string, value: string) => {
+            if (path.endsWith("prop.share-attributes")) {
+                return JSON.parse(value);
+            }
+            return value;
+        };
+
+        const data = await readFile(
+            new URL("../../responses/propfind-nextcloud-share-attributes.xml", import.meta.url)
+        );
+
+        const parsed = await parseXML(data.toString(), {
+            attributeNamePrefix: "",
+            attributeParsers: [],
+            tagParsers: [shareAttributesParser]
+        });
+
+        expect(parsed.multistatus.response).to.have.length(1);
+        expect(parsed.multistatus.response[0].propstat.prop["share-attributes"]).to.deep.equal([
+            {
+                scope: "permissions",
+                key: "download",
+                value: false
+            }
+        ]);
     });
 });

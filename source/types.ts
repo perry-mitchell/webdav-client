@@ -316,6 +316,8 @@ export interface WebDAVClient {
         options?: StatOptions
     ) => Promise<FileStat | ResponseDataDetailed<FileStat>>;
     unlock: (path: string, token: string, options?: WebDAVMethodOptions) => Promise<void>;
+    registerAttributeParser: (parser: WebDAVAttributeParser) => void;
+    registerTagParser: (parser: WebDAVTagParser) => void;
 }
 
 export interface WebDAVClientContext {
@@ -364,6 +366,27 @@ export interface WebDAVMethodOptions {
     signal?: AbortSignal;
 }
 
+/**
+ * Callback to parse a prop attribute value.
+ * If `undefined` is returned the original text value will be used.
+ * If the unchanged value is returned the default parsing will be applied.
+ * Otherwise the returned value will be used.
+ */
+export type WebDAVAttributeParser = (
+    jPath: string,
+    attributeValue: string
+) => string | unknown | undefined;
+
+/**
+ * Callback to parse a prop tag value.
+ * If `undefined` is returned the original text value will be used.
+ * If the unchanged value is returned the default parsing will be applied.
+ * Otherwise the returned value will be used.
+ */
+export type WebDAVTagParser = (jPath: string, tagValue: string) => string | unknown | undefined;
+
 export interface WebDAVParsingContext {
     attributeNamePrefix?: string;
+    attributeParsers: WebDAVAttributeParser[];
+    tagParsers: WebDAVTagParser[];
 }

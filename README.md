@@ -677,6 +677,64 @@ await client.unlock("/file.doc", lock.token);
 
 _`options` extends [method options](#method-options)._
 
+#### registerAttributeParser
+
+Register a new attribute parser on the client
+
+```typescript
+// Parses all `disabled` attributes to boolean, e.g. `<prop disabled="true">`
+function booleanAttributeParser(jPath: string, value: string) {
+    if (jPath.endsWith(".disabled")) {
+        return value === "true"
+    }
+    // Apply default parsing otherwise
+    return value
+}
+await client.registerAttributeParser(booleanAttributeParser);
+```
+
+```typescript
+(parser: WebDAVAttributeParser) => void
+```
+
+The `WebDAVAttributeParser` is a function that receives the jPath and the attribute value and either returns:
+- `undefined` to use the value as it is and skip any further parsing
+- the unchanged value to apply default parsing
+- Any other parsed value to use
+
+```typescript
+(jPath: string, value: string) => undefined|string|unknown
+```
+
+#### registerTagParser
+
+Register a new tag parser on the client, this is used to parse the value of props when doing stat requests.
+
+```typescript
+// Parses only <prop><json-prop>JSONVALUE</json-prop></prop>
+function jsonPropParser(jPath: string, value: string) {
+    if (jPath.endsWith("prop.json-prop")) {
+        return JSON.parse(value)
+    }
+    // Apply default parsing otherwise
+    return value
+}
+await client.registerTagParser(jsonPropParser);
+```
+
+```typescript
+(parser: WebDAVTagParser) => void
+```
+
+The `WebDAVTagParser` is a function that receives the jPath and the attribute value and either returns:
+- `undefined` to use the value as it is and skip any further parsing
+- the unchanged value to apply default parsing
+- Any other parsed value to use
+
+```typescript
+(jPath: string, value: string) => undefined|string|unknown
+```
+
 ##### Custom properties
 
 For requests like `stat`, which use the `PROPFIND` method under the hood, it is possible to provide a custom request body to the method so that the server may respond with additional/different data. Overriding of the body can be performed by setting the `data` property in the [method options](#method-options).
