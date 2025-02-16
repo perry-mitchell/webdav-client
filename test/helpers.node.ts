@@ -1,18 +1,20 @@
-import path from "path";
-import fs from "fs";
-import { fileURLToPath } from "url";
+import path from "node:path";
+import fs from "node:fs";
+import { fileURLToPath } from "node:url";
+import { mock, Mock } from "node:test";
 import { fetch } from "@buttercup/fetch";
 import { rimraf } from "rimraf";
 import copyDir from "copy-dir";
-import sinon from "sinon";
+import getPort from "get-port";
 import { getPatcher } from "../source/index.js";
-import { PASSWORD, PORT, USERNAME } from "./server/credentials.js";
+import { PASSWORD, USERNAME } from "./server/credentials.js";
 
 export { createClient as createWebDAVClient } from "../source/index.js";
-export { createWebDAVServer } from "./server/index.js";
+export { type WebDAVServer, createWebDAVServer } from "./server/index.js";
+
+export type RequestSpy = Mock<typeof fetch>;
 
 export const SERVER_PASSWORD = PASSWORD;
-export const SERVER_PORT = PORT;
 export const SERVER_USERNAME = USERNAME;
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -23,6 +25,10 @@ export function clean() {
         path.resolve(dirname, "./serverContents"),
         path.resolve(dirname, "./testContents")
     );
+}
+
+export async function nextPort(): Promise<number> {
+    return getPort();
 }
 
 export function restoreRequests() {
@@ -49,8 +55,8 @@ export function useCustomXmlResponse(xmlFile) {
     );
 }
 
-export function useRequestSpy() {
-    const spy = sinon.spy(fetch);
+export function useRequestSpy(): RequestSpy {
+    const spy = mock.fn(fetch);
     // @ts-ignore
     getPatcher().patch("fetch", spy);
     return spy;

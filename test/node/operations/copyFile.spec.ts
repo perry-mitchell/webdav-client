@@ -1,85 +1,92 @@
-import path from "path";
-import { fileURLToPath } from "url";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import test from "node:test";
+import assert from "node:assert";
 import fileExists from "exists-file";
 import directoryExists from "directory-exists";
-import { expect } from "chai";
 import {
+    RequestSpy,
     SERVER_PASSWORD,
-    SERVER_PORT,
     SERVER_USERNAME,
+    WebDAVServer,
     clean,
     createWebDAVClient,
     createWebDAVServer,
+    nextPort,
     restoreRequests,
     useRequestSpy
 } from "../../helpers.node.js";
+import { WebDAVClient } from "../../../source/types.js";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const TEST_CONTENTS = path.resolve(dirname, "../../testContents");
 
-describe("copyFile", function () {
-    beforeEach(function () {
-        this.client = createWebDAVClient(`http://localhost:${SERVER_PORT}/webdav/server`, {
+test.describe("copyFile", function () {
+    let client: WebDAVClient, server: WebDAVServer, requestSpy: RequestSpy;
+
+    test.beforeEach(async function (t) {
+        const port = await nextPort();
+        client = createWebDAVClient(`http://localhost:${port}/webdav/server`, {
             username: SERVER_USERNAME,
             password: SERVER_PASSWORD
         });
         clean();
-        this.server = createWebDAVServer();
-        this.requestSpy = useRequestSpy();
-        return this.server.start();
+        server = createWebDAVServer(port);
+        requestSpy = useRequestSpy();
+        await server.start();
     });
 
-    afterEach(function () {
+    test.afterEach(async function () {
         restoreRequests();
-        return this.server.stop();
+        await server.stop();
     });
 
-    it("copies files from one directory to another", function () {
-        return this.client.copyFile("/alrighty.jpg", "/sub1/alrighty.jpg").then(function () {
-            expect(fileExists.sync(path.join(TEST_CONTENTS, "./alrighty.jpg"))).to.be.true;
-            expect(fileExists.sync(path.join(TEST_CONTENTS, "./sub1/alrighty.jpg"))).to.be.true;
+    test("copies files from one directory to another", function () {
+        return client.copyFile("/alrighty.jpg", "/sub1/alrighty.jpg").then(function () {
+            assert.ok(fileExists.sync(path.join(TEST_CONTENTS, "./alrighty.jpg")));
+            assert.ok(fileExists.sync(path.join(TEST_CONTENTS, "./sub1/alrighty.jpg")));
         });
     });
 
-    it("copies directories from one directory to another", function () {
-        return this.client.copyFile("/webdav", "/sub1/webdav").then(function () {
-            expect(directoryExists.sync(path.join(TEST_CONTENTS, "./webdav"))).to.be.true;
-            expect(directoryExists.sync(path.join(TEST_CONTENTS, "./sub1/webdav"))).to.be.true;
+    test("copies directories from one directory to another", function () {
+        return client.copyFile("/webdav", "/sub1/webdav").then(function () {
+            assert.ok(directoryExists.sync(path.join(TEST_CONTENTS, "./webdav")));
+            assert.ok(directoryExists.sync(path.join(TEST_CONTENTS, "./sub1/webdav")));
         });
     });
 
-    it("copies files with special characters", function () {
-        return this.client.copyFile("/sub1/ยากจน #1.txt", "/sub1/ยากจน #2.txt").then(function () {
-            expect(fileExists.sync(path.join(TEST_CONTENTS, "./sub1/ยากจน #2.txt"))).to.be.true;
+    test("copies files with special characters", function () {
+        return client.copyFile("/sub1/ยากจน #1.txt", "/sub1/ยากจน #2.txt").then(function () {
+            assert.ok(fileExists.sync(path.join(TEST_CONTENTS, "./sub1/ยากจน #2.txt")));
         });
     });
 
-    it("allows specifying custom headers", async function () {
-        await this.client.copyFile("/alrighty.jpg", "/sub1/alrighty.jpg", {
+    test("allows specifying custom headers", async function () {
+        await client.copyFile("/alrighty.jpg", "/sub1/alrighty.jpg", {
             headers: {
                 "X-test": "test"
             }
         });
-        const [, requestOptions] = this.requestSpy.firstCall.args;
-        expect(requestOptions).to.have.property("headers").that.has.property("X-test", "test");
+        const [, requestOptions] = requestSpy.mock.calls[0].arguments;
+        assert.equal(requestOptions.headers["X-test"], "test");
     });
 
-    it("creates deep copy by default", async function () {
-        await this.client.copyFile("/alrighty.jpg", "/sub1/alrighty.jpg");
-        const [, requestOptions] = this.requestSpy.firstCall.args;
-        expect(requestOptions).to.have.property("headers").that.has.property("Depth", "infinity");
+    test("creates deep copy by default", async function () {
+        await client.copyFile("/alrighty.jpg", "/sub1/alrighty.jpg");
+        const [, requestOptions] = requestSpy.mock.calls[0].arguments;
+        assert.equal(requestOptions.headers["Depth"], "infinity");
     });
 
-    it("creates deep copy if shallow copy is disabled", async function () {
-        await this.client.copyFile("/alrighty.jpg", "/sub1/alrighty.jpg", { shallow: false });
-        const [, requestOptions] = this.requestSpy.firstCall.args;
-        expect(requestOptions).to.have.property("headers").that.has.property("Depth", "infinity");
+    test("creates deep copy if shallow copy is disabled", async function () {
+        await client.copyFile("/alrighty.jpg", "/sub1/alrighty.jpg", { shallow: false });
+        const [, requestOptions] = requestSpy.mock.calls[0].arguments;
+        assert.equal(requestOptions.headers["Depth"], "infinity");
     });
 
-    it("creates shallow copy if enabled", async function () {
-        await this.client.copyFile("/alrighty.jpg", "/sub1/alrighty.jpg", { shallow: true });
-        const [, requestOptions] = this.requestSpy.firstCall.args;
-        expect(requestOptions).to.have.property("headers").that.has.property("Depth", "0");
+    test("creates shallow copy if enabled", async function () {
+        await client.copyFile("/alrighty.jpg", "/sub1/alrighty.jpg", { shallow: true });
+        const [, requestOptions] = requestSpy.mock.calls[0].arguments;
+        assert.equal(requestOptions.headers["Depth"], "0");
     });
 });
