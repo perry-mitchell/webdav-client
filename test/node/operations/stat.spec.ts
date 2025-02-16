@@ -147,15 +147,15 @@ describe("stat", function () {
             // <z:system-tag z:can-assign="false" z:id="654" z:prop="">Tag2</z:system-tag>
             expect(result.data.props["system-tags"]["system-tag"]).to.deep.equal([
                 {
-                    "can-assign": true,
-                    id: "321",
-                    checked: true,
+                    "@can-assign": "true",
+                    "@id": "321",
+                    "@checked": true,
                     text: "Tag1"
                 },
                 {
-                    "can-assign": false,
-                    id: "654",
-                    prop: "",
+                    "@can-assign": "false",
+                    "@id": "654",
+                    "@prop": "",
                     text: "Tag2"
                 }
             ]);

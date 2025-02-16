@@ -25,7 +25,7 @@ export async function getQuota(
     const response = await request(requestOptions, context);
     handleResponseCode(context, response);
     const responseData = await response.text();
-    const result = await parseXML(responseData);
+    const result = await parseXML(responseData, context.parsing);
     const quota = parseQuota(result);
     return processResponsePayload(response, quota, options.details);
 }

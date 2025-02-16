@@ -218,6 +218,7 @@ The available configuration options are as follows:
 | Option        | Default       | Description                                       |
 |---------------|---------------|---------------------------------------------------|
 | `authType`    | `null`        | The authentication type to use. If not provided, defaults to trying to detect based upon whether `username` and `password` were provided. |
+| `attributeNamePrefix` | `@`   | Prefix used to identify attributes on the property object |
 | `contactHref` | _[This URL](https://github.com/perry-mitchell/webdav-client/blob/master/LOCK_CONTACT.md)_ | Contact URL used for LOCKs. |
 | `headers`     | `{}`          | Additional headers provided to all requests. Headers provided here are overridden by method-specific headers, including `Authorization`. |
 | `httpAgent`   | _None_        | HTTP agent instance. Available only in Node. See [http.Agent](https://nodejs.org/api/http.html#http_class_http_agent). |
@@ -676,6 +677,64 @@ await client.unlock("/file.doc", lock.token);
 
 _`options` extends [method options](#method-options)._
 
+#### registerAttributeParser
+
+Register a new attribute parser on the client
+
+```typescript
+// Parses all `disabled` attributes to boolean, e.g. `<prop disabled="true">`
+function booleanAttributeParser(jPath: string, value: string) {
+    if (jPath.endsWith(".disabled")) {
+        return value === "true";
+    }
+    // Apply default parsing otherwise
+    return value;
+}
+await client.registerAttributeParser(booleanAttributeParser);
+```
+
+```typescript
+(parser: WebDAVAttributeParser) => void
+```
+
+The `WebDAVAttributeParser` is a function that receives the jPath and the attribute value and either returns:
+- `undefined` to use the value as it is and skip any further parsing
+- the unchanged value to apply default parsing
+- Any other parsed value to use
+
+```typescript
+(jPath: string, value: string) => undefined|string|unknown
+```
+
+#### registerTagParser
+
+Register a new tag parser on the client, this is used to parse the value of props when doing stat requests.
+
+```typescript
+// Parses only <prop><json-prop>JSONVALUE</json-prop></prop>
+function jsonPropParser(jPath: string, value: string) {
+    if (jPath.endsWith("prop.json-prop")) {
+        return JSON.parse(value);
+    }
+    // Apply default parsing otherwise
+    return value;
+}
+await client.registerTagParser(jsonPropParser);
+```
+
+```typescript
+(parser: WebDAVTagParser) => void
+```
+
+The `WebDAVTagParser` is a function that receives the jPath and the attribute value and either returns:
+- `undefined` to use the value as it is and skip any further parsing
+- the unchanged value to apply default parsing
+- Any other parsed value to use
+
+```typescript
+(jPath: string, value: string) => undefined|string|unknown
+```
+
 ##### Custom properties
 
 For requests like `stat`, which use the `PROPFIND` method under the hood, it is possible to provide a custom request body to the method so that the server may respond with additional/different data. Overriding of the body can be performed by setting the `data` property in the [method options](#method-options).
@@ -694,7 +753,7 @@ Most WebDAV methods extend `WebDAVMethodOptions`, which allow setting things lik
 
 #### Item stats
 
-Item stats are objects with properties that descibe a file or directory. They resemble the following:
+Item stats are objects with properties that describe a file or directory. They resemble the following:
 
 ```json
 {
@@ -745,6 +804,46 @@ Requests that return results, such as `getDirectoryContents`, `getFileContents`,
 | headers      | Object          | The response headers.                  |
 | status       | Number          | The numeric status code.               |
 | statusText   | String          | The status text.                       |
+
+In the following example the `system-tag` prop contained attributes which you can identify by providing the `attributeNamePrefix` (by default `@`), with the value is then contained in the `text` attribute:
+
+```json
+{
+    "headers": {},
+    "status": 200,
+    "statusText": "Ok",
+    "data": {
+        "filename": "/1",
+        "basename": "1",
+        "lastmod": "Wed, 24 Jul 2024 19:46:09 GMT",
+        "size": 0,
+        "type": "file",
+        "etag": "66a15a0171527",
+        "mime": "",
+        "props": {
+            "getetag": "\"66a15a0171527\"",
+            "getlastmodified": "Wed, 24 Jul 2024 19:46:09 GMT",
+            "creationdate": "1970-01-01T00:00:00+00:00",
+            "system-tags": {
+                "system-tag": [
+                    {
+                        "text": "Tag1",
+                        "@can-assign": "true",
+                        "@id": "321",
+                        "@checked": true
+                    },
+                    {
+                        "text": "Tag2",
+                        "@can-assign": "false",
+                        "@id": "654",
+                        "@prop": ""
+                    }
+                ]
+            }
+        }
+    },
+}
+```
 
 ### CORS
 CORS is a security enforcement technique employed by browsers to ensure requests are executed to and from expected contexts. It can conflict with this library if the target server doesn't return CORS headers when making requests from a browser. It is your responsibility to handle this.

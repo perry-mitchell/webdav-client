@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<d:multistatus xmlns:d="DAV:" xmlns:s="http://sabredav.org/ns" xmlns:oc="http://owncloud.org/ns"
+	xmlns:nc="http://nextcloud.org/ns">
+	<d:response>
+		<d:href>/remote.php/dav/files/user1/New%20folder/</d:href>
+		<d:propstat>
+			<d:prop>
+				<d:getetag>&quot;67ada8c90025b&quot;</d:getetag>
+				<d:getlastmodified>Thu, 13 Feb 2025 08:09:44 GMT</d:getlastmodified>
+				<d:creationdate>1970-01-01T00:00:00+00:00</d:creationdate>
+				<d:displayname>New folder</d:displayname>
+				<d:quota-available-bytes>-3</d:quota-available-bytes>
+				<d:resourcetype>
+					<d:collection />
+				</d:resourcetype>
+				<nc:has-preview>false</nc:has-preview>
+				<nc:mount-type>shared</nc:mount-type>
+				<oc:comments-unread>0</oc:comments-unread>
+				<oc:favorite>0</oc:favorite>
+				<oc:fileid>56</oc:fileid>
+				<oc:owner-display-name>admin</oc:owner-display-name>
+				<oc:owner-id>admin</oc:owner-id>
+				<oc:permissions>SRGDNVCK</oc:permissions>
+				<oc:size>292842</oc:size>
+				<nc:hidden>false</nc:hidden>
+				<nc:is-mount-root>true</nc:is-mount-root>
+				<nc:reminder-due-date></nc:reminder-due-date>
+				<nc:note></nc:note>
+				<nc:sharees />
+				<nc:share-attributes>
+					[{&quot;scope&quot;:&quot;permissions&quot;,&quot;key&quot;:&quot;download&quot;,&quot;value&quot;:false}]</nc:share-attributes>
+				<oc:share-types />
+				<x1:share-permissions xmlns:x1="http://open-collaboration-services.org/ns">31</x1:share-permissions>
+				<nc:system-tags />
+				<nc:rich-workspace></nc:rich-workspace>
+				<nc:rich-workspace-file></nc:rich-workspace-file>
+			</d:prop>
+			<d:status>HTTP/1.1 200 OK</d:status>
+		</d:propstat>
+		<d:propstat>
+			<d:prop>
+				<d:getcontentlength />
+				<d:getcontenttype />
+				<nc:is-encrypted />
+				<nc:metadata-blurhash />
+				<nc:metadata-files-live-photo />
+			</d:prop>
+			<d:status>HTTP/1.1 404 Not Found</d:status>
+		</d:propstat>
+	</d:response>
+</d:multistatus>
