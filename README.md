@@ -805,7 +805,7 @@ Requests that return results, such as `getDirectoryContents`, `getFileContents`,
 | status       | Number          | The numeric status code.               |
 | statusText   | String          | The status text.                       |
 
-One example could look like this, in this example the `system-tag` prop contained attributes which you can identifiy by the `attributeNamePrefix` (by default `@`), the value is then contained in the `text` attribute:
+In the following example the `system-tag` prop contained attributes which you can identify by providing the `attributeNamePrefix` (by default `@`), with the value is then contained in the `text` attribute:
 
 ```json
 {
