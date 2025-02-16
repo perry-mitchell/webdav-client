@@ -714,7 +714,7 @@ Register a new tag parser on the client, this is used to parse the value of prop
 // Parses only <prop><json-prop>JSONVALUE</json-prop></prop>
 function jsonPropParser(jPath: string, value: string) {
     if (jPath.endsWith("prop.json-prop")) {
-        return JSON.parse(value)
+        return JSON.parse(value);
     }
     // Apply default parsing otherwise
     return value;
