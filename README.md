@@ -717,7 +717,7 @@ function jsonPropParser(jPath: string, value: string) {
         return JSON.parse(value)
     }
     // Apply default parsing otherwise
-    return value
+    return value;
 }
 await client.registerTagParser(jsonPropParser);
 ```
