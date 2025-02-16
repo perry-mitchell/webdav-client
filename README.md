@@ -688,7 +688,7 @@ function booleanAttributeParser(jPath: string, value: string) {
         return value === "true";
     }
     // Apply default parsing otherwise
-    return value
+    return value;
 }
 await client.registerAttributeParser(booleanAttributeParser);
 ```
