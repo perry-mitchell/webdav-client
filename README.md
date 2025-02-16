@@ -685,7 +685,7 @@ Register a new attribute parser on the client
 // Parses all `disabled` attributes to boolean, e.g. `<prop disabled="true">`
 function booleanAttributeParser(jPath: string, value: string) {
     if (jPath.endsWith(".disabled")) {
-        return value === "true"
+        return value === "true";
     }
     // Apply default parsing otherwise
     return value
