@@ -12,7 +12,7 @@ import { PASSWORD, USERNAME } from "./server/credentials.js";
 export { createClient as createWebDAVClient } from "../source/index.js";
 export { type WebDAVServer, createWebDAVServer } from "./server/index.js";
 
-export type RequestSpy = Mock<typeof fetch>;
+export type FetchSpy = Mock<typeof fetch>;
 
 export const SERVER_PASSWORD = PASSWORD;
 export const SERVER_USERNAME = USERNAME;
@@ -41,29 +41,31 @@ export function restoreRequests() {
     }
 }
 
-export function returnFakeResponse(xml: string) {
-    getPatcher().patch("request", function fakeRequest() {
-        return Promise.resolve({
-            text: () => Promise.resolve(xml)
-        });
-    });
-}
-
 export function sleep(ms: number) {
     return new Promise(resolve => {
         setTimeout(resolve, ms);
     });
 }
 
-export function useCustomXmlResponse(xmlFile: string) {
-    returnFakeResponse(
+export function useCustomXmlResponse(xmlFile: string): FetchSpy {
+    return useRequestSpyWithFakeResponse(
         fs.readFileSync(path.resolve(dirname, `./responses/${xmlFile}.xml`), "utf8")
     );
 }
 
-export function useRequestSpy(): RequestSpy {
+export function useFetchSpy(): FetchSpy {
     const spy = mock.fn(fetch);
     // @ts-ignore
+    getPatcher().patch("fetch", spy);
+    return spy;
+}
+
+export function useRequestSpyWithFakeResponse(xml: string): FetchSpy {
+    const spy = mock.fn(function fakeRequest() {
+        return Promise.resolve({
+            text: () => Promise.resolve(xml)
+        });
+    }) as unknown as FetchSpy;
     getPatcher().patch("fetch", spy);
     return spy;
 }

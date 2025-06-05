@@ -1,7 +1,7 @@
 import { Readable } from "node:stream";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
-    RequestSpy,
+    FetchSpy,
     SERVER_PASSWORD,
     SERVER_USERNAME,
     WebDAVServer,
@@ -10,7 +10,7 @@ import {
     createWebDAVServer,
     nextPort,
     restoreRequests,
-    useRequestSpy
+    useFetchSpy
 } from "../../helpers.node.js";
 import { Response, WebDAVClient } from "../../../source/types.js";
 
@@ -30,7 +30,7 @@ function streamToBuffer(stream: Readable): Promise<Buffer> {
 }
 
 describe("createReadStream", function () {
-    let client: WebDAVClient, server: WebDAVServer, requestSpy: RequestSpy;
+    let client: WebDAVClient, server: WebDAVServer, requestSpy: FetchSpy;
 
     beforeEach(async function () {
         const port = await nextPort();
@@ -40,7 +40,7 @@ describe("createReadStream", function () {
         });
         clean();
         server = createWebDAVServer(port);
-        requestSpy = useRequestSpy();
+        requestSpy = useFetchSpy();
         await server.start();
     });
 

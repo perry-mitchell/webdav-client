@@ -5,7 +5,7 @@ import bufferEquals from "buffer-equals";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { WebDAVClient } from "../../../source/index.js";
 import {
-    RequestSpy,
+    FetchSpy,
     SERVER_PASSWORD,
     SERVER_USERNAME,
     WebDAVServer,
@@ -14,7 +14,7 @@ import {
     createWebDAVServer,
     nextPort,
     restoreRequests,
-    useRequestSpy
+    useFetchSpy
 } from "../../helpers.node.js";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -23,7 +23,7 @@ const SOURCE_BIN = path.resolve(dirname, "../../testContents/alrighty.jpg");
 const SOURCE_TXT = path.resolve(dirname, "../../testContents/text document.txt");
 
 describe("getFileContents", function () {
-    let client: WebDAVClient, server: WebDAVServer, requestSpy: RequestSpy;
+    let client: WebDAVClient, server: WebDAVServer, requestSpy: FetchSpy;
 
     beforeEach(async function () {
         const port = await nextPort();
@@ -33,7 +33,7 @@ describe("getFileContents", function () {
             password: SERVER_PASSWORD
         });
         server = createWebDAVServer(port);
-        requestSpy = useRequestSpy();
+        requestSpy = useFetchSpy();
         await server.start();
     });
 

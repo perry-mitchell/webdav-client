@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { AuthType, FileStat, WebDAVClient } from "../../../source/index.js";
 import {
-    RequestSpy,
+    FetchSpy,
     SERVER_PASSWORD,
     SERVER_USERNAME,
     WebDAVServer,
@@ -11,13 +11,13 @@ import {
     createWebDAVServer,
     nextPort,
     restoreRequests,
-    returnFakeResponse,
+    useRequestSpyWithFakeResponse,
     useCustomXmlResponse,
-    useRequestSpy
+    useFetchSpy
 } from "../../helpers.node.js";
 
 describe("getDirectoryContents", function () {
-    let client: WebDAVClient, server: WebDAVServer, requestSpy: RequestSpy, port: number;
+    let client: WebDAVClient, server: WebDAVServer, requestSpy: FetchSpy, port: number;
 
     beforeEach(async function () {
         port = await nextPort();
@@ -27,7 +27,7 @@ describe("getDirectoryContents", function () {
             password: SERVER_PASSWORD
         });
         server = createWebDAVServer(port);
-        requestSpy = useRequestSpy();
+        requestSpy = useFetchSpy();
         await server.start();
     });
 
@@ -113,7 +113,7 @@ describe("getDirectoryContents", function () {
     });
 
     it("returns correct file results for files with HTML entities in their names", function () {
-        returnFakeResponse(
+        useRequestSpyWithFakeResponse(
             readFileSync(
                 new URL("../../responses/propfind-href-html-entities.xml", import.meta.url)
             ).toString()
@@ -129,7 +129,7 @@ describe("getDirectoryContents", function () {
     });
 
     it("returns correct file results for files with query in href", function () {
-        returnFakeResponse(
+        useRequestSpyWithFakeResponse(
             readFileSync(
                 new URL("../../responses/propfind-href-with-query.xml", import.meta.url)
             ).toString()
@@ -142,7 +142,7 @@ describe("getDirectoryContents", function () {
     });
 
     it("correctly parses the displayname property", function () {
-        returnFakeResponse(
+        useRequestSpyWithFakeResponse(
             readFileSync(
                 new URL("../../responses/propfind-numeric-displayname.xml", import.meta.url)
             ).toString()

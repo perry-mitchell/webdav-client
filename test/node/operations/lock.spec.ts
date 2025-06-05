@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { LockResponse, WebDAVClient } from "../../../source/index.js";
 import {
-    RequestSpy,
+    FetchSpy,
     SERVER_PASSWORD,
     SERVER_USERNAME,
     WebDAVServer,
@@ -10,13 +10,13 @@ import {
     createWebDAVServer,
     nextPort,
     restoreRequests,
-    useRequestSpy
+    useFetchSpy
 } from "../../helpers.node.js";
 
 const LOCK_TARGET = "/notes.txt";
 
 describe("lock", function () {
-    let client: WebDAVClient, server: WebDAVServer, requestSpy: RequestSpy, lock: LockResponse;
+    let client: WebDAVClient, server: WebDAVServer, requestSpy: FetchSpy, lock: LockResponse;
 
     beforeEach(async function () {
         const port = await nextPort();
@@ -26,7 +26,7 @@ describe("lock", function () {
             password: SERVER_PASSWORD
         });
         server = createWebDAVServer(port);
-        requestSpy = useRequestSpy();
+        requestSpy = useFetchSpy();
         lock = null;
         await server.start();
     });

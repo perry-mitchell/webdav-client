@@ -5,19 +5,14 @@ import {
     createWebDAVClient,
     createWebDAVServer,
     nextPort,
-    RequestSpy,
     restoreRequests,
-    useRequestSpy,
     WebDAVServer
 } from "../../helpers.node.js";
 
 const CONTENT_TYPE_SUFFIX = "?Content-Type=application/octet-stream";
 
 describe("getFileUploadLink", function () {
-    let clientPub: WebDAVClient,
-        clientAuth: WebDAVClient,
-        server: WebDAVServer,
-        requestSpy: RequestSpy;
+    let clientPub: WebDAVClient, clientAuth: WebDAVClient, server: WebDAVServer;
 
     beforeEach(async function () {
         const port = await nextPort();
@@ -28,7 +23,6 @@ describe("getFileUploadLink", function () {
             password: "pass"
         });
         server = createWebDAVServer(port);
-        requestSpy = useRequestSpy();
         await server.start();
     });
 

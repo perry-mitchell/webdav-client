@@ -4,7 +4,7 @@ import fileExists from "exists-file";
 import directoryExists from "directory-exists";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
-    RequestSpy,
+    FetchSpy,
     SERVER_PASSWORD,
     SERVER_USERNAME,
     WebDAVServer,
@@ -13,7 +13,7 @@ import {
     createWebDAVServer,
     nextPort,
     restoreRequests,
-    useRequestSpy
+    useFetchSpy
 } from "../../helpers.node.js";
 import { WebDAVClient } from "../../../source/types.js";
 
@@ -23,7 +23,7 @@ const localFilePath = path.resolve(dirname, "../../testContents/text document.tx
 const localDirPath = path.resolve(dirname, "../../testContents/sub1");
 
 describe("deleteFile", function () {
-    let client: WebDAVClient, server: WebDAVServer, requestSpy: RequestSpy;
+    let client: WebDAVClient, server: WebDAVServer, requestSpy: FetchSpy;
 
     beforeEach(async function () {
         const port = await nextPort();
@@ -33,7 +33,7 @@ describe("deleteFile", function () {
         });
         clean();
         server = createWebDAVServer(port);
-        requestSpy = useRequestSpy();
+        requestSpy = useFetchSpy();
         await server.start();
     });
 

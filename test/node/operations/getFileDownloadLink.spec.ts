@@ -5,17 +5,12 @@ import {
     createWebDAVClient,
     createWebDAVServer,
     nextPort,
-    RequestSpy,
     restoreRequests,
-    useRequestSpy,
     WebDAVServer
 } from "../../helpers.node.js";
 
 describe("getFileDownloadLink", function () {
-    let clientAuth: WebDAVClient,
-        clientPub: WebDAVClient,
-        server: WebDAVServer,
-        requestSpy: RequestSpy;
+    let clientAuth: WebDAVClient, clientPub: WebDAVClient, server: WebDAVServer;
 
     beforeEach(async function () {
         const port = await nextPort();
@@ -26,7 +21,6 @@ describe("getFileDownloadLink", function () {
             password: "pass"
         });
         server = createWebDAVServer(port);
-        requestSpy = useRequestSpy();
         await server.start();
     });
 

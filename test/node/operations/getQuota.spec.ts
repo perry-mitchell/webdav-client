@@ -3,7 +3,6 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
-    RequestSpy,
     SERVER_PASSWORD,
     SERVER_USERNAME,
     WebDAVServer,
@@ -12,27 +11,26 @@ import {
     createWebDAVServer,
     nextPort,
     restoreRequests,
-    returnFakeResponse,
-    useRequestSpy
+    useRequestSpyWithFakeResponse
 } from "../../helpers.node.js";
 import { WebDAVClient } from "../../../source/types.js";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function useInvalidQuota() {
-    returnFakeResponse(
+    return useRequestSpyWithFakeResponse(
         fs.readFileSync(path.resolve(dirname, "../../responses/quota-invalid.xml"), "utf8")
     );
 }
 
 function useValidQuota() {
-    returnFakeResponse(
+    return useRequestSpyWithFakeResponse(
         fs.readFileSync(path.resolve(dirname, "../../responses/quota-valid.xml"), "utf8")
     );
 }
 
 describe("getQuota", function () {
-    let client: WebDAVClient, server: WebDAVServer, requestSpy: RequestSpy;
+    let client: WebDAVClient, server: WebDAVServer;
 
     beforeEach(async function () {
         const port = await nextPort();
@@ -42,7 +40,6 @@ describe("getQuota", function () {
             password: SERVER_PASSWORD
         });
         server = createWebDAVServer(port);
-        requestSpy = useRequestSpy();
         await server.start();
     });
 
@@ -84,6 +81,7 @@ describe("getQuota", function () {
     });
 
     it("supports path option", async function () {
+        const requestSpy = useValidQuota();
         await client.getQuota({ path: "sub1" });
         const [url] = requestSpy.mock.calls[0].arguments;
         expect(url).to.match(/webdav\/server\/sub1$/);
