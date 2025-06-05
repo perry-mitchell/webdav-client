@@ -26,7 +26,8 @@
     "prepublishOnly": "npm run build",
     "test": "run-s test:node test:web test:format",
     "test:format": "prettier --check '{source,test}/**/*.{js,ts}'",
-    "test:node": "node --import tsx --test test/node/**/*.spec.ts",
+    "test:node": "vitest --watch=false",
+    "xtest:node": "node --import tsx --test test/node/**/*.spec.ts",
     "test:node:watch": "nodemon --exec 'npm run test:node' --ignore 'dist/'",
     "test:web": "echo 'Currently disabled...'"
   },
@@ -106,6 +107,7 @@
     "ts-node": "^10.9.2",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3",
+    "vitest": "^3.0.5",
     "wait-on": "^7.2.0",
     "webdav-server": "^2.6.2",
     "webpack": "^5.93.0",

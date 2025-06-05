@@ -1,20 +1,21 @@
 import nock from "nock";
-import { expect } from "chai";
-import { AuthType } from "../../source/index.js";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { AuthType, WebDAVClient } from "../../source/index.js";
 import {
     SERVER_PASSWORD,
-    SERVER_PORT,
     SERVER_USERNAME,
+    WebDAVServer,
     clean,
     createWebDAVClient,
-    createWebDAVServer
+    createWebDAVServer,
+    nextPort
 } from "../helpers.node.js";
 
 const DUMMYSERVER = "https://dummy.webdav.server";
 
 describe("auth", function () {
-    afterEach(function () {
-        nock.cleanAll();
+    afterEach(async function () {
+        clean();
     });
 
     it("should connect unauthenticated if no credentials are passed", function () {
@@ -75,34 +76,37 @@ describe("auth", function () {
     });
 
     describe("using Digest-enabled server", function () {
-        beforeEach(function () {
-            this.client = createWebDAVClient(`http://localhost:${SERVER_PORT}/webdav/server`, {
+        let client: WebDAVClient, server: WebDAVServer, port: number;
+
+        beforeEach(async function () {
+            port = await nextPort();
+            client = createWebDAVClient(`http://localhost:${port}/webdav/server`, {
                 username: SERVER_USERNAME,
                 password: SERVER_PASSWORD,
-                authType: AuthType.Auto
+                authType: AuthType.Digest
             });
             clean();
-            this.server = createWebDAVServer("digest");
-            return this.server.start();
+            server = createWebDAVServer(port, "digest");
+            await server.start();
         });
 
-        afterEach(function () {
-            return this.server.stop();
+        afterEach(async function () {
+            await server.stop();
         });
 
         it("should connect using Digest authentication if digest enabled", function () {
-            return this.client.exists("/alrighty.jpg").then(function (exists) {
+            return client.exists("/alrighty.jpg").then(function (exists) {
                 expect(exists).to.be.true;
             });
         });
 
-        it("should support auto-detection of password/digest auth", function () {
-            this.client = createWebDAVClient(`http://localhost:${SERVER_PORT}/webdav/server`, {
+        it("should support auto-detection of password/digest auth", async function () {
+            client = createWebDAVClient(`http://localhost:${port}/webdav/server`, {
                 username: SERVER_USERNAME,
                 password: SERVER_PASSWORD,
                 authType: AuthType.Auto
             });
-            return this.client.exists("/alrighty.jpg").then(function (exists) {
+            return client.exists("/alrighty.jpg").then(function (exists) {
                 expect(exists).to.be.true;
             });
         });

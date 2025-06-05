@@ -1,4 +1,4 @@
-import { expect } from "chai";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { readFile } from "fs/promises";
 import { parseXML } from "../../../source/index.js";
 

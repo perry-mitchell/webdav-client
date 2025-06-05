@@ -1,31 +1,36 @@
-import { expect } from "chai";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
+    RequestSpy,
     SERVER_PASSWORD,
-    SERVER_PORT,
     SERVER_USERNAME,
+    WebDAVServer,
     clean,
     createWebDAVClient,
-    createWebDAVServer
+    createWebDAVServer,
+    nextPort
 } from "../../helpers.node.js";
-import { parseStat, parseXML } from "../../../source/index.js";
+import { parseStat, parseXML, WebDAVClient } from "../../../source/index.js";
 
 describe("custom", function () {
-    beforeEach(function () {
-        this.client = createWebDAVClient(`http://localhost:${SERVER_PORT}/webdav/server`, {
+    let client: WebDAVClient, server: WebDAVServer, requestSpy: RequestSpy;
+
+    beforeEach(async function () {
+        const port = await nextPort();
+        client = createWebDAVClient(`http://localhost:${port}/webdav/server`, {
             username: SERVER_USERNAME,
             password: SERVER_PASSWORD
         });
         clean();
-        this.server = createWebDAVServer();
-        return this.server.start();
+        server = createWebDAVServer(port);
+        await server.start();
     });
 
-    afterEach(function () {
-        return this.server.stop();
+    afterEach(async function () {
+        await server.stop();
     });
 
     it("send and parse stat custom request", async function () {
-        const resp = await this.client.customRequest("/alrighty.jpg", {
+        const resp = await client.customRequest("/alrighty.jpg", {
             method: "PROPFIND",
             headers: {
                 Accept: "text/plain,application/xml",

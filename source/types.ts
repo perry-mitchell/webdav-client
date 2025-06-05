@@ -141,11 +141,18 @@ export interface DAVCompliance {
     server: string;
 }
 
-export interface GetDirectoryContentsOptions extends WebDAVMethodOptions {
+interface GetDirectoryContentsOptions extends WebDAVMethodOptions {
     deep?: boolean;
-    details?: boolean;
     glob?: string;
     includeSelf?: boolean;
+}
+
+export interface GetDirectoryContentsOptionsWithDetails extends GetDirectoryContentsOptions {
+    details: true;
+}
+
+export interface GetDirectoryContentsOptionsWithoutDetails extends GetDirectoryContentsOptions {
+    details?: false;
 }
 
 export interface GetFileContentsOptions extends WebDAVMethodOptions {
@@ -271,13 +278,18 @@ export interface WebDAVClient {
         callback?: CreateWriteStreamCallback
     ) => Stream.Writable;
     customRequest: (path: string, requestOptions: RequestOptionsCustom) => Promise<Response>;
-    deleteFile: (filename: string) => Promise<void>;
-    exists: (path: string) => Promise<boolean>;
+    deleteFile: (filename: string, options?: WebDAVMethodOptions) => Promise<void>;
+    exists: (path: string, options?: WebDAVMethodOptions) => Promise<boolean>;
     getDAVCompliance: (path: string) => Promise<DAVCompliance>;
-    getDirectoryContents: (
+    getDirectoryContents(path: string): Promise<Array<FileStat>>;
+    getDirectoryContents(
         path: string,
-        options?: GetDirectoryContentsOptions
-    ) => Promise<Array<FileStat> | ResponseDataDetailed<Array<FileStat>>>;
+        options: GetDirectoryContentsOptionsWithDetails
+    ): Promise<ResponseDataDetailed<Array<FileStat>>>;
+    getDirectoryContents(
+        path: string,
+        options: GetDirectoryContentsOptionsWithoutDetails
+    ): Promise<Array<FileStat>>;
     getFileContents: (
         filename: string,
         options?: GetFileContentsOptions

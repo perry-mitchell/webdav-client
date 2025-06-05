@@ -2,14 +2,17 @@ import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
 import bufferEquals from "buffer-equals";
-import { expect } from "chai";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { WebDAVClient } from "../../../source/index.js";
 import {
+    RequestSpy,
     SERVER_PASSWORD,
-    SERVER_PORT,
     SERVER_USERNAME,
+    WebDAVServer,
     clean,
     createWebDAVClient,
     createWebDAVServer,
+    nextPort,
     restoreRequests,
     useRequestSpy
 } from "../../helpers.node.js";
@@ -20,37 +23,41 @@ const SOURCE_BIN = path.resolve(dirname, "../../testContents/alrighty.jpg");
 const SOURCE_TXT = path.resolve(dirname, "../../testContents/text document.txt");
 
 describe("getFileContents", function () {
-    beforeEach(function () {
-        this.client = createWebDAVClient(`http://localhost:${SERVER_PORT}/webdav/server`, {
+    let client: WebDAVClient, server: WebDAVServer, requestSpy: RequestSpy;
+
+    beforeEach(async function () {
+        const port = await nextPort();
+        clean();
+        client = createWebDAVClient(`http://localhost:${port}/webdav/server`, {
             username: SERVER_USERNAME,
             password: SERVER_PASSWORD
         });
-        clean();
-        this.server = createWebDAVServer();
-        this.requestSpy = useRequestSpy();
-        return this.server.start();
+        server = createWebDAVServer(port);
+        requestSpy = useRequestSpy();
+        await server.start();
     });
 
-    afterEach(function () {
+    afterEach(async function () {
+        await server.stop();
         restoreRequests();
-        return this.server.stop();
+        clean();
     });
 
     it("reads a remote file into a buffer", async function () {
-        const bufferRemote = await this.client.getFileContents("/alrighty.jpg");
+        const bufferRemote = await client.getFileContents("/alrighty.jpg");
         expect(bufferRemote).to.be.an.instanceof(Buffer);
         const bufferLocal = fs.readFileSync(SOURCE_BIN);
         expect(bufferEquals(bufferRemote, bufferLocal)).to.be.true;
     });
 
     it("supports returning detailed results (buffer)", async function () {
-        const details = await this.client.getFileContents("/alrighty.jpg", { details: true });
+        const details = await client.getFileContents("/alrighty.jpg", { details: true });
         expect(details).to.have.property("data").that.is.an.instanceof(Buffer);
         expect(details).to.have.property("headers").that.is.an("object");
     });
 
     it("reads a remote file into a string", async function () {
-        const stringRemote = await this.client.getFileContents("/text document.txt", {
+        const stringRemote = await client.getFileContents("/text document.txt", {
             format: "text"
         });
         const stringLocal = fs.readFileSync(SOURCE_TXT, "utf8");
@@ -58,7 +65,7 @@ describe("getFileContents", function () {
     });
 
     it("supports returning detailed results (string)", async function () {
-        const details = await this.client.getFileContents("/text document.txt", {
+        const details = await client.getFileContents("/text document.txt", {
             format: "text",
             details: true
         });
@@ -67,18 +74,18 @@ describe("getFileContents", function () {
     });
 
     it("allows specifying custom headers", async function () {
-        await this.client.getFileContents("/text document.txt", {
+        await client.getFileContents("/text document.txt", {
             format: "text",
             headers: {
                 "X-test": "test"
             }
         });
-        const [, requestOptions] = this.requestSpy.firstCall.args;
+        const [, requestOptions] = requestSpy.mock.calls[0].arguments;
         expect(requestOptions).to.have.property("headers").that.has.property("X-test", "test");
     });
 
     it("can retrieve JSON files as text (#267)", async function () {
-        const contents = await this.client.getFileContents("/format.json", {
+        const contents = await client.getFileContents("/format.json", {
             format: "text"
         });
         expect(contents).to.be.a("string");

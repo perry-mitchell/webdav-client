@@ -32,7 +32,13 @@ export async function nextPort(): Promise<number> {
 }
 
 export function restoreRequests() {
-    getPatcher().restore("request");
+    const patcher = getPatcher();
+    if (patcher.isPatched("request")) {
+        patcher.restore("request");
+    }
+    if (patcher.isPatched("fetch")) {
+        patcher.restore("fetch");
+    }
 }
 
 export function returnFakeResponse(xml: string) {
@@ -49,7 +55,7 @@ export function sleep(ms: number) {
     });
 }
 
-export function useCustomXmlResponse(xmlFile) {
+export function useCustomXmlResponse(xmlFile: string) {
     returnFakeResponse(
         fs.readFileSync(path.resolve(dirname, `./responses/${xmlFile}.xml`), "utf8")
     );

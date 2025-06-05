@@ -2,14 +2,19 @@ import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
 import bufferEquals from "buffer-equals";
-import { expect } from "chai";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { WebDAVClient } from "../../../source/index.js";
 import {
+    RequestSpy,
     SERVER_PASSWORD,
-    SERVER_PORT,
     SERVER_USERNAME,
+    WebDAVServer,
     clean,
     createWebDAVClient,
-    createWebDAVServer
+    createWebDAVServer,
+    nextPort,
+    restoreRequests,
+    useRequestSpy
 } from "../../helpers.node.js";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -20,23 +25,29 @@ const TARGET_TXT = path.resolve(dirname, "../../testContents/newFile.txt");
 const TARGET_TXT_CHARS = path.resolve(dirname, "../../testContents/จะทำลาย.txt");
 
 describe("putFileContents", function () {
-    beforeEach(function () {
-        this.client = createWebDAVClient(`http://localhost:${SERVER_PORT}/webdav/server`, {
+    let client: WebDAVClient, server: WebDAVServer, requestSpy: RequestSpy;
+
+    beforeEach(async function () {
+        const port = await nextPort();
+        clean();
+        client = createWebDAVClient(`http://localhost:${port}/webdav/server`, {
             username: SERVER_USERNAME,
             password: SERVER_PASSWORD
         });
-        clean();
-        this.server = createWebDAVServer();
-        return this.server.start();
+        server = createWebDAVServer(port);
+        requestSpy = useRequestSpy();
+        await server.start();
     });
 
-    afterEach(function () {
-        return this.server.stop();
+    afterEach(async function () {
+        await server.stop();
+        restoreRequests();
+        clean();
     });
 
     it("writes binary files", function () {
         const imgBin = fs.readFileSync(SOURCE_BIN);
-        return this.client.putFileContents("/sub1/alrighty.jpg", imgBin).then(function () {
+        return client.putFileContents("/sub1/alrighty.jpg", imgBin).then(function () {
             const written = fs.readFileSync(TARGET_BIN);
             expect(bufferEquals(written, imgBin)).to.be.true;
         });
@@ -44,7 +55,7 @@ describe("putFileContents", function () {
 
     it("writes text files", function () {
         const text = "this is\nsome text\ncontent\t...\n";
-        return this.client.putFileContents("/newFile.txt", text).then(function () {
+        return client.putFileContents("/newFile.txt", text).then(function () {
             const written = fs.readFileSync(TARGET_TXT, "utf8");
             expect(written).to.equal(text);
         });
@@ -52,7 +63,7 @@ describe("putFileContents", function () {
 
     it("writes streams", async function () {
         const readStream = fs.createReadStream(SOURCE_BIN);
-        await this.client.putFileContents("/sub1/alrighty.jpg", readStream);
+        await client.putFileContents("/sub1/alrighty.jpg", readStream);
         // Check result
         const source = fs.readFileSync(SOURCE_BIN);
         const written = fs.readFileSync(TARGET_BIN);
@@ -61,7 +72,7 @@ describe("putFileContents", function () {
 
     it("writes files with non-latin characters in the filename", function () {
         const text = "this is\nsome text\ncontent\t...\n";
-        return this.client.putFileContents("/จะทำลาย.txt", text).then(function () {
+        return client.putFileContents("/จะทำลาย.txt", text).then(function () {
             const written = fs.readFileSync(TARGET_TXT_CHARS, "utf8");
             expect(written).to.equal(text);
         });

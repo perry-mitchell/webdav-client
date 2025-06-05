@@ -1,14 +1,16 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { expect } from "chai";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
+    RequestSpy,
     SERVER_PASSWORD,
-    SERVER_PORT,
     SERVER_USERNAME,
+    WebDAVServer,
     clean,
     createWebDAVClient,
     createWebDAVServer,
+    nextPort,
     restoreRequests,
     returnFakeResponse,
     useRequestSpy
@@ -38,22 +40,24 @@ const searchRequest = `<?xml version="1.0" encoding="UTF-8"?>
 `;
 
 describe("search", function () {
-    let client: WebDAVClient;
-    beforeEach(function () {
-        // fake client, not actually used when mocking responses
-        client = createWebDAVClient(`http://localhost:${SERVER_PORT}/webdav/server`, {
+    let client: WebDAVClient, server: WebDAVServer, requestSpy: RequestSpy;
+
+    beforeEach(async function () {
+        const port = await nextPort();
+        clean();
+        client = createWebDAVClient(`http://localhost:${port}/webdav/server`, {
             username: SERVER_USERNAME,
             password: SERVER_PASSWORD
         });
-        clean();
-        this.server = createWebDAVServer();
-        this.requestSpy = useRequestSpy();
-        return this.server.start();
+        server = createWebDAVServer(port);
+        requestSpy = useRequestSpy();
+        await server.start();
     });
 
-    afterEach(function () {
+    afterEach(async function () {
+        await server.stop();
         restoreRequests();
-        return this.server.stop();
+        clean();
     });
 
     it("returns full search response", function () {

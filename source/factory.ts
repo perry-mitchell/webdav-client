@@ -26,6 +26,8 @@ import {
     CreateWriteStreamCallback,
     CreateWriteStreamOptions,
     GetDirectoryContentsOptions,
+    GetDirectoryContentsOptionsWithDetails,
+    GetDirectoryContentsOptionsWithoutDetails,
     GetFileContentsOptions,
     GetQuotaOptions,
     Headers,
@@ -102,8 +104,12 @@ export function createClient(remoteURL: string, options: WebDAVClientOptions = {
         deleteFile: (filename: string, options?: WebDAVMethodOptions) =>
             deleteFile(context, filename, options),
         exists: (path: string, options?: WebDAVMethodOptions) => exists(context, path, options),
-        getDirectoryContents: (path: string, options?: GetDirectoryContentsOptions) =>
-            getDirectoryContents(context, path, options),
+        getDirectoryContents: (
+            path: string,
+            options?:
+                | GetDirectoryContentsOptionsWithDetails
+                | GetDirectoryContentsOptionsWithoutDetails
+        ) => getDirectoryContents(context, path, options),
         getFileContents: (filename: string, options?: GetFileContentsOptions) =>
             getFileContents(context, filename, options),
         getFileDownloadLink: (filename: string) => getFileDownloadLink(context, filename),

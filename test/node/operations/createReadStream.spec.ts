@@ -1,57 +1,66 @@
-import { Readable } from "stream";
-import { expect } from "chai";
+import { Readable } from "node:stream";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
+    RequestSpy,
     SERVER_PASSWORD,
-    SERVER_PORT,
     SERVER_USERNAME,
+    WebDAVServer,
     clean,
     createWebDAVClient,
     createWebDAVServer,
+    nextPort,
     restoreRequests,
     useRequestSpy
 } from "../../helpers.node.js";
+import { Response, WebDAVClient } from "../../../source/types.js";
 
 function streamToBuffer(stream: Readable): Promise<Buffer> {
     const buffs: Array<Buffer> = [];
-    return new Promise(function (resolve) {
-        stream.on("data", function (d) {
+    return new Promise((resolve, reject) => {
+        stream.on("data", d => {
             buffs.push(d);
         });
-        stream.on("end", function () {
+        stream.on("end", () => {
             resolve(Buffer.concat(buffs));
+        });
+        stream.on("error", err => {
+            reject(err);
         });
     });
 }
 
 describe("createReadStream", function () {
-    beforeEach(function () {
-        this.client = createWebDAVClient(`http://localhost:${SERVER_PORT}/webdav/server`, {
+    let client: WebDAVClient, server: WebDAVServer, requestSpy: RequestSpy;
+
+    beforeEach(async function () {
+        const port = await nextPort();
+        client = createWebDAVClient(`http://localhost:${port}/webdav/server`, {
             username: SERVER_USERNAME,
             password: SERVER_PASSWORD
         });
         clean();
-        this.server = createWebDAVServer();
-        this.requestSpy = useRequestSpy();
-        return this.server.start();
+        server = createWebDAVServer(port);
+        requestSpy = useRequestSpy();
+        await server.start();
     });
 
-    afterEach(function () {
+    afterEach(async function () {
         restoreRequests();
-        return this.server.stop();
+        await server.stop();
     });
 
     it("streams contents of a remote file", async function () {
-        const stream = this.client.createReadStream("/alrighty.jpg");
+        const stream = client.createReadStream("/alrighty.jpg");
         expect(stream instanceof Readable).to.be.true;
         const buff = await streamToBuffer(stream);
         expect(buff.length).to.equal(52130);
     });
 
     it("streams portions (ranges) of a remote file", async function () {
-        const stream1 = this.client.createReadStream("/alrighty.jpg", {
+        const stream1 = client.createReadStream("/alrighty.jpg", {
             range: { start: 0, end: 24999 }
         });
-        const stream2 = this.client.createReadStream("/alrighty.jpg", {
+        const stream2 = client.createReadStream("/alrighty.jpg", {
             range: { start: 25000, end: 52129 }
         });
         const [part1, part2] = await Promise.all([
@@ -63,7 +72,7 @@ describe("createReadStream", function () {
     });
 
     it("streams a partial file when only the start is provided", async function () {
-        const stream = this.client.createReadStream("/alrighty.jpg", {
+        const stream = client.createReadStream("/alrighty.jpg", {
             range: { start: 25000 }
         });
         const buff = await streamToBuffer(stream);
@@ -71,22 +80,30 @@ describe("createReadStream", function () {
     });
 
     it("allows specifying custom headers", async function () {
-        this.client.createReadStream("/alrighty.jpg", {
+        const stream = client.createReadStream("/alrighty.jpg", {
             headers: {
                 "X-test": "test"
             }
         });
-        const [, requestOptions] = this.requestSpy.firstCall.args;
+        await streamToBuffer(stream);
+
+        const [, requestOptions] = requestSpy.mock.calls[0].arguments;
         expect(requestOptions).to.have.property("headers").that.has.property("X-test", "test");
     });
 
-    it("calls callback with response", function (done) {
-        const stream = this.client.createReadStream("/notes.txt", {
-            callback: (response: Response) => {
-                expect(response).to.have.property("status", 200);
-                done();
-            }
+    it("calls callback with response", async function () {
+        let status: number = 0;
+
+        const stream = await new Promise<Readable>(resolve => {
+            const output = client.createReadStream("/notes.txt", {
+                callback: (response: Response) => {
+                    status = response.status;
+                    resolve(output);
+                }
+            });
         });
-        streamToBuffer(stream);
+
+        await streamToBuffer(stream);
+        expect(status).to.equal(200);
     });
 });

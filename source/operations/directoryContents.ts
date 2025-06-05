@@ -7,15 +7,30 @@ import { handleResponseCode, processGlobFilter, processResponsePayload } from ".
 import {
     DAVResult,
     FileStat,
-    GetDirectoryContentsOptions,
+    GetDirectoryContentsOptionsWithDetails,
+    GetDirectoryContentsOptionsWithoutDetails,
     ResponseDataDetailed,
     WebDAVClientContext
 } from "../types.js";
 
+export function getDirectoryContents(
+    context: WebDAVClientContext,
+    remotePath: string
+): Promise<Array<FileStat>>;
+export function getDirectoryContents(
+    context: WebDAVClientContext,
+    remotePath: string,
+    options: GetDirectoryContentsOptionsWithDetails
+): Promise<ResponseDataDetailed<Array<FileStat>>>;
+export function getDirectoryContents(
+    context: WebDAVClientContext,
+    remotePath: string,
+    options?: GetDirectoryContentsOptionsWithoutDetails
+): Promise<Array<FileStat>>;
 export async function getDirectoryContents(
     context: WebDAVClientContext,
     remotePath: string,
-    options: GetDirectoryContentsOptions = {}
+    options: GetDirectoryContentsOptionsWithDetails | GetDirectoryContentsOptionsWithoutDetails = {}
 ): Promise<Array<FileStat> | ResponseDataDetailed<Array<FileStat>>> {
     const requestOptions = prepareRequestOptions(
         {

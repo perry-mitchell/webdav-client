@@ -1,4 +1,4 @@
-import { expect } from "chai";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { decodeHTMLEntities } from "../../../source/tools/encode.js";
 
 describe("decodeHTMLEntities", function () {

@@ -9,7 +9,7 @@ const dirname = path.dirname(fileURLToPath(import.meta.url));
 rimraf.sync(path.resolve(dirname, "./testContents"));
 copyDir.sync(path.resolve(dirname, "./serverContents"), path.resolve(dirname, "./testContents"));
 
-const server = createWebDAVServer("basic");
+const server = createWebDAVServer(45000, "basic");
 server.start().then(() => {
     console.log("Server started");
 });

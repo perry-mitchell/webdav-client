@@ -1,18 +1,21 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { expect } from "chai";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
+    RequestSpy,
     SERVER_PASSWORD,
-    SERVER_PORT,
     SERVER_USERNAME,
+    WebDAVServer,
     clean,
     createWebDAVClient,
     createWebDAVServer,
+    nextPort,
     restoreRequests,
     returnFakeResponse,
     useRequestSpy
 } from "../../helpers.node.js";
+import { WebDAVClient } from "../../../source/types.js";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -29,26 +32,29 @@ function useValidQuota() {
 }
 
 describe("getQuota", function () {
-    beforeEach(function () {
-        // fake client, not actually used when mocking responses
-        this.client = createWebDAVClient(`http://localhost:${SERVER_PORT}/webdav/server`, {
+    let client: WebDAVClient, server: WebDAVServer, requestSpy: RequestSpy;
+
+    beforeEach(async function () {
+        const port = await nextPort();
+        clean();
+        client = createWebDAVClient(`http://localhost:${port}/webdav/server`, {
             username: SERVER_USERNAME,
             password: SERVER_PASSWORD
         });
-        clean();
-        this.server = createWebDAVServer();
-        this.requestSpy = useRequestSpy();
-        return this.server.start();
+        server = createWebDAVServer(port);
+        requestSpy = useRequestSpy();
+        await server.start();
     });
 
-    afterEach(function () {
+    afterEach(async function () {
+        await server.stop();
         restoreRequests();
-        return this.server.stop();
+        clean();
     });
 
     it("returns correct available amount", function () {
         useValidQuota();
-        return this.client.getQuota().then(function (quotaInfo) {
+        return client.getQuota().then(function (quotaInfo) {
             expect(quotaInfo).to.be.an("object");
             expect(quotaInfo).to.have.property("available", "unlimited");
         });
@@ -56,7 +62,7 @@ describe("getQuota", function () {
 
     it("returns correct used amount", function () {
         useValidQuota();
-        return this.client.getQuota().then(function (quotaInfo) {
+        return client.getQuota().then(function (quotaInfo) {
             expect(quotaInfo).to.be.an("object");
             expect(quotaInfo).to.have.property("used", 6864755191);
         });
@@ -64,22 +70,22 @@ describe("getQuota", function () {
 
     it("returns null for invalid quotas", function () {
         useInvalidQuota();
-        return this.client.getQuota().then(function (quotaInfo) {
+        return client.getQuota().then(function (quotaInfo) {
             expect(quotaInfo).to.be.null;
         });
     });
 
     it("supports returning detailed results", function () {
         useValidQuota();
-        return this.client.getQuota({ details: true }).then(function (details) {
+        return client.getQuota({ details: true }).then(function (details) {
             expect(details).to.have.property("data").that.is.an("object");
             expect(details).to.have.property("headers").that.is.an("object");
         });
     });
 
     it("supports path option", async function () {
-        await this.client.getQuota({ path: "sub1" });
-        const [url] = this.requestSpy.firstCall.args;
+        await client.getQuota({ path: "sub1" });
+        const [url] = requestSpy.mock.calls[0].arguments;
         expect(url).to.match(/webdav\/server\/sub1$/);
     });
 });
