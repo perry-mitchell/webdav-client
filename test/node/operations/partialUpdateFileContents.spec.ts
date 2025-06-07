@@ -4,7 +4,7 @@ import fileExists from "exists-file";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { WebDAVClient } from "../../../source/index.js";
 import {
-    RequestSpy,
+    FetchSpy,
     SERVER_PASSWORD,
     SERVER_USERNAME,
     WebDAVServer,
@@ -13,7 +13,7 @@ import {
     createWebDAVServer,
     nextPort,
     restoreRequests,
-    useRequestSpy
+    useFetchSpy
 } from "../../helpers.node.js";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -21,7 +21,7 @@ const dirname = path.dirname(fileURLToPath(import.meta.url));
 const TEST_CONTENTS = path.resolve(dirname, "../../testContents");
 
 describe("partialUpdateFileContents", function () {
-    let client: WebDAVClient, server: WebDAVServer, requestSpy: RequestSpy;
+    let client: WebDAVClient, server: WebDAVServer, requestSpy: FetchSpy;
 
     beforeEach(async function () {
         const port = await nextPort();
@@ -31,7 +31,7 @@ describe("partialUpdateFileContents", function () {
             password: SERVER_PASSWORD
         });
         server = createWebDAVServer(port);
-        requestSpy = useRequestSpy();
+        requestSpy = useFetchSpy();
         await server.start();
     });
 

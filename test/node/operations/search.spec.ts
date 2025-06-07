@@ -3,7 +3,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
-    RequestSpy,
+    FetchSpy,
     SERVER_PASSWORD,
     SERVER_USERNAME,
     WebDAVServer,
@@ -12,21 +12,21 @@ import {
     createWebDAVServer,
     nextPort,
     restoreRequests,
-    returnFakeResponse,
-    useRequestSpy
+    useRequestSpyWithFakeResponse,
+    useFetchSpy
 } from "../../helpers.node.js";
 import { ResponseDataDetailed, SearchResult, WebDAVClient } from "../../../source/types.js";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function useTruncatedSearchResults() {
-    returnFakeResponse(
+    return useRequestSpyWithFakeResponse(
         fs.readFileSync(path.resolve(dirname, "../../responses/search-truncated.xml"), "utf8")
     );
 }
 
 function useFullSearchResults() {
-    returnFakeResponse(
+    return useRequestSpyWithFakeResponse(
         fs.readFileSync(path.resolve(dirname, "../../responses/search-full-success.xml"), "utf8")
     );
 }
@@ -40,7 +40,7 @@ const searchRequest = `<?xml version="1.0" encoding="UTF-8"?>
 `;
 
 describe("search", function () {
-    let client: WebDAVClient, server: WebDAVServer, requestSpy: RequestSpy;
+    let client: WebDAVClient, server: WebDAVServer, requestSpy: FetchSpy;
 
     beforeEach(async function () {
         const port = await nextPort();
@@ -50,7 +50,7 @@ describe("search", function () {
             password: SERVER_PASSWORD
         });
         server = createWebDAVServer(port);
-        requestSpy = useRequestSpy();
+        requestSpy = useFetchSpy();
         await server.start();
     });
 

@@ -17,6 +17,11 @@ export default defineConfig({
             "test/node/operations/getFileUploadLink.spec.ts",
             "test/node/operations/getQuota.spec.ts",
             "test/node/operations/lock.spec.ts",
+            "test/node/operations/moveFile.spec.ts",
+            "test/node/operations/partialUpdateFileContents.spec.ts",
+            "test/node/operations/putFileContents.spec.ts",
+            "test/node/operations/search.spec.ts",
+            "test/node/operations/stat.spec.ts",
             // "test/node/**/*.spec.ts"
         ]
     },

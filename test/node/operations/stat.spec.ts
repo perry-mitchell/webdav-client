@@ -14,15 +14,15 @@ import {
     createWebDAVServer,
     useCustomXmlResponse,
     restoreRequests,
-    returnFakeResponse,
+    useRequestSpyWithFakeResponse,
     WebDAVServer,
-    RequestSpy,
+    FetchSpy,
     nextPort,
-    useRequestSpy
+    useFetchSpy
 } from "../../helpers.node.js";
 
 describe("stat", function () {
-    let client: WebDAVClient, server: WebDAVServer, requestSpy: RequestSpy;
+    let client: WebDAVClient, server: WebDAVServer, requestSpy: FetchSpy;
 
     beforeEach(async function () {
         const port = await nextPort();
@@ -32,7 +32,7 @@ describe("stat", function () {
             password: SERVER_PASSWORD
         });
         server = createWebDAVServer(port);
-        requestSpy = useRequestSpy();
+        requestSpy = useFetchSpy();
         await server.start();
     });
 
@@ -130,7 +130,7 @@ describe("stat", function () {
     });
 
     it("correctly parses the displayname property", async function () {
-        returnFakeResponse(
+        useRequestSpyWithFakeResponse(
             readFileSync(
                 new URL("../../responses/propfind-numeric-displayname.xml", import.meta.url)
             ).toString()
@@ -148,7 +148,7 @@ describe("stat", function () {
     });
 
     it("correctly parses the attributes property", async function () {
-        returnFakeResponse(
+        useRequestSpyWithFakeResponse(
             readFileSync(
                 new URL("../../responses/propfind-attributes.xml", import.meta.url)
             ).toString()
