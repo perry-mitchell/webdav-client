@@ -1,12 +1,30 @@
-import { createClient } from "../../source/index.js";
-import { PASSWORD, PORT, USERNAME } from "../server/credentials.js";
+import { beforeEach, describe, expect, it } from "vitest";
+import {
+    clean,
+    createWebDAVClient,
+    createWebDAVServer,
+    FetchSpy,
+    nextPort,
+    SERVER_PASSWORD,
+    SERVER_USERNAME,
+    useFetchSpy,
+    WebDAVServer
+} from "../helpers.node.js";
+import { WebDAVClient } from "../../source/types.js";
 
 describe("getDirectoryContents", function () {
-    beforeEach(function () {
-        client = createClient(`http://localhost:${PORT}/webdav/server`, {
-            username: USERNAME,
-            password: PASSWORD
+    let client: WebDAVClient, server: WebDAVServer, requestSpy: FetchSpy;
+
+    beforeEach(async function () {
+        const port = await nextPort();
+        clean();
+        client = createWebDAVClient(`http://localhost:${port}/webdav/server`, {
+            username: SERVER_USERNAME,
+            password: SERVER_PASSWORD
         });
+        server = createWebDAVServer(port);
+        requestSpy = useFetchSpy();
+        await server.start();
     });
 
     it("returns an array of items", function () {
