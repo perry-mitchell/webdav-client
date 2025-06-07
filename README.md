@@ -38,11 +38,13 @@ Support table:
 
 | Library Major Version | Node JS Range     |
 |-----------------------|-------------------|
-| v5                    | 14+               |
+| v5                    | 14+ ¹             |
 | v4                    | 10-18             |
 | v3                    | 10-16             |
 | v2                    | 6-14              |
 | v1                    | 4-12              |
+
+_¹ Note that while Node 14 is supported on v5, it is not tested for. Node versions below 18 do not have active test cases, and rely on community support for patching._
 
 #### Browser support
 
