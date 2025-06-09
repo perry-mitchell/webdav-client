@@ -28,7 +28,7 @@
     "test:format": "prettier --check '{source,test}/**/*.{js,ts}'",
     "test:node": "vitest --watch=false --project node-unit",
     "test:node:watch": "vitest --watch=true --project node-unit",
-    "test:web": "npm run clean && npm run build:web && concurrently -k -s last 'npm run test:web:server' 'npm run test:web:specs'",
+    "test:web": "npm run clean && npm run build:web && concurrently -k -s first 'npm run test:web:server' 'npm run test:web:specs'",
     "test:web:server": "npx -y tsx ./test/server.web.ts",
     "test:web:specs": "vitest --watch=false --project browser"
   },
