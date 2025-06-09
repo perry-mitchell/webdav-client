@@ -1,34 +1,20 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import {
-    clean,
-    createWebDAVClient,
-    createWebDAVServer,
-    FetchSpy,
-    nextPort,
-    SERVER_PASSWORD,
-    SERVER_USERNAME,
-    useFetchSpy,
-    WebDAVServer
-} from "../helpers.node.js";
+import { createClient } from "../../dist/web/index.js";
 import { WebDAVClient } from "../../source/types.js";
+import { PASSWORD, WEB_PORT, USERNAME } from "../server/credentials.js";
 
 describe("getDirectoryContents", function () {
-    let client: WebDAVClient, server: WebDAVServer, requestSpy: FetchSpy;
+    let client: WebDAVClient;
 
     function arrayBufferToString(buf: Buffer) {
         return String.fromCharCode.apply(null, new Uint8Array(buf));
     }
 
     beforeEach(async function () {
-        const port = await nextPort();
-        clean();
-        client = createWebDAVClient(`http://localhost:${port}/webdav/server`, {
-            username: SERVER_USERNAME,
-            password: SERVER_PASSWORD
+        client = createClient(`http://localhost:${WEB_PORT}/webdav/server`, {
+            username: USERNAME,
+            password: PASSWORD
         });
-        server = createWebDAVServer(port);
-        requestSpy = useFetchSpy();
-        await server.start();
     });
 
     it("reads a remote text file into a buffer", async function () {

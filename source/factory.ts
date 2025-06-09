@@ -25,7 +25,6 @@ import {
     CreateReadStreamOptions,
     CreateWriteStreamCallback,
     CreateWriteStreamOptions,
-    GetDirectoryContentsOptions,
     GetDirectoryContentsOptionsWithDetails,
     GetDirectoryContentsOptionsWithoutDetails,
     GetFileContentsOptions,
@@ -109,6 +108,7 @@ export function createClient(remoteURL: string, options: WebDAVClientOptions = {
             options?:
                 | GetDirectoryContentsOptionsWithDetails
                 | GetDirectoryContentsOptionsWithoutDetails
+            // @ts-ignore
         ) => getDirectoryContents(context, path, options),
         getFileContents: (filename: string, options?: GetFileContentsOptions) =>
             getFileContents(context, filename, options),

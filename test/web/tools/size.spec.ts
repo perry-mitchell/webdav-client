@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { calculateDataLength } from "../../../source/tools/size.js";
+import { calculateDataLength } from "../../../dist/web/index.js";
 
 describe("calculateDataLength", () => {
     it("correctly calculates length for utf-8 string", () => {
