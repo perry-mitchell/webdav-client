@@ -46,15 +46,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-        env:
-          MOZ_HEADLESS: 1
-          CI: travis
-      - name: Setup Firefox
-        uses: browser-actions/setup-firefox@latest
-        with:
-          firefox-version: latest
-      - name: Setup Chrome
-        uses: browser-actions/setup-chrome@latest
-      - run: google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
+      # - name: Setup Firefox
+      #   uses: browser-actions/setup-firefox@latest
+      #   with:
+      #     firefox-version: latest
+      # - name: Setup Chrome
+      #   uses: browser-actions/setup-chrome@latest
+      # - run: google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
       - run: npm ci
+      - run: npx playwright install
       - run: npm run test:web
