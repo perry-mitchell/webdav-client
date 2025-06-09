@@ -1,57 +1,63 @@
-import { expect } from "chai";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
+    FetchSpy,
     SERVER_PASSWORD,
-    SERVER_PORT,
     SERVER_USERNAME,
+    WebDAVServer,
     clean,
     createWebDAVClient,
     createWebDAVServer,
+    nextPort,
     restoreRequests,
-    useRequestSpy
+    useFetchSpy
 } from "../../helpers.node.js";
+import { WebDAVClient } from "../../../source/types.js";
 
 describe("exists", function () {
-    beforeEach(function () {
-        this.client = createWebDAVClient(`http://localhost:${SERVER_PORT}/webdav/server`, {
+    let client: WebDAVClient, server: WebDAVServer, requestSpy: FetchSpy;
+
+    beforeEach(async function () {
+        const port = await nextPort();
+        client = createWebDAVClient(`http://localhost:${port}/webdav/server`, {
             username: SERVER_USERNAME,
             password: SERVER_PASSWORD
         });
         clean();
-        this.server = createWebDAVServer();
-        this.requestSpy = useRequestSpy();
-        return this.server.start();
+        server = createWebDAVServer(port);
+        requestSpy = useFetchSpy();
+        await server.start();
     });
 
-    afterEach(function () {
+    afterEach(async function () {
         restoreRequests();
-        return this.server.stop();
+        await server.stop();
     });
 
-    it("correctly detects existing files", function () {
-        return this.client.exists("/two%20words/file2.txt").then(doesExist => {
+    it("correctly detects existing files", async function () {
+        await client.exists("/two%20words/file2.txt").then(doesExist => {
             expect(doesExist).to.be.true;
         });
     });
 
-    it("correctly detects existing directories", function () {
-        return this.client.exists("/webdav/server").then(doesExist => {
+    it("correctly detects existing directories", async function () {
+        await client.exists("/webdav/server").then(doesExist => {
             expect(doesExist).to.be.true;
         });
     });
 
-    it("correctly responds for non-existing paths", function () {
-        return this.client.exists("/webdav/this/is/not/here.txt").then(doesExist => {
+    it("correctly responds for non-existing paths", async function () {
+        await client.exists("/webdav/this/is/not/here.txt").then(doesExist => {
             expect(doesExist).to.be.false;
         });
     });
 
     it("allows specifying custom headers", async function () {
-        await this.client.exists("/test.txt", {
+        await client.exists("/test.txt", {
             headers: {
                 "X-test": "test"
             }
         });
-        const [, requestOptions] = this.requestSpy.firstCall.args;
+        const [, requestOptions] = requestSpy.mock.calls[0].arguments;
         expect(requestOptions).to.have.property("headers").that.has.property("X-test", "test");
     });
 });

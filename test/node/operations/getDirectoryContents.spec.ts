@@ -1,46 +1,51 @@
-import { expect } from "chai";
-import { AuthType, FileStat } from "../../../source/index.js";
+import { readFileSync } from "node:fs";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { AuthType, FileStat, WebDAVClient } from "../../../source/index.js";
 import {
+    FetchSpy,
     SERVER_PASSWORD,
-    SERVER_PORT,
     SERVER_USERNAME,
+    WebDAVServer,
     clean,
     createWebDAVClient,
     createWebDAVServer,
+    nextPort,
     restoreRequests,
-    returnFakeResponse,
+    useRequestSpyWithFakeResponse,
     useCustomXmlResponse,
-    useRequestSpy
+    useFetchSpy
 } from "../../helpers.node.js";
-import { readFileSync } from "fs";
 
 describe("getDirectoryContents", function () {
+    let client: WebDAVClient, server: WebDAVServer, requestSpy: FetchSpy, port: number;
+
     beforeEach(async function () {
+        port = await nextPort();
         clean();
-        this.client = createWebDAVClient(`http://localhost:${SERVER_PORT}/webdav/server`, {
+        client = createWebDAVClient(`http://localhost:${port}/webdav/server`, {
             username: SERVER_USERNAME,
             password: SERVER_PASSWORD
         });
-        this.server = createWebDAVServer();
-        this.requestSpy = useRequestSpy();
-        await this.server.start();
+        server = createWebDAVServer(port);
+        requestSpy = useFetchSpy();
+        await server.start();
     });
 
     afterEach(async function () {
-        await this.server.stop();
+        await server.stop();
         restoreRequests();
         clean();
     });
 
     it("returns an array of items", function () {
-        return this.client.getDirectoryContents("/").then(function (contents) {
+        return client.getDirectoryContents("/").then(function (contents) {
             expect(contents).to.be.an("array");
             expect(contents[0]).to.be.an("object");
         });
     });
 
     it("returns correct directory results", function () {
-        return this.client.getDirectoryContents("/").then(function (contents) {
+        return client.getDirectoryContents("/").then(function (contents) {
             const sub1 = contents.find(function (item) {
                 return item.basename === "sub1";
             });
@@ -51,7 +56,7 @@ describe("getDirectoryContents", function () {
     });
 
     it("returns results not including base directory", function () {
-        return this.client.getDirectoryContents("/sub1").then(function (contents) {
+        return client.getDirectoryContents("/sub1").then(function (contents) {
             const sub1 = contents.find(function (item) {
                 return item.basename === "sub1";
             });
@@ -60,14 +65,14 @@ describe("getDirectoryContents", function () {
     });
 
     it("returns only expected results when using trailing slash", function () {
-        return this.client.getDirectoryContents("/webdav/").then(function (contents) {
+        return client.getDirectoryContents("/webdav/").then(function (contents) {
             const items = contents.map(item => item.filename);
             expect(items).to.deep.equal(["/webdav/server"]);
         });
     });
 
     it("returns correct file results", function () {
-        return this.client.getDirectoryContents("/").then(function (contents) {
+        return client.getDirectoryContents("/").then(function (contents) {
             const sub1 = contents.find(item => item.basename === "alrighty.jpg");
             const sub2 = contents.find(item => item.basename === "file&name.txt");
             expect(sub1.filename).to.equal("/alrighty.jpg");
@@ -78,7 +83,7 @@ describe("getDirectoryContents", function () {
     });
 
     it("returns correct file results in sub-directory", function () {
-        return this.client.getDirectoryContents("/sub1").then(function (contents) {
+        return client.getDirectoryContents("/sub1").then(function (contents) {
             const sub1 = contents.find(function (item) {
                 return item.basename === "irrelephant.jpg";
             });
@@ -89,7 +94,7 @@ describe("getDirectoryContents", function () {
     });
 
     it("returns correct results when calling without root slash", function () {
-        return this.client.getDirectoryContents("sub1").then(function (contents) {
+        return client.getDirectoryContents("sub1").then(function (contents) {
             expect(contents).to.have.lengthOf(2);
             const sub1 = contents.find(item => item.basename === "irrelephant.jpg");
             expect(sub1).to.be.ok;
@@ -99,7 +104,7 @@ describe("getDirectoryContents", function () {
     });
 
     it("returns correct file results for files with special characters", function () {
-        return this.client.getDirectoryContents("/sub1").then(function (contents) {
+        return client.getDirectoryContents("/sub1").then(function (contents) {
             const sub1 = contents.find(function (item) {
                 return item.basename === "ยากจน #1.txt";
             });
@@ -108,13 +113,13 @@ describe("getDirectoryContents", function () {
     });
 
     it("returns correct file results for files with HTML entities in their names", function () {
-        returnFakeResponse(
+        useRequestSpyWithFakeResponse(
             readFileSync(
                 new URL("../../responses/propfind-href-html-entities.xml", import.meta.url)
             ).toString()
         );
 
-        return this.client.getDirectoryContents("/files").then(function (contents) {
+        return client.getDirectoryContents("/files").then(function (contents) {
             const file = contents.find(function (item) {
                 return item.basename === "&amp;.md";
             });
@@ -124,25 +129,25 @@ describe("getDirectoryContents", function () {
     });
 
     it("returns correct file results for files with query in href", function () {
-        returnFakeResponse(
+        useRequestSpyWithFakeResponse(
             readFileSync(
                 new URL("../../responses/propfind-href-with-query.xml", import.meta.url)
             ).toString()
         );
 
-        return this.client.getDirectoryContents("/files").then(function (contents) {
+        return client.getDirectoryContents("/files").then(function (contents) {
             expect(contents).to.have.length(1);
             expect(contents[0].filename).to.match(/\/files\/some file\?foo=1&bar=2$/);
         });
     });
 
     it("correctly parses the displayname property", function () {
-        returnFakeResponse(
+        useRequestSpyWithFakeResponse(
             readFileSync(
                 new URL("../../responses/propfind-numeric-displayname.xml", import.meta.url)
             ).toString()
         );
-        return this.client.getDirectoryContents("/1", { details: true }).then(function (result) {
+        return client.getDirectoryContents("/1", { details: true }).then(function (result) {
             expect(result.data).to.have.length(1);
             expect(result.data[0]).to.have.property("props").that.is.an("object");
             expect(result.data[0].props)
@@ -153,7 +158,7 @@ describe("getDirectoryContents", function () {
     });
 
     it("returns the contents of a directory with repetitive naming", function () {
-        return this.client.getDirectoryContents("/webdav/server").then(function (contents) {
+        return client.getDirectoryContents("/webdav/server").then(function (contents) {
             expect(contents).to.be.an("array");
             expect(contents[0]).to.be.an("object");
             expect(contents[0]).to.have.property("basename", "notreal.txt");
@@ -161,28 +166,28 @@ describe("getDirectoryContents", function () {
     });
 
     it("returns only the directory contents (issue #68)", function () {
-        return this.client.getDirectoryContents("/two words").then(function (contents) {
+        return client.getDirectoryContents("/two words").then(function (contents) {
             expect(contents).to.have.lengthOf(1);
             expect(contents[0].basename).to.equal("file.txt");
         });
     });
 
     it("returns only the directory contents for directory with & in name", function () {
-        return this.client.getDirectoryContents("/with & in path").then(function (contents) {
+        return client.getDirectoryContents("/with & in path").then(function (contents) {
             expect(contents).to.have.lengthOf(1);
             expect(contents[0].basename).to.equal("file.txt");
         });
     });
 
     it("returns correct directory contents when path contains encoded sequences (issue #93)", function () {
-        return this.client.getDirectoryContents("/two%20words").then(contents => {
+        return client.getDirectoryContents("/two%20words").then(contents => {
             expect(contents).to.have.lengthOf(1);
             expect(contents[0].basename).to.equal("file2.txt");
         });
     });
 
     it("returns correct names for directories that contain % in the name", function () {
-        return this.client.getDirectoryContents("/").then(function (contents) {
+        return client.getDirectoryContents("/").then(function (contents) {
             const noPercent = contents.find(item => item.basename === "two words");
             const percent = contents.find(item => item.basename === "two%20words");
             expect(noPercent).to.have.property("type", "directory");
@@ -191,53 +196,47 @@ describe("getDirectoryContents", function () {
     });
 
     it("allows specifying custom headers", async function () {
-        await this.client.getDirectoryContents("/", {
+        await client.getDirectoryContents("/", {
             headers: {
                 "X-test": "test"
             }
         });
-        const [, requestOptions] = this.requestSpy.firstCall.args;
+        const [, requestOptions] = requestSpy.mock.calls[0].arguments;
         expect(requestOptions).to.have.property("headers").that.has.property("X-test", "test");
     });
 
     describe("when using details: true", function () {
         it("returns data and headers properties", function () {
-            return this.client
-                .getDirectoryContents("/", { details: true })
-                .then(function (details) {
-                    expect(details).to.have.property("data").that.is.an("array");
-                    expect(details).to.have.property("headers").that.is.an("object");
-                });
+            return client.getDirectoryContents("/", { details: true }).then(function (details) {
+                expect(details).to.have.property("data").that.is.an("array");
+                expect(details).to.have.property("headers").that.is.an("object");
+            });
         });
 
         it("returns props on each directory item", function () {
-            return this.client
-                .getDirectoryContents("/", { details: true })
-                .then(function (details) {
-                    const alrightyJpg = details.data.find(item => item.basename === "alrighty.jpg");
-                    expect(alrightyJpg).to.have.property("props").that.is.an("object");
-                    expect(alrightyJpg.props)
-                        .to.have.property("getlastmodified")
-                        .that.matches(/GMT$/);
-                });
+            return client.getDirectoryContents("/", { details: true }).then(function (details) {
+                const alrightyJpg = details.data.find(item => item.basename === "alrighty.jpg");
+                expect(alrightyJpg).to.have.property("props").that.is.an("object");
+                expect(alrightyJpg.props).to.have.property("getlastmodified").that.matches(/GMT$/);
+            });
         });
     });
 
     describe("when connected to Seafile server", function () {
-        beforeEach(function () {
-            this.client = createWebDAVClient("https://cloud.ascal-strasbg.fr/seafdav", {
+        beforeEach(async function () {
+            client = createWebDAVClient("https://cloud.ascal-strasbg.fr/seafdav", {
                 username: SERVER_USERNAME,
                 password: SERVER_PASSWORD
             });
             useCustomXmlResponse("seafile-propfind");
         });
 
-        afterEach(function () {
+        afterEach(async function () {
             restoreRequests();
         });
 
         it("returns the correct response", function () {
-            return this.client.getDirectoryContents("/").then(function (contents) {
+            return client.getDirectoryContents("/").then(function (contents) {
                 expect(contents).to.be.an("array");
                 expect(contents).to.deep.equal([
                     {
@@ -254,20 +253,20 @@ describe("getDirectoryContents", function () {
     });
 
     describe("when fetching an empty multistatus", function () {
-        beforeEach(function () {
-            this.client = createWebDAVClient(`http://localhost:${SERVER_PORT}/webdav/server`, {
+        beforeEach(async function () {
+            client = createWebDAVClient(`http://localhost:${port}/webdav/server`, {
                 username: SERVER_USERNAME,
                 password: SERVER_PASSWORD
             });
             useCustomXmlResponse("empty-multistatus");
         });
 
-        afterEach(function () {
+        afterEach(async function () {
             restoreRequests();
         });
 
         it("returns the correct response", function () {
-            return this.client.getDirectoryContents("/").then(function (contents) {
+            return client.getDirectoryContents("/").then(function (contents) {
                 expect(contents).to.be.an("array");
                 expect(contents).to.deep.equal([]);
             });
@@ -279,7 +278,7 @@ describe("getDirectoryContents", function () {
             deep: true,
             glob: "/webdav/**/*.txt"
         };
-        return this.client.getDirectoryContents("/", options).then(function (contents) {
+        return client.getDirectoryContents("/", options).then(function (contents) {
             expect(contents).to.have.lengthOf(1);
             expect(contents[0].filename).to.equal("/webdav/server/notreal.txt");
         });
@@ -287,23 +286,18 @@ describe("getDirectoryContents", function () {
 
     describe("using Digest authentication", function () {
         beforeEach(async function () {
-            await this.server.stop();
-            this.client = createWebDAVClient(`http://localhost:${SERVER_PORT}/webdav/server`, {
+            await server.stop();
+            client = createWebDAVClient(`http://localhost:${port}/webdav/server`, {
                 username: SERVER_USERNAME,
                 password: SERVER_PASSWORD,
                 authType: AuthType.Digest
             });
-            this.server = createWebDAVServer("digest");
-            await this.server.start();
-        });
-
-        afterEach(async function () {
-            await this.server.stop();
-            clean();
+            server = createWebDAVServer(port, "digest");
+            await server.start();
         });
 
         it("returns an array of results", function () {
-            return this.client.getDirectoryContents("/").then(function (contents) {
+            return client.getDirectoryContents("/").then(function (contents) {
                 expect(contents).to.be.an("array");
                 expect(contents[0]).to.be.an("object");
             });
@@ -312,7 +306,7 @@ describe("getDirectoryContents", function () {
 
     describe("when using includeSelf: true", function () {
         it("returns correct directory results with directory itself", function () {
-            return this.client.getDirectoryContents("/", { includeSelf: true }).then(function (
+            return client.getDirectoryContents("/", { includeSelf: true }).then(function (
                 contents: Array<FileStat>
             ) {
                 const root = contents.find(item => item.basename === "");
@@ -324,7 +318,7 @@ describe("getDirectoryContents", function () {
         });
 
         it("returns correct file results in sub-directory", function () {
-            return this.client.getDirectoryContents("/sub1", { includeSelf: true }).then(function (
+            return client.getDirectoryContents("/sub1", { includeSelf: true }).then(function (
                 contents: Array<FileStat>
             ) {
                 const sub1 = contents.find(item => item.basename === "sub1");
@@ -338,7 +332,7 @@ describe("getDirectoryContents", function () {
 
     describe("when using custom dir base path", function () {
         beforeEach(async function () {
-            this.client = createWebDAVClient(`http://localhost:${SERVER_PORT}/webdav/server`, {
+            client = createWebDAVClient(`http://localhost:${port}/webdav/server`, {
                 username: SERVER_USERNAME,
                 password: SERVER_PASSWORD,
                 remoteBasePath: "/webdav/server/custom"
@@ -346,7 +340,7 @@ describe("getDirectoryContents", function () {
         });
 
         it("return correct filename with custom path", function () {
-            return this.client.getDirectoryContents("/").then(function (contents: Array<FileStat>) {
+            return client.getDirectoryContents("/").then(function (contents: Array<FileStat>) {
                 const file = contents.find(item => item.basename === "notes.txt");
                 expect(file.filename).to.equal("/../notes.txt");
             });

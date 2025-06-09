@@ -1,4 +1,4 @@
-import { expect } from "chai";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { mergeHeaders } from "../../../source/tools/headers.js";
 
 describe("mergeHeaders", function () {

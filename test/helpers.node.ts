@@ -1,18 +1,20 @@
-import path from "path";
-import fs from "fs";
-import { fileURLToPath } from "url";
+import path from "node:path";
+import fs from "node:fs";
+import { fileURLToPath } from "node:url";
+import { mock, Mock } from "node:test";
 import { fetch } from "@buttercup/fetch";
 import { rimraf } from "rimraf";
 import copyDir from "copy-dir";
-import sinon from "sinon";
+import getPort from "get-port";
 import { getPatcher } from "../source/index.js";
-import { PASSWORD, PORT, USERNAME } from "./server/credentials.js";
+import { PASSWORD, USERNAME } from "./server/credentials.js";
 
 export { createClient as createWebDAVClient } from "../source/index.js";
-export { createWebDAVServer } from "./server/index.js";
+export { type WebDAVServer, createWebDAVServer } from "./server/index.js";
+
+export type FetchSpy = Mock<typeof fetch>;
 
 export const SERVER_PASSWORD = PASSWORD;
-export const SERVER_PORT = PORT;
 export const SERVER_USERNAME = USERNAME;
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -25,16 +27,18 @@ export function clean() {
     );
 }
 
-export function restoreRequests() {
-    getPatcher().restore("request");
+export async function nextPort(): Promise<number> {
+    return getPort();
 }
 
-export function returnFakeResponse(xml: string) {
-    getPatcher().patch("request", function fakeRequest() {
-        return Promise.resolve({
-            text: () => Promise.resolve(xml)
-        });
-    });
+export function restoreRequests() {
+    const patcher = getPatcher();
+    if (patcher.isPatched("request")) {
+        patcher.restore("request");
+    }
+    if (patcher.isPatched("fetch")) {
+        patcher.restore("fetch");
+    }
 }
 
 export function sleep(ms: number) {
@@ -43,15 +47,25 @@ export function sleep(ms: number) {
     });
 }
 
-export function useCustomXmlResponse(xmlFile) {
-    returnFakeResponse(
+export function useCustomXmlResponse(xmlFile: string): FetchSpy {
+    return useRequestSpyWithFakeResponse(
         fs.readFileSync(path.resolve(dirname, `./responses/${xmlFile}.xml`), "utf8")
     );
 }
 
-export function useRequestSpy() {
-    const spy = sinon.spy(fetch);
+export function useFetchSpy(): FetchSpy {
+    const spy = mock.fn(fetch);
     // @ts-ignore
+    getPatcher().patch("fetch", spy);
+    return spy;
+}
+
+export function useRequestSpyWithFakeResponse(xml: string): FetchSpy {
+    const spy = mock.fn(function fakeRequest() {
+        return Promise.resolve({
+            text: () => Promise.resolve(xml)
+        });
+    }) as unknown as FetchSpy;
     getPatcher().patch("fetch", spy);
     return spy;
 }

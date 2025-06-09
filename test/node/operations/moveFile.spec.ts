@@ -2,16 +2,19 @@ import path from "path";
 import { fileURLToPath } from "url";
 import fileExists from "exists-file";
 import directoryExists from "directory-exists";
-import { expect } from "chai";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { WebDAVClient } from "../../../source/index.js";
 import {
+    FetchSpy,
     SERVER_PASSWORD,
-    SERVER_PORT,
     SERVER_USERNAME,
+    WebDAVServer,
     clean,
     createWebDAVClient,
     createWebDAVServer,
+    nextPort,
     restoreRequests,
-    useRequestSpy
+    useFetchSpy
 } from "../../helpers.node.js";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -19,60 +22,64 @@ const dirname = path.dirname(fileURLToPath(import.meta.url));
 const TEST_CONTENTS = path.resolve(dirname, "../../testContents");
 
 describe("moveFile", function () {
-    beforeEach(function () {
-        this.client = createWebDAVClient(`http://localhost:${SERVER_PORT}/webdav/server`, {
+    let client: WebDAVClient, server: WebDAVServer, requestSpy: FetchSpy;
+
+    beforeEach(async function () {
+        const port = await nextPort();
+        clean();
+        client = createWebDAVClient(`http://localhost:${port}/webdav/server`, {
             username: SERVER_USERNAME,
             password: SERVER_PASSWORD
         });
-        clean();
-        this.server = createWebDAVServer();
-        this.requestSpy = useRequestSpy();
-        return this.server.start();
+        server = createWebDAVServer(port);
+        requestSpy = useFetchSpy();
+        await server.start();
     });
 
-    afterEach(function () {
+    afterEach(async function () {
+        await server.stop();
         restoreRequests();
-        return this.server.stop();
+        clean();
     });
 
     it("moves files from one directory to another", function () {
-        return this.client.moveFile("/alrighty.jpg", "/sub1/alrighty.jpg").then(function () {
+        return client.moveFile("/alrighty.jpg", "/sub1/alrighty.jpg").then(function () {
             expect(fileExists.sync(path.join(TEST_CONTENTS, "./alrighty.jpg"))).to.be.false;
             expect(fileExists.sync(path.join(TEST_CONTENTS, "./sub1/alrighty.jpg"))).to.be.true;
         });
     });
 
     it("moves directories from one directory to another", function () {
-        return this.client.moveFile("/webdav", "/sub1/webdav").then(function () {
+        return client.moveFile("/webdav", "/sub1/webdav").then(function () {
             expect(directoryExists.sync(path.join(TEST_CONTENTS, "./webdav"))).to.be.false;
             expect(directoryExists.sync(path.join(TEST_CONTENTS, "./sub1/webdav"))).to.be.true;
         });
     });
 
     it("moves files from one name to another", function () {
-        return this.client.moveFile("/alrighty.jpg", "/renamed.jpg").then(function () {
+        return client.moveFile("/alrighty.jpg", "/renamed.jpg").then(function () {
             expect(fileExists.sync(path.join(TEST_CONTENTS, "./alrighty.jpg"))).to.be.false;
             expect(fileExists.sync(path.join(TEST_CONTENTS, "./renamed.jpg"))).to.be.true;
         });
     });
 
-    it("Overwrite on move by default", async function () {
-        await this.client.moveFile("/two words/file.txt", "/with & in path/files.txt");
-        const [, requestOptions] = this.requestSpy.firstCall.args;
+    it("overwrites on move by default", async function () {
+        await client.moveFile("/two words/file.txt", "/with & in path/files.txt");
+        const [, requestOptions] = requestSpy.mock.calls[0].arguments;
         expect(requestOptions).to.have.property("headers").that.has.property("Overwrite", "T");
     });
 
-    it("Overwrite on move if explicitly enabled", async function () {
-        await this.client.moveFile("/two words/file.txt", "/with & in path/files.txt", {
+    it("overwrites on move if explicitly enabled", async function () {
+        await client.moveFile("/two words/file.txt", "/with & in path/files.txt", {
             overwrite: true
         });
-        const [, requestOptions] = this.requestSpy.firstCall.args;
+        const [, requestOptions] = requestSpy.mock.calls[0].arguments;
         expect(requestOptions).to.have.property("headers").that.has.property("Overwrite", "T");
     });
 
-    it("Do not overwrite if disabled", async function () {
+    it("does not overwrite remote file if disabled", async function () {
         try {
-            await this.client.moveFile("/two words/file.txt", "/with & in path/files.txt", {
+            await client.moveFile("/two words/file.txt", "/with & in path/files.txt", {
                 overwrite: false
             });
         } catch (e) {
@@ -80,7 +87,7 @@ describe("moveFile", function () {
             expect(e.status).to.equal(412);
             return;
         } finally {
-            const [, requestOptions] = this.requestSpy.firstCall.args;
+            const [, requestOptions] = requestSpy.mock.calls[0].arguments;
             expect(requestOptions).to.have.property("headers").that.has.property("Overwrite", "F");
         }
 

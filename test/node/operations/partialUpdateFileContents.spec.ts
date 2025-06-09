@@ -1,17 +1,19 @@
 import path from "path";
 import { fileURLToPath } from "url";
 import fileExists from "exists-file";
-import directoryExists from "directory-exists";
-import { expect } from "chai";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { WebDAVClient } from "../../../source/index.js";
 import {
+    FetchSpy,
     SERVER_PASSWORD,
-    SERVER_PORT,
     SERVER_USERNAME,
+    WebDAVServer,
     clean,
     createWebDAVClient,
     createWebDAVServer,
+    nextPort,
     restoreRequests,
-    useRequestSpy
+    useFetchSpy
 } from "../../helpers.node.js";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -19,27 +21,31 @@ const dirname = path.dirname(fileURLToPath(import.meta.url));
 const TEST_CONTENTS = path.resolve(dirname, "../../testContents");
 
 describe("partialUpdateFileContents", function () {
-    beforeEach(function () {
-        this.client = createWebDAVClient(`http://localhost:${SERVER_PORT}/webdav/server`, {
+    let client: WebDAVClient, server: WebDAVServer, requestSpy: FetchSpy;
+
+    beforeEach(async function () {
+        const port = await nextPort();
+        clean();
+        client = createWebDAVClient(`http://localhost:${port}/webdav/server`, {
             username: SERVER_USERNAME,
             password: SERVER_PASSWORD
         });
-        clean();
-        this.server = createWebDAVServer();
-        this.requestSpy = useRequestSpy();
-        return this.server.start();
+        server = createWebDAVServer(port);
+        requestSpy = useFetchSpy();
+        await server.start();
     });
 
-    afterEach(function () {
+    afterEach(async function () {
+        await server.stop();
         restoreRequests();
-        return this.server.stop();
+        clean();
     });
 
     it("partial update should be failed with server support", async function () {
         let err: Error | null = null;
         try {
             // the server does not support partial update
-            await this.client.partialUpdateFileContents("/patch.bin", 1, 3, "foo");
+            await client.partialUpdateFileContents("/patch.bin", 1, 3, "foo");
         } catch (error) {
             err = error;
         }

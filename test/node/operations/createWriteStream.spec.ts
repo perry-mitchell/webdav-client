@@ -1,19 +1,22 @@
-import path from "path";
-import { fileURLToPath } from "url";
-import fs from "fs";
-import { PassThrough } from "stream";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import fs from "node:fs";
+import { PassThrough, Writable } from "node:stream";
 import waitOn from "wait-on";
-import { expect } from "chai";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
+    FetchSpy,
     SERVER_PASSWORD,
-    SERVER_PORT,
     SERVER_USERNAME,
+    WebDAVServer,
     clean,
     createWebDAVClient,
     createWebDAVServer,
+    nextPort,
     restoreRequests,
-    useRequestSpy
+    useFetchSpy
 } from "../../helpers.node.js";
+import { Response, WebDAVClient } from "../../../source/types.js";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -41,15 +44,19 @@ function waitOnFile(filename: string) {
 }
 
 describe("createWriteStream", function () {
-    beforeEach(function () {
-        this.client = createWebDAVClient(`http://localhost:${SERVER_PORT}/webdav/server`, {
+    let client: WebDAVClient, server: WebDAVServer, requestSpy: FetchSpy;
+
+    beforeEach(async function () {
+        const port = await nextPort();
+        client = createWebDAVClient(`http://localhost:${port}/webdav/server`, {
             username: SERVER_USERNAME,
             password: SERVER_PASSWORD
         });
         clean();
-        this.server = createWebDAVServer();
-        this.requestSpy = useRequestSpy();
-        return this.server.start();
+        server = createWebDAVServer(port);
+        requestSpy = useFetchSpy();
+
+        await server.start();
     });
 
     afterEach(async function () {
@@ -57,15 +64,15 @@ describe("createWriteStream", function () {
         await new Promise(resolve => {
             setTimeout(resolve, 500);
         });
-        return this.server.stop();
+        await server.stop();
     });
 
-    it("writes the file to the remote", function () {
+    it("writes the file to the remote", async function () {
         const targetFile = path.join(TEST_CONTENTS, "./alrighty2.jpg");
-        const writeStream = this.client.createWriteStream("/alrighty2.jpg");
+        const writeStream = client.createWriteStream("/alrighty2.jpg");
         const readStream = fs.createReadStream(IMAGE_SOURCE);
         expect(writeStream instanceof PassThrough).to.be.true;
-        return new Promise(function (resolve, reject) {
+        await new Promise(function (resolve, reject) {
             writeStream.on("end", function () {
                 // stupid stream needs time to close probably..
                 waitOnFile(targetFile).then(resolve, reject);
@@ -76,26 +83,34 @@ describe("createWriteStream", function () {
     });
 
     it("allows specifying custom headers", async function () {
-        const writeStream = this.client.createWriteStream("/alrighty2.jpg", {
+        const writeStream = client.createWriteStream("/alrighty2.jpg", {
             headers: {
                 "X-test": "test"
             }
         });
         fs.createReadStream(TEXT_SOURCE).pipe(writeStream);
-        const [, requestOptions] = this.requestSpy.firstCall.args;
+
+        const [, requestOptions] = requestSpy.mock.calls[0].arguments;
         expect(requestOptions).to.have.property("headers").that.has.property("X-test", "test");
     });
 
-    it("calls the callback function with the response", function (done) {
+    it("calls the callback function with the response", async function () {
+        let status: number = 0;
+
         const readStream = fs.createReadStream(TEXT_SOURCE);
-        const writeStream = this.client.createWriteStream(
-            "/test.txt",
-            undefined,
-            (response: Response) => {
-                expect(response).to.have.property("status", 201);
-                done();
-            }
-        );
-        readStream.pipe(writeStream);
+        await new Promise<Writable>(resolve => {
+            const output = client.createWriteStream(
+                "/test.txt",
+                undefined,
+                (response: Response) => {
+                    status = response.status;
+                    resolve(output);
+                }
+            );
+
+            readStream.pipe(output);
+        });
+
+        expect(status).to.equal(201);
     });
 });

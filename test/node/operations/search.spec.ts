@@ -1,30 +1,32 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { expect } from "chai";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
+    FetchSpy,
     SERVER_PASSWORD,
-    SERVER_PORT,
     SERVER_USERNAME,
+    WebDAVServer,
     clean,
     createWebDAVClient,
     createWebDAVServer,
+    nextPort,
     restoreRequests,
-    returnFakeResponse,
-    useRequestSpy
+    useRequestSpyWithFakeResponse,
+    useFetchSpy
 } from "../../helpers.node.js";
 import { ResponseDataDetailed, SearchResult, WebDAVClient } from "../../../source/types.js";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function useTruncatedSearchResults() {
-    returnFakeResponse(
+    return useRequestSpyWithFakeResponse(
         fs.readFileSync(path.resolve(dirname, "../../responses/search-truncated.xml"), "utf8")
     );
 }
 
 function useFullSearchResults() {
-    returnFakeResponse(
+    return useRequestSpyWithFakeResponse(
         fs.readFileSync(path.resolve(dirname, "../../responses/search-full-success.xml"), "utf8")
     );
 }
@@ -38,22 +40,24 @@ const searchRequest = `<?xml version="1.0" encoding="UTF-8"?>
 `;
 
 describe("search", function () {
-    let client: WebDAVClient;
-    beforeEach(function () {
-        // fake client, not actually used when mocking responses
-        client = createWebDAVClient(`http://localhost:${SERVER_PORT}/webdav/server`, {
+    let client: WebDAVClient, server: WebDAVServer, requestSpy: FetchSpy;
+
+    beforeEach(async function () {
+        const port = await nextPort();
+        clean();
+        client = createWebDAVClient(`http://localhost:${port}/webdav/server`, {
             username: SERVER_USERNAME,
             password: SERVER_PASSWORD
         });
-        clean();
-        this.server = createWebDAVServer();
-        this.requestSpy = useRequestSpy();
-        return this.server.start();
+        server = createWebDAVServer(port);
+        requestSpy = useFetchSpy();
+        await server.start();
     });
 
-    afterEach(function () {
+    afterEach(async function () {
+        await server.stop();
         restoreRequests();
-        return this.server.stop();
+        clean();
     });
 
     it("returns full search response", function () {

@@ -1,11 +1,20 @@
 import path from "path";
 import { fileURLToPath } from "url";
 import { v2 as ws } from "webdav-server";
-import { PASSWORD, PORT, USERNAME } from "./credentials.js";
+import { PASSWORD, USERNAME } from "./credentials.js";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
-export function createServer(dir: string, authType: "basic" | "digest") {
+export interface WebDAVServer {
+    start: () => Promise<void>;
+    stop: () => Promise<void>;
+}
+
+export function createServer(
+    dir: string,
+    port: number,
+    authType: "basic" | "digest"
+): WebDAVServer {
     if (!dir) {
         throw new Error("Expected target directory");
     }
@@ -25,7 +34,7 @@ export function createServer(dir: string, authType: "basic" | "digest") {
     const privilegeManager = new ws.SimplePathPrivilegeManager();
     privilegeManager.setRights(user, "/", ["all"]);
     const server = new ws.WebDAVServer({
-        port: PORT,
+        port,
         httpAuthentication: auth,
         privilegeManager: privilegeManager,
         maxRequestDepth: Infinity,
@@ -40,9 +49,9 @@ export function createServer(dir: string, authType: "basic" | "digest") {
     // console.log(`Created server on localhost with port: 9988, and authType: ${authType}`);
     return {
         start: function start() {
-            return new Promise(function (resolve) {
+            return new Promise<void>(function (resolve) {
                 server.setFileSystem("/webdav/server", new ws.PhysicalFileSystem(dir), function () {
-                    server.start(resolve);
+                    server.start(() => resolve());
                 });
             });
         },
@@ -55,6 +64,9 @@ export function createServer(dir: string, authType: "basic" | "digest") {
     };
 }
 
-export function createWebDAVServer(authType: "basic" | "digest" = "basic") {
-    return createServer(path.resolve(dirname, "../testContents"), authType);
+export function createWebDAVServer(
+    port: number,
+    authType: "basic" | "digest" = "basic"
+): WebDAVServer {
+    return createServer(path.resolve(dirname, "../testContents"), port, authType);
 }
