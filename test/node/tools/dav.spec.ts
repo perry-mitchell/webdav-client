@@ -218,6 +218,44 @@ describe("parseXML", function () {
             ).to.equal("alice");
         });
 
+        it("resolves prefixed prop tags against the multistatus xmlns scope", async function () {
+            // The other clarkNotationProps test uses inline `xmlns="..."` on
+            // each prop element (Sabre's serialisation for custom namespaces);
+            // this test exercises the other path where the namespace is
+            // resolved from the prefix-to-URI map declared on the multistatus
+            // element. Nextcloud and similar servers serialise this way.
+            const prefixedXml = `<?xml version="1.0"?>
+<d:multistatus
+    xmlns:d="DAV:"
+    xmlns:oc="http://owncloud.org/ns"
+    xmlns:nc="http://nextcloud.org/ns">
+    <d:response>
+        <d:href>/file.txt</d:href>
+        <d:propstat>
+            <d:prop>
+                <d:displayname>file.txt</d:displayname>
+                <oc:permissions>RDNVW</oc:permissions>
+                <nc:has-preview>true</nc:has-preview>
+            </d:prop>
+            <d:status>HTTP/1.1 200 OK</d:status>
+        </d:propstat>
+    </d:response>
+</d:multistatus>`;
+            const parsed = await parseXML(prefixedXml, {
+                attributeNamePrefix: "@",
+                attributeParsers: [],
+                clarkNotationProps: true,
+                tagParsers: []
+            });
+            const props = parsed.multistatus.response[0].propstat.prop as unknown as Record<
+                string,
+                string
+            >;
+            expect(props["{DAV:}displayname"]).to.equal("file.txt");
+            expect(props["{http://owncloud.org/ns}permissions"]).to.equal("RDNVW");
+            expect(props["{http://nextcloud.org/ns}has-preview"]).to.equal(true);
+        });
+
         it("falls back to the null namespace for prefixes that are not in scope", async function () {
             const xmlMalformed = `<?xml version="1.0"?>
 <d:multistatus xmlns:d="DAV:">

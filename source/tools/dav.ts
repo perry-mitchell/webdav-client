@@ -187,11 +187,6 @@ const STRUCTURAL_KEYS = new Set([
     "responsedescription"
 ]);
 
-function localName(key: string): string {
-    const colonIdx = key.indexOf(":");
-    return colonIdx === -1 ? key : key.slice(colonIdx + 1);
-}
-
 function isPlainObject(value: unknown): value is Record<string, unknown> {
     return typeof value === "object" && value !== null && !Array.isArray(value);
 }
@@ -204,19 +199,15 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
  *  2. Rewrite every key inside each `<prop>` to Clark notation
  *     `{namespaceURI}localName`, resolving the namespace from the xmlns
  *     scope of the surrounding multistatus and from any inline
- *     `xmlns="..."` declared on the property element itself. Wrapped values
- *     of the form `{ "@xmlns": ..., text: "..." }` are unwrapped to just
- *     their text content.
- *
- * Pre-computes the xmlns attribute keys once and extends the prefix scope
- * map only when a node actually declares xmlns, so the walk stays close to
- * a plain tree traversal in cost.
+ *     `xmlns="..."` declared on the property element itself. Wrapped
+ *     simple-text elements of the form `{ "@xmlns": ..., text: "..." }`
+ *     are unwrapped to their text content. Property values with their own
+ *     nested element children are returned as-is (the keys of those
+ *     grandchildren are not rewritten to Clark notation).
  */
 function applyClarkNotation(root: unknown, attrPrefix: string): void {
     if (!isPlainObject(root) && !Array.isArray(root)) return;
 
-    // Stable string references for the duration of the walk; lets V8
-    // inline-cache the property accesses against the same key shapes.
     const xmlnsKey = `${attrPrefix}xmlns`;
     const xmlnsPrefixedKey = `${xmlnsKey}:`;
     const xmlnsPrefixedKeyLen = xmlnsPrefixedKey.length;
@@ -249,26 +240,19 @@ function applyClarkNotation(root: unknown, attrPrefix: string): void {
         return scope ?? parent;
     }
 
+    // Unwrap the `{ "@xmlns": ..., text: "..." }` shape that fast-xml-parser
+    // produces for elements with both an xmlns attribute and text content.
+    // Complex elements with their own nested children are returned as-is:
+    // their keys are NOT rewritten to Clark notation, since the walker only
+    // resolves namespaces at the `<prop>` child level.
     function unwrapXmlnsWrappedValue(raw: unknown): unknown {
         if (!isPlainObject(raw)) return raw;
         const text = raw[TEXT_KEY];
-        // If the only non-text keys are xmlns attrs, the element is a simple
-        // text node with namespace metadata: extract the text directly.
-        let onlyXmlnsAndText = true;
         for (const k of Object.keys(raw)) {
             if (k === TEXT_KEY) continue;
-            if (!isXmlnsAttr(k)) {
-                onlyXmlnsAndText = false;
-                break;
-            }
+            if (!isXmlnsAttr(k)) return raw;
         }
-        if (onlyXmlnsAndText && text !== undefined) return text;
-        // Complex element: clone with xmlns attrs stripped, keep child content.
-        const out: Record<string, unknown> = {};
-        for (const k of Object.keys(raw)) {
-            if (!isXmlnsAttr(k)) out[k] = raw[k];
-        }
-        return out;
+        return text !== undefined ? text : raw;
     }
 
     function emitClarkForChild(
@@ -335,7 +319,8 @@ function applyClarkNotation(root: unknown, attrPrefix: string): void {
         const childScope = extendScope(node, scope);
 
         for (const key of Object.keys(node)) {
-            const ln = localName(key);
+            const colonIdx = key.indexOf(":");
+            const ln = colonIdx === -1 ? key : key.slice(colonIdx + 1);
             const value = node[key];
 
             // Rename structural keys to bare local name.
