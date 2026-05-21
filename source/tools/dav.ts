@@ -35,6 +35,7 @@ function toJPathString(
 function getParser({
     attributeNamePrefix,
     attributeParsers,
+    clarkNotationProps,
     entityDecoder: entityDecoderOptions,
     tagParsers
 }: WebDAVParsingContext): XMLParser {
@@ -43,7 +44,7 @@ function getParser({
         attributeNamePrefix,
         textNodeName: "text",
         ignoreAttributes: false,
-        removeNSPrefix: true,
+        removeNSPrefix: !clarkNotationProps,
         jPath: false,
         numberParseOptions: {
             hex: true,
@@ -165,9 +166,222 @@ function normaliseResult(result: DAVResultRaw): DAVResult {
     return output as DAVResult;
 }
 
+// Structural keys of the WebDAV multistatus envelope (RFC 4918). When
+// `clarkNotationProps` is enabled the parser keeps namespace prefixes on
+// every tag, so these structural keys arrive prefixed (e.g. `d:multistatus`)
+// and have to be renamed back to their bare local name so the existing
+// `normaliseResult` continues to work and `DAVResult` keeps its shape.
+//
+// Keep this list in sync with the structural fields exposed on `DAVResult`,
+// `DAVResultResponse`, `DAVResultPropstatResponse`, `DAVResultStatusResponse`
+// and `DAVPropStat` in `source/types.ts`. If a new structural field is added
+// to those interfaces, it must be added here too or the prefixed variant
+// will leak through into the result.
+const STRUCTURAL_KEYS = new Set([
+    "multistatus",
+    "response",
+    "propstat",
+    "prop",
+    "status",
+    "href",
+    "responsedescription"
+]);
+
+function localName(key: string): string {
+    const colonIdx = key.indexOf(":");
+    return colonIdx === -1 ? key : key.slice(colonIdx + 1);
+}
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+    return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
 /**
- * Parse an XML response from a WebDAV service,
- *  converting it to an internal DAV result
+ * Transform a parsed (prefix-preserving) tree in place to:
+ *
+ *  1. Rename structural keys (`multistatus`/`response`/...) back to their
+ *     bare local names so `DAVResult`'s shape is preserved.
+ *  2. Rewrite every key inside each `<prop>` to Clark notation
+ *     `{namespaceURI}localName`, resolving the namespace from the xmlns
+ *     scope of the surrounding multistatus and from any inline
+ *     `xmlns="..."` declared on the property element itself. Wrapped values
+ *     of the form `{ "@xmlns": ..., text: "..." }` are unwrapped to just
+ *     their text content.
+ *
+ * Pre-computes the xmlns attribute keys once and extends the prefix scope
+ * map only when a node actually declares xmlns, so the walk stays close to
+ * a plain tree traversal in cost.
+ */
+function applyClarkNotation(root: unknown, attrPrefix: string): void {
+    if (!isPlainObject(root) && !Array.isArray(root)) return;
+
+    // Stable string references for the duration of the walk; lets V8
+    // inline-cache the property accesses against the same key shapes.
+    const xmlnsKey = `${attrPrefix}xmlns`;
+    const xmlnsPrefixedKey = `${xmlnsKey}:`;
+    const xmlnsPrefixedKeyLen = xmlnsPrefixedKey.length;
+    const TEXT_KEY = "text";
+    const EMPTY_SCOPE: Map<string, string> = new Map();
+
+    function isXmlnsAttr(key: string): boolean {
+        return (
+            key === xmlnsKey ||
+            (key.length > xmlnsPrefixedKeyLen && key.startsWith(xmlnsPrefixedKey))
+        );
+    }
+
+    // Return an extended scope if `obj` declares any xmlns; otherwise reuse
+    // the parent scope to avoid allocating a Map for every node.
+    function extendScope(
+        obj: Record<string, unknown>,
+        parent: Map<string, string>
+    ): Map<string, string> {
+        let scope: Map<string, string> | null = null;
+        for (const key of Object.keys(obj)) {
+            if (key === xmlnsKey) {
+                if (!scope) scope = new Map(parent);
+                scope.set("", obj[key] as string);
+            } else if (key.length > xmlnsPrefixedKeyLen && key.startsWith(xmlnsPrefixedKey)) {
+                if (!scope) scope = new Map(parent);
+                scope.set(key.slice(xmlnsPrefixedKeyLen), obj[key] as string);
+            }
+        }
+        return scope ?? parent;
+    }
+
+    function unwrapXmlnsWrappedValue(raw: unknown): unknown {
+        if (!isPlainObject(raw)) return raw;
+        const text = raw[TEXT_KEY];
+        // If the only non-text keys are xmlns attrs, the element is a simple
+        // text node with namespace metadata: extract the text directly.
+        let onlyXmlnsAndText = true;
+        for (const k of Object.keys(raw)) {
+            if (k === TEXT_KEY) continue;
+            if (!isXmlnsAttr(k)) {
+                onlyXmlnsAndText = false;
+                break;
+            }
+        }
+        if (onlyXmlnsAndText && text !== undefined) return text;
+        // Complex element: clone with xmlns attrs stripped, keep child content.
+        const out: Record<string, unknown> = {};
+        for (const k of Object.keys(raw)) {
+            if (!isXmlnsAttr(k)) out[k] = raw[k];
+        }
+        return out;
+    }
+
+    function emitClarkForChild(
+        rawKey: string,
+        rawValue: unknown,
+        scope: Map<string, string>,
+        out: Record<string, unknown>
+    ): void {
+        const colonIdx = rawKey.indexOf(":");
+        const prefix = colonIdx === -1 ? "" : rawKey.slice(0, colonIdx);
+        const local = colonIdx === -1 ? rawKey : rawKey.slice(colonIdx + 1);
+        // Unknown prefix falls back to the null namespace; that yields a bare
+        // `local` key rather than throwing or losing the data.
+        const scopeNs = scope.get(prefix) ?? "";
+
+        const assign = (ns: string, value: unknown): void => {
+            const key = ns ? `{${ns}}${local}` : local;
+            const existing = out[key];
+            if (existing === undefined) {
+                out[key] = value;
+            } else if (Array.isArray(existing)) {
+                existing.push(value);
+            } else {
+                out[key] = [existing, value];
+            }
+        };
+
+        if (Array.isArray(rawValue)) {
+            for (const item of rawValue) {
+                const itemNs =
+                    isPlainObject(item) && xmlnsKey in item ? (item[xmlnsKey] as string) : scopeNs;
+                assign(itemNs, unwrapXmlnsWrappedValue(item));
+            }
+            return;
+        }
+
+        const ns =
+            isPlainObject(rawValue) && xmlnsKey in rawValue
+                ? (rawValue[xmlnsKey] as string)
+                : scopeNs;
+        assign(ns, unwrapXmlnsWrappedValue(rawValue));
+    }
+
+    function rewritePropToClark(
+        propObj: Record<string, unknown>,
+        parentScope: Map<string, string>
+    ): Record<string, unknown> {
+        const scope = extendScope(propObj, parentScope);
+        const out: Record<string, unknown> = {};
+        for (const key of Object.keys(propObj)) {
+            if (isXmlnsAttr(key)) continue;
+            emitClarkForChild(key, propObj[key], scope, out);
+        }
+        return out;
+    }
+
+    function walk(node: unknown, scope: Map<string, string>): void {
+        if (Array.isArray(node)) {
+            for (const item of node) walk(item, scope);
+            return;
+        }
+        if (!isPlainObject(node)) return;
+
+        const childScope = extendScope(node, scope);
+
+        for (const key of Object.keys(node)) {
+            const ln = localName(key);
+            const value = node[key];
+
+            // Rename structural keys to bare local name.
+            let actualKey = key;
+            if (STRUCTURAL_KEYS.has(ln) && ln !== key) {
+                delete node[key];
+                node[ln] = value;
+                actualKey = ln;
+            }
+
+            if (ln === "prop") {
+                if (isPlainObject(value)) {
+                    node[actualKey] = rewritePropToClark(value, childScope);
+                } else if (Array.isArray(value)) {
+                    node[actualKey] = value.map(v =>
+                        isPlainObject(v) ? rewritePropToClark(v, childScope) : v
+                    );
+                }
+                // Stop here; the prop content was rewritten in one shot.
+            } else {
+                walk(value, childScope);
+            }
+        }
+    }
+
+    walk(root, EMPTY_SCOPE);
+}
+
+/**
+ * Parse an XML response from a WebDAV service, converting it to an internal
+ * DAV result.
+ *
+ * When `context.clarkNotationProps` is `true`, every property key inside
+ * each `propstat.prop` is rewritten to Clark notation
+ * `{namespaceURI}localName`. This lets consumers disambiguate properties
+ * that share a local name across different XML namespaces (RFC 4918) and
+ * uses a single canonical key per property regardless of how the server
+ * serialised the namespace (prefix or inline default xmlns).
+ *
+ * The structural shape of `DAVResult` (`multistatus`/`response`/`propstat`/
+ * `prop`/`status`/`href`) is unaffected by this option; only the keys
+ * inside each `propstat.prop` change. Downstream helpers like
+ * `prepareFileFromProps`, `parseStat` and `parseSearch` assume bare prop
+ * keys and will not work with Clark-notation ones; consumers that opt in
+ * are expected to address the Clark keys on their side.
+ *
  * @param xml The raw XML string
  * @param context The current client context
  * @returns A parsed and processed DAV result
@@ -181,6 +395,9 @@ export function parseXML(xml: string, context?: WebDAVParsingContext): Promise<D
     };
     return new Promise(resolve => {
         const result = getParser(context).parse(xml);
+        if (context.clarkNotationProps) {
+            applyClarkNotation(result, context.attributeNamePrefix ?? "@");
+        }
         resolve(normaliseResult(result));
     });
 }

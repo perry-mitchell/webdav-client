@@ -33,6 +33,12 @@ export interface CreateWriteStreamOptions extends WebDAVMethodOptions {
     overwrite?: boolean;
 }
 
+// The bare local names of the structural fields below (`multistatus`,
+// `response`, `propstat`, `prop`, `status`, `href`, `responsedescription`)
+// are mirrored in the `STRUCTURAL_KEYS` set in `tools/dav.ts`, which strips
+// any namespace prefixes from those keys when `clarkNotationProps` is
+// enabled. Keep both in sync.
+
 /** <propstat> as per http://www.webdav.org/specs/rfc2518.html#rfc.section.12.9.1.1 */
 interface DAVPropStat {
     prop: DAVResultResponseProps;
@@ -408,6 +414,7 @@ export interface WebDAVEntityDecoderOptions {
 export interface WebDAVParsingContext {
     attributeNamePrefix?: string;
     attributeParsers: WebDAVAttributeParser[];
+    clarkNotationProps?: boolean;
     entityDecoder?: WebDAVEntityDecoderOptions;
     tagParsers: WebDAVTagParser[];
 }
