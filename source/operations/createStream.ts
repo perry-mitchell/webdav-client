@@ -8,8 +8,10 @@ import {
     CreateWriteStreamCallback,
     CreateWriteStreamOptions,
     Headers,
+    ReadableLike,
     WebDAVClientContext,
-    WebDAVClientError
+    WebDAVClientError,
+    WritableLike
 } from "../types.js";
 
 const NOOP = () => {};
@@ -18,7 +20,7 @@ export function createReadStream(
     context: WebDAVClientContext,
     filePath: string,
     options: CreateReadStreamOptions = {}
-): Stream.Readable {
+): ReadableLike {
     const PassThroughStream = Stream.PassThrough;
     const outStream = new PassThroughStream();
     getFileStream(context, filePath, options)
@@ -36,7 +38,7 @@ export function createWriteStream(
     filePath: string,
     options: CreateWriteStreamOptions = {},
     callback: CreateWriteStreamCallback = NOOP
-): Stream.Writable {
+): WritableLike {
     const PassThroughStream = Stream.PassThrough;
     const writeStream = new PassThroughStream();
     const headers = {};

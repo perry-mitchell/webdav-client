@@ -4,13 +4,19 @@
   "description": "WebDAV client for NodeJS",
   "exports": {
     ".": {
+      "types": "./dist/node/index.d.ts",
       "browser": "./dist/web/index.js",
       "react-native": "./dist/react-native/index.js",
-      "types": "./dist/node/index.d.ts",
       "default": "./dist/node/index.js"
     },
-    "./react-native": "./dist/react-native/index.js",
-    "./web": "./dist/web/index.js",
+    "./react-native": {
+      "types": "./dist/node/index.d.ts",
+      "default": "./dist/react-native/index.js"
+    },
+    "./web": {
+      "types": "./dist/node/index.d.ts",
+      "default": "./dist/web/index.js"
+    },
     "./dist/*": "./dist/*"
   },
   "react-native": "./dist/react-native/index.js",
@@ -24,10 +30,11 @@
     "dev": "nodemon -e ts,js --exec 'npm run build' --ignore 'dist/' --ignore 'web/'",
     "format": "prettier --write '{source,test}/**/*.{js,ts}'",
     "prepublishOnly": "npm run build",
-    "test": "run-s test:node test:web test:format",
+    "test": "run-s test:node test:web test:types test:format",
     "test:format": "prettier --check '{source,test}/**/*.{js,ts}'",
     "test:node": "vitest --watch=false --project node-unit",
     "test:node:watch": "vitest --watch=true --project node-unit",
+    "test:types": "npm run build:node && vitest --watch=false --project node-types",
     "test:web": "npm run clean && npm run build:web && concurrently -k -s first 'npm run test:web:server' 'npm run test:web:specs'",
     "test:web:server": "npx -y tsx ./test/server.web.ts",
     "test:web:specs": "vitest --watch=false --project browser"

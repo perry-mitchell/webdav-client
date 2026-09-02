@@ -1,17 +1,16 @@
-import { Headers } from "@buttercup/fetch";
-import { Headers as HeadersSimple } from "../types.js";
+import { Headers as HeadersSimple, HeadersLike } from "../types.js";
 
-export function convertResponseHeaders(headers: Headers): HeadersSimple {
+export function convertResponseHeaders(headers: HeadersLike): HeadersSimple {
     const output: HeadersSimple = {};
-    for (const key of headers.keys()) {
-        output[key] = headers.get(key);
-    }
+    headers.forEach((value, key) => {
+        output[key] = value;
+    });
     return output;
 }
 
 export function mergeHeaders(...headerPayloads: HeadersSimple[]): HeadersSimple {
     if (headerPayloads.length === 0) return {};
-    const headerKeys = {};
+    const headerKeys: Record<string, string> = {};
     return headerPayloads.reduce((output: HeadersSimple, headers: HeadersSimple) => {
         Object.keys(headers).forEach(header => {
             const lowerHeader = header.toLowerCase();

@@ -1,4 +1,3 @@
-import { Readable } from "stream";
 import { Layerr } from "layerr";
 import { joinURL } from "../tools/url.js";
 import { encodePath } from "../tools/path.js";
@@ -9,6 +8,7 @@ import {
     BufferLike,
     ErrorCode,
     Headers,
+    ReadableLike,
     WebDAVMethodOptions,
     WebDAVClientContext
 } from "../types.js";
@@ -18,7 +18,7 @@ export async function partialUpdateFileContents(
     filePath: string,
     start: number | null,
     end: number | null,
-    data: string | BufferLike | Readable,
+    data: string | BufferLike | ReadableLike,
     options: WebDAVMethodOptions = {}
 ): Promise<void> {
     const compliance = await getDAVCompliance(context, filePath, options);
@@ -53,7 +53,7 @@ async function partialUpdateFileContentsSabredav(
     filePath: string,
     start: number,
     end: number,
-    data: string | BufferLike | Readable,
+    data: string | BufferLike | ReadableLike,
     options: WebDAVMethodOptions = {}
 ): Promise<void> {
     if (start > end || start < 0) {
@@ -92,7 +92,7 @@ async function partialUpdateFileContentsApache(
     filePath: string,
     start: number,
     end: number,
-    data: string | BufferLike | Readable,
+    data: string | BufferLike | ReadableLike,
     options: WebDAVMethodOptions = {}
 ): Promise<void> {
     if (start > end || start < 0) {

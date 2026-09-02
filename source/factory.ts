@@ -1,4 +1,3 @@
-import Stream from "stream";
 import { extractURLPath } from "./tools/url.js";
 import { setupAuth } from "./auth/index.js";
 import { copyFile } from "./operations/copyFile.js";
@@ -33,6 +32,7 @@ import {
     LockOptions,
     MoveFileOptions,
     PutFileContentsOptions,
+    ReadableLike,
     RequestOptionsCustom,
     SearchOptions,
     StatOptions,
@@ -123,14 +123,14 @@ export function createClient(remoteURL: string, options: WebDAVClientOptions = {
             moveFile(context, filename, destinationFilename, options),
         putFileContents: (
             filename: string,
-            data: string | BufferLike | Stream.Readable,
+            data: string | BufferLike | ReadableLike,
             options?: PutFileContentsOptions
         ) => putFileContents(context, filename, data, options),
         partialUpdateFileContents: (
             filePath: string,
             start: number,
             end: number,
-            data: string | BufferLike | Stream.Readable,
+            data: string | BufferLike | ReadableLike,
             options?: WebDAVMethodOptions
         ) => partialUpdateFileContents(context, filePath, start, end, data, options),
         getDAVCompliance: (path: string) => getDAVCompliance(context, path),

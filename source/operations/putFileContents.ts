@@ -13,6 +13,7 @@ import {
     ErrorCode,
     Headers,
     PutFileContentsOptions,
+    ReadableLike,
     WebDAVClientContext,
     WebDAVClientError
 } from "../types.js";
@@ -20,7 +21,7 @@ import {
 export async function putFileContents(
     context: WebDAVClientContext,
     filePath: string,
-    data: string | BufferLike | Stream.Readable,
+    data: string | BufferLike | ReadableLike,
     options: PutFileContentsOptions = {}
 ): Promise<boolean> {
     const { contentLength = true, overwrite = true } = options;
