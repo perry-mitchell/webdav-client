@@ -414,6 +414,23 @@ export interface WebDAVEntityDecoderOptions {
 export interface WebDAVParsingContext {
     attributeNamePrefix?: string;
     attributeParsers: WebDAVAttributeParser[];
+    /**
+     * Rewrite every key inside `propstat.prop` to Clark notation
+     * (`{namespaceURI}localName`) instead of the bare local name.
+     *
+     * This is a low-level escape hatch for consumers calling the exported
+     * `parseXML` directly. It is deliberately not exposed through
+     * `WebDAVClientOptions`: every client method that parses a multistatus
+     * (`stat`, `getDirectoryContents`, `search`, `getQuota`) reads bare prop
+     * keys such as `getlastmodified` or `resourcetype` and would break if it
+     * were wired in there.
+     *
+     * Note that `tagParsers` and `attributeParsers` keep receiving jPaths
+     * without namespace prefixes (`propstat.prop.displayname`) regardless of
+     * this option.
+     *
+     * @default false
+     */
     clarkNotationProps?: boolean;
     entityDecoder?: WebDAVEntityDecoderOptions;
     tagParsers: WebDAVTagParser[];
