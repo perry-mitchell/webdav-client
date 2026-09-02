@@ -8,7 +8,7 @@ export function calculateDataLength(data: string | BufferLike): number {
     if (isArrayBuffer(data)) {
         return (<ArrayBuffer>data).byteLength;
     } else if (isBuffer(data)) {
-        return (<Buffer>data).length;
+        return (<Uint8Array>data).length;
     } else if (typeof data === "string") {
         return byteLength(<string>data);
     }

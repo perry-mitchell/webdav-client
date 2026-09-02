@@ -1,8 +1,3 @@
-import * as Stream from "node:stream";
-import { Response } from "@buttercup/fetch";
-
-export { Request, Response } from "@buttercup/fetch";
-
 export type AuthHeader = string;
 
 export enum AuthType {
@@ -13,7 +8,68 @@ export enum AuthType {
     Token = "token"
 }
 
-export type BufferLike = Buffer | ArrayBuffer;
+export type BufferLike = Uint8Array | ArrayBuffer;
+
+/**
+ * Minimal structural fetch header type, satisfied by both browser (WHATWG)
+ * and Node.js implementations.
+ */
+export interface HeadersLike {
+    get(name: string): string | null;
+    forEach(callback: (value: string, key: string) => void): void;
+}
+
+/**
+ * Minimal structural fetch request type, satisfied by both browser (WHATWG)
+ * and Node.js implementations.
+ */
+export interface Request {
+    readonly headers: HeadersLike;
+    readonly method: string;
+    readonly url: string;
+}
+
+/**
+ * Minimal structural fetch response type, satisfied by both browser (WHATWG)
+ * and Node.js implementations.
+ */
+export interface Response {
+    readonly headers: HeadersLike;
+    readonly ok: boolean;
+    readonly status: number;
+    readonly statusText: string;
+    readonly url: string;
+    arrayBuffer(): Promise<ArrayBuffer>;
+    json(): Promise<any>;
+    text(): Promise<string>;
+}
+
+/**
+ * Minimal structural readable stream type, satisfied by node streams.
+ * Node-specific members are intentionally omitted to keep the shipped
+ * types platform-neutral.
+ */
+export interface ReadableLike {
+    on(event: string | symbol, listener: (...args: any[]) => void): this;
+    once(event: string | symbol, listener: (...args: any[]) => void): this;
+    emit(event: string | symbol, ...args: any[]): boolean;
+    pipe(destination: any, options?: { end?: boolean }): any;
+    destroy(error?: Error): void;
+}
+
+/**
+ * Minimal structural writable stream type, satisfied by node streams.
+ * Node-specific members are intentionally omitted to keep the shipped
+ * types platform-neutral.
+ */
+export interface WritableLike {
+    on(event: string | symbol, listener: (...args: any[]) => void): this;
+    once(event: string | symbol, listener: (...args: any[]) => void): this;
+    emit(event: string | symbol, ...args: any[]): boolean;
+    write(chunk: any, callback?: (error: Error | null | undefined) => void): boolean;
+    end(callback?: () => void): this;
+    destroy(error?: Error): this;
+}
 
 export interface CreateDirectoryOptions extends WebDAVMethodOptions {
     recursive?: boolean;
@@ -216,7 +272,7 @@ export interface PutFileContentsOptions extends WebDAVMethodOptions {
     onUploadProgress?: UploadProgressCallback;
 }
 
-export type RequestDataPayload = string | Buffer | ArrayBuffer | Record<string, any>;
+export type RequestDataPayload = string | Uint8Array | ArrayBuffer | Record<string, any>;
 
 interface RequestOptionsBase {
     data?: RequestDataPayload;
@@ -243,7 +299,7 @@ export interface RequestOptionsWithState extends RequestOptions {
     _digest?: DigestContext;
 }
 
-export type ResponseData = string | Buffer | ArrayBuffer | Object | Array<any>;
+export type ResponseData = string | Uint8Array | ArrayBuffer | Object | Array<any>;
 
 export interface ResponseDataDetailed<T> {
     data: T;
@@ -271,12 +327,12 @@ export type UploadProgressCallback = ProgressEventCallback;
 export interface WebDAVClient {
     copyFile: (filename: string, destination: string, options?: CopyFileOptions) => Promise<void>;
     createDirectory: (path: string, options?: CreateDirectoryOptions) => Promise<void>;
-    createReadStream: (filename: string, options?: CreateReadStreamOptions) => Stream.Readable;
+    createReadStream: (filename: string, options?: CreateReadStreamOptions) => ReadableLike;
     createWriteStream: (
         filename: string,
         options?: CreateWriteStreamOptions,
         callback?: CreateWriteStreamCallback
-    ) => Stream.Writable;
+    ) => WritableLike;
     customRequest: (path: string, requestOptions: RequestOptionsCustom) => Promise<Response>;
     deleteFile: (filename: string, options?: WebDAVMethodOptions) => Promise<void>;
     exists: (path: string, options?: WebDAVMethodOptions) => Promise<boolean>;
@@ -308,14 +364,14 @@ export interface WebDAVClient {
     ) => Promise<void>;
     putFileContents: (
         filename: string,
-        data: string | BufferLike | Stream.Readable,
+        data: string | BufferLike | ReadableLike,
         options?: PutFileContentsOptions
     ) => Promise<boolean>;
     partialUpdateFileContents: (
         filePath: string,
         start: number,
         end: number,
-        data: string | BufferLike | Stream.Readable,
+        data: string | BufferLike | ReadableLike,
         options?: WebDAVMethodOptions
     ) => Promise<void>;
     search: (
