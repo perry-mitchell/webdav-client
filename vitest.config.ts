@@ -14,6 +14,13 @@ export default defineConfig({
             },
             {
                 test: {
+                    name: "node-types",
+                    environment: "node",
+                    include: ["test/types/**/*.spec.ts"]
+                }
+            },
+            {
+                test: {
                     name: "browser",
                     include: ["test/web/**/*.spec.ts"],
                     setupFiles: ["test/web/setup.ts"],
