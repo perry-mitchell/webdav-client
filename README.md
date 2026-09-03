@@ -254,6 +254,25 @@ const client = createClient("https://some-server.org", {
 | `limit.maxTotalExpansions` | `0` | Maximum number of entity references expanded per document. `0` means unlimited. |
 | `limit.maxExpandedLength`  | `0` | Maximum number of characters added by entity expansion per document. `0` means unlimited. |
 
+### Namespaced property keys
+
+Property keys are reported by their local name, so two properties sharing a local name across different XML namespaces collapse into one key. Passing `clarkNotationProps` to the exported `parseXML` keys them in [Clark notation](http://www.jclark.com/xml/xmlns.htm) (`{namespaceURI}localName`) instead, which keeps them apart and gives a property the same key regardless of whether the server used a prefix or an inline `xmlns`:
+
+```typescript
+import { parseXML } from "webdav";
+
+const result = await parseXML(xml, {
+    attributeNamePrefix: "@",
+    attributeParsers: [],
+    clarkNotationProps: true,
+    tagParsers: []
+});
+// { "{DAV:}displayname": "file.txt", "{http://owncloud.org/ns}permissions": "RDNVW" }
+const props = result.multistatus.response[0].propstat.prop;
+```
+
+This is a low-level option for consumers parsing responses themselves: it is not available on `createClient`, as the client methods (`stat`, `getDirectoryContents`, `search`, `getQuota`) read bare property keys. Only the direct children of `<prop>` are rewritten, and a property whose prefix has no namespace declaration in scope keeps its bare local name.
+
 ### Client methods
 
 The `WebDAVClient` interface type contains all the methods and signatures for the WebDAV client instance.

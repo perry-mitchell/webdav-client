@@ -89,6 +89,12 @@ export interface CreateWriteStreamOptions extends WebDAVMethodOptions {
     overwrite?: boolean;
 }
 
+// The bare local names of the structural fields below (`multistatus`,
+// `response`, `propstat`, `prop`, `status`, `href`, `responsedescription`)
+// are mirrored in the `STRUCTURAL_KEYS` set in `tools/dav.ts`, which strips
+// any namespace prefixes from those keys when `clarkNotationProps` is
+// enabled. Keep both in sync.
+
 /** <propstat> as per http://www.webdav.org/specs/rfc2518.html#rfc.section.12.9.1.1 */
 interface DAVPropStat {
     prop: DAVResultResponseProps;
@@ -464,6 +470,24 @@ export interface WebDAVEntityDecoderOptions {
 export interface WebDAVParsingContext {
     attributeNamePrefix?: string;
     attributeParsers: WebDAVAttributeParser[];
+    /**
+     * Rewrite every key inside `propstat.prop` to Clark notation
+     * (`{namespaceURI}localName`) instead of the bare local name.
+     *
+     * This is a low-level escape hatch for consumers calling the exported
+     * `parseXML` directly. It is deliberately not exposed through
+     * `WebDAVClientOptions`: every client method that parses a multistatus
+     * (`stat`, `getDirectoryContents`, `search`, `getQuota`) reads bare prop
+     * keys such as `getlastmodified` or `resourcetype` and would break if it
+     * were wired in there.
+     *
+     * Note that `tagParsers` and `attributeParsers` keep receiving jPaths
+     * without namespace prefixes (`propstat.prop.displayname`) regardless of
+     * this option.
+     *
+     * @default false
+     */
+    clarkNotationProps?: boolean;
     entityDecoder?: WebDAVEntityDecoderOptions;
     tagParsers: WebDAVTagParser[];
 }

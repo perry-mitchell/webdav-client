@@ -23,18 +23,32 @@ enum PropertyType {
     Original = "original"
 }
 
-function toJPathString(
-    jPath: string | { toString: (sep?: string, includeNS?: boolean) => string }
-): string {
+type JPath = string | { toArray: () => string[] };
+
+function stripPrefix(name: string): string {
+    const colonIdx = name.indexOf(":");
+    return colonIdx === -1 ? name : name.slice(colonIdx + 1);
+}
+
+function isXmlnsAttribute(name: string): boolean {
+    return name === "xmlns" || name.startsWith("xmlns:");
+}
+
+// The parser only keeps namespace prefixes on tags in Clark mode, so without
+// this the jPaths would be `d:propstat.d:prop.d:displayname` there and bare
+// everywhere else. Strip per segment (rather than off the joined path) as
+// prefixes and local names may both contain dots.
+function toJPathString(jPath: JPath): string {
     if (typeof jPath === "string") {
         return jPath;
     }
-    return jPath.toString(".", false);
+    return jPath.toArray().map(stripPrefix).join(".");
 }
 
 function getParser({
     attributeNamePrefix,
     attributeParsers,
+    clarkNotationProps,
     entityDecoder: entityDecoderOptions,
     tagParsers
 }: WebDAVParsingContext): XMLParser {
@@ -43,13 +57,19 @@ function getParser({
         attributeNamePrefix,
         textNodeName: "text",
         ignoreAttributes: false,
-        removeNSPrefix: true,
+        removeNSPrefix: !clarkNotationProps,
         jPath: false,
         numberParseOptions: {
             hex: true,
             leadingZeros: false
         },
-        attributeValueProcessor(_, attrValue, jPath) {
+        attributeValueProcessor(attrName, attrValue, jPath) {
+            // Clark mode keeps the namespace declarations, which the default
+            // mode discards. They are consumed by the walker and removed from
+            // the result, so parsers never get to see them in either mode.
+            if (attributeParsers.length === 0 || isXmlnsAttribute(attrName)) {
+                return attrValue;
+            }
             const pathStr = toJPathString(jPath);
             for (const processor of attributeParsers) {
                 try {
@@ -64,6 +84,9 @@ function getParser({
             return attrValue;
         },
         tagValueProcessor(tagName, tagValue, jPath) {
+            if (tagParsers.length === 0) {
+                return tagValue;
+            }
             const pathStr = toJPathString(jPath);
             for (const processor of tagParsers) {
                 try {
@@ -165,9 +188,238 @@ function normaliseResult(result: DAVResultRaw): DAVResult {
     return output as DAVResult;
 }
 
+// Structural keys of the WebDAV multistatus envelope (RFC 4918). When
+// `clarkNotationProps` is enabled the parser keeps namespace prefixes on
+// every tag, so these structural keys arrive prefixed (e.g. `d:multistatus`)
+// and have to be renamed back to their bare local name so the existing
+// `normaliseResult` continues to work and `DAVResult` keeps its shape.
+//
+// Keep this list in sync with the structural fields exposed on `DAVResult`,
+// `DAVResultResponse`, `DAVResultPropstatResponse`, `DAVResultStatusResponse`
+// and `DAVPropStat` in `source/types.ts`. If a new structural field is added
+// to those interfaces, it must be added here too or the prefixed variant
+// will leak through into the result.
+const STRUCTURAL_KEYS = new Set([
+    "multistatus",
+    "response",
+    "propstat",
+    "prop",
+    "status",
+    "href",
+    "responsedescription"
+]);
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+    return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
 /**
- * Parse an XML response from a WebDAV service,
- *  converting it to an internal DAV result
+ * Transform a parsed (prefix-preserving) tree in place to:
+ *
+ *  1. Rename structural keys (`multistatus`/`response`/...) back to their
+ *     bare local names so `DAVResult`'s shape is preserved.
+ *  2. Rewrite every key inside each `<prop>` to Clark notation
+ *     `{namespaceURI}localName`, resolving the namespace against the xmlns
+ *     scope built up along the way (declarations on any of the enclosing
+ *     elements as well as on the property element itself). A property whose
+ *     prefix has no URI in scope keeps its bare local name.
+ *  3. Drop the xmlns declarations once they are resolved, so the result
+ *     carries the same shape the default (prefix-stripping) mode produces.
+ *
+ * Only the direct children of `<prop>` are rewritten: the keys of any
+ * nested elements below them are left alone and keep whichever prefix the
+ * server serialised them with.
+ */
+function applyClarkNotation(root: unknown, attrPrefix: string): void {
+    if (!isPlainObject(root) && !Array.isArray(root)) return;
+
+    const xmlnsKey = `${attrPrefix}xmlns`;
+    const xmlnsPrefixedKey = `${xmlnsKey}:`;
+    const xmlnsPrefixedKeyLen = xmlnsPrefixedKey.length;
+    const TEXT_KEY = "text";
+    const EMPTY_SCOPE: Map<string, string> = new Map();
+
+    function isXmlnsAttr(key: string): boolean {
+        return (
+            key === xmlnsKey ||
+            (key.length > xmlnsPrefixedKeyLen && key.startsWith(xmlnsPrefixedKey))
+        );
+    }
+
+    // Return an extended scope if `obj` declares any xmlns; otherwise reuse
+    // the parent scope to avoid allocating a Map for every node.
+    function extendScope(
+        obj: Record<string, unknown>,
+        parent: Map<string, string>
+    ): Map<string, string> {
+        let scope: Map<string, string> | null = null;
+        for (const key of Object.keys(obj)) {
+            if (key === xmlnsKey) {
+                if (!scope) scope = new Map(parent);
+                scope.set("", obj[key] as string);
+            } else if (key.length > xmlnsPrefixedKeyLen && key.startsWith(xmlnsPrefixedKey)) {
+                if (!scope) scope = new Map(parent);
+                scope.set(key.slice(xmlnsPrefixedKeyLen), obj[key] as string);
+            }
+        }
+        return scope ?? parent;
+    }
+
+    // Drop the namespace declarations once they have been resolved, so a prop
+    // value ends up with the same shape it has in the default (prefix-
+    // stripping) mode: bare text for a simple element, an empty string for an
+    // empty one, and `{ text, "@attr" }` for one carrying other attributes.
+    // The keys of nested children are NOT rewritten to Clark notation, since
+    // the walker only resolves namespaces at the `<prop>` child level; those
+    // keep the prefix the server happened to serialise them with.
+    function cleanPropValue(raw: unknown): unknown {
+        if (Array.isArray(raw)) return raw.map(cleanPropValue);
+        if (!isPlainObject(raw)) return raw;
+        const out: Record<string, unknown> = {};
+        for (const key of Object.keys(raw)) {
+            if (isXmlnsAttr(key)) continue;
+            out[key] = cleanPropValue(raw[key]);
+        }
+        const keys = Object.keys(out);
+        if (keys.length === 0) return "";
+        if (keys.length === 1 && keys[0] === TEXT_KEY) return out[TEXT_KEY];
+        return out;
+    }
+
+    function emitClarkForChild(
+        rawKey: string,
+        rawValue: unknown,
+        scope: Map<string, string>,
+        out: Record<string, unknown>
+    ): void {
+        const colonIdx = rawKey.indexOf(":");
+        const prefix = colonIdx === -1 ? "" : rawKey.slice(0, colonIdx);
+        const local = colonIdx === -1 ? rawKey : rawKey.slice(colonIdx + 1);
+
+        // A property element may declare its own namespaces, either as a
+        // default `xmlns="..."` or bound to the very prefix it uses, so its
+        // attributes have to be folded into the scope before resolving. A
+        // prefix with no URI in scope falls back to the null namespace; that
+        // yields a bare `local` key rather than throwing or losing the data.
+        const resolveNs = (value: unknown): string => {
+            const ownScope = isPlainObject(value) ? extendScope(value, scope) : scope;
+            return ownScope.get(prefix) ?? "";
+        };
+
+        const assign = (ns: string, value: unknown): void => {
+            const key = ns ? `{${ns}}${local}` : local;
+            const existing = out[key];
+            if (existing === undefined) {
+                out[key] = value;
+            } else if (Array.isArray(existing)) {
+                existing.push(value);
+            } else {
+                out[key] = [existing, value];
+            }
+        };
+
+        if (Array.isArray(rawValue)) {
+            for (const item of rawValue) {
+                assign(resolveNs(item), cleanPropValue(item));
+            }
+            return;
+        }
+
+        assign(resolveNs(rawValue), cleanPropValue(rawValue));
+    }
+
+    function rewritePropToClark(
+        propObj: Record<string, unknown>,
+        parentScope: Map<string, string>
+    ): Record<string, unknown> {
+        const scope = extendScope(propObj, parentScope);
+        const out: Record<string, unknown> = {};
+        for (const key of Object.keys(propObj)) {
+            if (isXmlnsAttr(key)) continue;
+            emitClarkForChild(key, propObj[key], scope, out);
+        }
+        return out;
+    }
+
+    function rewriteProp(value: unknown, parentScope: Map<string, string>): unknown {
+        if (!isPlainObject(value)) return value;
+        const rewritten = rewritePropToClark(value, parentScope);
+        return Object.keys(rewritten).length === 0 ? "" : rewritten;
+    }
+
+    // Returns the (possibly replaced) node, so that an element left empty by
+    // dropping its namespace declarations collapses to the empty string the
+    // default mode would have produced for it.
+    function walk(node: unknown, scope: Map<string, string>): unknown {
+        if (Array.isArray(node)) {
+            for (let index = 0; index < node.length; index += 1) {
+                node[index] = walk(node[index], scope);
+            }
+            return node;
+        }
+        if (!isPlainObject(node)) return node;
+
+        const childScope = extendScope(node, scope);
+
+        for (const key of Object.keys(node)) {
+            // The declarations have been folded into the scope above and are
+            // of no further use; the default mode discards them as well.
+            if (isXmlnsAttr(key)) {
+                delete node[key];
+                continue;
+            }
+
+            const colonIdx = key.indexOf(":");
+            const ln = colonIdx === -1 ? key : key.slice(colonIdx + 1);
+            const value = node[key];
+
+            // Rename structural keys to bare local name.
+            let actualKey = key;
+            if (STRUCTURAL_KEYS.has(ln) && ln !== key) {
+                delete node[key];
+                node[ln] = value;
+                actualKey = ln;
+            }
+
+            if (ln === "prop") {
+                node[actualKey] = Array.isArray(value)
+                    ? value.map(item => rewriteProp(item, childScope))
+                    : rewriteProp(value, childScope);
+                // Stop here; the prop content was rewritten in one shot.
+            } else {
+                node[actualKey] = walk(value, childScope);
+            }
+        }
+
+        return Object.keys(node).length === 0 ? "" : node;
+    }
+
+    walk(root, EMPTY_SCOPE);
+}
+
+/**
+ * Parse an XML response from a WebDAV service, converting it to an internal
+ * DAV result.
+ *
+ * When `context.clarkNotationProps` is `true`, every property key inside
+ * each `propstat.prop` is rewritten to Clark notation
+ * `{namespaceURI}localName`. This lets consumers disambiguate properties
+ * that share a local name across different XML namespaces (RFC 4918) and
+ * uses a single canonical key per property regardless of how the server
+ * serialised the namespace (prefix or inline default xmlns).
+ *
+ * The structural shape of `DAVResult` (`multistatus`/`response`/`propstat`/
+ * `prop`/`status`/`href`) is unaffected by this option; only the keys
+ * inside each `propstat.prop` change, and only for the direct children of
+ * `<prop>` (nested elements keep the prefix the server used). Downstream
+ * helpers like `prepareFileFromProps`, `parseStat` and `parseSearch` assume
+ * bare prop keys and will not work with Clark-notation ones; consumers that
+ * opt in are expected to address the Clark keys on their side.
+ *
+ * `context.tagParsers` and `context.attributeParsers` are unaffected as
+ * well: they are handed the same jPaths, without namespace prefixes, and
+ * are not invoked for the xmlns declarations in either mode.
+ *
  * @param xml The raw XML string
  * @param context The current client context
  * @returns A parsed and processed DAV result
@@ -181,6 +433,9 @@ export function parseXML(xml: string, context?: WebDAVParsingContext): Promise<D
     };
     return new Promise(resolve => {
         const result = getParser(context).parse(xml);
+        if (context.clarkNotationProps) {
+            applyClarkNotation(result, context.attributeNamePrefix ?? "@");
+        }
         resolve(normaliseResult(result));
     });
 }
