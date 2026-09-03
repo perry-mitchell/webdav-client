@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { readFile } from "fs/promises";
 import {
+    displaynameTagParser,
     parseXML,
     type WebDAVEntityDecoderOptions,
     type WebDAVParsingContext
 } from "../../../source/index.js";
-import { displaynameTagParser } from "../../../source/tools/dav.js";
 
 describe("parseXML", function () {
     it("keeps numeric-looking displaynames", async function () {
@@ -15,6 +15,20 @@ describe("parseXML", function () {
         const parsed = await parseXML(data.toString());
         expect(parsed.multistatus.response).to.have.length(1);
         // Ensure trailing zero is not lost
+        expect(parsed.multistatus.response[0].propstat.prop.displayname).to.equal("2024.10");
+    });
+
+    it("keeps numeric-looking displaynames with a custom context", async function () {
+        const data = await readFile(
+            new URL("../../responses/propfind-float-like-displayname.xml", import.meta.url)
+        );
+        // A context replaces the default parsers, so the exported parser has to
+        // be listed again to keep the trailing zero.
+        const parsed = await parseXML(data.toString(), {
+            attributeNamePrefix: "@",
+            attributeParsers: [],
+            tagParsers: [displaynameTagParser]
+        });
         expect(parsed.multistatus.response[0].propstat.prop.displayname).to.equal("2024.10");
     });
 
