@@ -517,11 +517,13 @@ export function parseStat(
     } = responseItem;
 
     // As defined in https://tools.ietf.org/html/rfc2068#section-6.1
-    const [_, statusCodeStr, statusText] = statusLine.split(" ", 3);
+    // The reason phrase can be more than one word ("Not Found", "Too Early")
+    const [_, statusCodeStr, ...reasonPhrase] = statusLine.split(" ");
+    const statusText = reasonPhrase.join(" ");
     const statusCode = parseInt(statusCodeStr, 10);
     if (statusCode >= 400) {
         const err: WebDAVClientError = new Error(
-            `Invalid response: ${statusCode} ${statusText}`
+            `Invalid response: ${statusCode} ${statusText}`.trimEnd()
         ) as WebDAVClientError;
         err.status = statusCode;
         throw err;
