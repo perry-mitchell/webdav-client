@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<d:multistatus xmlns:d="DAV:" xmlns:s="http://sabredav.org/ns" xmlns:oc="http://owncloud.org/ns">
+    <d:response>
+        <d:href>/remote.php/webdav/notes/still-processing.md</d:href>
+        <d:propstat>
+            <d:prop>
+                <d:getlastmodified>Thu, 11 Sep 2026 21:58:26 GMT</d:getlastmodified>
+                <d:getcontentlength>1001</d:getcontentlength>
+                <d:resourcetype/>
+                <d:getetag>&quot;e3b0c44298fc1c149afbf4c8996fb924&quot;</d:getetag>
+                <d:getcontenttype>text/markdown</d:getcontenttype>
+            </d:prop>
+            <d:status>HTTP/1.1 425 TOO EARLY</d:status>
+        </d:propstat>
+    </d:response>
+</d:multistatus>

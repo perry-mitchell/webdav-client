@@ -127,6 +127,44 @@ describe("stat", function () {
             expect(error).to.not.be.null;
             expect(error.status).to.equal(404);
         });
+
+        it("keeps the whole status text in the error message", async function () {
+            let error: WebDAVClientError | null = null;
+            try {
+                await client.stat("/does-not-exist");
+            } catch (err) {
+                error = err;
+            }
+            expect(error).to.not.be.null;
+            expect(error.message).to.equal("Invalid response: 404 Not Found");
+        });
+    });
+
+    describe("when the file is still being processed by the server", function () {
+        beforeEach(async function () {
+            const port = await nextPort();
+            client = createWebDAVClient(`http://localhost:${port}/remote.php/webdav`, {
+                username: SERVER_USERNAME,
+                password: SERVER_PASSWORD
+            });
+            useCustomXmlResponse("propfind-too-early");
+        });
+
+        afterEach(async function () {
+            restoreRequests();
+        });
+
+        it("throws 425 with the whole status text", async function () {
+            let error: WebDAVClientError | null = null;
+            try {
+                await client.stat("/notes/still-processing.md");
+            } catch (err) {
+                error = err;
+            }
+            expect(error).to.not.be.null;
+            expect(error.status).to.equal(425);
+            expect(error.message).to.equal("Invalid response: 425 TOO EARLY");
+        });
     });
 
     it("correctly parses the displayname property", async function () {
