@@ -19,7 +19,6 @@ export function createErrorFromResponse(response: Response, prefix: string = "")
 
 export function handleResponseCode(context: WebDAVClientContext, response: Response): Response {
     const { status } = response;
-    if (status === 401 && context.digest) return response;
     if (status >= 400) {
         const err = createErrorFromResponse(response);
         throw err;

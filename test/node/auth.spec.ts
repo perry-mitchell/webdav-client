@@ -110,5 +110,33 @@ describe("auth", function () {
                 expect(exists).to.be.true;
             });
         });
+
+        it("should throw a 401 error when the password is wrong", async function () {
+            client = createWebDAVClient(`http://localhost:${port}/webdav/server`, {
+                username: SERVER_USERNAME,
+                password: "wrong-password",
+                authType: AuthType.Digest
+            });
+            await expect(client.getDirectoryContents("/")).rejects.toMatchObject({
+                status: 401
+            });
+            await expect(client.getFileContents("/notes.txt")).rejects.toMatchObject({
+                status: 401
+            });
+        });
+
+        it("should throw a 401 error when the password is wrong with auto-detection", async function () {
+            client = createWebDAVClient(`http://localhost:${port}/webdav/server`, {
+                username: SERVER_USERNAME,
+                password: "wrong-password",
+                authType: AuthType.Auto
+            });
+            await expect(client.getDirectoryContents("/")).rejects.toMatchObject({
+                status: 401
+            });
+            await expect(client.getFileContents("/notes.txt")).rejects.toMatchObject({
+                status: 401
+            });
+        });
     });
 });
