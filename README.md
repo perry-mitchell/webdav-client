@@ -44,7 +44,7 @@ Support table:
 | v2                    | 6-14              |
 | v1                    | 4-12              |
 
-_¹ Note that while Node 14 is supported on v5, it is not tested for. Node versions below 18 do not have active test cases, and rely on community support for patching._
+_¹ Note that while Node 14 is supported on v5, it is not tested for. Node versions below 18 do not have active test cases, and rely on community support for patching. As of v5.11.1 the `minimatch` dependency (used for `glob` filters) is pinned to a release that officially supports Node 18+ only — older Node versions may warn during installation, but browser and react-native builds are unaffected._
 
 #### Browser support
 
