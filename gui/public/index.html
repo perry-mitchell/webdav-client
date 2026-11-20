@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DAVport</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e7c86'/%3E%3Cpath d='M9 20l7-9 7 9' stroke='white' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+        <symbol id="i-folder" viewBox="0 0 16 16"><path d="M1.5 3.5A1 1 0 0 1 2.5 2.5h3.2l1.6 1.6h6.2a1 1 0 0 1 1 1V12.5a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1z" fill="var(--folder-fill)" stroke="var(--folder-stroke)"/><path d="M1.5 6.5h13" stroke="var(--folder-stroke)"/></symbol>
+        <symbol id="i-file" viewBox="0 0 16 16"><path d="M3.5 1.5h6l3 3v10h-9z" fill="var(--file-fill)" stroke="var(--file-stroke)"/><path d="M9.5 1.5v3h3" fill="none" stroke="var(--file-stroke)"/><path d="M5.5 8h5M5.5 10.5h5" stroke="var(--file-stroke)" opacity=".6"/></symbol>
+        <symbol id="i-drive" viewBox="0 0 16 16"><rect x="1.5" y="4.5" width="13" height="7" rx="1" fill="var(--file-fill)" stroke="var(--file-stroke)"/><circle cx="12" cy="8" r="1" fill="var(--accent)"/></symbol>
+        <symbol id="i-home" viewBox="0 0 16 16"><path d="M2 8l6-5.5L14 8" fill="none" stroke="var(--folder-stroke)" stroke-width="1.2"/><path d="M4 7.5v6h8v-6" fill="var(--folder-fill)" stroke="var(--folder-stroke)"/></symbol>
+        <symbol id="i-up" viewBox="0 0 16 16"><path d="M8 13V3M4 7l4-4 4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+        <symbol id="i-chev" viewBox="0 0 16 16"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+        <symbol id="i-sites" viewBox="0 0 20 20"><rect x="2.5" y="3.5" width="15" height="4" rx="1" fill="none" stroke="currentColor" stroke-width="1.4"/><rect x="2.5" y="9.5" width="15" height="4" rx="1" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M5 16.5h10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="5.5" cy="5.5" r=".9" fill="currentColor"/><circle cx="5.5" cy="11.5" r=".9" fill="currentColor"/></symbol>
+        <symbol id="i-log" viewBox="0 0 20 20"><rect x="2.5" y="3.5" width="15" height="13" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M5.5 7.5h9M5.5 10h6M5.5 12.5h8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></symbol>
+        <symbol id="i-tree" viewBox="0 0 20 20"><path d="M6 4v12M6 8h5M6 12h5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><rect x="11" y="6.5" width="5" height="3" rx=".8" fill="currentColor"/><rect x="11" y="10.5" width="5" height="3" rx=".8" fill="currentColor"/><rect x="3.5" y="2.5" width="5" height="3" rx=".8" fill="currentColor"/></symbol>
+        <symbol id="i-queue" viewBox="0 0 20 20"><path d="M3 5.5h14M3 10h14M3 14.5h9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+        <symbol id="i-refresh" viewBox="0 0 20 20"><path d="M16 9a6 6 0 0 0-10.5-3M4 11a6 6 0 0 0 10.5 3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M5.5 2.5v4h4M14.5 17.5v-4h-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+        <symbol id="i-play" viewBox="0 0 20 20"><path d="M6 4l10 6-10 6z" fill="currentColor"/></symbol>
+        <symbol id="i-stop" viewBox="0 0 20 20"><rect x="5" y="5" width="10" height="10" rx="1.5" fill="currentColor"/></symbol>
+        <symbol id="i-plug" viewBox="0 0 20 20"><path d="M7 3v4M13 3v4M5 7h10v3a5 5 0 0 1-10 0zM10 15v3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+        <symbol id="i-unplug" viewBox="0 0 20 20"><path d="M7 3v4M13 3v4M5 7h10v3a5 5 0 0 1-10 0zM10 15v3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 17L17 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+        <symbol id="i-download" viewBox="0 0 16 16"><path d="M8 2v8M4.5 6.5L8 10l3.5-3.5M3 13h10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+        <symbol id="i-upload" viewBox="0 0 16 16"><path d="M8 10V2M4.5 5.5L8 2l3.5 3.5M3 13h10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+        <symbol id="i-moon" viewBox="0 0 20 20"><path d="M15.5 12.5A6.5 6.5 0 0 1 7.5 4.5a6.5 6.5 0 1 0 8 8z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></symbol>
+        <symbol id="i-check" viewBox="0 0 16 16"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+        <symbol id="i-warn" viewBox="0 0 16 16"><path d="M8 2.5l6 11H2z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M8 6.5v3.2M8 11.6v.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+        <symbol id="i-mkdir" viewBox="0 0 20 20"><path d="M2.5 5.5A1 1 0 0 1 3.5 4.5h4l1.8 1.8h7.2a1 1 0 0 1 1 1V15.5a1 1 0 0 1-1 1h-13a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10 9v5M7.5 11.5h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+    </defs>
+</svg>
+
+<div id="app">
+    <!-- Menu bar -->
+    <nav id="menubar" class="menubar" aria-label="Menu principal"></nav>
+
+    <!-- Toolbar -->
+    <div id="toolbar" class="toolbar" role="toolbar">
+        <button class="tb" data-action="sites" title="Abrir o Gerenciador de Sites (Ctrl+S)"><svg><use href="#i-sites"/></svg></button>
+        <span class="tb-sep"></span>
+        <button class="tb toggle on" data-action="toggle-log" title="Alternar exibição do log de mensagens"><svg><use href="#i-log"/></svg></button>
+        <button class="tb toggle on" data-action="toggle-local-tree" title="Alternar exibição da árvore de diretórios local"><svg><use href="#i-tree"/></svg></button>
+        <button class="tb toggle on" data-action="toggle-remote-tree" title="Alternar exibição da árvore de diretórios remota"><svg><use href="#i-tree"/></svg></button>
+        <button class="tb toggle on" data-action="toggle-queue" title="Alternar exibição da fila de transferências"><svg><use href="#i-queue"/></svg></button>
+        <span class="tb-sep"></span>
+        <button class="tb" data-action="refresh" title="Atualizar listas de arquivos e diretórios (F5)"><svg><use href="#i-refresh"/></svg></button>
+        <span class="tb-sep"></span>
+        <button class="tb" data-action="process" title="Processar fila de transferências (Ctrl+P)"><svg><use href="#i-play"/></svg></button>
+        <button class="tb" data-action="stop" title="Cancelar operação atual"><svg><use href="#i-stop"/></svg></button>
+        <span class="tb-sep"></span>
+        <button class="tb" data-action="disconnect" title="Desconectar do servidor"><svg><use href="#i-unplug"/></svg></button>
+        <button class="tb" data-action="reconnect" title="Reconectar ao último servidor utilizado"><svg><use href="#i-plug"/></svg></button>
+        <span class="tb-spacer"></span>
+        <button class="tb" data-action="theme" title="Alternar tema claro/escuro"><svg><use href="#i-moon"/></svg></button>
+    </div>
+
+    <!-- Quickconnect -->
+    <form id="quickconnect" class="quickconnect" autocomplete="off">
+        <label>Servidor: <input id="qc-host" name="host" list="qc-history" placeholder="https://exemplo.com/remote.php/dav/files/usuario" spellcheck="false" /></label>
+        <datalist id="qc-history"></datalist>
+        <label>Usuário: <input id="qc-user" name="user" /></label>
+        <label>Senha: <input id="qc-pass" name="pass" type="password" /></label>
+        <label>Porta: <input id="qc-port" name="port" type="number" min="1" max="65535" placeholder="" /></label>
+        <button type="submit" id="qc-connect" class="btn primary">Conexão rápida</button>
+    </form>
+
+    <!-- Message log -->
+    <section id="log" class="msglog" aria-label="Log de mensagens">
+        <div id="log-body" class="msglog-body"></div>
+    </section>
+    <div class="splitter h" data-resize="log"></div>
+
+    <!-- Local / Remote panes -->
+    <main id="panes" class="panes">
+        <section class="pane" id="pane-local" data-pane="local">
+            <div class="pane-head">
+                <label for="local-path">Site local:</label>
+                <input id="local-path" class="path-input" spellcheck="false" />
+                <button class="btn icon" data-pane-action="up" title="Diretório pai (Backspace)"><svg><use href="#i-up"/></svg></button>
+            </div>
+            <div class="tree" id="local-tree" tabindex="0"></div>
+            <div class="splitter h" data-resize="local-tree"></div>
+            <div class="filelist" id="local-list" tabindex="0">
+                <table>
+                    <thead><tr>
+                        <th data-sort="name" class="sorted asc">Nome do arquivo</th>
+                        <th data-sort="size" class="num">Tamanho</th>
+                        <th data-sort="type">Tipo</th>
+                        <th data-sort="mtime">Última modificação</th>
+                    </tr></thead>
+                    <tbody></tbody>
+                </table>
+                <div class="list-empty hidden">Diretório vazio</div>
+            </div>
+            <div class="pane-status" id="local-status"></div>
+        </section>
+
+        <div class="splitter v" data-resize="panes"></div>
+
+        <section class="pane" id="pane-remote" data-pane="remote">
+            <div class="pane-head">
+                <label for="remote-path">Site remoto:</label>
+                <input id="remote-path" class="path-input" spellcheck="false" disabled />
+                <button class="btn icon" data-pane-action="up" title="Diretório pai (Backspace)"><svg><use href="#i-up"/></svg></button>
+            </div>
+            <div class="tree" id="remote-tree" tabindex="0"></div>
+            <div class="splitter h" data-resize="remote-tree"></div>
+            <div class="filelist" id="remote-list" tabindex="0">
+                <table>
+                    <thead><tr>
+                        <th data-sort="name" class="sorted asc">Nome do arquivo</th>
+                        <th data-sort="size" class="num">Tamanho</th>
+                        <th data-sort="type">Tipo</th>
+                        <th data-sort="mtime">Última modificação</th>
+                    </tr></thead>
+                    <tbody></tbody>
+                </table>
+                <div class="list-empty">Não conectado a nenhum servidor</div>
+            </div>
+            <div class="pane-status" id="remote-status"></div>
+        </section>
+    </main>
+    <div class="splitter h" data-resize="queue"></div>
+
+    <!-- Transfer queue -->
+    <section id="queue" class="queue" aria-label="Fila de transferências">
+        <div class="tabs" role="tablist">
+            <button class="tab active" data-tab="queued" role="tab">Arquivos na fila <span class="count" id="count-queued">(0)</span></button>
+            <button class="tab" data-tab="failed" role="tab">Transferências com falha <span class="count" id="count-failed">(0)</span></button>
+            <button class="tab" data-tab="done" role="tab">Transferências bem-sucedidas <span class="count" id="count-done">(0)</span></button>
+            <span class="tabs-spacer"></span>
+            <button class="btn small" data-action="process">Processar fila</button>
+            <button class="btn small" data-action="retry">Repetir falhas</button>
+            <button class="btn small" data-action="clear-tab">Limpar</button>
+        </div>
+        <div class="queue-body" id="queue-body" tabindex="0">
+            <table>
+                <thead><tr>
+                    <th>Servidor / Arquivo local</th>
+                    <th class="dir">Direção</th>
+                    <th>Arquivo remoto</th>
+                    <th class="num">Tamanho</th>
+                    <th class="status">Status</th>
+                </tr></thead>
+                <tbody></tbody>
+            </table>
+            <div class="list-empty" id="queue-empty">Fila vazia</div>
+        </div>
+    </section>
+
+    <!-- Status bar -->
+    <footer class="statusbar">
+        <span id="sb-conn" class="sb-conn"><i class="dot"></i> Desconectado</span>
+        <span id="sb-quota" class="sb-quota"></span>
+        <span class="sb-spacer"></span>
+        <span id="sb-speed" class="sb-speed"></span>
+        <span id="sb-queue" class="sb-queue">Fila: vazia</span>
+    </footer>
+</div>
+
+<!-- Context menu -->
+<ul id="ctxmenu" class="ctxmenu hidden" role="menu"></ul>
+
+<!-- Site manager -->
+<dialog id="dlg-sites" class="dialog sites">
+    <form method="dialog" class="dialog-form">
+        <header class="dialog-head">Gerenciador de Sites</header>
+        <div class="sites-body">
+            <div class="sites-left">
+                <div class="sites-list-label">Selecione uma entrada:</div>
+                <ul id="sites-list" class="sites-list"></ul>
+                <div class="sites-left-actions">
+                    <button type="button" class="btn" data-sites="new">Novo site</button>
+                    <button type="button" class="btn" data-sites="dup">Duplicar</button>
+                    <button type="button" class="btn danger" data-sites="del">Excluir</button>
+                </div>
+            </div>
+            <div class="sites-right" id="sites-form">
+                <div class="field"><label>Nome</label><input name="name" placeholder="Meu servidor" /></div>
+                <div class="field"><label>Endereço (URL)</label><input name="url" placeholder="https://servidor.com/remote.php/dav/files/usuario" spellcheck="false" /></div>
+                <div class="field-row">
+                    <div class="field"><label>Porta</label><input name="port" type="number" min="1" max="65535" placeholder="padrão" /></div>
+                    <div class="field"><label>Autenticação</label>
+                        <select name="authType">
+                            <option value="auto">Automática (Basic ou Digest)</option>
+                            <option value="password">Basic (usuário e senha)</option>
+                            <option value="digest">Digest</option>
+                            <option value="token">Token (Bearer)</option>
+                            <option value="none">Anônima</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="field-row">
+                    <div class="field"><label>Usuário</label><input name="username" /></div>
+                    <div class="field"><label>Senha</label><input name="password" type="password" /></div>
+                </div>
+                <div class="field"><label>Token de acesso</label><input name="token" placeholder="somente para autenticação por token" spellcheck="false" /></div>
+                <div class="field-row">
+                    <div class="field"><label>Diretório remoto padrão</label><input name="remoteDir" placeholder="/" spellcheck="false" /></div>
+                    <div class="field"><label>Diretório local padrão</label><input name="localDir" placeholder="deixe vazio para manter o atual" spellcheck="false" /></div>
+                </div>
+                <div class="field"><label>Comentários</label><textarea name="notes" rows="3"></textarea></div>
+                <p class="hint">As senhas são gravadas em texto simples em <code id="sites-file-hint">~/.webdav-client-gui/sites.json</code>.</p>
+            </div>
+        </div>
+        <footer class="dialog-foot">
+            <button type="button" class="btn primary" data-sites="connect">Conectar</button>
+            <span class="spacer"></span>
+            <button type="button" class="btn" data-sites="save">Salvar</button>
+            <button type="button" class="btn" data-sites="close">Fechar</button>
+        </footer>
+    </form>
+</dialog>
+
+<!-- Generic prompt -->
+<dialog id="dlg-prompt" class="dialog small">
+    <form method="dialog" class="dialog-form">
+        <header class="dialog-head" id="prompt-title">Entrada</header>
+        <div class="dialog-body">
+            <label id="prompt-label" for="prompt-input"></label>
+            <input id="prompt-input" spellcheck="false" />
+            <p id="prompt-text" class="prompt-text"></p>
+        </div>
+        <footer class="dialog-foot">
+            <span class="spacer"></span>
+            <button class="btn primary" value="ok" id="prompt-ok">OK</button>
+            <button class="btn" value="cancel">Cancelar</button>
+        </footer>
+    </form>
+</dialog>
+
+<!-- About -->
+<dialog id="dlg-about" class="dialog small">
+    <form method="dialog" class="dialog-form">
+        <header class="dialog-head">Sobre o DAVport</header>
+        <div class="dialog-body about">
+            <div class="about-logo">D</div>
+            <p><strong>DAVport</strong> é uma interface gráfica para a biblioteca <code>webdav</code> (cliente WebDAV em TypeScript para Node e navegador).</p>
+            <p>Dois painéis, log de mensagens, fila de transferências e gerenciador de sites, na linha dos clientes de transferência de arquivos clássicos.</p>
+        </div>
+        <footer class="dialog-foot"><span class="spacer"></span><button class="btn primary">Fechar</button></footer>
+    </form>
+</dialog>
+
+<script src="app.js" type="module"></script>
+</body>
+</html>

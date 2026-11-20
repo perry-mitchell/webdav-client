@@ -12,6 +12,18 @@ This library provides a **WebDAV client** interface that makes interacting with 
 
 This library's motivation is **not** to follow an RFC or to strictly adhere to standard WebDAV interfaces, but to provide an easy-to-consume client API for working with most WebDAV services from Node or the browser.
 
+### Graphical client (DAVport)
+
+This repository also ships **DAVport**, a FileZilla-style desktop GUI built on top of the library: two panes (local / remote), directory trees, a message log with every request and response, a transfer queue and a site manager. It runs as a small local Node server with a browser front-end and needs no extra dependencies:
+
+```shell
+npm install
+npm run gui        # builds the library and opens http://127.0.0.1:8765
+npm run gui:demo   # same, plus a local WebDAV test server on port 45000
+```
+
+See [gui/README.md](gui/README.md) for details.
+
 ### Supported Versions / Environments
 
 Version 5 is under active development. Version 4 is in support mode, and will receive security and stability related bugfixes. Earlier versions are deprecated and will not receive updates.
