@@ -259,16 +259,30 @@ const client = createClient("https://some-server.org", {
 Property keys are reported by their local name, so two properties sharing a local name across different XML namespaces collapse into one key. Passing `clarkNotationProps` to the exported `parseXML` keys them in [Clark notation](http://www.jclark.com/xml/xmlns.htm) (`{namespaceURI}localName`) instead, which keeps them apart and gives a property the same key regardless of whether the server used a prefix or an inline `xmlns`:
 
 ```typescript
-import { parseXML } from "webdav";
+import { displaynameTagParser, parseXML } from "webdav";
 
 const result = await parseXML(xml, {
     attributeNamePrefix: "@",
     attributeParsers: [],
     clarkNotationProps: true,
-    tagParsers: []
+    tagParsers: [displaynameTagParser]
 });
 // { "{DAV:}displayname": "file.txt", "{http://owncloud.org/ns}permissions": "RDNVW" }
 const props = result.multistatus.response[0].propstat.prop;
+```
+
+A context replaces the default parsers instead of extending them, so anything it does not list is gone. `displaynameTagParser` is the one applied by default, and it is exported for exactly this reason: without it in the list, a displayname like `2024.10` is read as the number `2024.1`. Own parsers are appended to it:
+
+```typescript
+// Keep a custom property verbatim, but leave the defaults in place.
+function tokenTagParser(jPath: string, value: string) {
+    if (jPath.endsWith("prop.token")) {
+        return; // use the text as it is
+    }
+    return value; // apply default parsing
+}
+
+tagParsers: [displaynameTagParser, tokenTagParser];
 ```
 
 This is a low-level option for consumers parsing responses themselves: it is not available on `createClient`, as the client methods (`stat`, `getDirectoryContents`, `search`, `getQuota`) read bare property keys. Only the direct children of `<prop>` are rewritten, and a property whose prefix has no namespace declaration in scope keeps its bare local name.

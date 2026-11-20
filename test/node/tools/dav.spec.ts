@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { readFile } from "fs/promises";
 import {
+    displaynameTagParser,
     parseXML,
     type WebDAVEntityDecoderOptions,
     type WebDAVParsingContext
 } from "../../../source/index.js";
-import { displaynameTagParser } from "../../../source/tools/dav.js";
 
 describe("parseXML", function () {
     it("keeps numeric-looking displaynames", async function () {
@@ -16,6 +16,40 @@ describe("parseXML", function () {
         expect(parsed.multistatus.response).to.have.length(1);
         // Ensure trailing zero is not lost
         expect(parsed.multistatus.response[0].propstat.prop.displayname).to.equal("2024.10");
+    });
+
+    describe("with a custom parsing context", function () {
+        const parseWith = async (tagParsers: WebDAVParsingContext["tagParsers"]) => {
+            const data = await readFile(
+                new URL("../../responses/propfind-float-like-displayname.xml", import.meta.url)
+            );
+            const parsed = await parseXML(data.toString(), {
+                attributeNamePrefix: "@",
+                attributeParsers: [],
+                tagParsers
+            });
+            return parsed.multistatus.response[0].propstat.prop.displayname;
+        };
+
+        it("drops the default parsers the context does not list", async function () {
+            // A context replaces the defaults rather than extending them, which
+            // is why the parser has to be reachable from outside at all.
+            expect(await parseWith([])).to.equal(2024.1);
+        });
+
+        it("keeps displaynames intact when the exported parser is listed", async function () {
+            expect(await parseWith([displaynameTagParser])).to.equal("2024.10");
+        });
+
+        it("applies own parsers alongside it", async function () {
+            const upperCaseParser = (jPath: string, value: string) =>
+                jPath.endsWith("prop.displayname") ? value : value.toString().toUpperCase();
+
+            // The first parser to return something other than the value it was
+            // given wins, so order decides: displayname stays a string, the
+            // other props go through the second parser.
+            expect(await parseWith([displaynameTagParser, upperCaseParser])).to.equal("2024.10");
+        });
     });
 
     it("correctly parses property attributes", async function () {

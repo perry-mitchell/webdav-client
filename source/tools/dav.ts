@@ -115,6 +115,9 @@ function getParser({
 /**
  * Tag parser for the displayname prop.
  * Ensure that the displayname is not parsed and always handled as is.
+ * Applied by default, but a `context` passed to `parseXML` replaces the
+ * default parsers wholesale, so it has to be listed in that context's
+ * `tagParsers` again to keep the behaviour.
  * @param path The jPath of the tag
  * @param value The text value of the tag
  */
