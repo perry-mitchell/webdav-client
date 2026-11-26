@@ -220,6 +220,9 @@ export interface GetDirectoryContentsOptionsWithoutDetails extends GetDirectoryC
 export interface GetFileContentsOptions extends WebDAVMethodOptions {
     details?: boolean;
     format?: "binary" | "text";
+    /**
+     * @deprecated Not supported since v5: the client never calls it.
+     */
     onDownloadProgress?: ProgressEventCallback;
 }
 
@@ -275,6 +278,9 @@ export type ProgressEventCallback = (e: ProgressEvent) => void;
 export interface PutFileContentsOptions extends WebDAVMethodOptions {
     contentLength?: boolean | number;
     overwrite?: boolean;
+    /**
+     * @deprecated Not supported since v5: the client never calls it.
+     */
     onUploadProgress?: UploadProgressCallback;
 }
 
@@ -287,7 +293,13 @@ interface RequestOptionsBase {
     httpsAgent?: any;
     maxRedirects?: number;
     method: string;
+    /**
+     * @deprecated Not supported since v5: the client never calls it.
+     */
     onDownloadProgress?: ProgressEventCallback;
+    /**
+     * @deprecated Not supported since v5: the client never calls it.
+     */
     onUploadProgress?: ProgressEventCallback;
     signal?: AbortSignal;
     transformResponse?: Array<(value: any) => any>;
